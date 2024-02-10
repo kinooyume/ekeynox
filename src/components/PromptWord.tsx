@@ -32,8 +32,7 @@ const Word = ({ keys, status, getKeypressed, focus }: WordProps) => {
     if (status() === WordStatus.unset) {
       setWpm(0);
       return WpmCounter.create;
-    }
-    else if (status() === WordStatus.pending) {
+    } else if (status() === WordStatus.pending) {
       if (counter.kind === CounterStatus.paused) {
         return counter.action.resume();
       }
@@ -78,7 +77,9 @@ const Word = ({ keys, status, getKeypressed, focus }: WordProps) => {
           {(key) => <Key key={key.key} status={key.status} />}
         </For>
       </div>
-      <Show when={keys.length > 5 && status() === WordStatus.done}><span class="wpm">{Math.trunc(wpm())}</span></Show>
+      <Show when={keys.length > 5 && status() === WordStatus.done}>
+        <span class="wpm">{Math.trunc(wpm())}</span>
+      </Show>
     </div>
   );
 };
