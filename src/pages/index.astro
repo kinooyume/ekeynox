@@ -1,0 +1,30 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Keyboard from "../components/TypingGame";
+import { games } from "../games.json";
+import { App }  from "../../test.jsx";
+
+type ParamsProps = {
+  params: { title: string };
+};
+const gameList = games.map(({ params }) => {
+  return { title: params.title, url: `/typing/${params.title}` };
+});
+---
+
+<Layout title="Welcome to Astro.">
+  <main>
+    <App client:only />
+    <ul class="menu">
+      {
+        gameList.map(({ url, title }: { url: string; title: string }) => (
+          <li>
+            <a href={url}>{title}</a>
+          </li>
+        ))
+      }
+    </ul>
+  </main>
+</Layout>
+
+<style></style>

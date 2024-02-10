@@ -1,0 +1,19 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import TypingGame from "../../components/TypingGame";
+import { games } from "../../games.json"
+
+export function getStaticPaths() {
+  return games
+}
+const {title} = Astro.params;
+const {content} = Astro.props;
+---
+
+<Layout title={title}>
+  <main>
+    <TypingGame client:only="solid" source={content}/>
+  </main>
+</Layout>
+
+<style></style>
