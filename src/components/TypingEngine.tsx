@@ -164,7 +164,7 @@ const TypingEngine = (props: TypingEngineProps) => {
     input.addEventListener("keyup", handleKeyUp);
     props.data[0].setFocus(true);
     props.data[0].keys[0].set(KeyStatus.current);
-    props.setFocus(input.focus);
+    props.setFocus(() => input.focus());
     props.setReset(reset);
   });
 

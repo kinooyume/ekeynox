@@ -7,13 +7,13 @@ import type { KeyProps } from "./PromptKey.tsx";
 import Key from "./PromptKey.tsx";
 
 export enum WordStatus {
-  unset = "unset",
-  pending = "pending",
-  corrected = "corrected",
-  done = "done",
+  unset,
+  pending,
+  corrected,
+  done,
   /* to implement */
-  correct = "correct",
-  incorrect = "incorrect",
+  correct,
+  incorrect,
 }
 
 // TODO: check about the keypressed things
@@ -32,8 +32,7 @@ const Word = ({ keys, status, getKeypressed, focus }: WordProps) => {
     if (status() === WordStatus.unset) {
       setWpm(0);
       return WpmCounter.create;
-    }
-    else if (status() === WordStatus.pending) {
+    } else if (status() === WordStatus.pending) {
       if (counter.kind === CounterStatus.paused) {
         return counter.action.resume();
       }
@@ -78,7 +77,9 @@ const Word = ({ keys, status, getKeypressed, focus }: WordProps) => {
           {(key) => <Key key={key.key} status={key.status} />}
         </For>
       </div>
-      <Show when={keys.length > 5 && status() === WordStatus.done}><span class="wpm">{Math.trunc(wpm())}</span></Show>
+      <Show when={keys.length > 5 && status() === WordStatus.done}>
+        <span class="wpm">{Math.trunc(wpm())}</span>
+      </Show>
     </div>
   );
 };
