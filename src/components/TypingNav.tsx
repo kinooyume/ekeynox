@@ -1,12 +1,11 @@
-import { type Accessor } from "solid-js";
 import { css } from "solid-styled";
 import Play from "./ui/play.tsx";
 import Reset from "./ui/reset.tsx";
 
 type TypingNavProps = {
   isPaused: boolean;
-  wpm: Accessor< number >;
-  raw: Accessor< number >;
+  wpm: number;
+  raw: number;
   onPause: () => void;
   onReset: () => void;
 };
@@ -25,8 +24,8 @@ const TypingNav = (props: TypingNavProps) => {
   `;
   return (
     <nav>
-      <span class="wpm">WPM: {Math.trunc(props.wpm())}</span>
-      <span class="raw">RAW: {Math.trunc(props.raw())}</span>
+      <span class="wpm">WPM: {Math.trunc(props.wpm)}</span>
+      <span class="raw">RAW: {Math.trunc(props.raw)}</span>
       <div onClick={props.onPause}>
         <Play pause={props.isPaused} />
       </div>
