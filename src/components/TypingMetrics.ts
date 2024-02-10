@@ -1,6 +1,10 @@
-import { createEffect, createSignal, onCleanup, type Accessor } from "solid-js";
-import { TypingStatus, type KeyPressed } from "./TypingEngine.tsx";
-import WpmCounter, { CounterStatus, type Counter } from "./WpmCounter.ts";
+import { type Setter } from "solid-js";
+import { type TypingStatus, TypingStatusKind } from "./TypingEngine.tsx";
+import WpmCounter, {
+  CounterStatus,
+  type Counter,
+  type PendingCounter,
+} from "./WpmCounter.ts";
 
 // TODO: accurary & real accurary
 // check the difference with consistency
@@ -18,106 +22,99 @@ type KeyResult =
   | { result: KeyStatus.correct }
   | { result: KeyStatus.incorrect; typedInstead: string }
   | { result: KeyStatus.extra; typedInstead: string }
-  | { result: KeyStatus.missed; typedInstead: string };
+  | { result: KeyStatus.missed; expected: string };
 
-type KeyMetrics = Map<string, Array<KeyResult>>;
+export type KeyMetrics = Map<string, Array<KeyResult>>;
 
 const blankCharacters = new Set([" ", "\n", "\r"]);
 
 /* *** */
 
-type TypingMetricsProps = { status: TypingStatus; keyPressed: KeyPressed };
-export type TypingMetrics = (props: TypingMetricsProps) => void;
-export type CreateTypingMetrics = () => {
-  wpm: Accessor<number>;
-  raw: Accessor<number>;
-  get: TypingMetrics;
-};
-
-type CounterEffectProps = {
+export type Metrics = {
   interval?: number;
   counter: Counter;
-  keys: KeyMetrics;
+  keyPressed: KeyMetrics;
 };
 
-const createTypingMetrics: CreateTypingMetrics = () => {
-  const [wpm, setWpm] = createSignal(0);
-  const [raw, setRaw] = createSignal(0);
+export const defaultMetrics: Metrics = {
+  counter: WpmCounter.create,
+  keyPressed: new Map(),
+};
 
-  return {
-    wpm,
-    raw,
-    get: (props: TypingMetricsProps) => {
-      const defaultEffect: CounterEffectProps = {
-        counter: WpmCounter.create,
-        keys: new Map(),
-      };
+type TypingMetricsProps = { status: TypingStatus };
 
-      const counterEffect = (
-        effect: CounterEffectProps,
-      ): CounterEffectProps => {
-      console.log("props", props);
-        switch (props.status) {
-          case TypingStatus.pending:
-            if (effect.counter.kind === CounterStatus.paused) {
-              const counter = effect.counter.action.resume();
-              console.log("counter", counter);
-              const updateWpm = () => {
-                const wpms = counter.action.getWpms();
-                setWpm(wpms.wpm);
-                setRaw(wpms.raw);
-              };
-              const interval = setInterval(updateWpm, 1000);
-              onCleanup(() => clearInterval(effect.interval));
-              return { ...effect, interval };
-            } else {
-              const [expectedKey, typedKey] = props.keyPressed;
-              // peu mieux faire
-              let result: KeyResult;
-              if (expectedKey === typedKey) {
-                effect.counter.action.keyPressed(true);
-                result = { result: KeyStatus.correct };
-              } else {
-                effect.counter.action.keyPressed(false);
-                if (blankCharacters.has(expectedKey)) {
-                  result = { result: KeyStatus.extra, typedInstead: typedKey };
-                } else if (blankCharacters.has(typedKey)) {
-                  result = { result: KeyStatus.missed, typedInstead: typedKey };
-                } else {
-                  result = {
-                    result: KeyStatus.incorrect,
-                    typedInstead: typedKey,
-                  };
-                }
-              }
-              const metric = effect.keys.get(expectedKey);
+type TypingMetrics = (metrics: Metrics, props: TypingMetricsProps) => Metrics;
 
-              if (metric === undefined) {
-                effect.keys.set(expectedKey, [result]);
-              } else {
-                metric.push(result);
-              }
-            }
-            break;
-          case TypingStatus.pause:
-            if (effect.counter.kind === CounterStatus.pending) {
-              clearInterval(effect.interval);
-              const counter = effect.counter.action.pause();
-              const wpms = counter.action.getWpms();
-              setWpm(wpms.wpm);
-              setRaw(wpms.raw);
-              return { ...effect, counter };
-            }
-            break;
-          case TypingStatus.unstart:
-            return defaultEffect;
+type CreateTypingMetricsProps = {
+  setWpm: Setter<number>;
+  setRaw: Setter<number>;
+  setKeyMetrics: Setter<KeyMetrics>;
+};
+
+type CreateTypingMetrics = (props: CreateTypingMetricsProps) => TypingMetrics;
+const createTypingMetrics: CreateTypingMetrics =
+  ({ setWpm, setRaw, setKeyMetrics }) =>
+  (metrics, props) => {
+    switch (props.status.kind) {
+      case TypingStatusKind.pending:
+        if (metrics.counter.kind === CounterStatus.paused) {
+          metrics.counter = metrics.counter.action.resume();
+          const updateWpm = () => {
+            const wpms = metrics.counter.action.getWpms();
+            setWpm(wpms.wpm);
+            setRaw(wpms.raw);
+          };
+          metrics.interval = setInterval(updateWpm, 1000);
         }
-        return effect;
-      };
+        const counter = metrics.counter.action as PendingCounter;
+        const [typedKey, expectedKey] = props.status.keyPressed;
+        // peu mieux faire
+        let result: KeyResult;
+        if (expectedKey === typedKey) {
+          counter.keyPressed(true);
+          result = { result: KeyStatus.correct };
+        } else {
+          counter.keyPressed(false);
+          if (blankCharacters.has(expectedKey)) {
+            result = { result: KeyStatus.extra, typedInstead: typedKey };
+          } else if (blankCharacters.has(typedKey)) {
+            result = { result: KeyStatus.missed, expected: expectedKey };
+          } else {
+            result = {
+              result: KeyStatus.incorrect,
+              typedInstead: typedKey,
+            };
+          }
+        }
+        const metric = metrics.keyPressed.get(expectedKey);
 
-      createEffect(counterEffect, defaultEffect);
-    },
+        if (metric === undefined) {
+          metrics.keyPressed.set(expectedKey, [result]);
+        } else {
+          metric.push(result);
+        }
+
+        break;
+      case TypingStatusKind.pause:
+        if (metrics.counter.kind === CounterStatus.pending) {
+          clearInterval(metrics.interval);
+          const counter = metrics.counter.action.pause();
+          const wpms = counter.action.getWpms();
+          setWpm(wpms.wpm);
+          setRaw(wpms.raw);
+          return { ...metrics, counter, interval: undefined };
+        }
+        break;
+      case TypingStatusKind.unstart:
+        setWpm(0);
+        setRaw(0);
+        clearInterval(metrics.interval);
+        return defaultMetrics;
+      case TypingStatusKind.over:
+        clearInterval(metrics.interval);
+        setKeyMetrics(metrics.keyPressed);
+    }
+    return metrics;
   };
-};
 
 export default createTypingMetrics;

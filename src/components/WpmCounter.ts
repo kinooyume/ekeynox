@@ -44,7 +44,7 @@ export type Counter =
   | { kind: CounterStatus.paused; action: PausedCounter }
   | { kind: CounterStatus.pending; action: PendingCounter };
 
-type PendingCounter = {
+export type PendingCounter = {
   keyPressed: (correct: boolean) => void;
   getWpms: () => Wpms;
   pause: () => Counter;
