@@ -1,17 +1,14 @@
 // NOTE: peut etre separer l'input, navigation, etc
 // de la verification
-import { createEffect, createSignal, onCleanup, onMount, type Setter } from "solid-js";
+import {
+  createSignal,
+  onCleanup,
+  onMount,
+  type Setter,
+} from "solid-js";
 import { WordStatus } from "./PromptWord.tsx";
 import { KeyStatus } from "./PromptKey.tsx";
 import { type MetaWord, type Metakey } from "./Content.ts";
-import { type TypingMetrics } from "./TypingMetrics.ts";
-import WpmCounter, { CounterStatus } from "./WpmCounter.ts";
-
-export type TypingEngineRemoteControl = {
-  reset: () => void;
-  focus: () => void;
-  pause: () => void;
-};
 
 export type TypingEngineProps = {
   data: Array<MetaWord>;
@@ -19,21 +16,27 @@ export type TypingEngineProps = {
   onKeyUp: (key: string) => void;
   status: TypingStatus;
   setStatus: Setter<TypingStatus>;
-  metrics?: TypingMetrics;
+  setFocus: (focus: () => void) => void;
+  setReset: (reset: () => void) => void;
 };
 
-export enum TypingStatus {
+export enum TypingStatusKind {
   unstart,
   pending,
   pause,
   over,
 }
 
+export type TypingStatus =
+  | { kind: TypingStatusKind.unstart }
+  | { kind: TypingStatusKind.pending; keyPressed: KeyPressed }
+  | { kind: TypingStatusKind.pause }
+  | { kind: TypingStatusKind.over };
+
 export type KeyPressed = [string, string];
 
 const TypingEngine = (props: TypingEngineProps) => {
   let input: HTMLInputElement;
-  const [keyPressed, setKeyPressed] = createSignal<KeyPressed>(["", ""]);
 
   /* Navigation */
   const [currentParagraph, setCurrentParagraph] = createSignal(0);
@@ -71,7 +74,7 @@ const TypingEngine = (props: TypingEngineProps) => {
       setCurrentChar(0);
       props.data[nextWord].keys[0].set(KeyStatus.current);
     } else {
-      props.setStatus(TypingStatus.over);
+      props.setStatus({ kind: TypingStatusKind.over });
     }
   };
 
@@ -112,16 +115,13 @@ const TypingEngine = (props: TypingEngineProps) => {
     if (event.key === "Backspace") {
       prev();
     } else if (event.key.length === 1 || event.key === "Enter") {
-      console.log(props.status)
-      if (props.status !== TypingStatus.pending) setPending();
+      if (props.status.kind !== TypingStatusKind.pending) setPending();
       const expected = props.data[currentWord()].keys[currentChar()];
-      setKeyPressed([expected.props.key, event.key]);
+      props.setStatus({
+        kind: TypingStatusKind.pending,
+        keyPressed: [event.key, expected.props.key],
+      });
       props.data[currentWord()].keypressed++;
-      // Metrics
-      // if (counter.kind === CounterStatus.pending) {
-      //   props.data[currentWord()].keypressed++;
-      //   counter.action.strokeKey();
-      // }
       compareKey(event.key);
       next();
     }
@@ -136,13 +136,13 @@ const TypingEngine = (props: TypingEngineProps) => {
   /* State Control */
 
   const setPending = () => {
-    if (props.status === TypingStatus.pending) return;
-    props.setStatus(TypingStatus.pending);
+    // current word only
+    if (props.status.kind === TypingStatusKind.pending) return;
     props.data[0].setStatus(WordStatus.pending);
   };
 
   const reset = () => {
-    props.setStatus(TypingStatus.unstart);
+    input.value = "";
     props.data.forEach((word) => {
       word.setStatus(WordStatus.unset);
       word.setFocus(false);
@@ -164,9 +164,8 @@ const TypingEngine = (props: TypingEngineProps) => {
     input.addEventListener("keyup", handleKeyUp);
     props.data[0].setFocus(true);
     props.data[0].keys[0].set(KeyStatus.current);
-    console.log(props)
-    const metricProps = { status: props.status, keyPressed: keyPressed() }
-    props.metrics?.(metricProps)
+    props.setFocus(input.focus);
+    props.setReset(reset);
   });
 
   onCleanup(() => {
