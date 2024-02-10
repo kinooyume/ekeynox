@@ -1,9 +1,7 @@
 type GetAverage = (value: number) => number;
-type CreateAverage = (
-  nbrIteration: number,
-) => (prevAverage: number) => GetAverage;
+type CreateAverage = (nbrIteration: number, prevAverage: number) => GetAverage;
 
-const createAverage: CreateAverage = (nbr) => (average) => (value: number) =>
+const createAverage: CreateAverage = (nbr, average) => (value: number) =>
   average + (value - average) / nbr;
 
 /* KeypressCounter */
@@ -85,8 +83,8 @@ const wpmCounter: WpmCounter = (iterNbr, averages) => {
         getWpms: () => wpms,
         resume: () => {
           return wpmCounter(iterNbr++, {
-            wpm: createAverage(iterNbr)(wpms.wpm),
-            raw: createAverage(iterNbr)(wpms.raw),
+            wpm: createAverage(iterNbr, wpms.wpm),
+            raw: createAverage(iterNbr, wpms.raw),
           });
         },
       });
