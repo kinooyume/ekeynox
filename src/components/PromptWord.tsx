@@ -7,13 +7,13 @@ import type { KeyProps } from "./PromptKey.tsx";
 import Key from "./PromptKey.tsx";
 
 export enum WordStatus {
-  unset = "unset",
-  pending = "pending",
-  corrected = "corrected",
-  done = "done",
+  unset,
+  pending,
+  corrected,
+  done,
   /* to implement */
-  correct = "correct",
-  incorrect = "incorrect",
+  correct,
+  incorrect,
 }
 
 // TODO: check about the keypressed things
