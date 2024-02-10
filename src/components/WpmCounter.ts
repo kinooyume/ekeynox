@@ -14,9 +14,9 @@ const createKeypressCounter = () => {
 
   const keyPressed = (correct: boolean) => {
     if (correct) {
-      correctKeys += 1;
+      correctKeys++;
     } else {
-      wrongKeys += 1;
+      wrongKeys++;
     }
   };
 
