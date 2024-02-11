@@ -8,11 +8,13 @@ export type PromptProps = { paragraphs: Paragraphs };
 const prompt = (props: PromptProps) => {
   css`
     .board {
-      display: flex;
-      flex-wrap: wrap;
       min-height: 180px;
       height: 300px;
       max-width: 900px;
+    }
+    .paragraph {
+      display: flex;
+      flex-wrap: wrap;
       align-items: center;
       font-size: 2em;
     }
@@ -29,15 +31,17 @@ const prompt = (props: PromptProps) => {
       <div class="board">
         <For each={props.paragraphs}>
           {(paragraphs) => (
-            <For each={paragraphs}>
-              {(word) => (
-                <Word
-                  keys={word.keys}
-                  focus={word.focus}
-                  status={word.status}
-                />
-              )}
-            </For>
+            <div class="paragraph">
+              <For each={paragraphs}>
+                {(word) => (
+                  <Word
+                    keys={word.keys}
+                    focus={word.focus}
+                    status={word.status}
+                  />
+                )}
+              </For>
+            </div>
           )}
         </For>
       </div>
