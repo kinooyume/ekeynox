@@ -16,7 +16,7 @@ const prompt = (props: PromptProps) => {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      font-size: 2em;
+      font-size: 1.6em;
     }
     .game {
       display: flex;
