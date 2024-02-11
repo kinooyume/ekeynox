@@ -72,7 +72,7 @@ const Keyboard = (props: KeyboardProps) => {
     }
 
     .key.double {
-      width: 80px;
+      width: 120px;
     }
 
     .key.two {
@@ -87,7 +87,7 @@ const Keyboard = (props: KeyboardProps) => {
       width: 85px;
     }
     .key.space {
-      width: 400px;
+      width: 500px;
     }
 
     .primary {
