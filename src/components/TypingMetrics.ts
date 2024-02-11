@@ -47,7 +47,7 @@ export type KeyInfos = KeyObject<KeyInfo>;
 
 const blankCharacters = new Set([" ", "\n", "\r"]);
 
-export const defautKeyInfo: () => KeyInfo = () => ({
+export const createKeyInfo: () => KeyInfo = () => ({
   correct: 0,
   incorrect: 0,
   extra: 0,
@@ -56,14 +56,15 @@ export const defautKeyInfo: () => KeyInfo = () => ({
   typedInstead: [],
   expected: [],
 });
+ 
 export type KeyInfoPack = [KeyInfo, KeyInfos];
 type CalculateKeyAccuracy = (metrics: KeyMetrics) => KeyInfoPack;
 export const calculateKeyAccuracy: CalculateKeyAccuracy = (metrics) => {
-  let global = defautKeyInfo();
+  let global = createKeyInfo();
 
   let infos: KeyInfos = {};
   metrics.forEach((results, key) => {
-    let info = defautKeyInfo();
+    let info = createKeyInfo();
     info.total = results.length;
     global.total += results.length;
     results.forEach((result) => {
