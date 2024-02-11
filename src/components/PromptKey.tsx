@@ -1,5 +1,5 @@
 import { css } from "solid-styled";
-import { createSignal, type Accessor, createEffect } from "solid-js";
+import { createSignal, createEffect } from "solid-js";
 
 export enum KeyStatus {
   unset = "unset",
