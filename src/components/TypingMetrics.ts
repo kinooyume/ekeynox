@@ -18,16 +18,76 @@ enum KeyStatus {
   missed,
 }
 
+// je pense qu'on va ajouter corrected
+// ou alors.. removed ? et du coup on calculerait..
+
 type KeyResult =
   | { result: KeyStatus.correct }
   | { result: KeyStatus.incorrect; typedInstead: string }
   | { result: KeyStatus.extra; typedInstead: string }
   | { result: KeyStatus.missed; expected: string };
 
-export type KeyMetrics = Map<string, Array<KeyResult>>;
+export type KeyInfo = {
+  correct: number;
+  incorrect: number;
+  extra: number;
+  missed: number;
+  total: number;
+  typedInstead: Array<string>;
+  expected: Array<string>;
+};
+
+type KeyMap<T> = Map<string, T>;
+type KeyObject<T> = { [key: string]: T };
+type KeyTuple<T> = [string, T];
+type KeyArray<T> = Array<KeyTuple<T>>;
+
+export type KeyMetrics = KeyMap<Array<KeyResult>>;
+export type KeyInfos = KeyObject<KeyInfo>;
 
 const blankCharacters = new Set([" ", "\n", "\r"]);
 
+export const defautKeyInfo: () => KeyInfo = () => ({
+  correct: 0,
+  incorrect: 0,
+  extra: 0,
+  missed: 0,
+  total: 0,
+  typedInstead: [],
+  expected: [],
+});
+export type KeyInfoPack = [KeyInfo, KeyInfos];
+type CalculateKeyAccuracy = (metrics: KeyMetrics) => KeyInfoPack;
+export const calculateKeyAccuracy: CalculateKeyAccuracy = (metrics) => {
+  let global = defautKeyInfo();
+
+  let infos: KeyInfos = {};
+  metrics.forEach((results, key) => {
+    let info = defautKeyInfo();
+    info.total = results.length;
+    global.total += results.length;
+    results.forEach((result) => {
+      if (result.result === KeyStatus.correct) {
+        info.correct++;
+        global.correct++;
+      } else if (result.result === KeyStatus.incorrect) {
+        info.incorrect++;
+        global.incorrect++;
+        info.typedInstead.push(result.typedInstead);
+      } else if (result.result === KeyStatus.extra) {
+        info.extra++;
+        global.extra++;
+        // info.typedInstead.push(result.typedInstead);
+      } else if (result.result === KeyStatus.missed) {
+        info.missed++;
+        global.missed++;
+        info.expected.push(result.expected);
+      }
+    });
+    infos[key] = info;
+  });
+  return [global, infos];
+};
 /* *** */
 
 export type Metrics = {
