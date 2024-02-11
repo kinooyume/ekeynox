@@ -27,23 +27,21 @@ const Enter = () => ({
 });
 
 export type Parser = (source: string) => Paragraphs;
-export const parse: Parser = (source) =>
-  source.split("\n").map((line, index) => {
-    const words = line.split(/(\s+)/).map((word) => {
-      return {
-        focus: false,
-        status: WordStatus.unstart,
-        keys: word.split("").map((key) => {
-          return {
-            key,
-            status: KeyStatus.unset,
-          };
-        }),
-      };
-    });
-    // if (index !== 0) words.unshift(Enter());
-    return words;
-  });
+export const parse: Parser = (source) => {
+  const paragraphs = source.split("\n").map((line) =>
+    line.split(/(\s+)/).map((word) => ({
+      focus: false,
+      status: WordStatus.unstart,
+      keys: word.split("").map((key) => ({ key, status: KeyStatus.unset })),
+    })),
+  );
+  if (paragraphs.length > 1) {
+    for (let i = 1; i < paragraphs.length; i++) {
+      paragraphs[i].unshift(Enter());
+    }
+  }
+  return paragraphs;
+};
 
 export default {
   parse,
