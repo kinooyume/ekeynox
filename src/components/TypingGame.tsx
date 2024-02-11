@@ -10,10 +10,11 @@ import CreateTypingMetrics, {
   defaultMetrics,
   type Metrics,
 } from "./TypingMetrics.ts";
+import TypingMetrics from "./TypingMetrics.tsx";
 
 import { css } from "solid-styled";
-import { createEffect, createSignal } from "solid-js";
-import { createStore, reconcile } from "solid-js/store";
+import { Show, createEffect, createSignal } from "solid-js";
+import { createStore } from "solid-js/store";
 
 type TypingGameProps = { source: string };
 
@@ -29,7 +30,9 @@ const deepCloneParagraphs = (paragraphs: Paragraphs) =>
 
 const TypingGame = ({ source }: TypingGameProps) => {
   const paragraphs = Content.parse(source);
-  const [paraStore, setParaStore] = createStore(deepCloneParagraphs(paragraphs));
+  const [paraStore, setParaStore] = createStore(
+    deepCloneParagraphs(paragraphs),
+  );
 
   const [status, setStatus] = createSignal<TypingStatus>({
     kind: TypingStatusKind.unstart,
@@ -66,27 +69,31 @@ const TypingGame = ({ source }: TypingGameProps) => {
     }
   `;
   return (
-    <div class="mega" onClick={() => focus()}>
-      <TypingEngine
-        paragraphs={paraStore}
-        setParagraphs={setParaStore}
-        status={status()}
-        setStatus={setStatus}
-        setFocus={(f) => (focus = f)}
-        setReset={(r) => (resetInput = r)}
-        onKeyDown={keyboard!?.keyDown}
-        onKeyUp={keyboard!?.keyUp}
-      />
-      <Prompt paragraphs={paraStore} />
-      <TypingNav
-        isPaused={status().kind !== TypingStatusKind.pending}
-        wpm={wpm()}
-        raw={raw()}
-        onPause={pause}
-        onReset={reset}
-      />
-      <Keyboard ref={(k) => (keyboard = k)} />
-    </div>
+    <Show when={status().kind !== TypingStatusKind.over}
+      fallback={<TypingMetrics wpm={wpm()} raw={raw()} keyMetrics={keyMetrics()} />}
+    >
+      <div class="mega" onClick={() => focus()}>
+        <TypingEngine
+          paragraphs={paraStore}
+          setParagraphs={setParaStore}
+          status={status()}
+          setStatus={setStatus}
+          setFocus={(f) => (focus = f)}
+          setReset={(r) => (resetInput = r)}
+          onKeyDown={keyboard!?.keyDown}
+          onKeyUp={keyboard!?.keyUp}
+        />
+        <Prompt paragraphs={paraStore} />
+        <TypingNav
+          isPaused={status().kind !== TypingStatusKind.pending}
+          wpm={wpm()}
+          raw={raw()}
+          onPause={pause}
+          onReset={reset}
+        />
+        <Keyboard ref={(k) => (keyboard = k)} />
+      </div>
+    </Show>
   );
 };
 
