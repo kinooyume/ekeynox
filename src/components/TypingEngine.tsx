@@ -153,25 +153,6 @@ const TypingEngine = (props: TypingEngineProps) => {
 
   const reset = () => {
     input.value = "";
-    // TODO: check for a simpler reset ?
-    //
-    // props.setParagraphs(props.paragraphs);,
-    props.paragraphs.forEach((words, pIndex) => {
-      words.forEach((word, wordIndex) => {
-        props.setParagraphs(pIndex, wordIndex, "status", WordStatus.unstart);
-        props.setParagraphs(pIndex, wordIndex, "focus", false);
-        word.keys.forEach((_, keyIndex) => {
-          props.setParagraphs(
-            pIndex,
-            wordIndex,
-            "keys",
-            keyIndex,
-            "status",
-            KeyStatus.unset,
-          );
-        });
-      });
-    });
 
     setCurrentParagraph(0);
     setCurrentWord(0);
