@@ -36,8 +36,8 @@ export const parse: Parser = (source) => {
     })),
   );
   if (paragraphs.length > 1) {
-    for (let i = 1; i < paragraphs.length; i++) {
-      paragraphs[i].unshift(Enter());
+    for (let i = 0; i < paragraphs.length - 1; i++) {
+      paragraphs[i].push(Enter());
     }
   }
   return paragraphs;
