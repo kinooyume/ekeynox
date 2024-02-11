@@ -1,7 +1,7 @@
 import { createEffect, createSignal, For } from "solid-js";
 import {
   calculateKeyAccuracy,
-  defautKeyInfo,
+  createKeyInfo,
   type KeyInfo,
   type KeyInfoPack,
   type KeyMetrics,
@@ -19,7 +19,7 @@ const pourcent = (info: KeyInfo) =>
 
 const TypingMetrics = (props: TypingMetricsProps) => {
   const [keyInfos, setKeyInfos] = createSignal<KeyInfoPack>([
-    defautKeyInfo(),
+    createKeyInfo(),
     {},
   ]);
 
