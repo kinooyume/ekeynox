@@ -63,7 +63,7 @@
         ["/", "?"],
         ["Shift"]
       ],
-      [["Control"], ["Alt"], [" "], ["Alt"], ["Control"]]
+      [["Control"], ["Win"], ["Alt"], [" "], ["Alt"], ["Fn"], ["Control"]]
     ]
   },
   "positions": {
@@ -76,6 +76,8 @@
         "Shift": "double",
         "Control": "two",
         "Alt": "two",
+        "Win": "two",
+        "Fn": "two",
         " ": "space",
         "Enter": "seven"
       }
