@@ -1,9 +1,9 @@
 import { For } from "solid-js";
 import Word from "./PromptWord.tsx";
 import { css } from "solid-styled";
-import { type MetaWord } from "./Content.ts";
+import { type Paragraphs } from "./Content.ts";
 
-export type PromptProps = { data: Array<MetaWord> };
+export type PromptProps = { paragraphs: Paragraphs };
 
 const prompt = (props: PromptProps) => {
   css`
@@ -27,14 +27,17 @@ const prompt = (props: PromptProps) => {
     <div class="prompt">
       <div class="game"></div>
       <div class="board">
-        <For each={props.data}>
-          {(word) => (
-            <Word
-              keys={word.keys.map((word) => word.props)}
-              focus={word.focus}
-              getKeypressed={() => word.keypressed}
-              status={word.status}
-            />
+        <For each={props.paragraphs}>
+          {(paragraphs) => (
+            <For each={paragraphs}>
+              {(word) => (
+                <Word
+                  keys={word.keys}
+                  focus={word.focus}
+                  status={word.status}
+                />
+              )}
+            </For>
           )}
         </For>
       </div>

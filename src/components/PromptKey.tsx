@@ -1,22 +1,24 @@
 import { css } from "solid-styled";
-import type { Accessor } from "solid-js";
+import { createSignal, type Accessor, createEffect } from "solid-js";
 
 export enum KeyStatus {
   unset = "unset",
+  current = "current",
+
   valid = "valid",
   invalid = "invalid",
-  current = "current",
-  corrected = "corrected",
-  deleted = "deleted",
 }
 
-export type KeyProps = { key: string; status: Accessor<KeyStatus> };
+export type KeyProps = { key: string; status: KeyStatus };
 
-// const transform = (char: string) => (char === " " ? " " : char);
+const Key = (props: KeyProps) => {
+  const [wasInvalid, setWasInvalid] = createSignal(false);
+  const special = props.key === "Enter" ? "special" : "";
+  const transform = (char: string) => (char === "Enter" ? "↵" : char);
 
-const Key = ({ key, status }: KeyProps) => {
-  const special = key === "Enter" ? "special" : "";
-  const transform = (char: string) => char === "Enter" ? "↵" : char;
+  createEffect(() => {
+    if (props.status === KeyStatus.invalid) setWasInvalid(true);
+  });
 
   css`
     span {
@@ -30,19 +32,23 @@ const Key = ({ key, status }: KeyProps) => {
       color: red;
       background-color: lightcoral;
     }
+    span.wasInvalid.valid {
+      color: orange;
+      background-color: lightyellow;
+    }
     span.current {
       color: blue;
       background-color: lightblue;
-    }
-    span.corrected {
-      color: orange;
-      background-color: lightyellow;
     }
     span.special {
       width: 100%;
     }
   `;
-  return <span class={`${status()} ${special}`}>{transform( key )}</span>;
+  return (
+    <span class={`${props.status} ${wasInvalid() ? "wasInvalid" : ""} ${special}`}>
+      {transform(props.key)}
+    </span>
+  );
 };
 
 export default Key;
