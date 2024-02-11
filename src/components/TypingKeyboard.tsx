@@ -42,15 +42,21 @@ const Keyboard = (props: KeyboardProps) => {
       position: relative;
       justify-content: center;
       align-items: center;
-      margin: 8px;
-      min-width: 50px;
+      margin: 6px;
+      min-width: 40px;
       padding: 10px;
-      height: 50px;
-      border-radius: 16px;
+      height: 40px;
+      border-radius: 8px;
       background: #e0e0e0;
       box-shadow:
-        6px 6px 12px #bebebe,
-        -6px -6px 12px #ffffff;
+        2px 2px 7px #bebebe,
+        -2px -2px 7px #ffffff;
+    }
+    .pressed {
+      background: #e0e0e0;
+      box-shadow:
+        inset 2px 2px 7px #bebebe,
+        inset -2px -2px 7px #ffffff;
     }
     .concave {
       background: linear-gradient(145deg, #cacaca, #f0f0f0);
@@ -61,40 +67,34 @@ const Keyboard = (props: KeyboardProps) => {
     .convex {
       background: linear-gradient(145deg, #f0f0f0, #cacaca);
       box-shadow:
-        6px 6px 12px #bebebe,
-        -6px -6px 12px #ffffff;
-    }
-    .pressed {
-      background: #e0e0e0;
-      box-shadow:
-        inset 6px 6px 12px #bebebe,
-        inset -6px -6px 12px #ffffff;
+        4px 4px 12px #bebebe,
+        -4px -4px 12px #ffffff;
     }
 
     .key.double {
-      width: 100px;
+      width: 80px;
     }
 
     .key.two {
-      width: 65px;
+      width: 50px;
     }
 
     .key.five {
-      width: 75px;
+      width: 60px;
     }
 
     .key.seven {
-      width: 90px;
+      width: 85px;
     }
     .key.space {
-      width: 450px;
+      width: 400px;
     }
 
     .primary {
-      font-size: 1em;
+      font-size: 0.9em;
     }
     .secondary {
-      font-size: 0.7em;
+      font-size: 0.6em;
       color: #666;
       position: absolute;
       top: 9px;
