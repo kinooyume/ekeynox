@@ -13,13 +13,16 @@ import CreateTypingMetrics, {
 
 import { css } from "solid-styled";
 import { createEffect, createSignal } from "solid-js";
+import { createStore } from "solid-js/store";
 
 type TypingGameProps = { source: string };
 
 // https://icon-sets.iconify.design/line-md/?query=play
 
 const TypingGame = ({ source }: TypingGameProps) => {
-  const data = Content.parse(source);
+
+  const paragraphs = Content.parse(source);
+  const  [paraStore, setParaStore] = createStore(paragraphs);
 
   const [status, setStatus] = createSignal<TypingStatus>({
     kind: TypingStatusKind.unstart,
@@ -29,7 +32,10 @@ const TypingGame = ({ source }: TypingGameProps) => {
   const [keyMetrics, setKeyMetrics] = createSignal(new Map());
 
   const pause = () => setStatus({ kind: TypingStatusKind.pause });
+
+
   const reset = () => {
+    // setParaStore(paragraphs);
     setStatus({ kind: TypingStatusKind.unstart });
     resetInput();
     focus!();
@@ -56,7 +62,8 @@ const TypingGame = ({ source }: TypingGameProps) => {
   return (
     <div class="mega" onClick={() => focus()}>
       <TypingEngine
-        data={data}
+        paragraphs={paraStore}
+        setParagraphs={setParaStore}
         status={status()}
         setStatus={setStatus}
         setFocus={(f) => (focus = f)}
@@ -64,7 +71,7 @@ const TypingGame = ({ source }: TypingGameProps) => {
         onKeyDown={keyboard!?.keyDown}
         onKeyUp={keyboard!?.keyUp}
       />
-      <Prompt data={data} />
+      <Prompt paragraphs={paraStore} />
       <TypingNav
         isPaused={status().kind !== TypingStatusKind.pending}
         wpm={wpm()}

@@ -6,47 +6,22 @@ import WpmCounter, { CounterStatus, type Counter } from "./WpmCounter.ts";
 import type { KeyProps } from "./PromptKey.tsx";
 import Key from "./PromptKey.tsx";
 
-export enum WordStatus {
-  unset,
+export enum WordStatus { // TypingStatusKind ?
+  unstart,
   pending,
-  corrected,
-  done,
-  /* to implement */
-  correct,
-  incorrect,
+  pause,
+  over,
 }
 
 // TODO: check about the keypressed things
 export type WordProps = {
   keys: Array<KeyProps>;
-  status: Accessor<WordStatus>;
-  getKeypressed: () => number; // should be replace
-  focus: Accessor<boolean>;
+  status: WordStatus;
+  focus: boolean;
 };
 
-const Word = ({ keys, status, getKeypressed, focus }: WordProps) => {
+const Word = (props: WordProps) => {
   const [wpm, setWpm] = createSignal(0);
-
-  createEffect((counter: Counter | void) => {
-    if (counter === undefined) return;
-    if (status() === WordStatus.unset) {
-      setWpm(0);
-      return WpmCounter.create;
-    } else if (status() === WordStatus.pending) {
-      if (counter.kind === CounterStatus.paused) {
-        return counter.action.resume();
-      }
-    } else if (status() === WordStatus.done) {
-      if (counter.kind === CounterStatus.pending) {
-        counter.action.addKeypress(getKeypressed());
-        const c = counter.action.pause();
-        setWpm(c.action.getWpm());
-        return c;
-      }
-    }
-    return counter;
-  }, WpmCounter.create);
-
   css`
     .keys {
       display: flex;
@@ -72,12 +47,12 @@ const Word = ({ keys, status, getKeypressed, focus }: WordProps) => {
   `;
   return (
     <div class="word">
-      <div class={`${status()}  ${focus() ? "focus" : ""} keys`}>
-        <For each={keys}>
+      <div class={`${props.status}  ${props.focus ? "focus" : ""} keys`}>
+        <For each={props.keys}>
           {(key) => <Key key={key.key} status={key.status} />}
         </For>
       </div>
-      <Show when={keys.length > 5 && status() === WordStatus.done}>
+      <Show when={props.keys.length > 5 && props.status === WordStatus.over}>
         <span class="wpm">{Math.trunc(wpm())}</span>
       </Show>
     </div>
