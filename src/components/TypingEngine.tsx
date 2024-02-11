@@ -4,6 +4,15 @@ import { KeyStatus } from "./PromptKey.tsx";
 import { type Paragraphs } from "./Content.ts";
 import type { SetStoreFunction } from "solid-js/store";
 
+/* Typing Engine
+
+- React to key events
+- navigate through paragraph
+- Update the store status, used by the Prompt component
+- Update Typing Status
+
+*/
+
 export type TypingEngineProps = {
   paragraphs: Paragraphs;
   setParagraphs: SetStoreFunction<Paragraphs>;
@@ -18,6 +27,7 @@ export type TypingEngineProps = {
 export enum TypingStatusKind {
   unstart,
   pending,
+  deleted,
   pause,
   over,
 }
@@ -25,6 +35,7 @@ export enum TypingStatusKind {
 export type TypingStatus =
   | { kind: TypingStatusKind.unstart }
   | { kind: TypingStatusKind.pending; keyPressed: KeyPressed }
+  | { kind: TypingStatusKind.deleted; wasOn: string }
   | { kind: TypingStatusKind.pause }
   | { kind: TypingStatusKind.over };
 
@@ -157,6 +168,10 @@ const TypingEngine = (props: TypingEngineProps) => {
   const handleKeypress = (event: KeyboardEvent) => {
     props.onKeyDown(event.key);
     if (event.key === "Backspace") {
+      props.setStatus({
+        kind: TypingStatusKind.deleted,
+        wasOn: getCurrent.key().key,
+      });
       prev();
     } else if (event.key.length === 1 || event.key === "Enter") {
       const expected = getCurrent.key();
@@ -164,7 +179,7 @@ const TypingEngine = (props: TypingEngineProps) => {
         kind: TypingStatusKind.pending,
         keyPressed: [event.key, expected.key],
       });
-      /* Should be moved ? */
+      /* Should we react to key metrics ? */
       if (event.key === expected.key) {
         setCurrent.keyStatus(KeyStatus.valid);
         // props.data[currentWord()].keyPressed(true); // word
