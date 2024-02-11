@@ -2,9 +2,6 @@ import { createSignal, onCleanup, onMount, type Setter } from "solid-js";
 import { WordStatus } from "./PromptWord.tsx";
 import { KeyStatus } from "./PromptKey.tsx";
 import {
-  type MetaWord,
-  type Metakey,
-  type Paragraph,
   type Paragraphs,
 } from "./Content.ts";
 import type { SetStoreFunction } from "solid-js/store";
