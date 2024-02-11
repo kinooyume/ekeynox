@@ -2,7 +2,6 @@
 import Layout from "../layouts/Layout.astro";
 import Keyboard from "../components/TypingGame";
 import { games } from "../games.json";
-import { App }  from "../../test.jsx";
 
 type ParamsProps = {
   params: { title: string };
@@ -12,9 +11,40 @@ const gameList = games.map(({ params }) => {
 });
 ---
 
+<style>
+  .menu {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 12px 64px;
+  }
+  a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 6px;
+    width: 200px;
+    padding: 10px;
+    height: 40px;
+    border-radius: 14px;
+    background: #e0e0e0;
+    box-shadow:
+      2px 2px 7px #bebebe,
+      -2px -2px 7px #ffffff;
+  }
+  li {
+    list-style: none;
+  }
+  a:hover {
+    background: #e0e0e0;
+    cursor: pointer;
+    box-shadow:
+      inset 2px 2px 7px #bebebe,
+      inset -2px -2px 7px #ffffff;
+  }
+</style>
 <Layout title="Welcome to Astro.">
   <main>
-    <App client:only />
     <ul class="menu">
       {
         gameList.map(({ url, title }: { url: string; title: string }) => (
