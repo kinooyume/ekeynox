@@ -32,14 +32,23 @@ export enum TypingStatusKind {
   over,
 }
 
+export enum KeyPressedKind {
+  match,
+  unmatch,
+}
+
+export type KeyPressed = [string, string];
+
+type KeyVariant =
+  | { kind: KeyPressedKind.match; key: string }
+  | { kind: KeyPressedKind.unmatch; key: string; pressed: string };
+
 export type TypingStatus =
   | { kind: TypingStatusKind.unstart }
-  | { kind: TypingStatusKind.pending; keyPressed: KeyPressed }
+  | { kind: TypingStatusKind.pending; keyPressed: KeyVariant }
   | { kind: TypingStatusKind.deleted; wasOn: string }
   | { kind: TypingStatusKind.pause }
   | { kind: TypingStatusKind.over };
-
-export type KeyPressed = [string, string];
 
 const TypingEngine = (props: TypingEngineProps) => {
   let input: HTMLInputElement;
@@ -165,6 +174,26 @@ const TypingEngine = (props: TypingEngineProps) => {
 
   /* Key Handlers */
 
+  // side effect, setCurrentKeyStatus
+  const getKeyPressed = (key: string): KeyVariant => {
+    const expected = getCurrent.key();
+    if (key === expected.key) {
+      setCurrent.keyStatus(KeyStatus.valid);
+      return {
+        kind: KeyPressedKind.match,
+        key: expected.key,
+      };
+      // props.data[currentWord()].keyPressed(true); // word
+    } else {
+      setCurrent.keyStatus(KeyStatus.invalid);
+      return {
+        kind: KeyPressedKind.unmatch,
+        key: expected.key,
+        pressed: key,
+      };
+    }
+  };
+
   const handleKeypress = (event: KeyboardEvent) => {
     props.onKeyDown(event.key);
     if (event.key === "Backspace") {
@@ -174,19 +203,11 @@ const TypingEngine = (props: TypingEngineProps) => {
       });
       prev();
     } else if (event.key.length === 1 || event.key === "Enter") {
-      const expected = getCurrent.key();
       props.setStatus({
         kind: TypingStatusKind.pending,
-        keyPressed: [event.key, expected.key],
+        keyPressed: getKeyPressed(event.key),
       });
-      /* Should we react to key metrics ? */
-      if (event.key === expected.key) {
-        setCurrent.keyStatus(KeyStatus.valid);
-        // props.data[currentWord()].keyPressed(true); // word
-      } else {
-        setCurrent.keyStatus(KeyStatus.invalid);
-      }
-      /* *** */
+
       next();
     }
   };
