@@ -164,7 +164,7 @@ const Keyboard = (props: KeyboardProps) => {
             <For each={row}>
               {(k) => (
                 <div
-                  class={`${k.some((ck) => keys().includes(ck)) ? "pressed" : ""} key ${getSize(k[0])}`}
+                  class={`${keys().some((ks) => ks === k[0]) ? "pressed" : ""} key ${getSize(k[0])}`}
                 >
                   <Show when={k[1] !== undefined}>
                     <span class="secondary">{k[1]}</span>
