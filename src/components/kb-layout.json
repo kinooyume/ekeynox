@@ -64,23 +64,21 @@
         ["Shift"]
       ],
       [["Control"], ["Win"], ["Alt"], [" "], ["Alt"], ["Fn"], ["Control"]]
-    ]
-  },
-  "positions": {
-    "iso": {
-      "default": 1,
-      "special": {
-        "Backspace": "five",
-        "Tab": "five",
-        "CapsLock": "seven",
-        "Shift": "double",
-        "Control": "two",
-        "Alt": "two",
-        "Win": "two",
-        "Fn": "two",
-        " ": "space",
-        "Enter": "seven"
-      }
+    ],
+    "positions": {
+        "default": 1,
+        "special": {
+          "Backspace": "five",
+          "Tab": "five",
+          "CapsLock": "seven",
+          "Shift": "double",
+          "Control": "two",
+          "Alt": "two",
+          "Win": "two",
+          "Fn": "two",
+          " ": "space",
+          "Enter": "seven"
+        }
     }
   }
 }
