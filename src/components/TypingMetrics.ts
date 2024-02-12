@@ -1,5 +1,5 @@
 import { type Setter } from "solid-js";
-import { type TypingStatus, TypingStatusKind } from "./TypingEngine.tsx";
+import { type TypingStatus, TypingStatusKind, KeyPressedKind } from "./TypingEngine.tsx";
 import WpmCounter, {
   CounterStatus,
   type Counter,
@@ -57,6 +57,10 @@ export const createKeyInfo: () => KeyInfo = () => ({
   expected: [],
 });
  
+/* *** */
+// Add logs support and dynamic counting
+/* *** */
+
 export type KeyInfoPack = [KeyInfo, KeyInfos];
 type CalculateKeyAccuracy = (metrics: KeyMetrics) => KeyInfoPack;
 export const calculateKeyAccuracy: CalculateKeyAccuracy = (metrics) => {
@@ -128,29 +132,30 @@ const createTypingMetrics: CreateTypingMetrics =
           metrics.interval = setInterval(updateWpm, 1000);
         }
         const counter = metrics.counter.action as PendingCounter;
-        const [typedKey, expectedKey] = props.status.keyPressed;
-        // peu mieux faire
+        /* *** */
+        const keyPressed = props.status.keyPressed
+        // peu mieux faire, plus tard
         let result: KeyResult;
-        if (expectedKey === typedKey) {
+        if (keyPressed.kind === KeyPressedKind.match) {
           counter.keyPressed(true);
           result = { result: KeyStatus.correct };
         } else {
           counter.keyPressed(false);
-          if (blankCharacters.has(expectedKey)) {
-            result = { result: KeyStatus.extra, typedInstead: typedKey };
-          } else if (blankCharacters.has(typedKey)) {
-            result = { result: KeyStatus.missed, expected: expectedKey };
+          if (blankCharacters.has(keyPressed.key)) {
+            result = { result: KeyStatus.extra, typedInstead: keyPressed.pressed };
+          } else if (blankCharacters.has(keyPressed.pressed)) {
+            result = { result: KeyStatus.missed, expected: keyPressed.key };
           } else {
             result = {
               result: KeyStatus.incorrect,
-              typedInstead: typedKey,
+              typedInstead: keyPressed.pressed,
             };
           }
         }
-        const metric = metrics.keyPressed.get(expectedKey);
+        const metric = metrics.keyPressed.get(keyPressed.key);
 
         if (metric === undefined) {
-          metrics.keyPressed.set(expectedKey, [result]);
+          metrics.keyPressed.set(keyPressed.key, [result]);
         } else {
           metric.push(result);
         }
