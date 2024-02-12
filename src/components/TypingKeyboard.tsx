@@ -21,12 +21,32 @@ type KeyboardProps = {
 const Keyboard = (props: KeyboardProps) => {
   const [keys, setKeys] = createSignal([] as string[]);
 
-  const addKey = (key: string) => setKeys([...keys(), key]);
-  const removeKey = (key: string) => setKeys(keys().filter((k) => k !== key));
+  const findPrimaryKey = (key: string) => {
+    let keyFound;
+    layoutKeys.some((row) =>
+      row.some((fullKey) => {
+        let keyIndex = fullKey.findIndex((k) => k === key);
+        if (keyIndex === -1) return false;
+        keyFound = fullKey[0];
+        return true;
+      }),
+    );
+    return keyFound;
+  };
+
+  const addKey = (key: string) => {
+    const keyFound = findPrimaryKey(key);
+    if (keyFound) setKeys([...keys(), keyFound]);
+  };
+
+  const removeKey = (key: string) => {
+    const keyFound = findPrimaryKey(key);
+    if (keyFound) setKeys(keys().filter((k) => k !== keyFound));
+  };
 
   onMount(() => {
     props.ref?.({ keyUp: removeKey, keyDown: addKey });
-  })
+  });
   css`
     .kb {
       display: flex;
@@ -138,7 +158,7 @@ const Keyboard = (props: KeyboardProps) => {
 
   return (
     <div class="kb">
-      <For each={kblayout.qwerty.keys}>
+      <For each={layoutKeys}>
         {(row) => (
           <div class="row">
             <For each={row}>
