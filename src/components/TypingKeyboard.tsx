@@ -1,7 +1,6 @@
 import { For, createSignal, onMount } from "solid-js";
 import kblayout from "./kb-layout.json";
 import { css } from "solid-styled";
-import type { TypingStatus } from "./TypingEngine";
 import KeyboardKey from "./KeyboardKey";
 
 type Size = {
@@ -28,7 +27,6 @@ export type TypingKeyboardRef = {
 type KeyboardProps = {
   ref?: (ref: TypingKeyboardRef) => void;
   layout: string;
-  status: TypingStatus;
 };
 
 const Keyboard = (props: KeyboardProps) => {
