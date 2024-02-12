@@ -8,9 +8,12 @@ import TypingNav from "./TypingNav.tsx";
 import Keyboard, { type TypingKeyboardRef } from "./TypingKeyboard.tsx";
 import CreateTypingMetrics, {
   defaultMetrics,
+  type KeyMetrics,
+  type KeyResult,
   type Metrics,
 } from "./TypingMetrics.ts";
 import TypingMetrics from "./TypingMetrics.tsx";
+import { ReactiveMap } from "@solid-primitives/map";
 
 import { css } from "solid-styled";
 import { Show, createEffect, createSignal } from "solid-js";
@@ -29,8 +32,7 @@ const TypingGame = ({ source }: TypingGameProps) => {
   });
   const [wpm, setWpm] = createSignal(0);
   const [raw, setRaw] = createSignal(0);
-  const [keyMetrics, setKeyMetrics] = createSignal(new Map());
-  // const [keyMetrics, setKeyMetrics] = createStore(new Map());
+  const keyMetrics : KeyMetrics = new ReactiveMap<string, Array<KeyResult>>();
 
   const pause = () => setStatus({ kind: TypingStatusKind.pause });
 
@@ -45,7 +47,7 @@ const TypingGame = ({ source }: TypingGameProps) => {
   let focus: () => void;
   let keyboard: TypingKeyboardRef;
 
-  const metrics = CreateTypingMetrics({ setWpm, setRaw, setKeyMetrics });
+  const metrics = CreateTypingMetrics({ setWpm, setRaw, keyMetrics });
 
   createEffect(
     (met: Metrics) => metrics(met, { status: status() }),
@@ -63,7 +65,7 @@ const TypingGame = ({ source }: TypingGameProps) => {
     <Show
       when={status().kind !== TypingStatusKind.over}
       fallback={
-        <TypingMetrics wpm={wpm()} raw={raw()} keyMetrics={keyMetrics()} />
+        <TypingMetrics wpm={wpm()} raw={raw()} keyMetrics={keyMetrics} />
       }
     >
       <div class="mega" onClick={() => focus()}>
