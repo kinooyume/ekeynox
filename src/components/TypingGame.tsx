@@ -91,7 +91,7 @@ const TypingGame = ({ source }: TypingGameProps) => {
           onPause={pause}
           onReset={reset}
         />
-        <Keyboard ref={(k) => (keyboard = k)} />
+        <Keyboard layout="qwerty" ref={(k) => (keyboard = k)} />
       </div>
     </Show>
   );
