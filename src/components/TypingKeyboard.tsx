@@ -1,10 +1,22 @@
-import { For, Show, createSignal, onMount } from "solid-js";
+import { For, createSignal, onMount } from "solid-js";
 import kblayout from "./kb-layout.json";
 import { css } from "solid-styled";
+import type { TypingStatus } from "./TypingEngine";
+import KeyboardKey from "./KeyboardKey";
+
+type Size = {
+  default: number;
+  special: { [key: string]: string };
+};
 
 const currentKb = "qwerty";
-const size = kblayout[currentKb].positions;
+const size: Size = kblayout[currentKb].positions;
 const layoutKeys = kblayout[currentKb].keys;
+
+const getSize = (k: string): string => {
+  const special = size.special[k];
+  return typeof special === "string" ? special : "";
+};
 
 type keyCb = (key: string) => void;
 
@@ -16,6 +28,7 @@ export type TypingKeyboardRef = {
 type KeyboardProps = {
   ref?: (ref: TypingKeyboardRef) => void;
   layout: string;
+  status: TypingStatus;
 };
 
 const Keyboard = (props: KeyboardProps) => {
@@ -59,102 +72,7 @@ const Keyboard = (props: KeyboardProps) => {
       justify-content: center;
       align-items: center;
     }
-    .key,
-    .flat {
-      display: flex;
-      position: relative;
-      justify-content: center;
-      align-items: center;
-      margin: 6px;
-      min-width: 40px;
-      padding: 10px;
-      height: 40px;
-      border-radius: 8px;
-      background: #e0e0e0;
-      box-shadow:
-        2px 2px 7px #bebebe,
-        -2px -2px 7px #ffffff;
-    }
-    .pressed {
-      background: #e0e0e0;
-      box-shadow:
-        inset 2px 2px 7px #bebebe,
-        inset -2px -2px 7px #ffffff;
-    }
-    .concave {
-      background: linear-gradient(145deg, #cacaca, #f0f0f0);
-      box-shadow:
-        6px 6px 12px #bebebe,
-        -6px -6px 12px #ffffff;
-    }
-    .convex {
-      background: linear-gradient(145deg, #f0f0f0, #cacaca);
-      box-shadow:
-        4px 4px 12px #bebebe,
-        -4px -4px 12px #ffffff;
-    }
-
-    .key.double {
-      width: 120px;
-    }
-
-    .key.two {
-      width: 50px;
-    }
-
-    .key.five {
-      width: 60px;
-    }
-
-    .key.seven {
-      width: 85px;
-    }
-    .key.space {
-      width: 500px;
-    }
-
-    .primary {
-      font-size: 0.9em;
-    }
-    .secondary {
-      font-size: 0.6em;
-      color: #666;
-      position: absolute;
-      top: 9px;
-      right: 16px;
-      float: right;
-    }
   `;
-
-  const transform = (k: string) => {
-    switch (k) {
-      case "Tab":
-        return "↹";
-      case "Enter":
-        return "⏎";
-      case "Backspace":
-        return "⌫";
-      case "Shift":
-        return "⇧";
-      case "CapsLock":
-        return "⇪";
-      case "Control":
-        return "Ctrl";
-      case "Alt":
-        return "Alt";
-      case " ":
-        return "␣";
-      default:
-        return k;
-    }
-  };
-
-  const getSize = (k: string): string => {
-    const keyTyped = k as keyof typeof size.special;
-    const special = size.special[keyTyped];
-    if (typeof special === "string") return special;
-    return "";
-  };
 
   return (
     <div class="kb">
@@ -163,14 +81,11 @@ const Keyboard = (props: KeyboardProps) => {
           <div class="row">
             <For each={row}>
               {(k) => (
-                <div
-                  class={`${keys().some((ks) => ks === k[0]) ? "pressed" : ""} key ${getSize(k[0])}`}
-                >
-                  <Show when={k[1] !== undefined}>
-                    <span class="secondary">{k[1]}</span>
-                  </Show>
-                  <span class="primary">{transform(k[0])}</span>
-                </div>
+                <KeyboardKey
+                  key={k}
+                  size={getSize(k[0])}
+                  pressed={keys().some((ks) => ks === k[0])}
+                />
               )}
             </For>
           </div>
