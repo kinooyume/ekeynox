@@ -69,8 +69,11 @@ const TypingGame = ({ source }: TypingGameProps) => {
     }
   `;
   return (
-    <Show when={status().kind !== TypingStatusKind.over}
-      fallback={<TypingMetrics wpm={wpm()} raw={raw()} keyMetrics={keyMetrics()} />}
+    <Show
+      when={status().kind !== TypingStatusKind.over}
+      fallback={
+        <TypingMetrics wpm={wpm()} raw={raw()} keyMetrics={keyMetrics()} />
+      }
     >
       <div class="mega" onClick={() => focus()}>
         <TypingEngine
@@ -91,7 +94,7 @@ const TypingGame = ({ source }: TypingGameProps) => {
           onPause={pause}
           onReset={reset}
         />
-        <Keyboard ref={(k) => (keyboard = k)} />
+        <Keyboard layout="qwerty" ref={(k) => (keyboard = k)} />
       </div>
     </Show>
   );

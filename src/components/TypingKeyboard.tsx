@@ -2,7 +2,9 @@ import { For, Show, createSignal, onMount } from "solid-js";
 import kblayout from "./kb-layout.json";
 import { css } from "solid-styled";
 
-const size = kblayout.positions.iso;
+const currentKb = "qwerty";
+const size = kblayout[currentKb].positions;
+const layoutKeys = kblayout[currentKb].keys;
 
 type keyCb = (key: string) => void;
 
@@ -13,6 +15,7 @@ export type TypingKeyboardRef = {
 
 type KeyboardProps = {
   ref?: (ref: TypingKeyboardRef) => void;
+  layout: string;
 };
 
 const Keyboard = (props: KeyboardProps) => {
