@@ -22,9 +22,7 @@ type TypingGameProps = { source: string };
 
 const TypingGame = ({ source }: TypingGameProps) => {
   const paragraphs = Content.parse(source);
-  const [paraStore, setParaStore] = createStore(
-    Content.deepClone(paragraphs),
-  );
+  const [paraStore, setParaStore] = createStore(Content.deepClone(paragraphs));
 
   const [status, setStatus] = createSignal<TypingStatus>({
     kind: TypingStatusKind.unstart,
@@ -32,6 +30,7 @@ const TypingGame = ({ source }: TypingGameProps) => {
   const [wpm, setWpm] = createSignal(0);
   const [raw, setRaw] = createSignal(0);
   const [keyMetrics, setKeyMetrics] = createSignal(new Map());
+  // const [keyMetrics, setKeyMetrics] = createStore(new Map());
 
   const pause = () => setStatus({ kind: TypingStatusKind.pause });
 
@@ -86,7 +85,7 @@ const TypingGame = ({ source }: TypingGameProps) => {
           onPause={pause}
           onReset={reset}
         />
-        <Keyboard layout="qwerty" status={status} ref={(k) => (keyboard = k)} />
+        <Keyboard layout="qwerty" ref={(k) => (keyboard = k)} />
       </div>
     </Show>
   );
