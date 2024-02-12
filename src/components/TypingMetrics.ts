@@ -5,6 +5,7 @@ import WpmCounter, {
   type Counter,
   type PendingCounter,
 } from "./WpmCounter.ts";
+import type { ReactiveMap } from "@solid-primitives/map";
 
 // TODO: accurary & real accurary
 // check the difference with consistency
@@ -18,10 +19,7 @@ enum KeyStatus {
   missed,
 }
 
-// je pense qu'on va ajouter corrected
-// ou alors.. removed ? et du coup on calculerait..
-
-type KeyResult =
+export type KeyResult =
   | { result: KeyStatus.correct }
   | { result: KeyStatus.incorrect; typedInstead: string }
   | { result: KeyStatus.extra; typedInstead: string }
@@ -37,7 +35,7 @@ export type KeyInfo = {
   expected: Array<string>;
 };
 
-type KeyMap<T> = Map<string, T>;
+type KeyMap<T> = ReactiveMap<string, T>;
 type KeyObject<T> = { [key: string]: T };
 type KeyTuple<T> = [string, T];
 type KeyArray<T> = Array<KeyTuple<T>>;
@@ -98,12 +96,10 @@ export const calculateKeyAccuracy: CalculateKeyAccuracy = (metrics) => {
 export type Metrics = {
   interval?: number;
   counter: Counter;
-  keyPressed: KeyMetrics;
 };
 
 export const defaultMetrics: Metrics = {
   counter: WpmCounter.create,
-  keyPressed: new Map(),
 };
 
 type TypingMetricsProps = { status: TypingStatus };
@@ -113,12 +109,12 @@ type TypingMetrics = (metrics: Metrics, props: TypingMetricsProps) => Metrics;
 type CreateTypingMetricsProps = {
   setWpm: Setter<number>;
   setRaw: Setter<number>;
-  setKeyMetrics: Setter<KeyMetrics>;
+  keyMetrics: KeyMetrics;
 };
 
 type CreateTypingMetrics = (props: CreateTypingMetricsProps) => TypingMetrics;
 const createTypingMetrics: CreateTypingMetrics =
-  ({ setWpm, setRaw, setKeyMetrics }) =>
+  ({ setWpm, setRaw, keyMetrics }) =>
   (metrics, props) => {
     switch (props.status.kind) {
       case TypingStatusKind.pending:
@@ -152,10 +148,10 @@ const createTypingMetrics: CreateTypingMetrics =
             };
           }
         }
-        const metric = metrics.keyPressed.get(keyPressed.key);
+        const metric = keyMetrics.get(keyPressed.key);
 
         if (metric === undefined) {
-          metrics.keyPressed.set(keyPressed.key, [result]);
+          keyMetrics.set(keyPressed.key, [result]);
         } else {
           metric.push(result);
         }
@@ -178,7 +174,6 @@ const createTypingMetrics: CreateTypingMetrics =
         return defaultMetrics;
       case TypingStatusKind.over:
         clearInterval(metrics.interval);
-        setKeyMetrics(metrics.keyPressed);
     }
     return metrics;
   };
