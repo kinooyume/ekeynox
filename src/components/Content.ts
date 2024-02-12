@@ -43,6 +43,15 @@ export const parse: Parser = (source) => {
   return paragraphs;
 };
 
+const deepClone = (paragraphs: Paragraphs) =>
+  paragraphs.map((paragraph) =>
+    paragraph.map((word) => ({
+      ...word,
+      keys: word.keys.map((key) => ({ ...key })),
+    })),
+  );
+
 export default {
   parse,
+  deepClone
 };

@@ -1,4 +1,4 @@
-import Content, { type Paragraphs } from "./Content.ts";
+import Content from "./Content.ts";
 import TypingEngine, {
   type TypingStatus,
   TypingStatusKind,
@@ -20,18 +20,10 @@ type TypingGameProps = { source: string };
 
 // https://icon-sets.iconify.design/line-md/?query=play
 
-const deepCloneParagraphs = (paragraphs: Paragraphs) =>
-  paragraphs.map((paragraph) =>
-    paragraph.map((word) => ({
-      ...word,
-      keys: word.keys.map((key) => ({ ...key })),
-    })),
-  );
-
 const TypingGame = ({ source }: TypingGameProps) => {
   const paragraphs = Content.parse(source);
   const [paraStore, setParaStore] = createStore(
-    deepCloneParagraphs(paragraphs),
+    Content.deepClone(paragraphs),
   );
 
   const [status, setStatus] = createSignal<TypingStatus>({
@@ -44,7 +36,7 @@ const TypingGame = ({ source }: TypingGameProps) => {
   const pause = () => setStatus({ kind: TypingStatusKind.pause });
 
   const reset = () => {
-    setParaStore(deepCloneParagraphs(paragraphs));
+    setParaStore(Content.deepClone(paragraphs));
     setStatus({ kind: TypingStatusKind.unstart });
     resetInput();
     focus!();
@@ -94,7 +86,7 @@ const TypingGame = ({ source }: TypingGameProps) => {
           onPause={pause}
           onReset={reset}
         />
-        <Keyboard layout="qwerty" ref={(k) => (keyboard = k)} />
+        <Keyboard layout="qwerty" status={status} ref={(k) => (keyboard = k)} />
       </div>
     </Show>
   );
