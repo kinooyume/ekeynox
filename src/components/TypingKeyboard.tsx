@@ -2,6 +2,7 @@ import { For, createSignal, onMount } from "solid-js";
 import kblayout from "./kb-layout.json";
 import { css } from "solid-styled";
 import KeyboardKey from "./KeyboardKey";
+import type { KeyData, KeyMap } from "./TypingMetrics";
 
 type Size = {
   default: number;
@@ -26,6 +27,7 @@ export type TypingKeyboardRef = {
 
 type KeyboardProps = {
   ref?: (ref: TypingKeyboardRef) => void;
+  metrics: KeyMap<KeyData>,
   layout: string;
 };
 
@@ -81,6 +83,7 @@ const Keyboard = (props: KeyboardProps) => {
               {(k) => (
                 <KeyboardKey
                   key={k}
+                  data={props.metrics.get(k[0])}
                   size={getSize(k[0])}
                   pressed={keys().some((ks) => ks === k[0])}
                 />

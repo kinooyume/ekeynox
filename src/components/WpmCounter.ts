@@ -4,6 +4,7 @@ type CreateAverage = (nbrIteration: number, prevAverage: number) => GetAverage;
 const createAverage: CreateAverage = (nbr, average) => (value: number) =>
   average + (value - average) / nbr;
 
+// En vrai, est-ce qu'on utiliserais pas global pour ca ?
 /* KeypressCounter */
 
 const createKeypressCounter = () => {
@@ -11,6 +12,7 @@ const createKeypressCounter = () => {
   let wrongKeys = 0;
 
   const keyPressed = (correct: boolean) => {
+    console.log(correct);
     if (correct) {
       correctKeys++;
     } else {
@@ -18,9 +20,9 @@ const createKeypressCounter = () => {
     }
   };
 
-  const date = Date.now();
+  const date = performance.now();
   const getCurrentWpms = () => {
-    const duration = Date.now() - date;
+    const duration = performance.now() - date;
     return {
       wpm: (correctKeys * (1 / duration) * 60000) / 5,
       raw: ((correctKeys + wrongKeys) * (1 / duration) * 60000) / 5,
@@ -47,6 +49,10 @@ export type PendingCounter = {
   getWpms: () => Wpms;
   pause: () => Counter;
 };
+
+// Pause.Keyssed ==> start the counter
+// et bon bha on peut garder pause dans paused counter
+// qui ne fait rien
 
 type PausedCounter = { getWpms: () => Wpms; resume: () => Counter };
 

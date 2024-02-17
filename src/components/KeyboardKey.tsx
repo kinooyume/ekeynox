@@ -1,5 +1,6 @@
 import { Show } from "solid-js";
 import { css } from "solid-styled";
+import type { KeyData, KeyInfo } from "./TypingMetrics";
 
 type transform = Array<[string, string]>;
 
@@ -29,8 +30,11 @@ const transform = (k: string) => {
 type KeyboardKeyProps = {
   key: Array<string>;
   size: string;
+  data: KeyData | undefined;
   pressed: boolean;
 };
+
+/* faire le truc correct, incorrect, was incorrect */
 
 const KeyboardKey = (props: KeyboardKeyProps) => {
   css`
@@ -99,9 +103,74 @@ const KeyboardKey = (props: KeyboardKeyProps) => {
       right: 16px;
       float: right;
     }
+    .correct {
+      background: #8ff0a4;
+      color: green;
+      box-shadow:
+        2px 2px 7px #7acc8b,
+        -2px -2px 7px #a4ffbd;
+    }
+    .correct.pressed {
+      box-shadow:
+        inset 2px 2px 7px #7acc8b,
+        inset -2px -2px 7px #a4ffbd;
+    }
+    .incorrect {
+      background: #f66151;
+      color: red;
+      box-shadow:
+        2px 2px 7px #d15245,
+        -2px -2px 7px #ff705d;
+    }
+    .incorrect.pressed {
+      box-shadow:
+        inset 2px 2px 7px #d15245,
+        inset -2px -2px 7px #ff705d;
+    }
+    .corrected {
+      background: #ffbe6f;
+      color: orange;
+      box-shadow:
+        2px 2px 7px #d9a25e,
+        -2px -2px 7px #ffdb80;
+    }
+    .corrected.pressed {
+      box-shadow:
+        inset 2px 2px 7px #d9a25e,
+        inset -2px -2px 7px #ffdb80;
+    }
   `;
+
+  /*  
+   *  red: 
+   border-radius: 50px;
+background: #f66151;
+box-shadow:  20px 20px 60px #d15245,
+             -20px -20px 60px #ff705d;
+
+
+            orange:
+border-radius: 50px;
+background: #ffbe6f;
+box-shadow:  20px 20px 60px #d9a25e,
+             -20px -20px 60px #ffdb80;
+    */
+
+  /*
+   *
+   */
+  const status = (info: KeyInfo | undefined) => {
+    if (!info) return "";
+    console.log(info);
+    const correct = info?.correct - info?.deletedCorrect;
+    const incorrect = info?.incorrect - info?.deletedIncorrect;
+    if (incorrect > 0) return "incorrect";
+    if (correct > 0) return info?.incorrect > 0 ? "corrected" : "correct";
+  };
   return (
-    <div class={`${props.pressed ? "pressed" : ""} key ${props.size}`}>
+    <div
+      class={`key ${props.pressed ? "pressed" : ""} ${status(props.data?.info)} ${props.size}`}
+    >
       <Show when={props.key[1] !== undefined}>
         <span class="secondary">{props.key[1]}</span>
       </Show>

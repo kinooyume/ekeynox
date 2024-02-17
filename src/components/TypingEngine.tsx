@@ -35,18 +35,20 @@ export enum TypingStatusKind {
 export enum KeyPressedKind {
   match,
   unmatch,
+  deleted,
 }
 
 export type KeyPressed = [string, string];
 
 type KeyVariant =
   | { kind: KeyPressedKind.match; key: string }
-  | { kind: KeyPressedKind.unmatch; key: string; pressed: string };
+  | { kind: KeyPressedKind.unmatch; key: string; pressed: string }
+  | { kind: KeyPressedKind.deleted; key: string; wasCorrect: boolean };
 
 export type TypingStatus =
   | { kind: TypingStatusKind.unstart }
   | { kind: TypingStatusKind.pending; keyPressed: KeyVariant }
-  | { kind: TypingStatusKind.deleted; wasOn: string }
+  | { kind: TypingStatusKind.deleted; wasOn: string; wasCorrect: boolean }
   | { kind: TypingStatusKind.pause }
   | { kind: TypingStatusKind.over };
 
@@ -198,8 +200,12 @@ const TypingEngine = (props: TypingEngineProps) => {
     props.onKeyDown(event.key);
     if (event.key === "Backspace") {
       props.setStatus({
-        kind: TypingStatusKind.deleted,
-        wasOn: getCurrent.key().key,
+        kind: TypingStatusKind.pending,
+        keyPressed: {
+          kind: KeyPressedKind.deleted,
+          key: getCurrent.key().key,
+          wasCorrect: getCurrent.key().status === KeyStatus.valid,
+        },
       });
       prev();
     } else if (event.key.length === 1 || event.key === "Enter") {
@@ -207,7 +213,6 @@ const TypingEngine = (props: TypingEngineProps) => {
         kind: TypingStatusKind.pending,
         keyPressed: getKeyPressed(event.key),
       });
-
       next();
     }
   };
