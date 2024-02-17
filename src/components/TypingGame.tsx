@@ -8,15 +8,12 @@ import TypingNav from "./TypingNav.tsx";
 import Keyboard, { type TypingKeyboardRef } from "./TypingKeyboard.tsx";
 import CreateTypingMetrics, {
   defaultMetrics,
-  type KeyMetrics,
-  type KeyResult,
   type Metrics,
 } from "./TypingMetrics.ts";
 import TypingMetrics from "./TypingMetrics.tsx";
-import { ReactiveMap } from "@solid-primitives/map";
 
 import { css } from "solid-styled";
-import { Show, createEffect, createSignal } from "solid-js";
+import { Show, createMemo, createSignal } from "solid-js";
 import { createStore } from "solid-js/store";
 
 type TypingGameProps = { source: string };
@@ -27,12 +24,14 @@ const TypingGame = ({ source }: TypingGameProps) => {
   const paragraphs = Content.parse(source);
   const [paraStore, setParaStore] = createStore(Content.deepClone(paragraphs));
 
+  // NOTE: surement refaire un store avec clef de clavier du coup
   const [status, setStatus] = createSignal<TypingStatus>({
     kind: TypingStatusKind.unstart,
   });
+
+  // Accuracy ca serra la meme chose, avec des intervals et tout ca
   const [wpm, setWpm] = createSignal(0);
   const [raw, setRaw] = createSignal(0);
-  const keyMetrics : KeyMetrics = new ReactiveMap<string, Array<KeyResult>>();
 
   const pause = () => setStatus({ kind: TypingStatusKind.pause });
 
@@ -47,10 +46,10 @@ const TypingGame = ({ source }: TypingGameProps) => {
   let focus: () => void;
   let keyboard: TypingKeyboardRef;
 
-  const metrics = CreateTypingMetrics({ setWpm, setRaw, keyMetrics });
+  const updateMetrics = CreateTypingMetrics({setWpm, setRaw})
 
-  createEffect(
-    (met: Metrics) => metrics(met, { status: status() }),
+  const metrics = createMemo(
+    (met: Metrics) => updateMetrics(met, { status: status() }),
     defaultMetrics,
   );
 
@@ -65,7 +64,7 @@ const TypingGame = ({ source }: TypingGameProps) => {
     <Show
       when={status().kind !== TypingStatusKind.over}
       fallback={
-        <TypingMetrics wpm={wpm()} raw={raw()} keyMetrics={keyMetrics} />
+        <TypingMetrics wpm={wpm()} raw={raw()} metrics={metrics()} />
       }
     >
       <div class="mega" onClick={() => focus()}>
@@ -87,7 +86,7 @@ const TypingGame = ({ source }: TypingGameProps) => {
           onPause={pause}
           onReset={reset}
         />
-        <Keyboard layout="qwerty" ref={(k) => (keyboard = k)} />
+        <Keyboard metrics={metrics().byKey} layout="qwerty" ref={(k) => (keyboard = k)} />
       </div>
     </Show>
   );

@@ -1,31 +1,21 @@
 import { createEffect, createSignal, For } from "solid-js";
 import {
-  calculateKeyAccuracy,
-  createKeyInfo,
   type KeyInfo,
-  type KeyInfoPack,
-  type KeyMetrics,
+  type Metrics,
 } from "./TypingMetrics";
 import { css } from "solid-styled";
 
 type TypingMetricsProps = {
   wpm: number;
   raw: number;
-  keyMetrics: KeyMetrics;
+  metrics: Metrics;
 };
 
 const pourcent = (info: KeyInfo) =>
   ((info.correct / info.total) * 100).toFixed(2);
 
 const TypingMetrics = (props: TypingMetricsProps) => {
-  const [keyInfos, setKeyInfos] = createSignal<KeyInfoPack>([
-    createKeyInfo(),
-    {},
-  ]);
-
-  createEffect(() => {
-    setKeyInfos(calculateKeyAccuracy(props.keyMetrics));
-  });
+  console.log(props.metrics);
   css`
     .accuracyPack {
       display: flex;
@@ -66,17 +56,8 @@ const TypingMetrics = (props: TypingMetricsProps) => {
         <p class="card speed">Raw: {props.raw.toFixed(2)}</p>
         <h2>Typing Accurry</h2>
         <h3>Real Accuracy</h3>
-        <p class="card">{pourcent(keyInfos()[0])}%</p>
         <h2>Success by key</h2>
         <div class="accuracyPack">
-          <For each={Object.keys(keyInfos()[1])}>
-            {(key) => (
-              <div class="card accuracy">
-                <span class="title">{key === " " ? "Space" : key}</span>
-                <span class="value">{pourcent(keyInfos()[1][key])}%</span>
-              </div>
-            )}
-          </For>
         </div>
       </div>
     </div>
