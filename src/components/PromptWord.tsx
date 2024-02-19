@@ -1,12 +1,10 @@
 import { css } from "solid-styled";
-import { For, Show, createEffect, createSignal, on } from "solid-js";
-import type { Accessor } from "solid-js";
-import WpmCounter, { CounterStatus, type Counter } from "./WpmCounter.ts";
+import { For, Show, createSignal } from "solid-js";
 
 import type { KeyProps } from "./PromptKey.tsx";
 import Key from "./PromptKey.tsx";
 
-export enum WordStatus { // TypingStatusKind ?
+export enum WordStatus { 
   unstart,
   pending,
   pause,
@@ -49,7 +47,7 @@ const Word = (props: WordProps) => {
     <div class="word">
       <div class={`${props.status}  ${props.focus ? "focus" : ""} keys`}>
         <For each={props.keys}>
-          {(key) => <Key key={key.key} status={key.status} />}
+          {(key) => <Key key={key.key} status={key.status} focus={key.focus} />}
         </For>
       </div>
       <Show when={props.keys.length > 5 && props.status === WordStatus.over}>
