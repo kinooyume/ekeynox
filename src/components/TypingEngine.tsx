@@ -2,10 +2,11 @@ import { createSignal, onCleanup, onMount, type Setter } from "solid-js";
 import { WordStatus } from "./PromptWord.tsx";
 import { type Paragraphs } from "./Content.ts";
 import type { SetStoreFunction } from "solid-js/store";
-import getKeyMetrics, {
+import {
   KeyStatus,
   PromptKeyStatus,
   type KeyTuple,
+  getKeyMetrics,
 } from "./KeyMetrics.ts";
 
 /* Typing Engine
