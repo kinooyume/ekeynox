@@ -141,24 +141,6 @@ const KeyboardKey = (props: KeyboardKeyProps) => {
     }
   `;
 
-  /*  
-   *  red: 
-   border-radius: 50px;
-background: #f66151;
-box-shadow:  20px 20px 60px #d15245,
-             -20px -20px 60px #ff705d;
-
-
-            orange:
-border-radius: 50px;
-background: #ffbe6f;
-box-shadow:  20px 20px 60px #d9a25e,
-             -20px -20px 60px #ffdb80;
-    */
-
-  /*
-   *
-   */
   const status = (info: KeyInfo | undefined) => {
     if (!info) return "";
     console.log(info);
@@ -167,6 +149,7 @@ box-shadow:  20px 20px 60px #d9a25e,
     if (incorrect > 0) return "incorrect";
     if (correct > 0) return info?.incorrect > 0 ? "corrected" : "correct";
   };
+
   return (
     <div
       class={`key ${props.pressed ? "pressed" : ""} ${status(props.data?.info)} ${props.size}`}
