@@ -1,15 +1,8 @@
 import { css } from "solid-styled";
 import { createSignal, createEffect } from "solid-js";
+import { PromptKeyStatus } from "./KeyMetrics";
 
-export enum KeyStatus {
-  unset = "unset",
-  current = "current",
-
-  valid = "valid",
-  invalid = "invalid",
-}
-
-export type KeyProps = { key: string; status: KeyStatus };
+export type KeyProps = { key: string; status: PromptKeyStatus; focus: boolean };
 
 const Key = (props: KeyProps) => {
   const [wasInvalid, setWasInvalid] = createSignal(false);
@@ -17,26 +10,26 @@ const Key = (props: KeyProps) => {
   const transform = (char: string) => (char === "Enter" ? "↵" : char);
 
   createEffect(() => {
-    if (props.status === KeyStatus.invalid) setWasInvalid(true);
+    if (props.status === PromptKeyStatus.incorrect) setWasInvalid(true);
   });
 
   css`
     span {
       white-space: pre;
     }
-    span.valid {
+    span.correct {
       color: green;
       background-color: lightgreen;
     }
-    span.invalid {
+    span.incorrect {
       color: red;
       background-color: lightcoral;
     }
-    span.wasInvalid.valid {
+    span.wasInvalid.correct {
       color: orange;
       background-color: lightyellow;
     }
-    span.current {
+    span.focus {
       color: blue;
       background-color: lightblue;
     }
@@ -45,7 +38,9 @@ const Key = (props: KeyProps) => {
     }
   `;
   return (
-    <span class={`${props.status} ${wasInvalid() ? "wasInvalid" : ""} ${special}`}>
+    <span
+      class={`${props.status} ${props.focus ? "focus" : ""} ${wasInvalid() ? "wasInvalid" : ""} ${special}`}
+    >
       {transform(props.key)}
     </span>
   );
