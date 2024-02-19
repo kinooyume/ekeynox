@@ -1,8 +1,12 @@
 import { createSignal, onCleanup, onMount, type Setter } from "solid-js";
 import { WordStatus } from "./PromptWord.tsx";
-import { KeyStatus } from "./PromptKey.tsx";
 import { type Paragraphs } from "./Content.ts";
 import type { SetStoreFunction } from "solid-js/store";
+import getKeyMetrics, {
+  KeyStatus,
+  PromptKeyStatus,
+  type KeyTuple,
+} from "./KeyMetrics.ts";
 
 /* Typing Engine
 
@@ -40,15 +44,9 @@ export enum KeyPressedKind {
 
 export type KeyPressed = [string, string];
 
-type KeyVariant =
-  | { kind: KeyPressedKind.match; key: string }
-  | { kind: KeyPressedKind.unmatch; key: string; pressed: string }
-  | { kind: KeyPressedKind.deleted; key: string; wasCorrect: boolean };
-
 export type TypingStatus =
   | { kind: TypingStatusKind.unstart }
-  | { kind: TypingStatusKind.pending; keyPressed: KeyVariant }
-  | { kind: TypingStatusKind.deleted; wasOn: string; wasCorrect: boolean }
+  | { kind: TypingStatusKind.pending; keyMetrics: KeyTuple; timestamp: number }
   | { kind: TypingStatusKind.pause }
   | { kind: TypingStatusKind.over };
 
@@ -60,16 +58,10 @@ const TypingEngine = (props: TypingEngineProps) => {
   const [currentWord, setCurrentWord] = createSignal(0);
   const [currentKey, setCurrentKey] = createSignal(0);
 
+  /* Store Management */
   const currentFocus = () => {
     props.setParagraphs(currentParagraph(), currentWord(), "focus", true);
-    props.setParagraphs(
-      currentParagraph(),
-      currentWord(),
-      "keys",
-      currentKey(),
-      "status",
-      KeyStatus.current,
-    );
+    setCurrent.keyFocus(true);
   };
 
   const getCurrent = {
@@ -84,7 +76,7 @@ const TypingEngine = (props: TypingEngineProps) => {
   };
 
   const setCurrent = {
-    keyStatus: (status: KeyStatus) => {
+    keyStatus: (status: PromptKeyStatus) => {
       props.setParagraphs(
         currentParagraph(),
         currentWord(),
@@ -94,18 +86,30 @@ const TypingEngine = (props: TypingEngineProps) => {
         status,
       );
     },
+    keyFocus: (focus: boolean) => {
+      props.setParagraphs(
+        currentParagraph(),
+        currentWord(),
+        "keys",
+        currentKey(),
+        "focus",
+        focus,
+      );
+    },
     wordStatus: (status: WordStatus, focus: boolean) => {
       props.setParagraphs(currentParagraph(), currentWord(), "status", status);
       props.setParagraphs(currentParagraph(), currentWord(), "focus", focus);
     },
   };
 
+  /* *** */
+
   const nextWord = () => {
     setCurrent.wordStatus(WordStatus.over, false);
     setCurrentWord(currentWord() + 1);
     setCurrentKey(0);
     setCurrent.wordStatus(WordStatus.pending, true);
-    setCurrent.keyStatus(KeyStatus.current);
+    setCurrent.keyFocus(true);
   };
 
   const nextParagraph = () => {
@@ -114,13 +118,13 @@ const TypingEngine = (props: TypingEngineProps) => {
     setCurrentWord(0);
     setCurrentKey(0);
     setCurrent.wordStatus(WordStatus.pending, true);
-    setCurrent.keyStatus(KeyStatus.current);
+    setCurrent.keyFocus(true);
   };
 
   const next = () => {
     if (currentKey() < getCurrent.nbrKeys()) {
       setCurrentKey(currentKey() + 1);
-      setCurrent.keyStatus(KeyStatus.current);
+      setCurrent.keyFocus(true);
     } else if (currentWord() < getCurrent.nbrWords()) {
       nextWord();
     } else if (currentParagraph() < getCurrent.nbrParagraphs()) {
@@ -142,28 +146,28 @@ const TypingEngine = (props: TypingEngineProps) => {
 
   const prevWord = () => {
     setCurrent.wordStatus(WordStatus.unstart, false);
-    setCurrent.keyStatus(KeyStatus.unset);
+    setCurrent.keyStatus(PromptKeyStatus.unset);
     setCurrentWord(currentWord() - 1);
     setCurrentKey(getCurrent.nbrKeys());
     setCurrent.wordStatus(WordStatus.pending, true);
-    setCurrent.keyStatus(KeyStatus.current);
+    setCurrent.keyFocus(true);
   };
 
   const prevParagraph = () => {
     setCurrent.wordStatus(WordStatus.unstart, false);
-    setCurrent.keyStatus(KeyStatus.unset);
+    setCurrent.keyStatus(PromptKeyStatus.unset);
     setCurrentParagraph(currentParagraph() - 1);
     setCurrentWord(getCurrent.nbrWords());
     setCurrentKey(getCurrent.nbrKeys());
     setCurrent.wordStatus(WordStatus.pending, true);
-    setCurrent.keyStatus(KeyStatus.current);
+    setCurrent.keyFocus(true);
   };
 
   const prev = () => {
     if (currentKey() > 0) {
-      setCurrent.keyStatus(KeyStatus.unset);
+      setCurrent.keyStatus(PromptKeyStatus.unset);
       setCurrentKey(currentKey() - 1);
-      setCurrent.keyStatus(KeyStatus.current);
+      setCurrent.keyFocus(true);
     } else if (currentWord() > 0) {
       prevWord();
     } else if (currentParagraph() > 0) {
@@ -176,43 +180,29 @@ const TypingEngine = (props: TypingEngineProps) => {
 
   /* Key Handlers */
 
-  // side effect, setCurrentKeyStatus
-  const getKeyPressed = (key: string): KeyVariant => {
-    const expected = getCurrent.key();
-    if (key === expected.key) {
-      setCurrent.keyStatus(KeyStatus.valid);
-      return {
-        kind: KeyPressedKind.match,
-        key: expected.key,
-      };
-      // props.data[currentWord()].keyPressed(true); // word
-    } else {
-      setCurrent.keyStatus(KeyStatus.invalid);
-      return {
-        kind: KeyPressedKind.unmatch,
-        key: expected.key,
-        pressed: key,
-      };
-    }
-  };
-
   const handleKeypress = (event: KeyboardEvent) => {
+    const timestamp = performance.now();
     props.onKeyDown(event.key);
-    if (event.key === "Backspace") {
-      props.setStatus({
-        kind: TypingStatusKind.pending,
-        keyPressed: {
-          kind: KeyPressedKind.deleted,
-          key: getCurrent.key().key,
-          wasCorrect: getCurrent.key().status === KeyStatus.valid,
-        },
-      });
+    const keyMetrics = getKeyMetrics({
+      typed: event.key,
+      expected: getCurrent.key().key,
+      status: getCurrent.key().status,
+    });
+    props.setStatus({
+      kind: TypingStatusKind.pending,
+      keyMetrics,
+      timestamp,
+    });
+    if (keyMetrics[1].kind === KeyStatus.ignore) {
+      return;
+    } else if (keyMetrics[1].kind === KeyStatus.deleted) {
       prev();
-    } else if (event.key.length === 1 || event.key === "Enter") {
-      props.setStatus({
-        kind: TypingStatusKind.pending,
-        keyPressed: getKeyPressed(event.key),
-      });
+    } else {
+      if (keyMetrics[1].kind === KeyStatus.match) {
+        setCurrent.keyStatus(PromptKeyStatus.correct);
+      } else {
+        setCurrent.keyStatus(PromptKeyStatus.incorrect);
+      }
       next();
     }
   };
