@@ -1,8 +1,9 @@
 import { WordStatus } from "./PromptWord.tsx";
-import { KeyStatus } from "./PromptKey.tsx";
+import { PromptKeyStatus } from "./KeyMetrics.ts";
 
 export type Metakey = {
-  status: KeyStatus;
+  status: PromptKeyStatus;
+  focus: boolean;
   key: string;
 };
 
@@ -21,7 +22,8 @@ const Enter = () => ({
   keys: [
     {
       key: "Enter",
-      status: KeyStatus.unset,
+      status: PromptKeyStatus.unset,
+      focus: false,
     },
   ],
 });
@@ -32,7 +34,9 @@ export const parse: Parser = (source) => {
     line.split(/(\s+)/).map((word) => ({
       focus: false,
       status: WordStatus.unstart,
-      keys: word.split("").map((key) => ({ key, status: KeyStatus.unset })),
+      keys: word
+        .split("")
+        .map((key) => ({ key, status: PromptKeyStatus.unset, focus: false })),
     })),
   );
   if (paragraphs.length > 1) {
@@ -53,5 +57,5 @@ const deepClone = (paragraphs: Paragraphs) =>
 
 export default {
   parse,
-  deepClone
+  deepClone,
 };
