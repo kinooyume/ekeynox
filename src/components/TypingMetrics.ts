@@ -5,29 +5,10 @@ import KeypressMetrics, {
   type PendingKeypressMetrics,
   type PausedKeypressMetrics,
   type KeypressMetricsProjection,
+  type TypingProjection,
 } from "./KeypressMetrics";
 import type { LinkedList } from "./List";
 import List from "./List";
-
-export type TypingProjection = {
-  correct: number;
-  incorrect: number;
-  extra: number;
-  missed: number;
-  deletedCorrect: number;
-  deletedIncorrect: number;
-  total: number;
-};
-
-const createTypingProjection = () => ({
-  correct: 0,
-  incorrect: 0,
-  deletedCorrect: 0,
-  deletedIncorrect: 0,
-  extra: 0,
-  missed: 0,
-  total: 0,
-});
 
 export type TypingMetrics = {
   projection: TypingProjection;
@@ -35,7 +16,7 @@ export type TypingMetrics = {
 };
 
 const createTypingMetrics = (): TypingMetrics => ({
-  projection: createTypingProjection(),
+  projection: KeypressMetrics.createTypingProjection(),
   logs: null,
 });
 
@@ -43,12 +24,22 @@ type TypingMetricsProps = {
   status: TypingStatus;
 };
 
-type TypingMetricsPreview = {
+export type TypingMetricsState = (props: TypingMetricsProps) => TypingMetricsState;
+
+export type TypingMetricsPreview = {
   wpms: [number, number];
   accuracies: [number, number];
 };
 
-const createTypingMetricsState = (setPreview: Setter<TypingMetricsPreview>) => {
+const createTypingMetricsPreview = (): TypingMetricsPreview => ({
+  wpms: [0, 0],
+  accuracies: [0, 0],
+});
+
+
+const createTypingMetricsState = (
+  setPreview: Setter<TypingMetricsPreview>,
+): TypingMetricsState => {
   type PendingMetricsProps = {
     keypressMetrics: PendingKeypressMetrics;
     metrics: TypingMetrics;
@@ -56,7 +47,7 @@ const createTypingMetricsState = (setPreview: Setter<TypingMetricsPreview>) => {
   };
   const pending =
     (props: PendingMetricsProps) =>
-    ({ status }: TypingMetricsProps) => {
+    ({ status }: TypingMetricsProps): TypingMetricsState => {
       switch (status.kind) {
         case TypingStatusKind.pause:
           clearInterval(props.interval);
@@ -78,6 +69,7 @@ const createTypingMetricsState = (setPreview: Setter<TypingMetricsPreview>) => {
             metrics: props.metrics,
           });
       }
+      return pending(props);
     };
 
   type pausedMetricsProps = {
@@ -87,7 +79,7 @@ const createTypingMetricsState = (setPreview: Setter<TypingMetricsPreview>) => {
 
   const paused =
     ({ keypressMetrics, metrics }: pausedMetricsProps) =>
-    ({ status }: TypingMetricsProps) => {
+    ({ status }: TypingMetricsProps): TypingMetricsState => {
       switch (status.kind) {
         case TypingStatusKind.pending:
           const pendingKeypressMetrics = keypressMetrics.resume();
@@ -98,10 +90,7 @@ const createTypingMetricsState = (setPreview: Setter<TypingMetricsPreview>) => {
               wpms: KeypressMetricsProjection.wpms,
               accuracies: KeypressMetricsProjection.accuracies,
             });
-            metrics.logs = List.make(
-              metrics.logs,
-              KeypressMetricsProjection,
-            );
+            metrics.logs = List.make(metrics.logs, KeypressMetricsProjection);
           };
 
           pendingKeypressMetrics.event([
@@ -115,6 +104,7 @@ const createTypingMetricsState = (setPreview: Setter<TypingMetricsPreview>) => {
             metrics,
           });
       }
+      return paused({ keypressMetrics, metrics });
     };
 
   const create = () =>
@@ -126,4 +116,7 @@ const createTypingMetricsState = (setPreview: Setter<TypingMetricsPreview>) => {
   return create();
 };
 
-export { createTypingMetricsState, createTypingProjection };
+export {
+  createTypingMetricsState,
+  createTypingMetricsPreview,
+};

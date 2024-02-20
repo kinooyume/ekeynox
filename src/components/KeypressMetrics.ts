@@ -1,10 +1,6 @@
 import { KeyStatus, PromptKeyStatus, type KeyTimedTuple } from "./KeyMetrics";
 import type { LinkedList } from "./List";
 import List from "./List";
-import {
-  createTypingProjection,
-  type TypingProjection,
-} from "./TypingMetrics";
 
 /* Average */
 type GetAverage = (value: number) => number;
@@ -14,6 +10,26 @@ const createAverage: CreateAverage = (nbr, average) => (value: number) =>
   average + (value - average) / nbr;
 
 /* *** */
+
+export type TypingProjection = {
+  correct: number;
+  incorrect: number;
+  extra: number;
+  missed: number;
+  deletedCorrect: number;
+  deletedIncorrect: number;
+  total: number;
+};
+
+const createTypingProjection = () => ({
+  correct: 0,
+  incorrect: 0,
+  deletedCorrect: 0,
+  deletedIncorrect: 0,
+  extra: 0,
+  missed: 0,
+  total: 0,
+});
 
 export type KeypressMetricsProjection = {
   wpms: [number, number];
@@ -147,5 +163,5 @@ const defaultPausedKeypressMetrics: PausedKeypressMetrics = {
 
 export default {
   new: defaultPausedKeypressMetrics,
-  defaultProjection: defaultProjection,
+  createTypingProjection,
 };
