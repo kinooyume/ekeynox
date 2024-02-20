@@ -25,7 +25,8 @@ type KeyMetrics =
   | { kind: KeyStatus.deleted; status: PromptKeyStatus }
   | { kind: KeyStatus.ignore };
 
-export type KeyTuple = [string, KeyMetrics];
+export type KeyTuple = [key: string, KeyMetrics];
+export type KeyTimedTuple = [key: string, KeyMetrics, timestamps: number];
 
 type KeyMetricsProps = {
   typed: string;
