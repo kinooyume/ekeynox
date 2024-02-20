@@ -33,7 +33,7 @@ const keypressProjectionHandler = () => {
 
   const start = performance.now();
 
-  const getProjection = () : KeypressMetricsProjection => {
+  const getProjection = (): KeypressMetricsProjection => {
     const stop = performance.now();
     const duration = stop - start;
     let sortedLogs = null;
@@ -114,7 +114,7 @@ export type PausedKeypressMetrics = {
 // NOTE: broken play/pause, act like a reset
 // TODO: Multiple Session Handler (play/pause)
 
-const pendingKeypressMetrics = () : PendingKeypressMetrics => {
+const pendingKeypressMetrics = (): PendingKeypressMetrics => {
   const handler = keypressProjectionHandler();
   return {
     event: handler.event,
@@ -135,5 +135,5 @@ const defaultPausedKeypressMetrics: PausedKeypressMetrics = {
 };
 
 export default {
-  new: defaultPausedKeypressMetrics.resume,
+  new: defaultPausedKeypressMetrics,
 };
