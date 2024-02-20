@@ -4,9 +4,6 @@ type CreateAverage = (nbrIteration: number, prevAverage: number) => GetAverage;
 const createAverage: CreateAverage = (nbr, average) => (value: number) =>
   average + (value - average) / nbr;
 
-// En vrai, est-ce qu'on utiliserais pas global pour ca ?
-/* KeypressCounter */
-
 const createKeypressCounter = () => {
   let correctKeys = 0;
   let wrongKeys = 0;
@@ -23,94 +20,60 @@ const createKeypressCounter = () => {
   const date = performance.now();
   const getCurrentWpms = () => {
     const duration = performance.now() - date;
-    return {
-      wpm: (correctKeys * (1 / duration) * 60000) / 5,
-      raw: ((correctKeys + wrongKeys) * (1 / duration) * 60000) / 5,
-    };
+    return [
+      (correctKeys * (1 / duration) * 60000) / 5,
+      ((correctKeys + wrongKeys) * (1 / duration) * 60000) / 5,
+    ];
   };
   return { keyPressed, getCurrentWpms };
 };
 
-/* *** */
-
-type Wpms = { wpm: number; raw: number };
-
-export enum CounterStatus {
-  paused,
-  pending,
-}
-
-export type Counter =
-  | { kind: CounterStatus.paused; action: PausedCounter }
-  | { kind: CounterStatus.pending; action: PendingCounter };
+type Wpms = [number, number];
 
 export type PendingCounter = {
   keyPressed: (correct: boolean) => void;
   getWpms: () => Wpms;
-  pause: () => Counter;
+  pause: () => PausedCounter;
 };
 
-// Pause.Keyssed ==> start the counter
-// et bon bha on peut garder pause dans paused counter
-// qui ne fait rien
+export type PausedCounter = {
+  getWpms: () => Wpms;
+  resume: () => PendingCounter;
+};
 
-type PausedCounter = { getWpms: () => Wpms; resume: () => Counter };
-
-type PendingVariant = (counter: PendingCounter) => Counter;
-const pendingVariant: PendingVariant = (action) => ({
-  kind: CounterStatus.pending,
-  action: action,
-});
-
-type PausedVariant = (counter: PausedCounter) => Counter;
-const pausedVariant: PausedVariant = (action) => ({
-  kind: CounterStatus.paused,
-  action: action,
-});
-
-type NestedWpms = { wpm: GetAverage; raw: GetAverage };
-type WpmCounter = (iterNbr: number, wpms: NestedWpms) => Counter; // wpmsAverage
+type NestedWpms = [GetAverage, GetAverage];
+type WpmCounter = (iterNbr: number, wpms: NestedWpms) => PendingCounter; // wpmsAverage
 
 const wpmCounter: WpmCounter = (iterNbr, averages) => {
   const keypress = createKeypressCounter();
-  const getWpms = () => {
+  const getWpms = (): Wpms => {
     const current = keypress.getCurrentWpms();
-    return {
-      wpm: averages.wpm(current.wpm),
-      raw: averages.raw(current.raw),
-    };
+    return [averages[0](current[0]), averages[1](current[1])];
   };
-  return pendingVariant({
+  return {
     keyPressed: keypress.keyPressed,
     getWpms,
     pause: () => {
       const wpms = getWpms();
-      return pausedVariant({
+      return {
         getWpms: () => wpms,
         resume: () => {
-          return wpmCounter(iterNbr++, {
-            wpm: createAverage(iterNbr, wpms.wpm),
-            raw: createAverage(iterNbr, wpms.raw),
-          });
+          return wpmCounter(iterNbr++, [
+            createAverage(iterNbr, wpms[0]),
+            createAverage(iterNbr, wpms[1]),
+          ]);
         },
-      });
+      };
     },
-  });
+  };
 };
 
-const defaultWpms: NestedWpms = {
-  wpm: (n) => n,
-  raw: (n) => n,
-};
-
-const initWpms = () => ({
-  wpm: 0,
-  raw: 0,
-});
+const defaultWpms: NestedWpms = [(n) => n, (n) => n];
+const initWpms = (): Wpms => [0, 0];
 
 export default {
-  create: pausedVariant({
+  create: {
     getWpms: initWpms,
     resume: () => wpmCounter(1, defaultWpms),
-  }),
+  },
 };
