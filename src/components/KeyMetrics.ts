@@ -39,23 +39,20 @@ const getKeyMetrics = ({
   expected,
   status,
 }: KeyMetricsProps): KeyTuple => {
-  let metrics: KeyMetrics;
   if (typed === "Backspace") {
-    metrics = { kind: KeyStatus.deleted, status };
+    return [typed, { kind: KeyStatus.deleted, status }];
   } else if (typed.length === 1 || typed === "Enter") {
     if (expected === typed) {
-      metrics = { kind: KeyStatus.match };
+      return [expected, { kind: KeyStatus.match }];
     } else if (blankCharacters.includes(expected)) {
-      metrics = { kind: KeyStatus.extra };
+      return [typed, { kind: KeyStatus.extra }];
     } else if (blankCharacters.includes(typed)) {
-      metrics = { kind: KeyStatus.missed, expected };
+      return [expected, { kind: KeyStatus.missed, expected }];
     } else {
-      metrics = { kind: KeyStatus.unmatch, expected };
+      return [expected, { kind: KeyStatus.unmatch, expected }];
     }
-  } else {
-    metrics = { kind: KeyStatus.ignore };
   }
-  return [typed, metrics];
+  return [typed, { kind: KeyStatus.ignore }];
 };
 
 export type KeyMetricsProjection = {
