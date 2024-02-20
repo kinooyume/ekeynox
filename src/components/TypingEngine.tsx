@@ -107,6 +107,7 @@ const TypingEngine = (props: TypingEngineProps) => {
 
   const nextWord = () => {
     setCurrent.wordStatus(WordStatus.over, false);
+    setCurrent.keyFocus(false);
     setCurrentWord(currentWord() + 1);
     setCurrentKey(0);
     setCurrent.wordStatus(WordStatus.pending, true);
@@ -115,6 +116,7 @@ const TypingEngine = (props: TypingEngineProps) => {
 
   const nextParagraph = () => {
     setCurrent.wordStatus(WordStatus.over, false);
+    setCurrent.keyFocus(false);
     setCurrentParagraph(currentParagraph() + 1);
     setCurrentWord(0);
     setCurrentKey(0);
@@ -124,6 +126,7 @@ const TypingEngine = (props: TypingEngineProps) => {
 
   const next = () => {
     if (currentKey() < getCurrent.nbrKeys()) {
+      setCurrent.keyFocus(false);
       setCurrentKey(currentKey() + 1);
       setCurrent.keyFocus(true);
     } else if (currentWord() < getCurrent.nbrWords()) {
@@ -148,6 +151,7 @@ const TypingEngine = (props: TypingEngineProps) => {
   const prevWord = () => {
     setCurrent.wordStatus(WordStatus.unstart, false);
     setCurrent.keyStatus(PromptKeyStatus.unset);
+    setCurrent.keyFocus(false);
     setCurrentWord(currentWord() - 1);
     setCurrentKey(getCurrent.nbrKeys());
     setCurrent.wordStatus(WordStatus.pending, true);
@@ -157,6 +161,7 @@ const TypingEngine = (props: TypingEngineProps) => {
   const prevParagraph = () => {
     setCurrent.wordStatus(WordStatus.unstart, false);
     setCurrent.keyStatus(PromptKeyStatus.unset);
+    setCurrent.keyFocus(false);
     setCurrentParagraph(currentParagraph() - 1);
     setCurrentWord(getCurrent.nbrWords());
     setCurrentKey(getCurrent.nbrKeys());
@@ -167,6 +172,7 @@ const TypingEngine = (props: TypingEngineProps) => {
   const prev = () => {
     if (currentKey() > 0) {
       setCurrent.keyStatus(PromptKeyStatus.unset);
+      setCurrent.keyFocus(false);
       setCurrentKey(currentKey() - 1);
       setCurrent.keyFocus(true);
     } else if (currentWord() > 0) {
