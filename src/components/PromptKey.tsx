@@ -39,7 +39,7 @@ const Key = (props: KeyProps) => {
   `;
   return (
     <span
-      class={`${props.status} ${props.focus ? "focus" : ""} ${wasInvalid() ? "wasInvalid" : ""} ${special}`}
+      class={`${props.focus ? "focus" : props.status} ${wasInvalid() ? "wasInvalid" : ""} ${special}`}
     >
       {transform(props.key)}
     </span>
