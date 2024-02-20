@@ -109,7 +109,7 @@ export type PendingKeypressMetrics = {
 };
 
 export type PausedKeypressMetrics = {
-  getProjection: () => KeypressMetricsProjection | null;
+  getProjection: () => KeypressMetricsProjection;
   resume: () => PendingKeypressMetrics;
 };
 
@@ -131,8 +131,16 @@ const pendingKeypressMetrics = (): PendingKeypressMetrics => {
   };
 };
 
+const defaultProjection: KeypressMetricsProjection = {
+  wpms: [0, 0],
+  accuracies: [0, 0],
+  projection: createTypingProjection(),
+  logs: null,
+  start: 0,
+  stop: 0,
+};
 const defaultPausedKeypressMetrics: PausedKeypressMetrics = {
-  getProjection: () => null,
+  getProjection: () => defaultProjection,
   resume: pendingKeypressMetrics,
 };
 
