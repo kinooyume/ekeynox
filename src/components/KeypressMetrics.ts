@@ -20,6 +20,7 @@ export type KeypressMetricsProjection = {
   accuracies: [number, number];
   projection: TypingProjection;
   logs: LinkedList<KeyTimedTuple> | null;
+  start: number;
   stop: number;
 };
 
@@ -92,6 +93,7 @@ const keypressProjectionHandler = () => {
       accuracies: [accuracy, rawAccuracy],
       projection: Object.assign({}, projection),
       logs: sortedLogs,
+      start,
       stop,
     };
   };
