@@ -6,22 +6,8 @@ import KeypressMetrics, {
   type PausedKeypressMetrics,
   type KeypressMetricsProjection,
 } from "./KeypressMetrics";
-
-/* LinkedList */
-
-export type LinkedList<T> = {
-  value: T;
-  next: LinkedList<T> | null;
-};
-
-const makeLinkedList = <T>(
-  list: LinkedList<T> | null,
-  value: T,
-): LinkedList<T> => {
-  return { value, next: list };
-};
-
-/* *** */
+import type { LinkedList } from "./List";
+import List from "./List";
 
 export type TypingProjection = {
   correct: number;
@@ -85,6 +71,12 @@ const createTypingMetricsState = (setPreview: Setter<TypingMetricsPreview>) => {
             status.timestamp,
           ] as KeyTimedTuple);
           return pending(props);
+        case TypingStatusKind.over:
+          clearInterval(props.interval);
+          return paused({
+            keypressMetrics: props.keypressMetrics.pause(),
+            metrics: props.metrics,
+          });
       }
     };
 
@@ -106,7 +98,7 @@ const createTypingMetricsState = (setPreview: Setter<TypingMetricsPreview>) => {
               wpms: KeypressMetricsProjection.wpms,
               accuracies: KeypressMetricsProjection.accuracies,
             });
-            metrics.logs = makeLinkedList(
+            metrics.logs = List.make(
               metrics.logs,
               KeypressMetricsProjection,
             );
@@ -134,4 +126,4 @@ const createTypingMetricsState = (setPreview: Setter<TypingMetricsPreview>) => {
   return create();
 };
 
-export { createTypingMetricsState, makeLinkedList, createTypingProjection };
+export { createTypingMetricsState, createTypingProjection };

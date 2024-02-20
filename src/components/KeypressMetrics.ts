@@ -1,7 +1,7 @@
 import { KeyStatus, PromptKeyStatus, type KeyTimedTuple } from "./KeyMetrics";
+import type { LinkedList } from "./List";
+import List from "./List";
 import {
-  makeLinkedList,
-  type LinkedList,
   createTypingProjection,
   type TypingProjection,
 } from "./TypingMetrics";
@@ -29,7 +29,7 @@ const keypressProjectionHandler = () => {
   let logs: LinkedList<KeyTimedTuple> | null = null;
 
   const event = (key: KeyTimedTuple) => {
-    logs = makeLinkedList(logs, key);
+    logs = List.make(logs, key);
   };
 
   const start = performance.now();
@@ -63,7 +63,7 @@ const keypressProjectionHandler = () => {
           break;
       }
       projection.total++;
-      sortedLogs = makeLinkedList(sortedLogs, node.value);
+      sortedLogs = List.make(sortedLogs, node.value);
       node = node.next;
     }
 
@@ -139,6 +139,7 @@ const defaultProjection: KeypressMetricsProjection = {
   start: 0,
   stop: 0,
 };
+
 const defaultPausedKeypressMetrics: PausedKeypressMetrics = {
   getProjection: () => defaultProjection,
   resume: pendingKeypressMetrics,
@@ -146,4 +147,5 @@ const defaultPausedKeypressMetrics: PausedKeypressMetrics = {
 
 export default {
   new: defaultPausedKeypressMetrics,
+  defaultProjection: defaultProjection,
 };
