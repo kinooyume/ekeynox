@@ -1,79 +1,141 @@
+import { KeyStatus, PromptKeyStatus, type KeyTimedTuple } from "./KeyMetrics";
+import {
+  makeLinkedList,
+  type LinkedList,
+  createTypingProjection,
+  type TypingProjection,
+} from "./TypingMetrics";
+
+/* Average */
 type GetAverage = (value: number) => number;
 type CreateAverage = (nbrIteration: number, prevAverage: number) => GetAverage;
 
 const createAverage: CreateAverage = (nbr, average) => (value: number) =>
   average + (value - average) / nbr;
 
-const createKeypressCounter = () => {
-  let correctKeys = 0;
-  let wrongKeys = 0;
+/* *** */
 
-  const keyPressed = (correct: boolean) => {
-    console.log(correct);
-    if (correct) {
-      correctKeys++;
-    } else {
-      wrongKeys++;
+export type KeypressMetricsProjection = {
+  wpms: [number, number];
+  accuracies: [number, number];
+  projection: TypingProjection;
+  logs: LinkedList<KeyTimedTuple> | null;
+  stop: number;
+};
+
+const keypressProjectionHandler = () => {
+  const projection = createTypingProjection();
+  let logs: LinkedList<KeyTimedTuple> | null = null;
+
+  const event = (key: KeyTimedTuple) => {
+    logs = makeLinkedList(logs, key);
+  };
+
+  const start = performance.now();
+
+  const getProjection = () => {
+    const stop = performance.now();
+    const duration = stop - start;
+    let sortedLogs = null;
+    let node = logs;
+    while (node !== null) {
+      const [_, metrics] = node.value;
+      switch (metrics.kind) {
+        case KeyStatus.match:
+          projection.correct++;
+          break;
+        case KeyStatus.unmatch:
+          projection.incorrect++;
+          break;
+        case KeyStatus.extra:
+          projection.extra++;
+          break;
+        case KeyStatus.missed:
+          projection.missed++;
+          break;
+        case KeyStatus.deleted:
+          if (metrics.status === PromptKeyStatus.correct)
+            projection.deletedCorrect++;
+          else if (metrics.status === PromptKeyStatus.incorrect)
+            projection.deletedIncorrect++;
+          else projection.total--;
+          break;
+      }
+      projection.total++;
+      sortedLogs = makeLinkedList(sortedLogs, node.value);
+      node = node.next;
     }
-  };
 
-  const date = performance.now();
-  const getCurrentWpms = () => {
-    const duration = performance.now() - date;
-    return [
-      (correctKeys * (1 / duration) * 60000) / 5,
-      ((correctKeys + wrongKeys) * (1 / duration) * 60000) / 5,
-    ];
+    const wpm =
+      (((projection.correct - projection.deletedCorrect) / duration) * 60000) /
+      5;
+
+    const raw =
+      (((projection.total -
+        projection.deletedCorrect -
+        projection.deletedIncorrect) /
+        duration) *
+        60000) /
+      5;
+
+    const accuracy =
+      ((projection.correct - projection.deletedCorrect) /
+        (projection.total -
+          projection.deletedCorrect -
+          projection.deletedIncorrect)) *
+      100;
+
+    const rawAccuracy = (projection.correct / projection.total) * 100;
+
+    return {
+      wpms: [wpm, raw],
+      accuracies: [accuracy, rawAccuracy],
+      projection: Object.assign({}, projection),
+      logs: sortedLogs,
+      stop,
+    };
   };
-  return { keyPressed, getCurrentWpms };
+  return { event, getProjection, start };
 };
 
-type Wpms = [number, number];
+/* Session */
 
-export type PendingCounter = {
-  keyPressed: (correct: boolean) => void;
-  getWpms: () => Wpms;
-  pause: () => PausedCounter;
+export type PendingKeypressMetrics = {
+  event: (key: KeyTimedTuple) => void;
+  getProjection: () => KeypressMetricsProjection;
+  pause: () => PausedKeypressMetrics;
 };
 
-export type PausedCounter = {
-  getWpms: () => Wpms;
-  resume: () => PendingCounter;
+export type PausedKeypressMetrics = {
+  getProjection: () => KeypressMetricsProjection | null;
+  resume: () => PendingKeypressMetrics;
 };
 
-type NestedWpms = [GetAverage, GetAverage];
-type WpmCounter = (iterNbr: number, wpms: NestedWpms) => PendingCounter; // wpmsAverage
+// NOTE: broken play/pause, act like a reset
+// TODO: Multiple Session Handler (play/pause)
 
-const wpmCounter: WpmCounter = (iterNbr, averages) => {
-  const keypress = createKeypressCounter();
-  const getWpms = (): Wpms => {
-    const current = keypress.getCurrentWpms();
-    return [averages[0](current[0]), averages[1](current[1])];
-  };
+const pendingKeypressMetrics = () => {
+  const handler = keypressProjectionHandler();
   return {
-    keyPressed: keypress.keyPressed,
-    getWpms,
+    event: handler.event,
+    getProjection: handler.getProjection,
     pause: () => {
-      const wpms = getWpms();
+      const projection = handler.getProjection();
       return {
-        getWpms: () => wpms,
+        getProjection: () => projection,
         resume: () => {
-          return wpmCounter(iterNbr++, [
-            createAverage(iterNbr, wpms[0]),
-            createAverage(iterNbr, wpms[1]),
-          ]);
+          return pendingKeypressMetrics();
         },
       };
     },
   };
 };
 
-const defaultWpms: NestedWpms = [(n) => n, (n) => n];
-const initWpms = (): Wpms => [0, 0];
+const defaultPausedKeypressMetrics = {
+  getProjection: () => null,
+  resume: pendingKeypressMetrics,
+};
 
 export default {
-  create: {
-    getWpms: initWpms,
-    resume: () => wpmCounter(1, defaultWpms),
-  },
+  new: defaultPausedKeypressMetrics.resume,
 };
