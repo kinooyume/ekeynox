@@ -1,6 +1,6 @@
 import { Show } from "solid-js";
 import { css } from "solid-styled";
-import type { KeyData, KeyInfo } from "./TypingMetrics";
+import type { KeyMetricsProjection } from "./KeyMetrics";
 
 type transform = Array<[string, string]>;
 
@@ -30,7 +30,7 @@ const transform = (k: string) => {
 type KeyboardKeyProps = {
   key: Array<string>;
   size: string;
-  data: KeyData | undefined;
+  data: KeyMetricsProjection | undefined;
   pressed: boolean;
 };
 
@@ -141,7 +141,7 @@ const KeyboardKey = (props: KeyboardKeyProps) => {
     }
   `;
 
-  const status = (info: KeyInfo | undefined) => {
+  const status = (info: KeyMetricsProjection | undefined) => {
     if (!info) return "";
     console.log(info);
     const correct = info?.correct - info?.deletedCorrect;
@@ -152,7 +152,7 @@ const KeyboardKey = (props: KeyboardKeyProps) => {
 
   return (
     <div
-      class={`key ${props.pressed ? "pressed" : ""} ${status(props.data?.info)} ${props.size}`}
+      class={`key ${props.pressed ? "pressed" : ""} ${status(props.data)} ${props.size}`}
     >
       <Show when={props.key[1] !== undefined}>
         <span class="secondary">{props.key[1]}</span>
