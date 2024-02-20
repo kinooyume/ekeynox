@@ -1,5 +1,5 @@
 import type { Setter } from "solid-js";
-import { KeyStatus, type KeyTimedTuple, type KeyTuple } from "./KeyMetrics";
+import { type KeyTimedTuple } from "./KeyMetrics";
 import { TypingStatusKind, type TypingStatus } from "./TypingEngine";
 import KeypressMetrics, {
   type PendingKeypressMetrics,
