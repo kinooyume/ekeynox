@@ -28,8 +28,6 @@ const createKeypressCounter = () => {
   return { keyPressed, getCurrentWpms };
 };
 
-/* *** */
-
 type Wpms = [number, number];
 
 export type PendingCounter = {
