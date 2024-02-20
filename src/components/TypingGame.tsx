@@ -6,19 +6,18 @@ import TypingEngine, {
 import Prompt from "./Prompt.tsx";
 import TypingNav from "./TypingNav.tsx";
 import Keyboard, { type TypingKeyboardRef } from "./TypingKeyboard.tsx";
-import CreateTypingMetrics, {
-  defaultMetrics,
-  type Metrics,
+import {
+  createTypingMetricsPreview,
+  createTypingMetricsState,
+  type TypingMetricsState,
 } from "./TypingMetrics.ts";
 import TypingMetrics from "./TypingMetrics.tsx";
 
 import { css } from "solid-styled";
-import { Show, createMemo, createSignal } from "solid-js";
+import { Show, createEffect, createMemo, createSignal } from "solid-js";
 import { createStore } from "solid-js/store";
-import {
-  updateKeyProjection,
-  type KeysProjection,
-} from "./KeyMetrics.ts";
+import { updateKeyProjection, type KeysProjection } from "./KeyMetrics.ts";
+import KeypressMetrics from "./KeypressMetrics.ts";
 
 type TypingGameProps = { source: string };
 
@@ -34,17 +33,14 @@ const TypingGame = ({ source }: TypingGameProps) => {
 
   const pause = () => setStatus({ kind: TypingStatusKind.pause });
 
-  // Accuracy ca serra la meme chose, avec des intervals et tout ca
-  const [wpm, setWpm] = createSignal(0);
-  const [raw, setRaw] = createSignal(0);
-
   /* Metrics */
 
-  const updateMetrics = CreateTypingMetrics({ setWpm, setRaw });
-
-  const metrics = createMemo(
-    (met: Metrics) => updateMetrics(met, { status: status() }),
-    defaultMetrics,
+  const [preview, setPreview] = createSignal(createTypingMetricsPreview());
+  const updateMetrics = createTypingMetricsState(setPreview);
+  createEffect(
+    (typingMetricsState: TypingMetricsState) =>
+      typingMetricsState({ status: status() }),
+    updateMetrics,
   );
 
   const keyMetrics = createMemo(
@@ -73,10 +69,10 @@ const TypingGame = ({ source }: TypingGameProps) => {
       align-items: center;
     }
   `;
+  //  fallback={<TypingMetrics wpm={wpm()} raw={raw()} metrics={metrics()} />}
   return (
     <Show
       when={status().kind !== TypingStatusKind.over}
-      fallback={<TypingMetrics wpm={wpm()} raw={raw()} metrics={metrics()} />}
     >
       <div class="mega" onClick={() => focus()}>
         <TypingEngine
@@ -92,13 +88,12 @@ const TypingGame = ({ source }: TypingGameProps) => {
         <Prompt paragraphs={paraStore} />
         <TypingNav
           isPaused={status().kind !== TypingStatusKind.pending}
-          wpm={wpm()}
-          raw={raw()}
+          preview={preview()}
           onPause={pause}
           onReset={reset}
         />
         <Keyboard
-          metrics={metrics().byKey}
+          metrics={keyMetrics()}
           layout="qwerty"
           ref={(k) => (keyboard = k)}
         />
