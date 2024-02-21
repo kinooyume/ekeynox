@@ -12,7 +12,7 @@ import {
   createTypingMetricsState,
   type TypingMetricsState,
 } from "./TypingMetrics.ts";
-import TypingMetricsResume from "./TypingMetricsResume.tsx";
+import TypingMetricsResume from "./TypingMetricsResume";
 
 import { css } from "solid-styled";
 import { Show, createEffect, createMemo, createSignal } from "solid-js";

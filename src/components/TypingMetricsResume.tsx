@@ -6,7 +6,7 @@ type TypingMetricsProps = {
   metrics: TypingMetrics;
 };
 
-const TypingMetrics = (props: TypingMetricsProps) => {
+const TypingMetricsResume = (props: TypingMetricsProps) => {
   console.log(props.metrics);
   css`
     .preview {
@@ -66,4 +66,4 @@ const TypingMetrics = (props: TypingMetricsProps) => {
 };
 
 // https://github.com/kazzkiq/balloon.css
-export default TypingMetrics;
+export default TypingMetricsResume;
