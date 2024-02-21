@@ -4,10 +4,18 @@ import { PromptKeyStatus } from "./KeyMetrics";
 
 export type KeyProps = { key: string; status: PromptKeyStatus; focus: boolean };
 
+const transformDict = [
+  ["Enter", "↵"],
+  ["\t", "⇥"],
+];
+
 const Key = (props: KeyProps) => {
   const [wasInvalid, setWasInvalid] = createSignal(false);
+
   const special = props.key === "Enter" ? "special" : "";
-  const transform = (char: string) => (char === "Enter" ? "↵" : char);
+
+  const transform = (char: string) =>
+    transformDict.find(([key]) => key === char)?.[1] || char;
 
   createEffect(() => {
     if (props.status === PromptKeyStatus.incorrect) setWasInvalid(true);
