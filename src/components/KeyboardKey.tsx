@@ -31,7 +31,7 @@ type KeyboardKeyProps = {
   key: Array<string>;
   current: boolean;
   size: string;
-  data: KeyMetricsProjection | undefined;
+  data: Array<KeyMetricsProjection | undefined>;
   pressed: boolean;
 };
 
@@ -151,7 +151,17 @@ const KeyboardKey = (props: KeyboardKeyProps) => {
     }
   `;
 
-  const status = (info: KeyMetricsProjection | undefined, k: string) => {
+  const status = (data: Array<KeyMetricsProjection | undefined>, k: string) => {
+    const info = data.reduce((acc, cur) => {
+      if (cur) {
+        if (!acc) return cur;
+        acc.correct += cur.correct;
+        acc.incorrect += cur.incorrect;
+        acc.deletedCorrect += cur.deletedCorrect;
+        acc.deletedIncorrect += cur.deletedIncorrect;
+      }
+      return acc;
+    });
     if (!info) return "";
     const correct = info?.correct - info?.deletedCorrect;
     const incorrect = info?.incorrect - info?.deletedIncorrect;

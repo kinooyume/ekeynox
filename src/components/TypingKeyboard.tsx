@@ -27,7 +27,7 @@ export type TypingKeyboardRef = {
 
 type KeyboardProps = {
   ref?: (ref: TypingKeyboardRef) => void;
-  metrics: KeysProjection
+  metrics: KeysProjection;
   layout: string;
   currentKey: string;
 };
@@ -85,8 +85,8 @@ const Keyboard = (props: KeyboardProps) => {
               {(k) => (
                 <KeyboardKey
                   key={k}
-                  current={props.currentKey === k[0]}
-                  data={props.metrics[k[0]]}
+                  current={k.includes(props.currentKey)}
+                  data={k.map((c) => props.metrics[c])}
                   size={getSize(k[0])}
                   pressed={keys().some((ks) => ks === k[0])}
                 />
