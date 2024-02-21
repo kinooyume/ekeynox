@@ -9,6 +9,11 @@ type ParamsProps = {
 const gameList = games.map(({ params }) => {
   return { title: params.title, url: `/typing/${params.title}` };
 });
+
+// https://github.com/aminya/astro-parcel
+// checker terser
+// https://github.com/adamgian/minify-selectors
+// https://straffesites.com/en/blog/optimize-astro-html-post-build
 ---
 
 <style>
@@ -43,7 +48,7 @@ const gameList = games.map(({ params }) => {
       inset -2px -2px 7px #ffffff;
   }
 </style>
-<Layout title="Welcome to Astro.">
+<Layout title="eKeyNox">
   <main>
     <ul class="menu">
       {
