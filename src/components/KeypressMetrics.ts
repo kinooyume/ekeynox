@@ -55,28 +55,30 @@ const keypressProjectionHandler = () => {
     const duration = stop - start;
     let sortedLogs = null;
     let node = logs;
+    logs = null;
     while (node !== null) {
       const [_, metrics] = node.value;
-      switch (metrics.kind) {
-        case KeyStatus.match:
-          projection.correct++;
-          break;
-        case KeyStatus.unmatch:
-          projection.incorrect++;
-          break;
-        case KeyStatus.extra:
-          projection.extra++;
-          break;
-        case KeyStatus.missed:
-          projection.missed++;
-          break;
-        case KeyStatus.deleted:
-          if (metrics.status === PromptKeyStatus.correct)
-            projection.deletedCorrect++;
-          else if (metrics.status === PromptKeyStatus.incorrect)
-            projection.deletedIncorrect++;
-          else projection.total--;
-          break;
+      if (metrics.kind === KeyStatus.deleted) {
+        if (metrics.status === PromptKeyStatus.correct)
+          projection.deletedCorrect++;
+        else if (metrics.status === PromptKeyStatus.incorrect)
+          projection.deletedIncorrect++;
+        else break;
+      } else {
+        switch (metrics.kind) {
+          case KeyStatus.match:
+            projection.correct++;
+            break;
+          case KeyStatus.unmatch:
+            projection.incorrect++;
+            break;
+          case KeyStatus.extra:
+            projection.extra++;
+            break;
+          case KeyStatus.missed:
+            projection.missed++;
+            break;
+        }
       }
       projection.total++;
       sortedLogs = List.make(sortedLogs, node.value);
