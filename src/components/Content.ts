@@ -28,18 +28,26 @@ const Enter = () => ({
   ],
 });
 
+const wordSplit = (word: string) =>
+  word.split("").map((key) => ({
+    key,
+    status: PromptKeyStatus.unstart,
+    focus: PromptKeyFocus.unset,
+  }));
+
 export type Parser = (source: string) => Paragraphs;
 export const parse: Parser = (source) => {
-  const paragraphs = source.split("\n").map((line) =>
-    line.split(/(\s+)/).map((word) => ({
-      focus: false,
-      status: WordStatus.unstart,
-      keys: word.split("").map((key) => ({
-        key,
-        status: PromptKeyStatus.unstart,
-        focus: PromptKeyFocus.unset,
-      })),
-    })),
+  const paragraphs = source.split("\n").map(
+    (line) =>
+      line
+        .split(/(\s+)/)
+        .map((word) => ({
+          focus: false,
+          status: WordStatus.unstart,
+          keys: wordSplit(word),
+        }))
+        .filter((word) => word.keys.length > 0),
+    // NOTE: it create empty artefact when a string start or end with a space
   );
   if (paragraphs.length > 1) {
     for (let i = 0; i < paragraphs.length - 1; i++) {
