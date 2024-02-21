@@ -74,9 +74,13 @@ const TypingGame = ({ source }: TypingGameProps) => {
   return (
     <Show
       when={status().kind !== TypingStatusKind.over}
-      fallback={<TypingMetricsResume 
+      fallback={
+        <TypingMetricsResume
           keyMetrics={keyMetrics()}
-        preview={preview()} metrics={typingMetrics()} />}
+          preview={preview()}
+          metrics={typingMetrics()}
+        />
+      }
     >
       <div class="mega" onClick={() => focus()}>
         <TypingEngine
