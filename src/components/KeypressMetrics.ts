@@ -97,8 +97,8 @@ const keypressProjectionHandler = () => {
     const wpm = ((correct / duration) * 60000) / 5;
     const raw = ((projection.total / duration) * 60000) / 5;
 
-    const accuracy = (correct / total) * 100;
-    const rawAccuracy = (correct / (total + projection.deletedIncorrect)) * 100;
+    const accuracy = (correct / total) * 100 || 0;
+    const rawAccuracy = (correct / (total + projection.deletedIncorrect)) * 100 || 0;
 
     return {
       wpms: [wpm, raw],
