@@ -24,8 +24,14 @@ const TypingNav = (props: TypingNavProps) => {
   `;
   return (
     <nav>
-      <span class="wpm">WPM: {Math.trunc(props.preview.wpms[0])}</span>
-      <span class="raw">RAW: {Math.trunc(props.preview.wpms[1])}</span>
+      <span class="wpm">Wpm: {Math.trunc(props.preview.wpms[0])}</span>
+      <span class="wpm">Raw: {Math.trunc(props.preview.wpms[1])}</span>
+      <span class="wpm">
+        Accuracy: {Math.trunc(props.preview.accuracies[0])}
+      </span>
+      <span class="wpm">
+        Real Accuracy: {Math.trunc(props.preview.accuracies[1])}
+      </span>
       <div onClick={props.onPause}>
         <Play pause={props.isPaused} />
       </div>
