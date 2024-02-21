@@ -25,6 +25,7 @@ export type TypingEngineProps = {
   setParagraphs: SetStoreFunction<Paragraphs>;
   onKeyDown: (key: string) => void;
   onKeyUp: (key: string) => void;
+  setCurrentPromptKey: Setter<string>;
   status: TypingStatus;
   setStatus: Setter<TypingStatus>;
   setFocus: (focus: () => void) => void;
@@ -223,6 +224,7 @@ const TypingEngine = (props: TypingEngineProps) => {
       }
       next();
     }
+    props.setCurrentPromptKey(getCurrent.key().key);
   };
 
   const handleKeyUp = (event: KeyboardEvent) => {
@@ -237,6 +239,7 @@ const TypingEngine = (props: TypingEngineProps) => {
     currentFocus();
     props.setFocus(() => input.focus());
     props.setReset(reset);
+    props.setCurrentPromptKey(getCurrent.key().key);
   });
 
   onCleanup(() => {
