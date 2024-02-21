@@ -141,9 +141,9 @@ const KeyboardKey = (props: KeyboardKeyProps) => {
     }
   `;
 
-  const status = (info: KeyMetricsProjection | undefined) => {
+  const status = (info: KeyMetricsProjection | undefined, k: string) => {
     if (!info) return "";
-    console.log(info);
+    console.log(`${k}: ${JSON.stringify(info)}`)
     const correct = info?.correct - info?.deletedCorrect;
     const incorrect = info?.incorrect - info?.deletedIncorrect;
     if (incorrect > 0) return "incorrect";
@@ -152,7 +152,7 @@ const KeyboardKey = (props: KeyboardKeyProps) => {
 
   return (
     <div
-      class={`key ${props.pressed ? "pressed" : ""} ${status(props.data)} ${props.size}`}
+      class={`key ${props.pressed ? "pressed" : ""} ${status(props.data, props.key[0])} ${props.size}`}
     >
       <Show when={props.key[1] !== undefined}>
         <span class="secondary">{props.key[1]}</span>

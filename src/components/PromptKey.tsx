@@ -33,13 +33,16 @@ const Key = (props: KeyProps) => {
       color: blue;
       background-color: lightblue;
     }
+    span.back {
+      opacity: 0.6;
+    }
     span.special {
       width: 100%;
     }
   `;
   return (
     <span
-      class={`${props.focus ? "focus" : props.status} ${wasInvalid() ? "wasInvalid" : ""} ${special}`}
+      class={`${props.focus} ${props.status} ${wasInvalid() ? "wasInvalid" : ""} ${special}`}
     >
       {transform(props.key)}
     </span>

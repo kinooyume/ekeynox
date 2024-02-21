@@ -1,9 +1,16 @@
 import { TypingStatusKind, type TypingStatus } from "./TypingEngine";
 
 export enum PromptKeyStatus {
-  unset = "unset",
+  unstart = "unstart",
   correct = "correct",
   incorrect = "incorrect",
+}
+
+export enum PromptKeyFocus {
+  unset = "unset",
+  focus = "focus",
+  unfocus = "unfocus",
+  back = "back",
 }
 
 export enum KeyStatus {
@@ -105,7 +112,7 @@ const updateKeyProjection = ({
   }
   if (metrics.kind === KeyStatus.deleted) {
     switch (metrics.status) {
-      case PromptKeyStatus.unset:
+      case PromptKeyStatus.unstart:
         return projection;
       case PromptKeyStatus.correct:
         projection[key].deletedCorrect++;
