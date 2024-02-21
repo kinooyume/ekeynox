@@ -150,7 +150,6 @@ const TypingEngine = (props: TypingEngineProps) => {
 
   const prevWord = () => {
     setCurrent.wordStatus(WordStatus.unstart, false);
-    setCurrent.keyStatus(PromptKeyStatus.unset);
     setCurrent.keyFocus(false);
     setCurrentWord(currentWord() - 1);
     setCurrentKey(getCurrent.nbrKeys());
@@ -160,7 +159,6 @@ const TypingEngine = (props: TypingEngineProps) => {
 
   const prevParagraph = () => {
     setCurrent.wordStatus(WordStatus.unstart, false);
-    setCurrent.keyStatus(PromptKeyStatus.unset);
     setCurrent.keyFocus(false);
     setCurrentParagraph(currentParagraph() - 1);
     setCurrentWord(getCurrent.nbrWords());
@@ -171,7 +169,6 @@ const TypingEngine = (props: TypingEngineProps) => {
 
   const prev = () => {
     if (currentKey() > 0) {
-      setCurrent.keyStatus(PromptKeyStatus.unset);
       setCurrent.keyFocus(false);
       setCurrentKey(currentKey() - 1);
       setCurrent.keyFocus(true);
@@ -187,24 +184,33 @@ const TypingEngine = (props: TypingEngineProps) => {
 
   /* Key Handlers */
 
-  const handleKeypress = (event: KeyboardEvent) => {
-    const timestamp = performance.now();
-    props.onKeyDown(event.key);
-    const keyMetrics = getKeyMetrics({
-      typed: event.key,
+  const currentKeyMetrics = (typed: string) =>
+    getKeyMetrics({
+      typed,
       expected: getCurrent.key().key,
       status: getCurrent.key().status,
     });
+
+  const setStatus = (timestamp: number, keyMetrics: KeyTuple) => {
     props.setStatus({
       kind: TypingStatusKind.pending,
       keyMetrics,
       timestamp,
     });
+  };
+
+  const handleKeypress = (event: KeyboardEvent) => {
+    const timestamp = performance.now();
+    const keyMetrics = currentKeyMetrics(event.key);
+    props.onKeyDown(event.key);
     if (keyMetrics[1].kind === KeyStatus.ignore) {
       return;
     } else if (keyMetrics[1].kind === KeyStatus.deleted) {
       prev();
+      const prevKeyMetrics = currentKeyMetrics(event.key);
+      setStatus(timestamp, prevKeyMetrics); // deleted
     } else {
+      setStatus(timestamp, keyMetrics);
       if (keyMetrics[1].kind === KeyStatus.match) {
         setCurrent.keyStatus(PromptKeyStatus.correct);
       } else {
