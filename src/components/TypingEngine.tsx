@@ -7,6 +7,7 @@ import {
   PromptKeyStatus,
   type KeyTuple,
   getKeyMetrics,
+  makeDeletedKeyMetrics,
 } from "./KeyMetrics.ts";
 
 /* Typing Engine
@@ -188,7 +189,6 @@ const TypingEngine = (props: TypingEngineProps) => {
     getKeyMetrics({
       typed,
       expected: getCurrent.key().key,
-      status: getCurrent.key().status,
     });
 
   const setStatus = (timestamp: number, keyMetrics: KeyTuple) => {
@@ -205,10 +205,13 @@ const TypingEngine = (props: TypingEngineProps) => {
     props.onKeyDown(event.key);
     if (keyMetrics[1].kind === KeyStatus.ignore) {
       return;
-    } else if (keyMetrics[1].kind === KeyStatus.deleted) {
+    } else if (keyMetrics[1].kind === KeyStatus.back) {
       prev();
-      const prevKeyMetrics = currentKeyMetrics(event.key);
-      setStatus(timestamp, prevKeyMetrics); // deleted
+      const deletedKeyMetrics = makeDeletedKeyMetrics({
+        expected: getCurrent.key().key,
+        status: getCurrent.key().status,
+      });
+      setStatus(timestamp, deletedKeyMetrics); // deleted
     } else {
       setStatus(timestamp, keyMetrics);
       if (keyMetrics[1].kind === KeyStatus.match) {

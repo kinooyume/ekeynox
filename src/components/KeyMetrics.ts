@@ -12,6 +12,7 @@ export enum KeyStatus {
   extra,
   missed,
   deleted,
+  back,
   ignore,
 }
 
@@ -23,6 +24,7 @@ type KeyMetrics =
   | { kind: KeyStatus.missed; typed: string }
   | { kind: KeyStatus.unmatch; typed: string }
   | { kind: KeyStatus.deleted; status: PromptKeyStatus }
+  | { kind: KeyStatus.back }
   | { kind: KeyStatus.ignore };
 
 export type KeyTuple = [key: string, KeyMetrics];
@@ -31,16 +33,24 @@ export type KeyTimedTuple = [key: string, KeyMetrics, timestamps: number];
 type KeyMetricsProps = {
   typed: string;
   expected: string;
+};
+
+type KeyDeletedMetricsProps = {
+  expected: string;
   status: PromptKeyStatus;
 };
 
-const getKeyMetrics = ({
-  typed,
+const makeDeletedKeyMetrics = ({
   expected,
   status,
-}: KeyMetricsProps): KeyTuple => {
+}: KeyDeletedMetricsProps): KeyTuple => [
+  expected,
+  { kind: KeyStatus.deleted, status },
+];
+
+const getKeyMetrics = ({ typed, expected }: KeyMetricsProps): KeyTuple => {
   if (typed === "Backspace") {
-    return [expected, { kind: KeyStatus.deleted, status }];
+    return [typed, { kind: KeyStatus.back }];
   } else if (typed.length === 1 || typed === "Enter") {
     if (expected === typed) {
       return [expected, { kind: KeyStatus.match }];
@@ -129,4 +139,9 @@ const updateKeyProjection = ({
   return projection;
 };
 
-export { getKeyMetrics, updateKeyProjection, createKeyMetricsProjection };
+export {
+  getKeyMetrics,
+  makeDeletedKeyMetrics,
+  updateKeyProjection,
+  createKeyMetricsProjection,
+};
