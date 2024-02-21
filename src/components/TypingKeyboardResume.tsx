@@ -1,7 +1,7 @@
 import { For, createSignal, onMount } from "solid-js";
 import kblayout from "./kb-layout.json";
 import { css } from "solid-styled";
-import KeyboardKey  from "./KeyboardKey";
+import KeyboardKeyResume  from "./KeyboardKeyResume";
 import type { KeysProjection } from "./KeyMetrics";
 
 type Size = {
@@ -29,8 +29,6 @@ type KeyboardProps = {
   ref?: (ref: TypingKeyboardRef) => void;
   metrics: KeysProjection;
   layout: string;
-  // children: (props: KeyboardKeyProps) => JSX.Element;
-  currentKey: string;
 };
 
 const Keyboard = (props: KeyboardProps) => {
@@ -84,9 +82,8 @@ const Keyboard = (props: KeyboardProps) => {
           <div class="row">
             <For each={row}>
               {(k) => (
-                <KeyboardKey
+                <KeyboardKeyResume
                   key={k}
-                  current={k.includes(props.currentKey)}
                   data={k.map((c) => props.metrics[c])}
                   size={getSize(k[0])}
                   pressed={keys().some((ks) => ks === k[0])}

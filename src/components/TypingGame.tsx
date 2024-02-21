@@ -18,7 +18,6 @@ import { css } from "solid-styled";
 import { Show, createEffect, createMemo, createSignal } from "solid-js";
 import { createStore } from "solid-js/store";
 import { updateKeyProjection, type KeysProjection } from "./KeyMetrics.ts";
-import KeypressMetrics from "./KeypressMetrics.ts";
 
 type TypingGameProps = { source: string };
 
@@ -75,7 +74,9 @@ const TypingGame = ({ source }: TypingGameProps) => {
   return (
     <Show
       when={status().kind !== TypingStatusKind.over}
-      fallback={<TypingMetricsResume preview={preview()} metrics={typingMetrics()} />}
+      fallback={<TypingMetricsResume 
+          keyMetrics={keyMetrics()}
+        preview={preview()} metrics={typingMetrics()} />}
     >
       <div class="mega" onClick={() => focus()}>
         <TypingEngine

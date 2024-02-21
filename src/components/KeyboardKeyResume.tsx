@@ -1,5 +1,6 @@
 import { Show } from "solid-js";
 import { css } from "solid-styled";
+import "balloon-css";
 import type { KeyMetricsProjection } from "./KeyMetrics";
 
 type transform = Array<[string, string]>;
@@ -27,9 +28,8 @@ const transform = (k: string) => {
   }
 };
 
-export type KeyboardKeyProps = {
+export type KeyboardKeyResumeProps = {
   key: Array<string>;
-  current: boolean;
   size: string;
   data: Array<KeyMetricsProjection | undefined>;
   pressed: boolean;
@@ -37,7 +37,7 @@ export type KeyboardKeyProps = {
 
 /* faire le truc correct, incorrect, was incorrect */
 
-const KeyboardKey = (props: KeyboardKeyProps) => {
+const KeyboardKeyResume = (props: KeyboardKeyResumeProps) => {
   css`
     .key,
     .flat {
@@ -151,17 +151,43 @@ const KeyboardKey = (props: KeyboardKeyProps) => {
     }
   `;
 
-  const status = (data: Array<KeyMetricsProjection | undefined>, k: string) => {
-    const info = data.reduce((acc, cur) => {
+  const getInfo = (data: Array<KeyMetricsProjection | undefined>) =>
+    data.reduce((acc, cur) => {
       if (cur) {
+        console.log(props.key);
+        console.log(acc!.incorrect);
         if (!acc) return cur;
         acc.correct += cur.correct;
+        console.log(cur.incorrect);
         acc.incorrect += cur.incorrect;
         acc.deletedCorrect += cur.deletedCorrect;
         acc.deletedIncorrect += cur.deletedIncorrect;
+        acc.missed += cur.missed;
+        acc.extra += cur.extra;
+        acc.total += cur.total;
       }
       return acc;
     });
+
+  // show accuracy
+  const infoToString = (data: Array<KeyMetricsProjection | undefined>) =>
+    {
+    const info = getInfo(data) 
+    return info ? ` ${info.correct - info.deletedCorrect} / ${info.total}` : "";
+  }
+
+  //   const infoToString = () =>
+  //     info
+  //       ? `
+  // Correct: ${info.correct - info.deletedCorrect}\n
+  // Incorrect: ${info.incorrect}\n
+  // Missed: ${info.missed}\n
+  // Extra: ${info.extra}\n
+  // Total: ${info.total}
+  // `
+  //       : "";
+  const status = (data: Array<KeyMetricsProjection | undefined>, k: string) => {
+    const info = getInfo(data);
     if (!info) return "";
     const correct = info?.correct - info?.deletedCorrect;
     const incorrect = info?.incorrect - info?.deletedIncorrect;
@@ -171,7 +197,9 @@ const KeyboardKey = (props: KeyboardKeyProps) => {
 
   return (
     <div
-      class={`key ${props.pressed ? "pressed" : ""} ${props.current ? "current" : ""} ${status(props.data, props.key[0])} ${props.size}`}
+      aria-label={infoToString(props.data)}
+      data-balloon-pos="up"
+      class={`key ${props.pressed ? "pressed" : ""} ${status(props.data, props.key[0])} ${props.size}`}
     >
       <Show when={props.key[1] !== undefined}>
         <span class="secondary">{props.key[1]}</span>
@@ -181,4 +209,4 @@ const KeyboardKey = (props: KeyboardKeyProps) => {
   );
 };
 
-export default KeyboardKey;
+export default KeyboardKeyResume;
