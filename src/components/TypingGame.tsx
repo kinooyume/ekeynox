@@ -12,7 +12,7 @@ import {
   createTypingMetricsState,
   type TypingMetricsState,
 } from "./TypingMetrics.ts";
-import TypingMetrics from "./TypingMetrics.tsx";
+import TypingMetricsResume from "./TypingMetricsResume.tsx";
 
 import { css } from "solid-styled";
 import { Show, createEffect, createMemo, createSignal } from "solid-js";
@@ -75,7 +75,7 @@ const TypingGame = ({ source }: TypingGameProps) => {
   return (
     <Show
       when={status().kind !== TypingStatusKind.over}
-      fallback={<TypingMetrics preview={preview()} metrics={typingMetrics()} />}
+      fallback={<TypingMetricsResume preview={preview()} metrics={typingMetrics()} />}
     >
       <div class="mega" onClick={() => focus()}>
         <TypingEngine
