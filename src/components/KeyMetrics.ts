@@ -93,6 +93,21 @@ const updateKeyProjection = ({
   if (projection[key] === undefined) {
     projection[key] = createKeyMetricsProjection();
   }
+  if (metrics.kind === KeyStatus.deleted) {
+    switch (metrics.status) {
+      case PromptKeyStatus.unset:
+        return projection;
+      case PromptKeyStatus.correct:
+        projection[key].deletedCorrect++;
+        break;
+      case PromptKeyStatus.incorrect:
+        projection[key].deletedIncorrect++;
+        break;
+    }
+
+    projection[key].total++;
+    return projection;
+  }
   switch (metrics.kind) {
     case KeyStatus.match:
       projection[key].correct++;
@@ -108,14 +123,9 @@ const updateKeyProjection = ({
       projection[key].missed++;
       projection[key].expected.push(metrics.expected);
       break;
-    case KeyStatus.deleted:
-      if (metrics.status === PromptKeyStatus.correct) {
-        projection[key].deletedCorrect++;
-      } else {
-        projection[key].deletedIncorrect++;
-      }
-      break;
   }
+
+  projection[key].total++;
   return projection;
 };
 
