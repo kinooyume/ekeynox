@@ -1,9 +1,8 @@
 import { css } from "solid-styled";
 import { For, Show, createSignal } from "solid-js";
 
-import type { KeyProps } from "./PromptKey.tsx";
 import Key from "./PromptKey.tsx";
-import type { PromptKeyFocus } from "./KeyMetrics.ts";
+import type { MetaWord } from "./Content.ts";
 
 export enum WordStatus {
   unstart = "unstart",
@@ -12,14 +11,7 @@ export enum WordStatus {
   over = "over",
 }
 
-// TODO: check about the keypressed things
-export type WordProps = {
-  keys: Array<KeyProps>;
-  status: WordStatus;
-  focus: PromptKeyFocus;
-};
-
-const Word = (props: WordProps) => {
+const Word = (props: MetaWord) => {
   const [wpm, setWpm] = createSignal(0);
   css`
     .keys {

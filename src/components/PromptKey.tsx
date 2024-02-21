@@ -1,15 +1,14 @@
 import { css } from "solid-styled";
 import { createSignal, createEffect } from "solid-js";
 import { PromptKeyStatus } from "./KeyMetrics";
-
-export type KeyProps = { key: string; status: PromptKeyStatus; focus: boolean };
+import { type Metakey } from "./Content.ts"
 
 const transformDict = [
   ["Enter", "↵"],
   ["\t", "⇥"],
 ];
 
-const Key = (props: KeyProps) => {
+const Key = (props: Metakey) => {
   const [wasInvalid, setWasInvalid] = createSignal(false);
 
   const special = props.key === "Enter" ? "special" : "";
