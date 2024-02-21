@@ -5,11 +5,11 @@ import type { KeyProps } from "./PromptKey.tsx";
 import Key from "./PromptKey.tsx";
 import type { PromptKeyFocus } from "./KeyMetrics.ts";
 
-export enum WordStatus { 
-  unstart,
-  pending,
-  pause,
-  over,
+export enum WordStatus {
+  unstart = "unstart",
+  pending = "pending",
+  pause = "pause",
+  over = "over",
 }
 
 // TODO: check about the keypressed things
@@ -27,15 +27,19 @@ const Word = (props: WordProps) => {
     }
 
     .word {
+      color: rgb(0, 31, 63);
       margin-top: 24px;
       position: relative;
-      color: grey;
+    }
+    .keys {
+      color: rgb(0, 31, 63);
+      opacity: 0.6;
     }
     .pending {
-      background-color: lightgrey;
+      opacity: 1;
     }
     .focus {
-      color: black;
+      opacity: 1;
     }
     .wpm {
       position: absolute;

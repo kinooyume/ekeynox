@@ -49,6 +49,7 @@ const KeyboardKey = (props: KeyboardKeyProps) => {
       min-width: 40px;
       padding: 10px;
       height: 40px;
+      color: rgb(0, 31, 63);
       border-radius: 8px;
       background: #e0e0e0;
       box-shadow:
@@ -98,7 +99,7 @@ const KeyboardKey = (props: KeyboardKeyProps) => {
     }
     .secondary {
       font-size: 0.6em;
-      color: #666;
+      opacity: 0.5;
       position: absolute;
       top: 9px;
       right: 16px;
@@ -106,7 +107,6 @@ const KeyboardKey = (props: KeyboardKeyProps) => {
     }
     .correct {
       background: #8ff0a4;
-      color: green;
       box-shadow:
         2px 2px 7px #7acc8b,
         -2px -2px 7px #a4ffbd;
@@ -118,7 +118,6 @@ const KeyboardKey = (props: KeyboardKeyProps) => {
     }
     .incorrect {
       background: #f66151;
-      color: red;
       box-shadow:
         2px 2px 7px #d15245,
         -2px -2px 7px #ff705d;
@@ -130,7 +129,6 @@ const KeyboardKey = (props: KeyboardKeyProps) => {
     }
     .corrected {
       background: #ffbe6f;
-      color: orange;
       box-shadow:
         2px 2px 7px #d9a25e,
         -2px -2px 7px #ffdb80;
