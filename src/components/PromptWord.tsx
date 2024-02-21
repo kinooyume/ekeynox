@@ -3,6 +3,7 @@ import { For, Show, createSignal } from "solid-js";
 
 import type { KeyProps } from "./PromptKey.tsx";
 import Key from "./PromptKey.tsx";
+import type { PromptKeyFocus } from "./KeyMetrics.ts";
 
 export enum WordStatus { 
   unstart,
@@ -15,7 +16,7 @@ export enum WordStatus {
 export type WordProps = {
   keys: Array<KeyProps>;
   status: WordStatus;
-  focus: boolean;
+  focus: PromptKeyFocus;
 };
 
 const Word = (props: WordProps) => {

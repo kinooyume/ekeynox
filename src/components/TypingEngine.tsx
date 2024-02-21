@@ -8,6 +8,7 @@ import {
   type KeyTuple,
   getKeyMetrics,
   makeDeletedKeyMetrics,
+  PromptKeyFocus,
 } from "./KeyMetrics.ts";
 
 /* Typing Engine
@@ -63,7 +64,7 @@ const TypingEngine = (props: TypingEngineProps) => {
   /* Store Management */
   const currentFocus = () => {
     props.setParagraphs(currentParagraph(), currentWord(), "focus", true);
-    setCurrent.keyFocus(true);
+    setCurrent.keyFocus(PromptKeyFocus.focus);
   };
 
   const getCurrent = {
@@ -88,7 +89,7 @@ const TypingEngine = (props: TypingEngineProps) => {
         status,
       );
     },
-    keyFocus: (focus: boolean) => {
+    keyFocus: (focus: PromptKeyFocus) => {
       props.setParagraphs(
         currentParagraph(),
         currentWord(),
@@ -108,28 +109,28 @@ const TypingEngine = (props: TypingEngineProps) => {
 
   const nextWord = () => {
     setCurrent.wordStatus(WordStatus.over, false);
-    setCurrent.keyFocus(false);
+    setCurrent.keyFocus(PromptKeyFocus.unfocus)
     setCurrentWord(currentWord() + 1);
     setCurrentKey(0);
     setCurrent.wordStatus(WordStatus.pending, true);
-    setCurrent.keyFocus(true);
+    setCurrent.keyFocus(PromptKeyFocus.focus);
   };
 
   const nextParagraph = () => {
     setCurrent.wordStatus(WordStatus.over, false);
-    setCurrent.keyFocus(false);
+    setCurrent.keyFocus(PromptKeyFocus.unfocus);
     setCurrentParagraph(currentParagraph() + 1);
     setCurrentWord(0);
     setCurrentKey(0);
     setCurrent.wordStatus(WordStatus.pending, true);
-    setCurrent.keyFocus(true);
+    setCurrent.keyFocus(PromptKeyFocus.focus);
   };
 
   const next = () => {
     if (currentKey() < getCurrent.nbrKeys()) {
-      setCurrent.keyFocus(false);
+      setCurrent.keyFocus(PromptKeyFocus.unfocus);
       setCurrentKey(currentKey() + 1);
-      setCurrent.keyFocus(true);
+      setCurrent.keyFocus(PromptKeyFocus.focus);
     } else if (currentWord() < getCurrent.nbrWords()) {
       nextWord();
     } else if (currentParagraph() < getCurrent.nbrParagraphs()) {
@@ -151,28 +152,28 @@ const TypingEngine = (props: TypingEngineProps) => {
 
   const prevWord = () => {
     setCurrent.wordStatus(WordStatus.unstart, false);
-    setCurrent.keyFocus(false);
+    setCurrent.keyFocus(PromptKeyFocus.back);
     setCurrentWord(currentWord() - 1);
     setCurrentKey(getCurrent.nbrKeys());
     setCurrent.wordStatus(WordStatus.pending, true);
-    setCurrent.keyFocus(true);
+    setCurrent.keyFocus(PromptKeyFocus.focus);
   };
 
   const prevParagraph = () => {
     setCurrent.wordStatus(WordStatus.unstart, false);
-    setCurrent.keyFocus(false);
+    setCurrent.keyFocus(PromptKeyFocus.back);
     setCurrentParagraph(currentParagraph() - 1);
     setCurrentWord(getCurrent.nbrWords());
     setCurrentKey(getCurrent.nbrKeys());
     setCurrent.wordStatus(WordStatus.pending, true);
-    setCurrent.keyFocus(true);
+    setCurrent.keyFocus(PromptKeyFocus.focus);
   };
 
   const prev = () => {
     if (currentKey() > 0) {
-      setCurrent.keyFocus(false);
+      setCurrent.keyFocus(PromptKeyFocus.back);
       setCurrentKey(currentKey() - 1);
-      setCurrent.keyFocus(true);
+      setCurrent.keyFocus(PromptKeyFocus.focus);
     } else if (currentWord() > 0) {
       prevWord();
     } else if (currentParagraph() > 0) {
