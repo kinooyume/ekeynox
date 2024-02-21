@@ -85,26 +85,20 @@ const keypressProjectionHandler = () => {
       node = node.next;
     }
 
-    const wpm =
-      (((projection.correct - projection.deletedCorrect) / duration) * 60000) /
-      5;
+    const correct = projection.correct - projection.deletedCorrect;
+    const incorrect =
+      projection.incorrect +
+      projection.extra +
+      projection.missed -
+      projection.deletedIncorrect;
 
-    const raw =
-      (((projection.total -
-        projection.deletedCorrect -
-        projection.deletedIncorrect) /
-        duration) *
-        60000) /
-      5;
+    const total = correct + incorrect;
 
-    const accuracy =
-      ((projection.correct - projection.deletedCorrect) /
-        (projection.total -
-          projection.deletedCorrect -
-          projection.deletedIncorrect)) *
-      100;
+    const wpm = ((correct / duration) * 60000) / 5;
+    const raw = ((projection.total / duration) * 60000) / 5;
 
-    const rawAccuracy = (projection.correct / projection.total) * 100;
+    const accuracy = (correct / total) * 100;
+    const rawAccuracy = (correct / (total + projection.deletedIncorrect)) * 100;
 
     return {
       wpms: [wpm, raw],
