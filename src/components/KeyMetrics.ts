@@ -40,7 +40,7 @@ const getKeyMetrics = ({
   status,
 }: KeyMetricsProps): KeyTuple => {
   if (typed === "Backspace") {
-    return [typed, { kind: KeyStatus.deleted, status }];
+    return [expected, { kind: KeyStatus.deleted, status }];
   } else if (typed.length === 1 || typed === "Enter") {
     if (expected === typed) {
       return [expected, { kind: KeyStatus.match }];
