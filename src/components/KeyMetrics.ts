@@ -20,8 +20,8 @@ const blankCharacters = [" ", "Enter"];
 type KeyMetrics =
   | { kind: KeyStatus.match }
   | { kind: KeyStatus.extra }
-  | { kind: KeyStatus.missed; expected: string }
-  | { kind: KeyStatus.unmatch; expected: string }
+  | { kind: KeyStatus.missed; typed: string }
+  | { kind: KeyStatus.unmatch; typed: string }
   | { kind: KeyStatus.deleted; status: PromptKeyStatus }
   | { kind: KeyStatus.ignore };
 
@@ -47,9 +47,9 @@ const getKeyMetrics = ({
     } else if (blankCharacters.includes(expected)) {
       return [typed, { kind: KeyStatus.extra }];
     } else if (blankCharacters.includes(typed)) {
-      return [expected, { kind: KeyStatus.missed, expected }];
+      return [expected, { kind: KeyStatus.missed, typed }];
     } else {
-      return [expected, { kind: KeyStatus.unmatch, expected }];
+      return [expected, { kind: KeyStatus.unmatch, typed }];
     }
   }
   return [typed, { kind: KeyStatus.ignore }];
@@ -114,14 +114,14 @@ const updateKeyProjection = ({
       break;
     case KeyStatus.unmatch:
       projection[key].incorrect++;
-      projection[key].expected.push(metrics.expected);
+      projection[key].expected.push(metrics.typed);
       break;
     case KeyStatus.extra:
       projection[key].extra++;
       break;
     case KeyStatus.missed:
       projection[key].missed++;
-      projection[key].expected.push(metrics.expected);
+      projection[key].expected.push(metrics.typed);
       break;
   }
 
