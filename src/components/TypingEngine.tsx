@@ -189,7 +189,6 @@ const TypingEngine = (props: TypingEngineProps) => {
     getKeyMetrics({
       typed,
       expected: getCurrent.key().key,
-      // status: getCurrent.key().status,
     });
 
   const setStatus = (timestamp: number, keyMetrics: KeyTuple) => {
