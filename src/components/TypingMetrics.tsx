@@ -1,26 +1,20 @@
-import { createEffect, createSignal, For } from "solid-js";
-import {
-  type KeyInfo,
-  type Metrics,
-} from "./TypingMetrics";
 import { css } from "solid-styled";
+import type { TypingMetricsPreview, TypingMetrics } from "./TypingMetrics";
 
 type TypingMetricsProps = {
-  wpm: number;
-  raw: number;
-  metrics: Metrics;
+  preview: TypingMetricsPreview;
+  metrics: TypingMetrics;
 };
-
-const pourcent = (info: KeyInfo) =>
-  ((info.correct / info.total) * 100).toFixed(2);
 
 const TypingMetrics = (props: TypingMetricsProps) => {
   console.log(props.metrics);
   css`
-    .accuracyPack {
+    .preview {
       display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
+      flex-direction: row;
+      justify-content: space-between;
+      max-width: 400px;
+      margin: 0 auto;
     }
     .card {
       display: flex;
@@ -38,6 +32,7 @@ const TypingMetrics = (props: TypingMetricsProps) => {
     }
     .card.accuracy {
       text-align: center;
+      max-width: 200px;
     }
     .card.accuracy .title {
       font-size: 1.1em;
@@ -50,14 +45,20 @@ const TypingMetrics = (props: TypingMetricsProps) => {
   `;
   return (
     <div class="metrics">
-      <div class="speed">
-        <h2>Typing Speed</h2>
-        <p class="card speed">WPM: {props.wpm.toFixed(2)}</p>
-        <p class="card speed">Raw: {props.raw.toFixed(2)}</p>
-        <h2>Typing Accurry</h2>
-        <h3>Real Accuracy</h3>
-        <h2>Success by key</h2>
-        <div class="accuracyPack">
+      <div class="preview">
+        <div class="speeds">
+          <h2>Speed</h2>
+          <p class="card speed">WPM: {props.preview.wpms[0].toFixed(2)}</p>
+          <p class="card speed">Raw: {props.preview.wpms[1].toFixed(2)}</p>
+        </div>
+        <div class="accuracies">
+          <h2>Accurracies</h2>
+          <p class="card accuracy">
+            Accurracy: {props.preview.accuracies[0].toFixed(2)}%
+          </p>
+          <p class="card accuracy">
+            Real Accuracy: {props.preview.accuracies[1].toFixed(2)}%
+          </p>
         </div>
       </div>
     </div>

@@ -7,6 +7,7 @@ import Prompt from "./Prompt.tsx";
 import TypingNav from "./TypingNav.tsx";
 import Keyboard, { type TypingKeyboardRef } from "./TypingKeyboard.tsx";
 import {
+  createTypingMetrics,
   createTypingMetricsPreview,
   createTypingMetricsState,
   type TypingMetricsState,
@@ -37,7 +38,8 @@ const TypingGame = ({ source }: TypingGameProps) => {
   /* Metrics */
 
   const [preview, setPreview] = createSignal(createTypingMetricsPreview());
-  const updateMetrics = createTypingMetricsState(setPreview);
+  const [typingMetrics, setTypingMetrics] = createSignal(createTypingMetrics());
+  const updateMetrics = createTypingMetricsState(setPreview, setTypingMetrics);
   createEffect(
     (typingMetricsState: TypingMetricsState) =>
       typingMetricsState({ status: status() }),
@@ -70,9 +72,11 @@ const TypingGame = ({ source }: TypingGameProps) => {
       align-items: center;
     }
   `;
-  //  fallback={<TypingMetrics wpm={wpm()} raw={raw()} metrics={metrics()} />}
   return (
-    <Show when={status().kind !== TypingStatusKind.over}>
+    <Show
+      when={status().kind !== TypingStatusKind.over}
+      fallback={<TypingMetrics preview={preview()} metrics={typingMetrics()} />}
+    >
       <div class="mega" onClick={() => focus()}>
         <TypingEngine
           paragraphs={paraStore}
