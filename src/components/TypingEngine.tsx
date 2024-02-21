@@ -109,7 +109,7 @@ const TypingEngine = (props: TypingEngineProps) => {
 
   const nextWord = () => {
     setCurrent.wordStatus(WordStatus.over, false);
-    setCurrent.keyFocus(PromptKeyFocus.unfocus)
+    setCurrent.keyFocus(PromptKeyFocus.unfocus);
     setCurrentWord(currentWord() + 1);
     setCurrentKey(0);
     setCurrent.wordStatus(WordStatus.pending, true);
@@ -169,7 +169,7 @@ const TypingEngine = (props: TypingEngineProps) => {
     setCurrent.keyFocus(PromptKeyFocus.focus);
   };
 
-  const prev = () => {
+  const prev = (): boolean => {
     if (currentKey() > 0) {
       setCurrent.keyFocus(PromptKeyFocus.back);
       setCurrentKey(currentKey() - 1);
@@ -179,8 +179,9 @@ const TypingEngine = (props: TypingEngineProps) => {
     } else if (currentParagraph() > 0) {
       prevParagraph();
     } else {
-      reset();
+      return false;
     }
+    return true;
   };
   /* *** */
 
@@ -207,7 +208,7 @@ const TypingEngine = (props: TypingEngineProps) => {
     if (keyMetrics[1].kind === KeyStatus.ignore) {
       return;
     } else if (keyMetrics[1].kind === KeyStatus.back) {
-      prev();
+      if (!prev()) return;
       const deletedKeyMetrics = makeDeletedKeyMetrics({
         expected: getCurrent.key().key,
         status: getCurrent.key().status,
