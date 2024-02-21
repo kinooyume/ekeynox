@@ -5,12 +5,14 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build",
+    "build": "astro check && astro build",
+    "forcebuild": "astro build",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
     "@astrojs/check": "^0.4.1",
+    "@astrojs/sitemap": "^3.1.0",
     "@astrojs/solid-js": "^4.0.1",
     "@solid-primitives/map": "^0.4.9",
     "animejs": "^3.2.2",
