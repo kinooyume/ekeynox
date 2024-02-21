@@ -50,7 +50,6 @@ const makeDeletedKeyMetrics = ({
 
 const getKeyMetrics = ({ typed, expected }: KeyMetricsProps): KeyTuple => {
   if (typed === "Backspace") {
-    //    return [expected, { kind: KeyStatus.deleted, status }];
     return [typed, { kind: KeyStatus.back }];
   } else if (typed.length === 1 || typed === "Enter") {
     if (expected === typed) {
