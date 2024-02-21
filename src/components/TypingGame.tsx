@@ -27,6 +27,7 @@ const TypingGame = ({ source }: TypingGameProps) => {
   const paragraphs = Content.parse(source);
   const [paraStore, setParaStore] = createStore(Content.deepClone(paragraphs));
 
+  const [currentPromptKey, setCurrentPromptKey] = createSignal("");
   const [status, setStatus] = createSignal<TypingStatus>({
     kind: TypingStatusKind.unstart,
   });
@@ -71,9 +72,7 @@ const TypingGame = ({ source }: TypingGameProps) => {
   `;
   //  fallback={<TypingMetrics wpm={wpm()} raw={raw()} metrics={metrics()} />}
   return (
-    <Show
-      when={status().kind !== TypingStatusKind.over}
-    >
+    <Show when={status().kind !== TypingStatusKind.over}>
       <div class="mega" onClick={() => focus()}>
         <TypingEngine
           paragraphs={paraStore}
@@ -82,6 +81,7 @@ const TypingGame = ({ source }: TypingGameProps) => {
           setStatus={setStatus}
           setFocus={(f) => (focus = f)}
           setReset={(r) => (resetInput = r)}
+          setCurrentPromptKey={setCurrentPromptKey}
           onKeyDown={keyboard!?.keyDown}
           onKeyUp={keyboard!?.keyUp}
         />
@@ -94,6 +94,7 @@ const TypingGame = ({ source }: TypingGameProps) => {
         />
         <Keyboard
           metrics={keyMetrics()}
+          currentKey={currentPromptKey()}
           layout="qwerty"
           ref={(k) => (keyboard = k)}
         />

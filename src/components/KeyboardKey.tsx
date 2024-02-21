@@ -29,6 +29,7 @@ const transform = (k: string) => {
 
 type KeyboardKeyProps = {
   key: Array<string>;
+  current: boolean;
   size: string;
   data: KeyMetricsProjection | undefined;
   pressed: boolean;
@@ -139,11 +140,21 @@ const KeyboardKey = (props: KeyboardKeyProps) => {
         inset 2px 2px 7px #d9a25e,
         inset -2px -2px 7px #ffdb80;
     }
+    .current {
+      background: #99c1f1;
+      box-shadow:
+        2px 2px 7px #82a4cd,
+        -2px -2px 7px #b0deff;
+    }
+    .current.pressed {
+      box-shadow:
+        inset 2px 2px 7px #82a4cd,
+        inset -2px -2px 7px #b0deff;
+    }
   `;
 
   const status = (info: KeyMetricsProjection | undefined, k: string) => {
     if (!info) return "";
-    console.log(`${k}: ${JSON.stringify(info)}`)
     const correct = info?.correct - info?.deletedCorrect;
     const incorrect = info?.incorrect - info?.deletedIncorrect;
     if (incorrect > 0) return "incorrect";
@@ -152,7 +163,7 @@ const KeyboardKey = (props: KeyboardKeyProps) => {
 
   return (
     <div
-      class={`key ${props.pressed ? "pressed" : ""} ${status(props.data, props.key[0])} ${props.size}`}
+      class={`key ${props.pressed ? "pressed" : ""} ${props.current ? "current" : ""} ${status(props.data, props.key[0])} ${props.size}`}
     >
       <Show when={props.key[1] !== undefined}>
         <span class="secondary">{props.key[1]}</span>
