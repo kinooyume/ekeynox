@@ -1,9 +1,12 @@
 import { css } from "solid-styled";
 import type { TypingMetricsPreview, TypingMetrics } from "./TypingMetrics";
+import TypingKeyboardResume from "./TypingKeyboardResume";
+import type { KeysProjection } from "./KeyMetrics";
 
 type TypingMetricsProps = {
   preview: TypingMetricsPreview;
   metrics: TypingMetrics;
+  keyMetrics: KeysProjection;
 };
 
 const TypingMetricsResume = (props: TypingMetricsProps) => {
@@ -42,6 +45,10 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
       border-radius: 8px;
       padding: 5px;
     }
+
+    .keyboard {
+      margin-top: 64px;
+    }
   `;
   return (
     <div class="metrics">
@@ -61,9 +68,11 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
           </p>
         </div>
       </div>
+      <div class="keyboard">
+        <TypingKeyboardResume layout="qwerty" metrics={props.keyMetrics} />
+      </div>
     </div>
   );
 };
 
-// https://github.com/kazzkiq/balloon.css
 export default TypingMetricsResume;
