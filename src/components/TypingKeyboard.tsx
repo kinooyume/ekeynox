@@ -26,9 +26,6 @@ const Keyboard = (props: KeyboardProps) => {
   const [layoutKeys, setLayoutKeys] = createSignal<string[][][]>([]);
   const [keySizes, setKeySizes] = createSignal<KeySize>({});
 
-  // const size: Size = kblayout[props.layout].positions;
-  // const layoutKeys = kblayout[props.layout].keys;
-
   createComputed(() => {
     const layout = kblayout[props.layout as keyof typeof kblayout];
     if (!layout) return;
