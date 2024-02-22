@@ -24,7 +24,7 @@ type TypingGameProps = { source: string };
 // https://icon-sets.iconify.design/line-md/?query=play
 
 const TypingGame = ({ source }: TypingGameProps) => {
-  const paragraphs = Content.parse(source);
+  const [paragraphs, keySet] = Content.parse(source);
   const [paraStore, setParaStore] = createStore(Content.deepClone(paragraphs));
 
   const [currentPromptKey, setCurrentPromptKey] = createSignal("");
@@ -105,6 +105,7 @@ const TypingGame = ({ source }: TypingGameProps) => {
           metrics={keyMetrics()}
           currentKey={currentPromptKey()}
           layout="qwerty"
+          keySet={keySet}
           ref={(k) => (keyboard = k)}
         />
       </div>
