@@ -12,7 +12,7 @@ const {content} = Astro.props;
 
 <Layout title={title}>
   <main>
-    <TypingGame client:load="solid" source={content}/>
+    <TypingGame client:only="solid" source={content}/>
   </main>
 </Layout>
 
