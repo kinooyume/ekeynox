@@ -3,6 +3,8 @@ import type { TypingMetricsPreview, TypingMetrics } from "./TypingMetrics";
 import TypingKeyboardResume from "./TypingKeyboardResume";
 import type { KeysProjection } from "./KeyMetrics";
 import type { KeyboardLayout } from "./KeyboardLayout";
+// https://github.com/s0ftik3/solid-chartjs?tab=readme-ov-file
+import MetricsChart from "./MetricsChart";
 
 type TypingMetricsProps = {
   preview: TypingMetricsPreview;
@@ -76,6 +78,10 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
             Real Accuracy: {props.preview.accuracies[1].toFixed(2)}%
           </p>
         </div>
+      </div>
+
+      <div class="chart">
+        <MetricsChart metrics={props.metrics} />
       </div>
       <div class="keyboard">
         <TypingKeyboardResume
