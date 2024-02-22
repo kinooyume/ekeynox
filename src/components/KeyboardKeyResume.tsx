@@ -31,6 +31,7 @@ const transform = (k: string) => {
 export type KeyboardKeyResumeProps = {
   key: Array<string>;
   size: string;
+  used: boolean;
   data: Array<KeyMetricsProjection | undefined>;
   pressed: boolean;
 };
@@ -149,6 +150,9 @@ const KeyboardKeyResume = (props: KeyboardKeyResumeProps) => {
         inset 2px 2px 7px #82a4cd,
         inset -2px -2px 7px #b0deff;
     }
+    .key:not(.used) {
+      opacity: 0.6;
+    }
   `;
 
   const getInfo = (data: Array<KeyMetricsProjection | undefined>) =>
@@ -195,7 +199,7 @@ const KeyboardKeyResume = (props: KeyboardKeyResumeProps) => {
     <div
       aria-label={infoToString(props.data)}
       data-balloon-pos="up"
-      class={`key ${props.pressed ? "pressed" : ""} ${status(props.data, props.key[0])} ${props.size}`}
+      class={`key ${props.pressed ? "pressed" : ""} ${props.used ? "used" : ""} ${status(props.data, props.key[0])} ${props.size}`}
     >
       <Show when={props.key[1] !== undefined}>
         <span class="secondary">{props.key[1]}</span>

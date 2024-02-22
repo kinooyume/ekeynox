@@ -2,16 +2,25 @@ import { css } from "solid-styled";
 import type { TypingMetricsPreview, TypingMetrics } from "./TypingMetrics";
 import TypingKeyboardResume from "./TypingKeyboardResume";
 import type { KeysProjection } from "./KeyMetrics";
+import type { KeyboardLayout } from "./KeyboardLayout";
 
 type TypingMetricsProps = {
   preview: TypingMetricsPreview;
   metrics: TypingMetrics;
+  layout: KeyboardLayout;
   keyMetrics: KeysProjection;
 };
 
 const TypingMetricsResume = (props: TypingMetricsProps) => {
   console.log(props.metrics);
   css`
+    .metrics {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
     .preview {
       display: flex;
       flex-direction: row;
@@ -69,7 +78,10 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
         </div>
       </div>
       <div class="keyboard">
-        <TypingKeyboardResume layout="qwerty" metrics={props.keyMetrics} />
+        <TypingKeyboardResume
+          layout={props.layout}
+          metrics={props.keyMetrics}
+        />
       </div>
     </div>
   );

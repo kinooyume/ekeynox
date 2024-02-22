@@ -17,7 +17,13 @@ import {
 import TypingMetricsResume from "./TypingMetricsResume";
 
 import { css } from "solid-styled";
-import { Show, createComputed, createEffect, createMemo, createSignal } from "solid-js";
+import {
+  Show,
+  createComputed,
+  createEffect,
+  createMemo,
+  createSignal,
+} from "solid-js";
 import { createStore } from "solid-js/store";
 import { updateKeyProjection, type KeysProjection } from "./KeyMetrics.ts";
 
@@ -40,7 +46,7 @@ const TypingGame = ({ source }: TypingGameProps) => {
     const layout = KeyboardLayout.create("qwerty", keySet);
     if (layout !== null) setKbLayout(layout);
     // TODO: manage error
-  })
+  });
 
   const pause = () => setStatus({ kind: TypingStatusKind.pause });
 
@@ -90,6 +96,7 @@ const TypingGame = ({ source }: TypingGameProps) => {
         <TypingMetricsResume
           keyMetrics={keyMetrics()}
           preview={preview()}
+          layout={kbLayout()}
           metrics={typingMetrics()}
         />
       }
