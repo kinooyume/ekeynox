@@ -4,25 +4,9 @@ import { css } from "solid-styled";
 import KeyboardKey from "./KeyboardKey";
 import type { KeysProjection } from "./KeyMetrics";
 
-type Size = {
-  default: number;
-  special: { [key: string]: string };
-};
-
-const currentKb = "qwerty";
-const size: Size = kblayout[currentKb].positions;
-const layoutKeys = kblayout[currentKb].keys;
-
-const getSize = (k: string): string => {
-  const special = size.special[k];
-  return typeof special === "string" ? special : "";
-};
-
-type keyCb = (key: string) => void;
-
 export type TypingKeyboardRef = {
-  keyUp: keyCb;
-  keyDown: keyCb;
+  keyUp: (key: string) => void;
+  keyDown: (key: string) => void;
 };
 
 type KeyboardProps = {
@@ -34,12 +18,23 @@ type KeyboardProps = {
   currentKey: string;
 };
 
+type KeySize = Record<string, string>;
 const Keyboard = (props: KeyboardProps) => {
-  const [pressedKeys, setPressedKeys] = createSignal([] as string[]);
+  const [pressedKeys, setPressedKeys] = createSignal<string[]>([]);
+  const [layoutKeys, setLayoutKeys] = createSignal<string[][][]>([]);
+  const [keySizes, setKeySizes] = createSignal<KeySize>({});
+
+  createComputed(() => {
+    const layout = kblayout[props.layout as keyof typeof kblayout];
+    if (!layout) return;
+    // TODO: merge keys & positions
+    setLayoutKeys(layout.keys);
+    setKeySizes(layout.positions);
+  });
 
   const findPrimaryKey = (key: string) => {
     let keyFound;
-    layoutKeys.some((row) =>
+    layoutKeys().some((row) =>
       row.some((fullKey) => {
         let keyIndex = fullKey.findIndex((k) => k === key);
         if (keyIndex === -1) return false;
@@ -81,7 +76,7 @@ const Keyboard = (props: KeyboardProps) => {
 
   return (
     <div class="kb">
-      <For each={layoutKeys}>
+      <For each={layoutKeys()}>
         {(row) => (
           <div class="row">
             <For each={row}>
@@ -90,7 +85,7 @@ const Keyboard = (props: KeyboardProps) => {
                   key={k}
                   current={k.includes(props.currentKey)}
                   data={k.map((c) => props.metrics[c])}
-                  size={getSize(k[0])}
+                  size={keySizes()[k[0]] || ""}
                   pressed={pressedKeys().includes(k[0])}
                 />
               )}
