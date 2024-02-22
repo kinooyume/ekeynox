@@ -23,6 +23,7 @@ const Keyboard = (props: KeyboardProps) => {
   const [pressedKeys, setPressedKeys] = createSignal<string[]>([]);
   const [layoutKeys, setLayoutKeys] = createSignal<string[][][]>([]);
   const [keySizes, setKeySizes] = createSignal<KeySize>({});
+  const [extraKeys, setExtraKeys] = createSignal<string[]>([]);
 
   createComputed(() => {
     const layout = kblayout[props.layout as keyof typeof kblayout];
@@ -30,6 +31,15 @@ const Keyboard = (props: KeyboardProps) => {
     // TODO: merge keys & positions
     setLayoutKeys(layout.keys);
     setKeySizes(layout.positions);
+
+    const flatLayout = layout.keys.flat(2);
+    let extraKeys: Array<string> = [];
+    props.keySet.forEach((k) => {
+      if (flatLayout.includes(k)) return;
+      extraKeys.push(k);
+    });
+
+    setExtraKeys(extraKeys);
   });
 
   const findPrimaryKey = (key: string) => {
@@ -65,9 +75,16 @@ const Keyboard = (props: KeyboardProps) => {
       opacity: 0.8;
       flex-direction: column;
       width: 100%;
+      max-width: 1032px;
       user-select: none;
     }
     .row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .extraKeys {
+      margin-top: 12px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -93,6 +110,19 @@ const Keyboard = (props: KeyboardProps) => {
           </div>
         )}
       </For>
+      <div class="extraKeys">
+        <For each={extraKeys()}>
+          {(key) => (
+            <KeyboardKey
+              key={[key]}
+              current={key === props.currentKey}
+              data={[props.metrics[key]]}
+              size=""
+              pressed={pressedKeys().includes(key)}
+            />
+          )}
+        </For>
+      </div>
     </div>
   );
 };
