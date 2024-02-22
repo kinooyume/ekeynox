@@ -243,6 +243,7 @@ const TypingEngine = (props: TypingEngineProps) => {
   });
 
   onCleanup(() => {
+    if (!input) return;
     input.removeEventListener("keydown", handleKeypress);
     input.addEventListener("keyup", handleKeyUp);
   });
