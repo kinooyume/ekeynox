@@ -28,25 +28,27 @@ const Enter = () => ({
   ],
 });
 
-const wordSplit = (word: string) =>
-  word.split("").map((key) => ({
-    key,
-    status: PromptKeyStatus.unstart,
-    focus: PromptKeyFocus.unset,
-  }));
-
-export type Parser = (source: string) => Paragraphs;
+export type Parser = (source: string) => [ Paragraphs, Set<string> ]
 export const parse: Parser = (source) => {
+  const keySet = new Set<string>();
   const paragraphs = source.split("\n").map(
-    (line) =>
-      line
+    (line) => {
+      return line
         .split(/(\s+)/)
         .map((word) => ({
           focus: false,
           status: WordStatus.unstart,
-          keys: wordSplit(word),
+          keys: word.split("").map((key) => {
+              keySet.add(key);
+              return ({
+                  key,
+                  status: PromptKeyStatus.unstart,
+                  focus: PromptKeyFocus.unset,
+              });
+          }),
         }))
-        .filter((word) => word.keys.length > 0),
+        .filter((word) => word.keys.length > 0);
+    },
     // NOTE: it create empty artefact when a string start or end with a space
   );
   if (paragraphs.length > 1) {
@@ -54,7 +56,7 @@ export const parse: Parser = (source) => {
       paragraphs[i].push(Enter());
     }
   }
-  return paragraphs;
+  return [ paragraphs, keySet ];
 };
 
 const deepClone = (paragraphs: Paragraphs) =>
