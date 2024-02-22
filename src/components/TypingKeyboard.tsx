@@ -1,7 +1,7 @@
-import { For, createSignal, onMount } from "solid-js";
+import { For, createComputed, createSignal, onMount } from "solid-js";
 import kblayout from "./kb-layout.json";
 import { css } from "solid-styled";
-import KeyboardKey  from "./KeyboardKey";
+import KeyboardKey from "./KeyboardKey";
 import type { KeysProjection } from "./KeyMetrics";
 
 type Size = {
@@ -29,12 +29,13 @@ type KeyboardProps = {
   ref?: (ref: TypingKeyboardRef) => void;
   metrics: KeysProjection;
   layout: string;
+  keySet: Set<string>;
   // children: (props: KeyboardKeyProps) => JSX.Element;
   currentKey: string;
 };
 
 const Keyboard = (props: KeyboardProps) => {
-  const [keys, setKeys] = createSignal([] as string[]);
+  const [pressedKeys, setPressedKeys] = createSignal([] as string[]);
 
   const findPrimaryKey = (key: string) => {
     let keyFound;
@@ -49,14 +50,15 @@ const Keyboard = (props: KeyboardProps) => {
     return keyFound;
   };
 
+  // NOTE: use a store/memo maybe ?
   const addKey = (key: string) => {
     const keyFound = findPrimaryKey(key);
-    if (keyFound) setKeys([...keys(), keyFound]);
+    if (keyFound) setPressedKeys([...pressedKeys(), keyFound]);
   };
 
   const removeKey = (key: string) => {
     const keyFound = findPrimaryKey(key);
-    if (keyFound) setKeys(keys().filter((k) => k !== keyFound));
+    if (keyFound) setPressedKeys(pressedKeys().filter((k) => k !== keyFound));
   };
 
   onMount(() => {
@@ -89,7 +91,7 @@ const Keyboard = (props: KeyboardProps) => {
                   current={k.includes(props.currentKey)}
                   data={k.map((c) => props.metrics[c])}
                   size={getSize(k[0])}
-                  pressed={keys().some((ks) => ks === k[0])}
+                  pressed={pressedKeys().includes(k[0])}
                 />
               )}
             </For>
