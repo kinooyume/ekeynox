@@ -1,4 +1,6 @@
 import Content from "./Content.ts";
+import KeyboardLayout from "./KeyboardLayout.ts";
+
 import TypingEngine, {
   type TypingStatus,
   TypingStatusKind,
@@ -15,7 +17,7 @@ import {
 import TypingMetricsResume from "./TypingMetricsResume";
 
 import { css } from "solid-styled";
-import { Show, createEffect, createMemo, createSignal } from "solid-js";
+import { Show, createComputed, createEffect, createMemo, createSignal } from "solid-js";
 import { createStore } from "solid-js/store";
 import { updateKeyProjection, type KeysProjection } from "./KeyMetrics.ts";
 
@@ -31,6 +33,14 @@ const TypingGame = ({ source }: TypingGameProps) => {
   const [status, setStatus] = createSignal<TypingStatus>({
     kind: TypingStatusKind.unstart,
   });
+
+  const [kbLayout, setKbLayout] = createSignal(KeyboardLayout.getDefault());
+
+  createComputed(() => {
+    const layout = KeyboardLayout.create("qwerty", keySet);
+    if (layout !== null) setKbLayout(layout);
+    // TODO: manage error
+  })
 
   const pause = () => setStatus({ kind: TypingStatusKind.pause });
 
@@ -69,6 +79,8 @@ const TypingGame = ({ source }: TypingGameProps) => {
       display: flex;
       flex-direction: column;
       align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
     }
   `;
   return (
@@ -104,8 +116,7 @@ const TypingGame = ({ source }: TypingGameProps) => {
         <Keyboard
           metrics={keyMetrics()}
           currentKey={currentPromptKey()}
-          layout="qwerty"
-          keySet={keySet}
+          layout={kbLayout()}
           ref={(k) => (keyboard = k)}
         />
       </div>
