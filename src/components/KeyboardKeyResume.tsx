@@ -154,11 +154,8 @@ const KeyboardKeyResume = (props: KeyboardKeyResumeProps) => {
   const getInfo = (data: Array<KeyMetricsProjection | undefined>) =>
     data.reduce((acc, cur) => {
       if (cur) {
-        console.log(props.key);
-        console.log(acc!.incorrect);
         if (!acc) return cur;
         acc.correct += cur.correct;
-        console.log(cur.incorrect);
         acc.incorrect += cur.incorrect;
         acc.deletedCorrect += cur.deletedCorrect;
         acc.deletedIncorrect += cur.deletedIncorrect;
@@ -170,11 +167,10 @@ const KeyboardKeyResume = (props: KeyboardKeyResumeProps) => {
     });
 
   // show accuracy
-  const infoToString = (data: Array<KeyMetricsProjection | undefined>) =>
-    {
-    const info = getInfo(data) 
+  const infoToString = (data: Array<KeyMetricsProjection | undefined>) => {
+    const info = getInfo(data);
     return info ? ` ${info.correct - info.deletedCorrect} / ${info.total}` : "";
-  }
+  };
 
   //   const infoToString = () =>
   //     info
