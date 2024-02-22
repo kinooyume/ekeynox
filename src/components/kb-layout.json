@@ -65,7 +65,7 @@
       ],
       [["Control"], ["Win"], ["Alt"], [" "], ["Alt"], ["Fn"], ["Control"]]
     ],
-    "positions": {
+    "size": {
       "Backspace": "five",
       "Tab": "five",
       "CapsLock": "seven",
