@@ -22,6 +22,8 @@ const Word = (props: MetaWord) => {
       color: rgb(0, 31, 63);
       margin-top: 24px;
       position: relative;
+      display: inline-block;
+      overflow: hidden;
     }
     .keys {
       color: rgb(0, 31, 63);

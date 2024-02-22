@@ -1,7 +1,7 @@
 import { css } from "solid-styled";
 import { createSignal, createEffect } from "solid-js";
 import { PromptKeyStatus } from "./KeyMetrics";
-import { type Metakey } from "./Content.ts"
+import { type Metakey } from "./Content.ts";
 
 const transformDict = [
   ["Enter", "↵"],
@@ -21,6 +21,9 @@ const Key = (props: Metakey) => {
   });
 
   css`
+    .prompt-key {
+      transform-origin: 0 100%;
+    }
     span {
       white-space: pre;
     }
@@ -44,12 +47,13 @@ const Key = (props: Metakey) => {
       opacity: 0.6;
     }
     span.special {
+      opacity: 0.6;
       width: 100%;
     }
   `;
   return (
     <span
-      class={`${props.focus} ${props.status} ${wasInvalid() ? "wasInvalid" : ""} ${special}`}
+      class={`prompt-key ${props.focus} ${props.status} ${wasInvalid() ? "wasInvalid" : ""} ${special}`}
     >
       {transform(props.key)}
     </span>
