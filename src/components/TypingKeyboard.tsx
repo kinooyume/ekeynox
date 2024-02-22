@@ -4,11 +4,9 @@ import { css } from "solid-styled";
 import KeyboardKey from "./KeyboardKey";
 import type { KeysProjection } from "./KeyMetrics";
 
-type keyCb = (key: string) => void;
-
 export type TypingKeyboardRef = {
-  keyUp: keyCb;
-  keyDown: keyCb;
+  keyUp: (key: string) => void;
+  keyDown: (key: string) => void;
 };
 
 type KeyboardProps = {
