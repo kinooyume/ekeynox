@@ -149,7 +149,7 @@ const KeyboardKey = (props: KeyboardKeyProps) => {
         inset -2px -2px 7px #b0deff;
     }
     .key:not(.used) {
-      opacity: 0.8;
+      opacity: 0.6;
     }
   `;
 
