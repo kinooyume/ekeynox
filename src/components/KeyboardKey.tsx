@@ -31,11 +31,10 @@ export type KeyboardKeyProps = {
   key: Array<string>;
   current: boolean;
   size: string;
+  used: boolean;
   data: Array<KeyMetricsProjection | undefined>;
   pressed: boolean;
 };
-
-/* faire le truc correct, incorrect, was incorrect */
 
 const KeyboardKey = (props: KeyboardKeyProps) => {
   css`
@@ -149,6 +148,9 @@ const KeyboardKey = (props: KeyboardKeyProps) => {
         inset 2px 2px 7px #82a4cd,
         inset -2px -2px 7px #b0deff;
     }
+    .key:not(.used) {
+      opacity: 0.8;
+    }
   `;
 
   const status = (data: Array<KeyMetricsProjection | undefined>, k: string) => {
@@ -171,7 +173,7 @@ const KeyboardKey = (props: KeyboardKeyProps) => {
 
   return (
     <div
-      class={`key ${props.pressed ? "pressed" : ""} ${props.current ? "current" : ""} ${status(props.data, props.key[0])} ${props.size}`}
+      class={`key ${props.pressed ? "pressed" : ""} ${props.used ? "used" : ""} ${props.current ? "current" : ""} ${status(props.data, props.key[0])} ${props.size}`}
     >
       <Show when={props.key[1] !== undefined}>
         <span class="secondary">{props.key[1]}</span>
