@@ -17,6 +17,9 @@ dependencies:
   '@solid-primitives/map':
     specifier: ^0.4.9
     version: 0.4.9(solid-js@1.8.12)
+  '@types/animejs':
+    specifier: ^3.1.12
+    version: 3.1.12
   animejs:
     specifier: ^3.2.2
     version: 3.2.2
@@ -830,6 +833,10 @@ packages:
       solid-js: ^1.6.12
     dependencies:
       solid-js: 1.8.12
+    dev: false
+
+  /@types/animejs@3.1.12:
+    resolution: {integrity: sha512-fpdH+ZtlO0kqjTOqRaBdsEmvpRNOayI8k4EVkEtitL5l6wducDOXk0rgQgfZqWf/ZX9DzXrHf257S5i9xTcISQ==}
     dev: false
 
   /@types/babel__core@7.20.5:
