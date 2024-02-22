@@ -1,8 +1,8 @@
-import { For, createComputed, createSignal, onMount } from "solid-js";
-import kblayout from "./kb-layout.json";
+import { For, createSignal, onMount } from "solid-js";
 import { css } from "solid-styled";
 import KeyboardKey from "./KeyboardKey";
 import type { KeysProjection } from "./KeyMetrics";
+import type { KeyboardLayout } from "./KeyboardLayout";
 
 export type TypingKeyboardRef = {
   keyUp: (key: string) => void;
@@ -12,47 +12,19 @@ export type TypingKeyboardRef = {
 type KeyboardProps = {
   ref?: (ref: TypingKeyboardRef) => void;
   metrics: KeysProjection;
-  layout: string;
-  keySet: Set<string>;
+  layout: KeyboardLayout;
   // children: (props: KeyboardKeyProps) => JSX.Element;
   currentKey: string;
 };
 
-type KeySize = Record<string, string>;
 const Keyboard = (props: KeyboardProps) => {
   const [pressedKeys, setPressedKeys] = createSignal<string[]>([]);
-  const [layoutKeys, setLayoutKeys] = createSignal<string[][][]>([]);
-  const [keySizes, setKeySizes] = createSignal<KeySize>({});
-  const [extraKeys, setExtraKeys] = createSignal<string[]>([]);
-
-  createComputed(() => {
-    const layout = kblayout[props.layout as keyof typeof kblayout];
-    if (!layout) return;
-    // TODO: merge keys & positions
-    setLayoutKeys(layout.keys);
-    setKeySizes(layout.positions);
-
-    const flatLayout = layout.keys.flat(2);
-    let extraKeys: Array<string> = [];
-    props.keySet.forEach((k) => {
-      if (flatLayout.includes(k)) return;
-      extraKeys.push(k);
-    });
-
-    setExtraKeys(extraKeys);
-  });
 
   const findPrimaryKey = (key: string) => {
-    let keyFound;
-    layoutKeys().some((row) =>
-      row.some((fullKey) => {
-        let keyIndex = fullKey.findIndex((k) => k === key);
-        if (keyIndex === -1) return false;
-        keyFound = fullKey[0];
-        return true;
-      }),
-    );
-    return keyFound;
+    const keyFound =
+      props.layout.layoutFlat.find((lKey) => lKey.all.includes(key)) ||
+      props.layout.extra.find((lKey) => lKey.all.includes(key));
+    return keyFound ? keyFound.primary : "";
   };
 
   // NOTE: use a store/memo maybe ?
@@ -93,17 +65,18 @@ const Keyboard = (props: KeyboardProps) => {
 
   return (
     <div class="kb">
-      <For each={layoutKeys()}>
+      <For each={props.layout.layout}>
         {(row) => (
           <div class="row">
             <For each={row}>
-              {(k) => (
+              {(lKey) => (
                 <KeyboardKey
-                  key={k}
-                  current={k.includes(props.currentKey)}
-                  data={k.map((c) => props.metrics[c])}
-                  size={keySizes()[k[0]] || ""}
-                  pressed={pressedKeys().includes(k[0])}
+                  key={lKey.all}
+                  used={lKey.used}
+                  current={lKey.all.includes(props.currentKey)}
+                  data={lKey.all.map((c) => props.metrics[c])}
+                  size={lKey.size}
+                  pressed={pressedKeys().includes(lKey.primary)}
                 />
               )}
             </For>
@@ -111,14 +84,15 @@ const Keyboard = (props: KeyboardProps) => {
         )}
       </For>
       <div class="extraKeys">
-        <For each={extraKeys()}>
-          {(key) => (
+        <For each={props.layout.extra}>
+          {(lKey) => (
             <KeyboardKey
-              key={[key]}
-              current={key === props.currentKey}
-              data={[props.metrics[key]]}
-              size=""
-              pressed={pressedKeys().includes(key)}
+              key={lKey.all}
+              used={lKey.used}
+              current={lKey.all.includes(props.currentKey)}
+              data={lKey.all.map((c) => props.metrics[c])}
+              size={lKey.size}
+              pressed={pressedKeys().includes(lKey.primary)}
             />
           )}
         </For>
