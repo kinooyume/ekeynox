@@ -12,7 +12,6 @@ import "../styles/global.css";
   .theme {
     display: flex;
     align-items: center;
-    -webkit-tap-highlight-color: transparent;
   }
 
   .theme__fill,
@@ -156,10 +155,6 @@ import "../styles/global.css";
 
   .theme__toggle:checked:before {
     background-color: hsl(198, 90%, 55%);
-  }
-
-  .theme__toggle:checked ~ .theme__fill {
-    transform: translateX(0);
   }
 
   .theme__toggle:checked ~ .theme__icon .theme__icon-part:nth-child(1) {

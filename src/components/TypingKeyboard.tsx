@@ -44,7 +44,6 @@ const Keyboard = (props: KeyboardProps) => {
   css`
     .kb {
       display: flex;
-      opacity: 0.8;
       flex-direction: column;
       width: 100%;
       max-width: 1032px;

@@ -108,9 +108,6 @@ const KeyboardKeyResume = (props: KeyboardKeyResumeProps) => {
     }
     .correct {
       background: var(--key-correct-bg-color);
-      box-shadow:
-        2px 2px 7px var(--key-correct-color),
-        -2px -2px 7px var(--key-correct-color-alt);
     }
     .correct.pressed {
       box-shadow:
@@ -119,9 +116,6 @@ const KeyboardKeyResume = (props: KeyboardKeyResumeProps) => {
     }
     .incorrect {
       background: var(--key-incorrect-bg-color);
-      box-shadow:
-        2px 2px 7px var(--key-incorrect-color),
-        -2px -2px 7px var(--key-incorrect-color-alt);
     }
     .incorrect.pressed {
       box-shadow:
@@ -130,9 +124,6 @@ const KeyboardKeyResume = (props: KeyboardKeyResumeProps) => {
     }
     .corrected {
       background: var(--key-corrected-bg-color);
-      box-shadow:
-        2px 2px 7px var(--key-corrected-color),
-        -2px -2px 7px var(--key-corrected-color-alt);
     }
     .corrected.pressed {
       box-shadow:
@@ -141,8 +132,6 @@ const KeyboardKeyResume = (props: KeyboardKeyResumeProps) => {
     }
     .current {
       background: var(--key-focus-bg-color);
-      box-shadow: 2px 2px 7px var(--key-focus-color) -2px -2px 7px
-        var(--key-focus-color-alt);
     }
     .current.pressed {
       box-shadow:
