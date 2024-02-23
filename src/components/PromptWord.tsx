@@ -19,14 +19,13 @@ const Word = (props: MetaWord) => {
     }
 
     .word {
-      color: rgb(0, 31, 63);
+      color: var(--text-color);
       margin-top: 24px;
       position: relative;
       display: inline-block;
       overflow: hidden;
     }
     .keys {
-      color: rgb(0, 31, 63);
       opacity: 0.6;
     }
     .pending {

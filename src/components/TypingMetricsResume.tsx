@@ -36,10 +36,10 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
       gap: 5px;
       padding: 10px;
       border-radius: 8px;
-      background: #e0e0e0;
+      background: var(--background-color);
       box-shadow:
-        2px 2px 7px #bebebe,
-        -2px -2px 7px #ffffff;
+        2px 2px 7px var(--key-color),
+        -2px -2px 7px var(--key-color-alt);
     }
     .card.speed {
       max-width: 100px;
@@ -51,8 +51,8 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
     .card.accuracy .title {
       font-size: 1.1em;
       box-shadow:
-        inset 2px 2px 7px #bebebe,
-        inset -2px -2px 7px #ffffff;
+        inset 2px 2px 7px var(--key-color),
+        inset -2px -2px 7px var(--key-color-alt);
       border-radius: 8px;
       padding: 5px;
     }
