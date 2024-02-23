@@ -1,7 +1,9 @@
 ---
+import DarkModeToggle from '../components/DarkModeToggle.astro';
 interface Props {
   title: string;
 }
+;
 
 const { title } = Astro.props;
 ---
@@ -18,7 +20,10 @@ const { title } = Astro.props;
     <title>{title}</title>
   </head>
   <body>
-    <div class="header"><a href="/">eKeyNox</a></div>
+    <div class="header">
+      <a href="/">eKeyNox</a>
+      <DarkModeToggle />
+    </div>
     <div class="sidebar"></div>
     <slot />
     <div class="footer"></div>
@@ -40,6 +45,11 @@ const { title } = Astro.props;
   html {
     font-family: system-ui, sans-serif;
     background-size: 224px;
+  }
+  .header {
+    display: flex;
+    padding: 1rem;
+    justify-content: space-evenly;
   }
   body {
     display: grid;
