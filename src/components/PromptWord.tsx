@@ -27,9 +27,14 @@ const Word = (props: MetaWord) => {
     }
     .keys {
       opacity: 0.6;
+      transform-origin: bottom center;
+      z-index: 2;
     }
     .pending {
       opacity: 1;
+      transform: scale(1.02);
+      transform-origin: bottom center;
+      z-index: 100;
     }
     .focus {
       opacity: 1;
