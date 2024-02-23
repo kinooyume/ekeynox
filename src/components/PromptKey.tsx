@@ -28,20 +28,20 @@ const Key = (props: Metakey) => {
       white-space: pre;
     }
     span.correct {
-      color: green;
-      background-color: lightgreen;
+      color: var(--correct-color);
+      background-color: var(--correct-bg-color);
     }
     span.incorrect {
-      color: red;
-      background-color: lightcoral;
+      color: var(--incorrect-color);
+      background-color: var(--incorrect-bg-color);
     }
     span.wasInvalid.correct {
-      color: orange;
-      background-color: lightyellow;
+      color: var(--corrected-color);
+      background-color: var(--corrected-bg-color);
     }
     span.focus {
-      color: blue;
-      background-color: lightblue;
+      color: var(--focus-color);
+      background-color: var(--focus-bg-color);
     }
     span.back {
       opacity: 0.6;

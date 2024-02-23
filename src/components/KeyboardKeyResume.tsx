@@ -50,30 +50,30 @@ const KeyboardKeyResume = (props: KeyboardKeyResumeProps) => {
       min-width: 40px;
       padding: 10px;
       height: 40px;
-      color: rgb(0, 31, 63);
+      color: var(--text-color);
       border-radius: 8px;
-      background: #e0e0e0;
+      background: var(--background-color);
       box-shadow:
-        2px 2px 7px #bebebe,
-        -2px -2px 7px #ffffff;
+        2px 2px 7px var(--key-color),
+        -2px -2px 7px var(--key-color-alt);
     }
     .pressed {
-      background: #e0e0e0;
+      background: var(--background-color);
       box-shadow:
-        inset 2px 2px 7px #bebebe,
-        inset -2px -2px 7px #ffffff;
+        inset 2px 2px 7px var(--key-color),
+        inset -2px -2px 7px var(--key-color-alt);
     }
     .concave {
       background: linear-gradient(145deg, #cacaca, #f0f0f0);
       box-shadow:
-        6px 6px 12px #bebebe,
-        -6px -6px 12px #ffffff;
+        6px 6px 12px var(--key-color),
+        -6px -6px 12px var(--key-color-alt);
     }
     .convex {
       background: linear-gradient(145deg, #f0f0f0, #cacaca);
       box-shadow:
-        4px 4px 12px #bebebe,
-        -4px -4px 12px #ffffff;
+        4px 4px 12px var(--key-color),
+        -4px -4px 12px var(--key-color-alt);
     }
 
     .key.double {
@@ -107,48 +107,47 @@ const KeyboardKeyResume = (props: KeyboardKeyResumeProps) => {
       float: right;
     }
     .correct {
-      background: #8ff0a4;
+      background: var(--key-correct-bg-color);
       box-shadow:
-        2px 2px 7px #7acc8b,
-        -2px -2px 7px #a4ffbd;
+        2px 2px 7px var(--key-correct-color),
+        -2px -2px 7px var(--key-correct-color-alt);
     }
     .correct.pressed {
       box-shadow:
-        inset 2px 2px 7px #7acc8b,
-        inset -2px -2px 7px #a4ffbd;
+        inset 2px 2px 7px var(--key-correct-color),
+        inset -2px -2px 7px var(--key-correct-color-alt);
     }
     .incorrect {
-      background: #f66151;
+      background: var(--key-incorrect-bg-color);
       box-shadow:
-        2px 2px 7px #d15245,
-        -2px -2px 7px #ff705d;
+        2px 2px 7px var(--key-incorrect-color),
+        -2px -2px 7px var(--key-incorrect-color-alt);
     }
     .incorrect.pressed {
       box-shadow:
-        inset 2px 2px 7px #d15245,
-        inset -2px -2px 7px #ff705d;
+        inset 2px 2px 7px var(--key-incorrect-color),
+        inset -2px -2px 7px var(--key-incorrect-color-alt);
     }
     .corrected {
-      background: #ffbe6f;
+      background: var(--key-corrected-bg-color);
       box-shadow:
-        2px 2px 7px #d9a25e,
-        -2px -2px 7px #ffdb80;
+        2px 2px 7px var(--key-corrected-color),
+        -2px -2px 7px var(--key-corrected-color-alt);
     }
     .corrected.pressed {
       box-shadow:
-        inset 2px 2px 7px #d9a25e,
-        inset -2px -2px 7px #ffdb80;
+        inset 2px 2px 7px var(--key-corrected-color),
+        inset -2px -2px 7px var(--key-corrected-color-alt);
     }
     .current {
-      background: #99c1f1;
-      box-shadow:
-        2px 2px 7px #82a4cd,
-        -2px -2px 7px #b0deff;
+      background: var(--key-focus-bg-color);
+      box-shadow: 2px 2px 7px var(--key-focus-color) -2px -2px 7px
+        var(--key-focus-color-alt);
     }
     .current.pressed {
       box-shadow:
-        inset 2px 2px 7px #82a4cd,
-        inset -2px -2px 7px #b0deff;
+        inset 2px 2px 7px var(--key-focus-color),
+        inset -2px -2px 7px var(--key-focus-color-alt);
     }
     .key:not(.used) {
       opacity: 0.6;
