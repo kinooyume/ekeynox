@@ -1,13 +1,14 @@
 import { createComputed, createSignal, onMount } from "solid-js";
 import {
   Chart,
-  Title,
-  Tooltip,
-  Legend,
-  Colors,
+  LineController,
+  CategoryScale,
+  PointElement,
+  LineElement,
+  LinearScale,
   type ChartData,
 } from "chart.js";
-import { Line, type ChartProps } from "solid-chartjs";
+
 import { DefaultChart } from "solid-chartjs";
 import type { TypingMetrics } from "./TypingMetrics";
 import { css } from "solid-styled";
@@ -21,7 +22,13 @@ const MyChart = (props: MyChartProps) => {
    * otherwise you will have the most primitive UI
    */
   onMount(() => {
-    Chart.register(Title, Tooltip, Legend, Colors);
+    Chart.register(
+      LineController,
+      CategoryScale,
+      PointElement,
+      LineElement,
+      LinearScale,
+    );
   });
 
   const [data, setData] = createSignal<ChartData | undefined>();
