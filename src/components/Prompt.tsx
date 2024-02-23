@@ -30,17 +30,25 @@ const prompt = (props: PromptProps) => {
   `;
 
   onMount(() => {
-    anime.timeline().add({
-      targets: ".paragraph .word .prompt-key",
-      translateY: ["1.1em", 0],
-      translateX: ["0.55em", 0],
-      translateZ: 0,
-      rotateZ: [180, 0],
-      duration: 750,
-      easing: "easeOutExpo",
-      delay: (el, i) => 6 * i,
-    });
+    anime
+      .timeline()
+      .add({
+        targets: ".paragraph .word .prompt-key",
+        translateY: ["1.1em", 0],
+        translateX: ["0.55em", 0],
+        translateZ: 0,
+        rotateZ: [180, 0],
+        duration: 750,
+        easing: "easeOutExpo",
+        delay: (el, i) => 6 * i,
+      })
+      .finished.then(() => {
+        document
+          .querySelectorAll(".paragraph .word .prompt-key")
+          ?.forEach((el) => el.removeAttribute("style"));
+      });
   });
+
   return (
     <div class="prompt">
       <div class="game"></div>
@@ -50,11 +58,11 @@ const prompt = (props: PromptProps) => {
             <div class="paragraph">
               <For each={paragraphs}>
                 {(word) => (
-                    <Word
-                      keys={word.keys}
-                      focus={word.focus}
-                      status={word.status}
-                    />
+                  <Word
+                    keys={word.keys}
+                    focus={word.focus}
+                    status={word.status}
+                  />
                 )}
               </For>
             </div>
