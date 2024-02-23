@@ -10,6 +10,7 @@ import {
 import { Line, type ChartProps } from "solid-chartjs";
 import { DefaultChart } from "solid-chartjs";
 import type { TypingMetrics } from "./TypingMetrics";
+import { css } from "solid-styled";
 
 type MyChartProps = {
   metrics: TypingMetrics;
@@ -25,6 +26,12 @@ const MyChart = (props: MyChartProps) => {
 
   const [data, setData] = createSignal<ChartData | undefined>();
 
+  css`
+    .chart {
+      width: 900px;
+      height: 300px;
+    }
+  `;
   createComputed(() => {
     let labels = [] as string[];
     let data = [] as number[];
@@ -53,7 +60,11 @@ const MyChart = (props: MyChartProps) => {
     tension: 0.4,
   };
 
-  return <DefaultChart type="line" data={data()} options={options} />;
+  return (
+    <div class="chart">
+      <DefaultChart type="line" data={data()} options={options} />
+    </div>
+  );
 };
 
 export default MyChart;
