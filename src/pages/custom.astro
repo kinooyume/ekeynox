@@ -1,0 +1,12 @@
+---
+import Layout from "../layouts/Layout.astro";
+import CustomGame from "../components/CustomGame";
+
+const { title } = Astro.params;
+---
+
+<Layout title={"eKeyNox"}>
+  <CustomGame client:only="solid" />
+</Layout>
+
+<style></style>
