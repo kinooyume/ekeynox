@@ -30,36 +30,38 @@ const Enter = () => ({
   ],
 });
 
-export type Parser = (source: string) => [ Paragraphs, Set<string> ]
+export type Parser = (source: string) => [Paragraphs, Set<string>];
 export const parse: Parser = (source) => {
   const keySet = new Set<string>();
-  const paragraphs = source.split("\n").map(
-    (line) => {
-      return line
-        .split(/(\s+)/)
-        .map((word) => ({
-          focus: false,
-          status: WordStatus.unstart,
-          isSeparator: word.trim() === "",
-          keys: word.split("").map((key) => {
+  const paragraphs = source
+    .split("\n")
+    .map(
+      (line) => {
+        return line
+          .split(/(\s+)/)
+          .map((word) => ({
+            focus: false,
+            status: WordStatus.unstart,
+            isSeparator: word.trim() === "",
+            keys: word.split("").map((key) => {
               keySet.add(key);
-              return ({
-                  key,
-                  status: PromptKeyStatus.unstart,
-                  focus: PromptKeyFocus.unset,
-              });
-          }),
-        }))
-        .filter((word) => word.keys.length > 0);
-    },
-    // NOTE: it create empty artefact when a string start or end with a space
-  );
+              return {
+                key,
+                status: PromptKeyStatus.unstart,
+                focus: PromptKeyFocus.unset,
+              };
+            }),
+          }))
+          .filter((word) => word.keys.length > 0);
+      },
+    )
+    .filter((paragraph) => paragraph.length > 0);
   if (paragraphs.length > 1) {
     for (let i = 0; i < paragraphs.length - 1; i++) {
       paragraphs[i].push(Enter());
     }
   }
-  return [ paragraphs, keySet ];
+  return [paragraphs, keySet];
 };
 
 const deepClone = (paragraphs: Paragraphs) =>
