@@ -98,6 +98,7 @@ const TypingGame = ({ source }: TypingGameProps) => {
           preview={preview()}
           layout={kbLayout()}
           metrics={typingMetrics()}
+          onReset={reset}
         />
       }
     >
