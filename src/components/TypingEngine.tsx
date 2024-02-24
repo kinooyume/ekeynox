@@ -127,9 +127,8 @@ const TypingEngine = (props: TypingEngineProps) => {
       nextWord();
     } else if (currentParagraph() < getCurrent.nbrParagraphs()) {
       nextParagraph();
-    } else {
-      props.setStatus({ kind: TypingStatusKind.over });
-    }
+    } else return false;
+    return true;
   };
 
   /* Prev */
@@ -214,12 +213,15 @@ const TypingEngine = (props: TypingEngineProps) => {
       } else {
         setCurrent.keyStatus(PromptKeyStatus.incorrect);
       }
-      next();
+      let hasNext = next();
       setStatus({
         keyMetrics,
         timestamp,
         focusIsSeparator: getCurrent.isSeparator(),
       });
+      if (!hasNext) {
+        props.setStatus({ kind: TypingStatusKind.over });
+      }
     }
     props.setCurrentPromptKey(getCurrent.key().key);
   };
