@@ -2,21 +2,23 @@ import type { Setter } from "solid-js";
 import { type KeyTimedTuple } from "./KeyMetrics";
 import { TypingStatusKind, type TypingStatus } from "./TypingEngine";
 import KeypressMetrics, {
-  type PendingKeypressMetrics,
-  type PausedKeypressMetrics,
   type KeypressMetricsProjection,
   type TypingProjection,
 } from "./KeypressMetrics";
 import type { LinkedList } from "./List";
 import List from "./List";
+import type { PausedKeypressMetrics, PendingKeypressMetrics } from "./KeypressMetricsSessions";
+import KeypressMetricsSessions from "./KeypressMetricsSessions";
 
 export type TypingMetrics = {
   projection: TypingProjection;
+  sessions: LinkedList<TypingProjection>;
   logs: LinkedList<KeypressMetricsProjection> | null;
 };
 
 const createTypingMetrics = (): TypingMetrics => ({
   projection: KeypressMetrics.createTypingProjection(),
+  sessions: List.make(null, KeypressMetrics.createTypingProjection()),
   logs: null,
 });
 
@@ -112,7 +114,7 @@ const createTypingMetricsState = (
 
   const create = () =>
     paused({
-      keypressMetrics: KeypressMetrics.new,
+      keypressMetrics: KeypressMetricsSessions.new,
       metrics: createTypingMetrics(),
     });
 

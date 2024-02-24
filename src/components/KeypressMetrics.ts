@@ -98,7 +98,8 @@ const keypressProjectionHandler = () => {
     const raw = ((projection.total / duration) * 60000) / 5;
 
     const accuracy = (correct / total) * 100 || 0;
-    const rawAccuracy = (correct / (total + projection.deletedIncorrect)) * 100 || 0;
+    const rawAccuracy =
+      (correct / (total + projection.deletedIncorrect)) * 100 || 0;
 
     return {
       wpms: [wpm, raw],
@@ -112,52 +113,7 @@ const keypressProjectionHandler = () => {
   return { event, getProjection, start };
 };
 
-/* Session */
-
-export type PendingKeypressMetrics = {
-  event: (key: KeyTimedTuple) => void;
-  getProjection: () => KeypressMetricsProjection;
-  pause: () => PausedKeypressMetrics;
-};
-
-export type PausedKeypressMetrics = {
-  getProjection: () => KeypressMetricsProjection;
-  resume: () => PendingKeypressMetrics;
-};
-
-// NOTE: broken play/pause, act like a reset
-// TODO: Multiple Session Handler (play/pause)
-
-const pendingKeypressMetrics = (): PendingKeypressMetrics => {
-  const handler = keypressProjectionHandler();
-  return {
-    event: handler.event,
-    getProjection: handler.getProjection,
-    pause: () => {
-      const projection = handler.getProjection();
-      return {
-        getProjection: () => projection,
-        resume: pendingKeypressMetrics,
-      };
-    },
-  };
-};
-
-const defaultProjection: KeypressMetricsProjection = {
-  wpms: [0, 0],
-  accuracies: [0, 0],
-  projection: createTypingProjection(),
-  logs: null,
-  start: 0,
-  stop: 0,
-};
-
-const defaultPausedKeypressMetrics: PausedKeypressMetrics = {
-  getProjection: () => defaultProjection,
-  resume: pendingKeypressMetrics,
-};
-
 export default {
-  new: defaultPausedKeypressMetrics,
   createTypingProjection,
+  keypressProjectionHandler,
 };
