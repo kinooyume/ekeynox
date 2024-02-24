@@ -1,13 +1,13 @@
 import { css } from "solid-styled";
-import type { TypingMetricsPreview, TypingMetrics } from "./TypingMetrics";
+import type {  TypingMetrics } from "./TypingMetrics";
 import TypingKeyboardResume from "./TypingKeyboardResume";
 import type { KeysProjection } from "./KeyMetrics";
 import type { KeyboardLayout } from "./KeyboardLayout";
-// https://github.com/s0ftik3/solid-chartjs?tab=readme-ov-file
 import MetricsChart from "./MetricsChart";
+import type { StatProjection } from "./KeypressMetrics";
 
 type TypingMetricsProps = {
-  preview: TypingMetricsPreview;
+  stat: StatProjection;
   metrics: TypingMetrics;
   layout: KeyboardLayout;
   keyMetrics: KeysProjection;
@@ -15,7 +15,6 @@ type TypingMetricsProps = {
 };
 
 const TypingMetricsResume = (props: TypingMetricsProps) => {
-  console.log(props.metrics);
   css`
     .metrics {
       display: flex;
@@ -70,16 +69,16 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
       <div class="preview">
         <div class="speeds">
           <h2>Speed</h2>
-          <p class="card speed">WPM: {props.preview.wpms[0].toFixed(2)}</p>
-          <p class="card speed">Raw: {props.preview.wpms[1].toFixed(2)}</p>
+          <p class="card speed">WPM: {props.stat.speed.byWord[0].toFixed(2)}</p>
+          <p class="card speed">Raw: {props.stat.speed.byKeypress[1].toFixed(2)}</p>
         </div>
         <div class="accuracies">
           <h2>Accurracies</h2>
           <p class="card accuracy">
-            Accurracy: {props.preview.accuracies[0].toFixed(2)}%
+            Accurracy: {props.stat.accuracies[0].toFixed(2)}%
           </p>
           <p class="card accuracy">
-            Real Accuracy: {props.preview.accuracies[1].toFixed(2)}%
+            Real Accuracy: {props.stat.accuracies[1].toFixed(2)}%
           </p>
         </div>
       </div>

@@ -31,53 +31,61 @@ const createTypingProjection = () => ({
   total: 0,
 });
 
-export type CoreKeypressProjection = {
+export type CoreProjection = {
   projection: TypingProjection;
   duration: number;
 };
 
-export type MetaKeypressProjection = {
+const createCoreProjection = (): CoreProjection => ({
+  projection: createTypingProjection(),
+  duration: 0,
+});
+
+export type MetaProjection = {
   logs: LinkedList<KeyTimedTuple> | null;
   start: number;
   stop: number;
 };
+
+const createMetaKeypressProjection = (): MetaProjection => ({
+  logs: null,
+  start: 0,
+  stop: 0,
+});
 
 export type SpeedProjection = {
   byKeypress: [valid: number, all: number];
   byWord: [valid: number, all: number];
 };
 
+const createSpeedProjection = (): SpeedProjection => ({
+  byKeypress: [0, 0],
+  byWord: [0, 0],
+});
+
 export type StatProjection = {
   speed: SpeedProjection;
   accuracies: [corrected: number, real: number];
 };
 
-const createCoreKeypressProjection = (): CoreKeypressProjection => ({
-  projection: createTypingProjection(),
-  duration: 0,
+const createStatProjection = (): StatProjection => ({
+  speed: createSpeedProjection(),
+  accuracies: [0, 0],
 });
 
 export type KeypressMetricsProjection = {
-  wpms: [number, number];
-  accuracies: [corrected: number, real: number];
-  projection: TypingProjection;
-  logs: LinkedList<KeyTimedTuple> | null;
-  start: number;
-  stop: number;
-  duration: number;
+  core: CoreProjection;
+  meta: MetaProjection;
+  stats: StatProjection;
 };
 
 const createKeypressProjection = (): KeypressMetricsProjection => ({
-  wpms: [0, 0],
-  accuracies: [0, 0],
-  projection: createTypingProjection(),
-  logs: null,
-  start: 0,
-  stop: 0,
-  duration: 0,
+  core: createCoreProjection(),
+  meta: createMetaKeypressProjection(),
+  stats: createStatProjection(),
 });
 
-const keypressProjectionHandler = (part: CoreKeypressProjection) => {
+const keypressProjectionHandler = (part: CoreProjection) => {
   const projection = Object.assign({}, part.projection);
   let logs: LinkedList<KeyTimedTuple> | null = null;
 
@@ -139,13 +147,15 @@ const keypressProjectionHandler = (part: CoreKeypressProjection) => {
       (correct / (total + projection.deletedIncorrect)) * 100 || 0;
 
     return {
-      wpms: [wpm, raw],
-      accuracies: [accuracy, rawAccuracy],
-      projection: Object.assign({}, projection),
-      logs: sortedLogs,
-      start,
-      stop,
-      duration,
+      core: { projection: Object.assign({}, projection), duration },
+      meta: { logs: sortedLogs, start, stop },
+      stats: {
+        speed: {
+          byKeypress: [wpm, raw],
+          byWord: [wpm, raw],
+        },
+        accuracies: [accuracy, rawAccuracy],
+      },
     };
   };
   return { event, getProjection, start };
@@ -155,5 +165,6 @@ export default {
   createTypingProjection,
   keypressProjectionHandler,
   createKeypressProjection,
-  createCoreKeypressProjection,
+  createCoreProjection,
+  createStatProjection,
 };
