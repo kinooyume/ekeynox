@@ -72,7 +72,8 @@ const createTypingMetricsState = (
           return pending(props);
         case TypingStatusKind.pause:
           clearInterval(props.interval.timer);
-          const pausedKeypressMetrics = props.keypressMetrics.pause();
+          // ici on veut le part actuel
+          const [ pausedKeypressMetrics, projection ] = props.keypressMetrics.pause();
           return paused({
             keypressMetrics: pausedKeypressMetrics,
             metrics: props.metrics,
@@ -80,8 +81,9 @@ const createTypingMetricsState = (
         case TypingStatusKind.over:
           clearInterval(props.interval.timer);
           setTypingMetrics(props.metrics);
+          const [ overKeypressMetrics, finalProjection ] = props.keypressMetrics.pause();
           return paused({
-            keypressMetrics: props.keypressMetrics.pause(),
+            keypressMetrics: overKeypressMetrics,
             metrics: props.metrics,
           });
       }
@@ -108,13 +110,12 @@ const createTypingMetricsState = (
           ] as KeyTimedTuple);
 
           const updatePreview = () => {
-            const KeypressMetricsProjection =
-              pendingKeypressMetrics.getProjection();
+            const projection = pendingKeypressMetrics.getProjection();
             setPreview({
-              wpms: KeypressMetricsProjection.wpms,
-              accuracies: KeypressMetricsProjection.accuracies,
+              wpms: projection.wpms,
+              accuracies: projection.accuracies,
             });
-            metrics.logs = List.make(metrics.logs, KeypressMetricsProjection);
+            metrics.logs = List.make(metrics.logs, projection);
           };
 
           const interval: Interval = { timer: 0 as unknown as NodeJS.Timer };
