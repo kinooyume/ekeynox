@@ -27,6 +27,12 @@ const Key = (props: Metakey) => {
     span {
       white-space: pre;
     }
+
+    span.focus {
+      position: relative;
+      color: var(--focus-color);
+      background-color: var(--focus-bg-color);
+    }
     span.correct {
       color: var(--correct-color);
       background-color: var(--correct-bg-color);
@@ -39,9 +45,14 @@ const Key = (props: Metakey) => {
       color: var(--corrected-color);
       background-color: var(--corrected-bg-color);
     }
-    span.focus {
-      color: var(--focus-color);
-      background-color: var(--focus-bg-color);
+    span.focus::before {
+      content: " ";
+      position: absolute;
+      top: -4px;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-bottom: 2px solid var(--focus-color);
     }
     span.back {
       opacity: 0.6;
