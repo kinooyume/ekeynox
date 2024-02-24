@@ -20,6 +20,20 @@ import {
 
 */
 
+export enum TypingStatusKind {
+  unstart,
+  pending,
+  deleted,
+  pause,
+  over,
+}
+
+export type TypingStatus =
+  | { kind: TypingStatusKind.unstart }
+  | { kind: TypingStatusKind.pending; keyMetrics: KeyTuple; timestamp: number }
+  | { kind: TypingStatusKind.pause }
+  | { kind: TypingStatusKind.over };
+
 export type TypingEngineProps = {
   paragraphs: Paragraphs;
   setParagraphs: SetStoreFunction<Paragraphs>;
@@ -31,28 +45,6 @@ export type TypingEngineProps = {
   setFocus: (focus: () => void) => void;
   setReset: (reset: () => void) => void;
 };
-
-export enum TypingStatusKind {
-  unstart,
-  pending,
-  deleted,
-  pause,
-  over,
-}
-
-export enum KeyPressedKind {
-  match,
-  unmatch,
-  deleted,
-}
-
-export type KeyPressed = [string, string];
-
-export type TypingStatus =
-  | { kind: TypingStatusKind.unstart }
-  | { kind: TypingStatusKind.pending; keyMetrics: KeyTuple; timestamp: number }
-  | { kind: TypingStatusKind.pause }
-  | { kind: TypingStatusKind.over };
 
 const TypingEngine = (props: TypingEngineProps) => {
   let input: HTMLInputElement;
