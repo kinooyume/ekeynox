@@ -59,6 +59,7 @@ const prompt = (props: PromptProps) => {
               <For each={paragraphs}>
                 {(word) => (
                   <Word
+                    isSeparator={word.isSeparator}
                     keys={word.keys}
                     focus={word.focus}
                     status={word.status}

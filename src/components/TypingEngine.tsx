@@ -11,15 +11,6 @@ import {
   PromptKeyFocus,
 } from "./KeyMetrics.ts";
 
-/* Typing Engine
-
-- React to key events
-- navigate through paragraph
-- Update the store status, used by the Prompt component
-- Update Typing Status
-
-*/
-
 export enum TypingStatusKind {
   unstart,
   pending,

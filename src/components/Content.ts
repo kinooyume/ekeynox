@@ -8,6 +8,7 @@ export type Metakey = {
 };
 
 export type MetaWord = {
+  isSeparator: boolean;
   status: WordStatus;
   focus: boolean;
   keys: Array<Metakey>;
@@ -19,6 +20,7 @@ export type Paragraphs = Array<Paragraph>;
 const Enter = () => ({
   focus: false,
   status: WordStatus.unstart,
+  isSeparator: true,
   keys: [
     {
       key: "Enter",
@@ -38,6 +40,7 @@ export const parse: Parser = (source) => {
         .map((word) => ({
           focus: false,
           status: WordStatus.unstart,
+          isSeparator: word.trim() === "",
           keys: word.split("").map((key) => {
               keySet.add(key);
               return ({
