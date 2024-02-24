@@ -38,7 +38,18 @@ export type KeypressMetricsProjection = {
   logs: LinkedList<KeyTimedTuple> | null;
   start: number;
   stop: number;
+  duration: number;
 };
+
+const createKeypressProjection = (): KeypressMetricsProjection => ({
+  wpms: [0, 0],
+  accuracies: [0, 0],
+  projection: createTypingProjection(),
+  logs: null,
+  start: 0,
+  stop: 0,
+  duration: 0,
+});
 
 const keypressProjectionHandler = () => {
   const projection = createTypingProjection();
@@ -108,6 +119,7 @@ const keypressProjectionHandler = () => {
       logs: sortedLogs,
       start,
       stop,
+      duration,
     };
   };
   return { event, getProjection, start };
@@ -116,4 +128,5 @@ const keypressProjectionHandler = () => {
 export default {
   createTypingProjection,
   keypressProjectionHandler,
+  createKeypressProjection,
 };
