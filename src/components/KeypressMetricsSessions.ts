@@ -15,8 +15,6 @@ export type PausedKeypressMetrics = {
   resume: () => [PendingKeypressMetrics, stop: number];
 };
 
-// pause: on donne le part
-// getProjection, nouveau part
 const pendingKeypressMetrics = (
   part: CoreKeypressProjection,
 ): PendingKeypressMetrics => {
