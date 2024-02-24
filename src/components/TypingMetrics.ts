@@ -60,6 +60,11 @@ const createTypingMetricsState = (
     (props: PendingMetricsProps) =>
     ({ status }: TypingMetricsProps): TypingMetricsState => {
       switch (status.kind) {
+        case TypingStatusKind.unstart:
+          console.log("unstart");
+          clearInterval(props.interval.timer);
+          setPreview(createTypingMetricsPreview());
+          return create();
         case TypingStatusKind.pending:
           props.keypressMetrics.event([
             ...status.keyMetrics,
@@ -81,7 +86,6 @@ const createTypingMetricsState = (
             metrics: props.metrics,
           });
       }
-      return pending(props);
     };
 
   type pausedMetricsProps = {
