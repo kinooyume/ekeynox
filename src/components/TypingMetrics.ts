@@ -7,7 +7,10 @@ import KeypressMetrics, {
 } from "./KeypressMetrics";
 import type { LinkedList } from "./List";
 import List from "./List";
-import type { PausedKeypressMetrics, PendingKeypressMetrics } from "./KeypressMetricsSessions";
+import type {
+  PausedKeypressMetrics,
+  PendingKeypressMetrics,
+} from "./KeypressMetricsSessions";
 import KeypressMetricsSessions from "./KeypressMetricsSessions";
 
 export type TypingMetrics = {
@@ -40,6 +43,10 @@ const createTypingMetricsPreview = (): TypingMetricsPreview => ({
   accuracies: [0, 0],
 });
 
+type Interval = {
+  timer: NodeJS.Timer | NodeJS.Timeout;
+};
+
 const createTypingMetricsState = (
   setPreview: Setter<TypingMetricsPreview>,
   setTypingMetrics: Setter<TypingMetrics>,
@@ -47,14 +54,14 @@ const createTypingMetricsState = (
   type PendingMetricsProps = {
     keypressMetrics: PendingKeypressMetrics;
     metrics: TypingMetrics;
-    interval: NodeJS.Timer;
+    interval: Interval;
   };
   const pending =
     (props: PendingMetricsProps) =>
     ({ status }: TypingMetricsProps): TypingMetricsState => {
       switch (status.kind) {
         case TypingStatusKind.pause:
-          clearInterval(props.interval);
+          clearInterval(props.interval.timer);
           const pausedKeypressMetrics = props.keypressMetrics.pause();
           return paused({
             keypressMetrics: pausedKeypressMetrics,
@@ -67,7 +74,7 @@ const createTypingMetricsState = (
           ] as KeyTimedTuple);
           return pending(props);
         case TypingStatusKind.over:
-          clearInterval(props.interval);
+          clearInterval(props.interval.timer);
           setTypingMetrics(props.metrics);
           return paused({
             keypressMetrics: props.keypressMetrics.pause(),
@@ -87,7 +94,8 @@ const createTypingMetricsState = (
     ({ status }: TypingMetricsProps): TypingMetricsState => {
       switch (status.kind) {
         case TypingStatusKind.pending:
-          const pendingKeypressMetrics = keypressMetrics.resume();
+          const [pendingKeypressMetrics, lastDuration] =
+            keypressMetrics.resume();
           pendingKeypressMetrics.event([
             ...status.keyMetrics,
             status.timestamp,
@@ -103,9 +111,17 @@ const createTypingMetricsState = (
             metrics.logs = List.make(metrics.logs, KeypressMetricsProjection);
           };
 
+          const interval: Interval = { timer: 0 as unknown as NodeJS.Timer };
+
+          interval.timer = setTimeout(() => {
+            updatePreview();
+            clearTimeout(interval.timer);
+            interval.timer = setInterval(updatePreview, 1000);
+          }, 1000 - lastDuration);
+
           return pending({
             keypressMetrics: pendingKeypressMetrics,
-            interval: setInterval(updatePreview, 1000),
+            interval,
             metrics,
           });
       }
