@@ -29,17 +29,8 @@ const pendingKeypressMetrics = (): PendingKeypressMetrics => {
   };
 };
 
-const defaultProjection: KeypressMetricsProjection = {
-  wpms: [0, 0],
-  accuracies: [0, 0],
-  projection: KeypressMetrics.createTypingProjection(),
-  logs: null,
-  start: 0,
-  stop: 0,
-};
-
 const defaultPausedKeypressMetrics: PausedKeypressMetrics = {
-  getProjection: () => defaultProjection,
+  getProjection: KeypressMetrics.createKeypressProjection,
   resume: () => [pendingKeypressMetrics(), 0],
 };
 
