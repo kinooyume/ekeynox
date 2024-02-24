@@ -1,11 +1,11 @@
 import { css } from "solid-styled";
 import Play from "./ui/play.tsx";
 import Reset from "./ui/reset.tsx";
-import type { TypingMetricsPreview } from "./TypingMetrics.ts";
+import type { StatProjection } from "./KeypressMetrics.ts";
 
 type TypingNavProps = {
   isPaused: boolean;
-  preview: TypingMetricsPreview;
+  stat: StatProjection;
   onPause: () => void;
   onReset: () => void;
 };
@@ -24,13 +24,11 @@ const TypingNav = (props: TypingNavProps) => {
   `;
   return (
     <nav>
-      <span class="wpm">Wpm: {Math.trunc(props.preview.wpms[0])}</span>
-      <span class="wpm">Raw: {Math.trunc(props.preview.wpms[1])}</span>
+      <span class="wpm">WPM: {props.stat.speed.byWord[0].toFixed(2)}</span>
+      <span class="wpm">Raw: {props.stat.speed.byKeypress[1].toFixed(2)}</span>
+      <span class="wpm">Accurracy: {props.stat.accuracies[0].toFixed(2)}%</span>
       <span class="wpm">
-        Accuracy: {Math.trunc(props.preview.accuracies[0])}
-      </span>
-      <span class="wpm">
-        Real Accuracy: {Math.trunc(props.preview.accuracies[1])}
+        Real Accuracy: {props.stat.accuracies[1].toFixed(2)}%
       </span>
       <div onClick={props.onPause}>
         <Play pause={props.isPaused} />

@@ -44,11 +44,10 @@ const MyChart = (props: MyChartProps) => {
     let data = [] as number[];
     let log = props.metrics.logs;
     while (log) {
-      console.log(log.value.projection.incorrect);
-      const elapsed = Math.round((log.value.stop - log.value.start) / 1000);
+      const elapsed = Math.round((log.value.meta.stop - log.value.meta.start) / 1000);
 
       labels.push(elapsed.toString());
-      data.push(log.value.wpms[0]);
+      data.push(log.value.stats.speed.byWord[0]);
       log = log.next;
     }
     setData({

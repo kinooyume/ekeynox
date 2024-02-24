@@ -10,7 +10,6 @@ import TypingNav from "./TypingNav.tsx";
 import Keyboard, { type TypingKeyboardRef } from "./TypingKeyboard.tsx";
 import {
   createTypingMetrics,
-  createTypingMetricsPreview,
   createTypingMetricsState,
   type TypingMetricsState,
 } from "./TypingMetrics.ts";
@@ -26,6 +25,7 @@ import {
 } from "solid-js";
 import { createStore } from "solid-js/store";
 import { updateKeyProjection, type KeysProjection } from "./KeyMetrics.ts";
+import KeypressMetrics from "./KeypressMetrics.ts";
 
 type TypingGameProps = { source: string };
 
@@ -52,9 +52,9 @@ const TypingGame = ({ source }: TypingGameProps) => {
 
   /* Metrics */
 
-  const [preview, setPreview] = createSignal(createTypingMetricsPreview());
+  const [stat, setStat] = createSignal(KeypressMetrics.createStatProjection());
   const [typingMetrics, setTypingMetrics] = createSignal(createTypingMetrics());
-  const updateMetrics = createTypingMetricsState(setPreview, setTypingMetrics);
+  const updateMetrics = createTypingMetricsState(setStat, setTypingMetrics);
   createEffect(
     (typingMetricsState: TypingMetricsState) =>
       typingMetricsState({ status: status() }),
@@ -95,7 +95,7 @@ const TypingGame = ({ source }: TypingGameProps) => {
       fallback={
         <TypingMetricsResume
           keyMetrics={keyMetrics()}
-          preview={preview()}
+          stat={stat()}
           layout={kbLayout()}
           metrics={typingMetrics()}
           onReset={reset}
@@ -117,7 +117,7 @@ const TypingGame = ({ source }: TypingGameProps) => {
         <Prompt paragraphs={paraStore} />
         <TypingNav
           isPaused={status().kind !== TypingStatusKind.pending}
-          preview={preview()}
+          stat={stat()}
           onPause={pause}
           onReset={reset}
         />

@@ -3,6 +3,7 @@ import { type KeyTimedTuple } from "./KeyMetrics";
 import { TypingStatusKind, type TypingStatus } from "./TypingEngine";
 import KeypressMetrics, {
   type KeypressMetricsProjection,
+  type StatProjection,
   type TypingProjection,
 } from "./KeypressMetrics";
 import type { LinkedList } from "./List";
@@ -33,22 +34,12 @@ export type TypingMetricsState = (
   props: TypingMetricsProps,
 ) => TypingMetricsState;
 
-export type TypingMetricsPreview = {
-  wpms: [number, number];
-  accuracies: [number, number];
-};
-
-const createTypingMetricsPreview = (): TypingMetricsPreview => ({
-  wpms: [0, 0],
-  accuracies: [0, 0],
-});
-
 type Interval = {
   timer: NodeJS.Timer | NodeJS.Timeout;
 };
 
 const createTypingMetricsState = (
-  setPreview: Setter<TypingMetricsPreview>,
+  setStat: Setter<StatProjection>,
   setTypingMetrics: Setter<TypingMetrics>,
 ): TypingMetricsState => {
   type PendingMetricsProps = {
@@ -62,7 +53,7 @@ const createTypingMetricsState = (
       switch (status.kind) {
         case TypingStatusKind.unstart:
           clearInterval(props.interval.timer);
-          setPreview(createTypingMetricsPreview());
+          setStat(KeypressMetrics.createStatProjection());
           return create();
         case TypingStatusKind.pending:
           props.keypressMetrics.event([
@@ -72,7 +63,6 @@ const createTypingMetricsState = (
           return pending(props);
         case TypingStatusKind.pause:
           clearInterval(props.interval.timer);
-          // ici on veut le part actuel
           const [ pausedKeypressMetrics, projection ] = props.keypressMetrics.pause();
           return paused({
             keypressMetrics: pausedKeypressMetrics,
@@ -99,7 +89,7 @@ const createTypingMetricsState = (
     ({ status }: TypingMetricsProps): TypingMetricsState => {
       switch (status.kind) {
         case TypingStatusKind.unstart:
-          setPreview(createTypingMetricsPreview());
+          setStat(KeypressMetrics.createStatProjection());
           return create();
         case TypingStatusKind.pending:
           const [pendingKeypressMetrics, lastDuration] =
@@ -111,10 +101,7 @@ const createTypingMetricsState = (
 
           const updatePreview = () => {
             const projection = pendingKeypressMetrics.getProjection();
-            setPreview({
-              wpms: projection.wpms,
-              accuracies: projection.accuracies,
-            });
+            setStat(projection.stats);
             metrics.logs = List.make(metrics.logs, projection);
           };
 
@@ -147,5 +134,4 @@ const createTypingMetricsState = (
 export {
   createTypingMetrics,
   createTypingMetricsState,
-  createTypingMetricsPreview,
 };

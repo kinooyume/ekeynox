@@ -1,6 +1,6 @@
 import type { KeyTimedTuple } from "./KeyMetrics";
 import KeypressMetrics, {
-  type CoreKeypressProjection,
+  type CoreProjection,
   type KeypressMetricsProjection,
 } from "./KeypressMetrics";
 
@@ -16,7 +16,7 @@ export type PausedKeypressMetrics = {
 };
 
 const pendingKeypressMetrics = (
-  part: CoreKeypressProjection,
+  part: CoreProjection,
 ): PendingKeypressMetrics => {
   const handler = KeypressMetrics.keypressProjectionHandler(part);
   return {
@@ -28,11 +28,8 @@ const pendingKeypressMetrics = (
         {
           getProjection: () => projection,
           resume: () => [
-            pendingKeypressMetrics({
-              duration: projection.duration,
-              projection: projection.projection,
-            }),
-            projection.stop,
+            pendingKeypressMetrics(projection.core),
+            projection.meta.stop,
           ],
         },
         projection,
@@ -44,7 +41,7 @@ const pendingKeypressMetrics = (
 const defaultPausedKeypressMetrics: PausedKeypressMetrics = {
   getProjection: KeypressMetrics.createKeypressProjection,
   resume: () => [
-    pendingKeypressMetrics(KeypressMetrics.createCoreKeypressProjection()),
+    pendingKeypressMetrics(KeypressMetrics.createCoreProjection()),
     0,
   ],
 };
