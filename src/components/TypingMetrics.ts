@@ -61,7 +61,6 @@ const createTypingMetricsState = (
     ({ status }: TypingMetricsProps): TypingMetricsState => {
       switch (status.kind) {
         case TypingStatusKind.unstart:
-          console.log("unstart");
           clearInterval(props.interval.timer);
           setPreview(createTypingMetricsPreview());
           return create();
