@@ -57,8 +57,8 @@ const createTypingMetricsState = (
           return create();
         case TypingStatusKind.pending:
           props.keypressMetrics.event([
-            ...status.keyMetrics,
-            status.timestamp,
+            ...status.event.keyMetrics,
+            status.event.timestamp,
           ] as KeyTimedTuple);
           return pending(props);
         case TypingStatusKind.pause:
@@ -95,8 +95,8 @@ const createTypingMetricsState = (
           const [pendingKeypressMetrics, lastDuration] =
             keypressMetrics.resume();
           pendingKeypressMetrics.event([
-            ...status.keyMetrics,
-            status.timestamp,
+            ...status.event.keyMetrics,
+            status.event.timestamp,
           ] as KeyTimedTuple);
 
           const updatePreview = () => {
