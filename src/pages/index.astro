@@ -21,14 +21,12 @@ const gameList = games.map(({ params }) => {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-    margin: 12px 64px;
   }
-  a {
+  li a {
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 6px;
-    width: 200px;
     padding: 10px;
     height: 40px;
     border-radius: 14px;
@@ -39,13 +37,6 @@ const gameList = games.map(({ params }) => {
   }
   li {
     list-style: none;
-  }
-  a:hover {
-    background: var(--background-color);
-    cursor: pointer;
-    box-shadow:
-      inset 2px 2px 7px var(--neu-color),
-      inset -2px -2px 7px var(--neu-color-alt);
   }
 </style>
 <Layout title="eKeyNox">
@@ -59,6 +50,7 @@ const gameList = games.map(({ params }) => {
         ))
       }
     </ul>
+    <a href="/custom">Custom</a>
   </main>
 </Layout>
 

@@ -2,15 +2,6 @@ import { KeyStatus, PromptKeyStatus, type KeyTimedTuple } from "./KeyMetrics";
 import type { LinkedList } from "./List";
 import List from "./List";
 
-/* Average */
-type GetAverage = (value: number) => number;
-type CreateAverage = (nbrIteration: number, prevAverage: number) => GetAverage;
-
-const createAverage: CreateAverage = (nbr, average) => (value: number) =>
-  average + (value - average) / nbr;
-
-/* *** */
-
 export type TypingProjection = {
   correct: number;
   incorrect: number;
