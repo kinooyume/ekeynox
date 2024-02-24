@@ -97,6 +97,9 @@ const createTypingMetricsState = (
     ({ keypressMetrics, metrics }: pausedMetricsProps) =>
     ({ status }: TypingMetricsProps): TypingMetricsState => {
       switch (status.kind) {
+        case TypingStatusKind.unstart:
+          setPreview(createTypingMetricsPreview());
+          return create();
         case TypingStatusKind.pending:
           const [pendingKeypressMetrics, lastDuration] =
             keypressMetrics.resume();
