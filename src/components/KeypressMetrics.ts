@@ -31,9 +31,35 @@ const createTypingProjection = () => ({
   total: 0,
 });
 
+export type CoreKeypressProjection = {
+  projection: TypingProjection;
+  duration: number;
+};
+
+export type MetaKeypressProjection = {
+  logs: LinkedList<KeyTimedTuple> | null;
+  start: number;
+  stop: number;
+};
+
+export type SpeedProjection = {
+  byKeypress: [valid: number, all: number];
+  byWord: [valid: number, all: number];
+};
+
+export type StatProjection = {
+  speed: SpeedProjection;
+  accuracies: [corrected: number, real: number];
+};
+
+const createCoreKeypressProjection = (): CoreKeypressProjection => ({
+  projection: createTypingProjection(),
+  duration: 0,
+});
+
 export type KeypressMetricsProjection = {
   wpms: [number, number];
-  accuracies: [number, number];
+  accuracies: [corrected: number, real: number];
   projection: TypingProjection;
   logs: LinkedList<KeyTimedTuple> | null;
   start: number;
@@ -51,8 +77,8 @@ const createKeypressProjection = (): KeypressMetricsProjection => ({
   duration: 0,
 });
 
-const keypressProjectionHandler = () => {
-  const projection = createTypingProjection();
+const keypressProjectionHandler = (part: CoreKeypressProjection) => {
+  const projection = Object.assign({}, part.projection);
   let logs: LinkedList<KeyTimedTuple> | null = null;
 
   const event = (key: KeyTimedTuple) => {
@@ -63,7 +89,7 @@ const keypressProjectionHandler = () => {
 
   const getProjection = (): KeypressMetricsProjection => {
     const stop = performance.now();
-    const duration = stop - start;
+    const duration = stop - start + part.duration;
     let sortedLogs = null;
     let node = logs;
     logs = null;
@@ -129,4 +155,5 @@ export default {
   createTypingProjection,
   keypressProjectionHandler,
   createKeypressProjection,
+  createCoreKeypressProjection,
 };
