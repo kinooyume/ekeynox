@@ -45,7 +45,7 @@ const createTypingMetricsState = (
   type PendingMetricsProps = {
     keypressMetrics: PendingKeypressMetrics;
     metrics: TypingMetrics;
-    interval: number;
+    interval: NodeJS.Timer;
   };
   const pending =
     (props: PendingMetricsProps) =>
@@ -86,6 +86,11 @@ const createTypingMetricsState = (
       switch (status.kind) {
         case TypingStatusKind.pending:
           const pendingKeypressMetrics = keypressMetrics.resume();
+          pendingKeypressMetrics.event([
+            ...status.keyMetrics,
+            status.timestamp,
+          ] as KeyTimedTuple);
+
           const updatePreview = () => {
             const KeypressMetricsProjection =
               pendingKeypressMetrics.getProjection();
@@ -96,14 +101,9 @@ const createTypingMetricsState = (
             metrics.logs = List.make(metrics.logs, KeypressMetricsProjection);
           };
 
-          pendingKeypressMetrics.event([
-            ...status.keyMetrics,
-            status.timestamp,
-          ] as KeyTimedTuple);
-          const interval = setInterval(updatePreview, 1000);
           return pending({
             keypressMetrics: pendingKeypressMetrics,
-            interval,
+            interval: setInterval(updatePreview, 1000),
             metrics,
           });
       }
