@@ -11,6 +11,7 @@ type TypingMetricsProps = {
   metrics: TypingMetrics;
   layout: KeyboardLayout;
   keyMetrics: KeysProjection;
+  onReset: () => void;
 };
 
 const TypingMetricsResume = (props: TypingMetricsProps) => {
@@ -60,6 +61,9 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
     .keyboard {
       margin-top: 64px;
     }
+    .reset {
+      margin: 64px;
+    }
   `;
   return (
     <div class="metrics">
@@ -89,6 +93,7 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
           metrics={props.keyMetrics}
         />
       </div>
+      <button class="reset" onClick={props.onReset}>Restart</button>
     </div>
   );
 };
