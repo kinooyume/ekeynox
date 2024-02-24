@@ -1,5 +1,7 @@
 import type { KeyTimedTuple } from "./KeyMetrics";
-import KeypressMetrics, { type KeypressMetricsProjection } from "./KeypressMetrics";
+import KeypressMetrics, {
+  type KeypressMetricsProjection,
+} from "./KeypressMetrics";
 
 export type PendingKeypressMetrics = {
   event: (key: KeyTimedTuple) => void;
@@ -9,11 +11,8 @@ export type PendingKeypressMetrics = {
 
 export type PausedKeypressMetrics = {
   getProjection: () => KeypressMetricsProjection;
-  resume: () => PendingKeypressMetrics;
+  resume: () => [PendingKeypressMetrics, number];
 };
-
-// NOTE: broken play/pause, act like a reset
-// TODO: Multiple Session Handler (play/pause)
 
 const pendingKeypressMetrics = (): PendingKeypressMetrics => {
   const handler = KeypressMetrics.keypressProjectionHandler();
@@ -24,7 +23,7 @@ const pendingKeypressMetrics = (): PendingKeypressMetrics => {
       const projection = handler.getProjection();
       return {
         getProjection: () => projection,
-        resume: pendingKeypressMetrics,
+        resume: () => [pendingKeypressMetrics(), projection.stop],
       };
     },
   };
@@ -41,7 +40,7 @@ const defaultProjection: KeypressMetricsProjection = {
 
 const defaultPausedKeypressMetrics: PausedKeypressMetrics = {
   getProjection: () => defaultProjection,
-  resume: pendingKeypressMetrics,
+  resume: () => [pendingKeypressMetrics(), 0],
 };
 
 export default {
