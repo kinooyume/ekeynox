@@ -23,8 +23,6 @@ export enum KeyStatus {
   ignore,
 }
 
-const blankCharacters = [" ", "Enter"];
-
 type KeyMetrics =
   | { kind: KeyStatus.match }
   | { kind: KeyStatus.extra }
@@ -33,6 +31,8 @@ type KeyMetrics =
   | { kind: KeyStatus.deleted; status: PromptKeyStatus }
   | { kind: KeyStatus.back }
   | { kind: KeyStatus.ignore };
+
+const blankCharacters = [" ", "Enter"];
 
 export type KeyTuple = [key: string, KeyMetrics];
 export type KeyTimedTuple = [key: string, KeyMetrics, timestamps: number];
@@ -106,7 +106,7 @@ const updateKeyProjection = ({
   } else if (status.kind !== TypingStatusKind.pending) {
     return projection;
   }
-  const [key, metrics] = status.keyMetrics;
+  const [key, metrics] = status.event.keyMetrics;
   if (projection[key] === undefined) {
     projection[key] = createKeyMetricsProjection();
   }

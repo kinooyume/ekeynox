@@ -19,9 +19,15 @@ export enum TypingStatusKind {
   over,
 }
 
+export type TypingPending = {
+  keyMetrics: KeyTuple;
+  timestamp: number;
+  focusIsSeparator: boolean;
+};
+
 export type TypingStatus =
   | { kind: TypingStatusKind.unstart }
-  | { kind: TypingStatusKind.pending; keyMetrics: KeyTuple; timestamp: number }
+  | { kind: TypingStatusKind.pending; event: TypingPending }
   | { kind: TypingStatusKind.pause }
   | { kind: TypingStatusKind.over };
 
@@ -60,6 +66,8 @@ const TypingEngine = (props: TypingEngineProps) => {
       props.paragraphs[currentParagraph()][currentWord()].keys.length - 1,
     key: () =>
       props.paragraphs[currentParagraph()][currentWord()].keys[currentKey()],
+    isSeparator: () =>
+      props.paragraphs[currentParagraph()][currentWord()].isSeparator,
   };
 
   const setCurrent = {
@@ -177,13 +185,11 @@ const TypingEngine = (props: TypingEngineProps) => {
       expected: getCurrent.key().key,
     });
 
-  const setStatus = (timestamp: number, keyMetrics: KeyTuple) => {
+  const setStatus = (event: TypingPending) =>
     props.setStatus({
       kind: TypingStatusKind.pending,
-      keyMetrics,
-      timestamp,
+      event,
     });
-  };
 
   const handleKeypress = (event: KeyboardEvent) => {
     const timestamp = performance.now();
@@ -197,15 +203,23 @@ const TypingEngine = (props: TypingEngineProps) => {
         expected: getCurrent.key().key,
         status: getCurrent.key().status,
       });
-      setStatus(timestamp, deletedKeyMetrics); // deleted
+      setStatus({
+        keyMetrics: deletedKeyMetrics,
+        timestamp,
+        focusIsSeparator: getCurrent.isSeparator(),
+      });
     } else {
-      setStatus(timestamp, keyMetrics);
       if (keyMetrics[1].kind === KeyStatus.match) {
         setCurrent.keyStatus(PromptKeyStatus.correct);
       } else {
         setCurrent.keyStatus(PromptKeyStatus.incorrect);
       }
       next();
+      setStatus({
+        keyMetrics,
+        timestamp,
+        focusIsSeparator: getCurrent.isSeparator(),
+      });
     }
     props.setCurrentPromptKey(getCurrent.key().key);
   };
