@@ -2,6 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import Keyboard from "../components/TypingGame";
 import { games } from "../games.json";
+import GameModeMenu from "../components/GameModeMenu";
 
 type ParamsProps = {
   params: { title: string };
@@ -14,6 +15,30 @@ const gameList = games.map(({ params }) => {
 // checker terser
 // https://github.com/adamgian/minify-selectors
 // https://straffesites.com/en/blog/optimize-astro-html-post-build
+//
+const gameModeList = [
+  {
+    title: "Monkey",
+    description:
+      "Type random words as quick as possible, try to not make mistake !",
+    url: "/typing/monkey",
+    picture: "/images/monkey.jpg",
+  },
+  {
+    title: "Rabbit",
+    description:
+      "Time is running out ! how many words can you write in the time allowed?",
+    url: "/typing/rabbit",
+    picture: "/images/rabbit.jpg",
+  },
+  {
+    title: "Chameleon",
+    description:
+      "Give a text to type, and test yourself on it. The limit is your imagination",
+    url: "/typing/chameleon",
+    picture: "/images/monkey.jpg",
+  },
+];
 ---
 
 <style>
@@ -41,7 +66,7 @@ const gameList = games.map(({ params }) => {
 </style>
 <Layout title="eKeyNox">
   <main>
-    <a href="/custom">Custom</a>
+    <GameModeMenu client:only gameModes={gameModeList} />
     <h2>Test</h2>
     <ul class="menu">
       {
