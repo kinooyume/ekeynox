@@ -35,7 +35,7 @@ const MyChart = (props: MyChartProps) => {
 
   css`
     .chart {
-      width: 900px;
+      width: 1024px;
       height: 300px;
     }
   `;
