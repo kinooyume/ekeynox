@@ -17,7 +17,7 @@ import KeypressMetricsSessions from "./KeypressMetricsSessions";
 export type TypingMetrics = {
   projection: TypingProjection;
   sessions: LinkedList<TypingProjection>;
-  logs: LinkedList<KeypressMetricsProjection> | null;
+  logs: LinkedList<KeypressMetricsProjection>;
 };
 
 const createTypingMetrics = (): TypingMetrics => ({

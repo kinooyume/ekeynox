@@ -33,7 +33,7 @@ const createCoreProjection = (): CoreProjection => ({
 });
 
 export type MetaProjection = {
-  logs: LinkedList<KeyTimedTuple> | null;
+  logs: LinkedList<KeyTimedTuple>;
   sectionProjection: TypingProjection;
   start: number;
   stop: number;
@@ -94,7 +94,7 @@ const mergeTypingProjections = (
 
 const keypressProjectionHandler = (part: CoreProjection) => {
   let projection = Object.assign({}, part.projection);
-  let logs: LinkedList<KeyTimedTuple> | null = null;
+  let logs: LinkedList<KeyTimedTuple> = null;
 
   const event = (key: KeyTimedTuple) => {
     logs = List.make(logs, key);
