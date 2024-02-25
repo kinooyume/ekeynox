@@ -1,4 +1,5 @@
 import { KeyStatus, PromptKeyStatus } from "./KeyMetrics";
+import { updateWordProjection } from "./KpWordMetrics";
 import type { LinkedList } from "./List";
 import List from "./List";
 import type { TypingPending } from "./TypingEngine";
@@ -110,8 +111,8 @@ export type KeypressMetricsProps = {
   words: KpWordsMetrics;
 };
 
-const keypressProjectionHandler = ({ part, words }: KeypressMetricsProps) => {
-  let projection = Object.assign({}, part.projection);
+const keypressProjectionHandler = (props: KeypressMetricsProps) => {
+  let projection = Object.assign({}, props.part.projection);
   let logs: LinkedList<TypingPending> = null;
 
   const event = (key: TypingPending) => {
@@ -123,12 +124,13 @@ const keypressProjectionHandler = ({ part, words }: KeypressMetricsProps) => {
   const getProjection = (): KeypressMetricsProjection => {
     const stop = performance.now();
     let node = logs;
+    updateWordProjection(props.words)(logs);
     logs = null;
-    const duration = stop - start + part.duration;
+    const duration = stop - start + props.part.duration;
     let sortedLogs = null;
     const sectionProjection = createTypingProjection();
     while (node !== null) {
-      const {keyMetrics, focusIsSeparator} = node.value;
+      const { keyMetrics } = node.value;
       const [_, metrics] = keyMetrics;
       if (metrics.kind === KeyStatus.deleted) {
         if (metrics.status === PromptKeyStatus.correct)
@@ -157,7 +159,11 @@ const keypressProjectionHandler = ({ part, words }: KeypressMetricsProps) => {
       node = node.next;
     }
     projection = mergeTypingProjections(projection, sectionProjection);
+
     const correct = projection.correct - projection.deletedCorrect;
+    const correctWord =
+      props.words.projection.correct - props.words.projection.deletedCorrect;
+
     const incorrect =
       projection.incorrect +
       projection.extra +
@@ -166,7 +172,7 @@ const keypressProjectionHandler = ({ part, words }: KeypressMetricsProps) => {
 
     const total = correct + incorrect;
 
-    const wpm = ((correct / duration) * 60000) / 5;
+    const wpm = ((correctWord / duration) * 60000) / 5;
     const raw = ((projection.total / duration) * 60000) / 5;
 
     const accuracy = (correct / total) * 100 || 0;
@@ -175,7 +181,7 @@ const keypressProjectionHandler = ({ part, words }: KeypressMetricsProps) => {
 
     return {
       core: { projection: Object.assign({}, projection), duration },
-      words,
+      words: props.words,
       meta: { logs: sortedLogs, sectionProjection, start, stop },
       stats: {
         speed: {
