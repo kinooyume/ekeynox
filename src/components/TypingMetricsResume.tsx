@@ -1,5 +1,5 @@
 import { css } from "solid-styled";
-import type {  TypingMetrics } from "./TypingMetrics";
+import type { TypingMetrics } from "./TypingMetrics";
 import TypingKeyboardResume from "./TypingKeyboardResume";
 import type { KeysProjection } from "./KeyMetrics";
 import type { KeyboardLayout } from "./KeyboardLayout";
@@ -23,38 +23,14 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
       max-width: 1200px;
       margin: 0 auto;
     }
-    .preview {
+    .data {
       display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      max-width: 400px;
-      margin: 0 auto;
-    }
-    .card {
-      display: flex;
+      position: fixed;
+      right: 198px;
       flex-direction: column;
-      gap: 5px;
-      padding: 10px;
-      border-radius: 8px;
-      background: var(--background-color);
-      box-shadow:
-        2px 2px 7px var(--key-color),
-        -2px -2px 7px var(--key-color-alt);
-    }
-    .card.speed {
-      max-width: 100px;
-    }
-    .card.accuracy {
-      text-align: center;
-      max-width: 200px;
-    }
-    .card.accuracy .title {
-      font-size: 1.1em;
-      box-shadow:
-        inset 2px 2px 7px var(--key-color),
-        inset -2px -2px 7px var(--key-color-alt);
-      border-radius: 8px;
-      padding: 5px;
+      align-items: center;
+      max-width: 400px;
+      margin: 24px auto;
     }
 
     .keyboard {
@@ -63,36 +39,61 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
     .reset {
       margin: 64px;
     }
+    .details {
+      max-width: 1200px;
+      margin-right: 198px;
+    }
+    .speeds {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+    .wpm-data {
+      font-size: 4em;
+      margin: 0;
+    }
+    .accu-data {
+      font-size: 3em;
+      margin: 0;
+    }
+    .accu-data span {
+      font-size: 1.5rem;
+    }
   `;
   return (
     <div class="metrics">
-      <div class="preview">
+      <div class="data">
         <div class="speeds">
-          <h2>Speed</h2>
-          <p class="card speed">WPM: {props.stat.speed.byWord[0].toFixed(2)}</p>
-          <p class="card speed">Raw: {props.stat.speed.byKeypress[1].toFixed(2)}</p>
+          <p class="wpm-data">{props.stat.speed.byWord[0].toFixed(2)}</p>
+          <p>WPM</p>
+          <p class="speed">Raw: {props.stat.speed.byKeypress[1].toFixed(2)}</p>
         </div>
         <div class="accuracies">
-          <h2>Accurracies</h2>
-          <p class="card accuracy">
-            Accurracy: {props.stat.accuracies[0].toFixed(2)}%
+          <p class="accu-data">
+            {Math.trunc(props.stat.accuracies[0])}
+            <span>%</span>
           </p>
+          <p>Accuracy</p>
           <p class="card accuracy">
-            Real Accuracy: {props.stat.accuracies[1].toFixed(2)}%
+            Real : {props.stat.accuracies[1].toFixed(2)}%
           </p>
         </div>
       </div>
 
-      <div class="chart">
-        <MetricsChart metrics={props.metrics} />
+      <div class="details">
+        <div class="chart">
+          <MetricsChart metrics={props.metrics} />
+        </div>
+        <div class="keyboard">
+          <TypingKeyboardResume
+            layout={props.layout}
+            metrics={props.keyMetrics}
+          />
+        </div>
+        <button class="reset" onClick={props.onReset}>
+          Restart
+        </button>
       </div>
-      <div class="keyboard">
-        <TypingKeyboardResume
-          layout={props.layout}
-          metrics={props.keyMetrics}
-        />
-      </div>
-      <button class="reset" onClick={props.onReset}>Restart</button>
     </div>
   );
 };
