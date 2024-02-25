@@ -66,14 +66,26 @@ const createStatProjection = (): StatProjection => ({
   accuracies: [0, 0],
 });
 
+export type KpWordsMetrics = {
+  word: LinkedList<KeyTimedTuple>;
+  projection: TypingProjection;
+};
+
+const createKpWordsMetrics = (): KpWordsMetrics => ({
+  word: null,
+  projection: createTypingProjection(),
+});
+
 export type KeypressMetricsProjection = {
   core: CoreProjection;
+  words: KpWordsMetrics;
   meta: MetaProjection;
   stats: StatProjection;
 };
 
 const createKeypressProjection = (): KeypressMetricsProjection => ({
   core: createCoreProjection(),
+  words: createKpWordsMetrics(),
   meta: createMetaKeypressProjection(),
   stats: createStatProjection(),
 });
@@ -92,7 +104,12 @@ const mergeTypingProjections = (
   return target;
 };
 
-const keypressProjectionHandler = (part: CoreProjection) => {
+export type KeypressMetricsProps = {
+  part: CoreProjection;
+  words: KpWordsMetrics;
+};
+
+const keypressProjectionHandler = ({ part, words }: KeypressMetricsProps) => {
   let projection = Object.assign({}, part.projection);
   let logs: LinkedList<KeyTimedTuple> = null;
 
@@ -156,6 +173,7 @@ const keypressProjectionHandler = (part: CoreProjection) => {
 
     return {
       core: { projection: Object.assign({}, projection), duration },
+      words,
       meta: { logs: sortedLogs, sectionProjection, start, stop },
       stats: {
         speed: {
@@ -175,4 +193,5 @@ export default {
   createKeypressProjection,
   createCoreProjection,
   createStatProjection,
+  createKpWordsMetrics,
 };
