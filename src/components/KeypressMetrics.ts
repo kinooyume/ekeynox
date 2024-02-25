@@ -1,6 +1,7 @@
-import { KeyStatus, PromptKeyStatus, type KeyTimedTuple } from "./KeyMetrics";
+import { KeyStatus, PromptKeyStatus } from "./KeyMetrics";
 import type { LinkedList } from "./List";
 import List from "./List";
+import type { TypingPending } from "./TypingEngine";
 
 export type TypingProjection = {
   correct: number;
@@ -33,7 +34,7 @@ const createCoreProjection = (): CoreProjection => ({
 });
 
 export type MetaProjection = {
-  logs: LinkedList<KeyTimedTuple>;
+  logs: LinkedList<TypingPending>;
   sectionProjection: TypingProjection;
   start: number;
   stop: number;
@@ -67,7 +68,7 @@ const createStatProjection = (): StatProjection => ({
 });
 
 export type KpWordsMetrics = {
-  word: LinkedList<KeyTimedTuple>;
+  word: LinkedList<TypingPending>;
   projection: TypingProjection;
 };
 
@@ -111,9 +112,9 @@ export type KeypressMetricsProps = {
 
 const keypressProjectionHandler = ({ part, words }: KeypressMetricsProps) => {
   let projection = Object.assign({}, part.projection);
-  let logs: LinkedList<KeyTimedTuple> = null;
+  let logs: LinkedList<TypingPending> = null;
 
-  const event = (key: KeyTimedTuple) => {
+  const event = (key: TypingPending) => {
     logs = List.make(logs, key);
   };
 
@@ -127,7 +128,8 @@ const keypressProjectionHandler = ({ part, words }: KeypressMetricsProps) => {
     let sortedLogs = null;
     const sectionProjection = createTypingProjection();
     while (node !== null) {
-      const [_, metrics] = node.value;
+      const {keyMetrics, focusIsSeparator} = node.value;
+      const [_, metrics] = keyMetrics;
       if (metrics.kind === KeyStatus.deleted) {
         if (metrics.status === PromptKeyStatus.correct)
           sectionProjection.deletedCorrect++;

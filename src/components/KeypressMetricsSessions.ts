@@ -1,11 +1,11 @@
-import type { KeyTimedTuple } from "./KeyMetrics";
 import KeypressMetrics, {
   type KeypressMetricsProjection,
   type KeypressMetricsProps,
 } from "./KeypressMetrics";
+import type { TypingPending } from "./TypingEngine";
 
 export type PendingKeypressMetrics = {
-  event: (key: KeyTimedTuple) => void;
+  event: (key: TypingPending) => void;
   getProjection: () => KeypressMetricsProjection;
   pause: () => [PausedKeypressMetrics, KeypressMetricsProjection];
 };
