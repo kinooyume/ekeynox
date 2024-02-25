@@ -172,8 +172,14 @@ const keypressProjectionHandler = (props: KeypressMetricsProps) => {
 
     const total = correct + incorrect;
 
-    const wpm = ((correctWord / duration) * 60000) / 5;
-    const raw = ((projection.total / duration) * 60000) / 5;
+    const byKeypress: [number, number] = [
+      ((correct / duration) * 60000) / 5,
+      ((projection.total / duration) * 60000) / 5,
+    ];
+    const byWord: [number, number] = [
+      ((correctWord / duration) * 60000) / 5,
+      ((props.words.projection.total / duration) * 60000) / 5,
+    ];
 
     const accuracy = (correct / total) * 100 || 0;
     const rawAccuracy =
@@ -185,8 +191,8 @@ const keypressProjectionHandler = (props: KeypressMetricsProps) => {
       meta: { logs: sortedLogs, sectionProjection, start, stop },
       stats: {
         speed: {
-          byKeypress: [wpm, raw],
-          byWord: [wpm, raw],
+          byKeypress,
+          byWord,
         },
         accuracies: [accuracy, rawAccuracy],
       },
