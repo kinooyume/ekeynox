@@ -26,7 +26,7 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
     .data {
       display: flex;
       position: fixed;
-      right: 198px;
+      right: 224px;
       flex-direction: column;
       align-items: center;
       max-width: 400px;
