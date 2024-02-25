@@ -34,12 +34,14 @@ const createCoreProjection = (): CoreProjection => ({
 
 export type MetaProjection = {
   logs: LinkedList<KeyTimedTuple> | null;
+  sectionProjection: TypingProjection;
   start: number;
   stop: number;
 };
 
 const createMetaKeypressProjection = (): MetaProjection => ({
   logs: null,
+  sectionProjection: createTypingProjection(),
   start: 0,
   stop: 0,
 });
@@ -76,8 +78,22 @@ const createKeypressProjection = (): KeypressMetricsProjection => ({
   stats: createStatProjection(),
 });
 
+const mergeTypingProjections = (
+  target: TypingProjection,
+  source: TypingProjection,
+) => {
+  target.correct += source.correct;
+  target.incorrect += source.incorrect;
+  target.extra += source.extra;
+  target.missed += source.missed;
+  target.deletedCorrect += source.deletedCorrect;
+  target.deletedIncorrect += source.deletedIncorrect;
+  target.total += source.total;
+  return target;
+};
+
 const keypressProjectionHandler = (part: CoreProjection) => {
-  const projection = Object.assign({}, part.projection);
+  let projection = Object.assign({}, part.projection);
   let logs: LinkedList<KeyTimedTuple> | null = null;
 
   const event = (key: KeyTimedTuple) => {
@@ -88,39 +104,40 @@ const keypressProjectionHandler = (part: CoreProjection) => {
 
   const getProjection = (): KeypressMetricsProjection => {
     const stop = performance.now();
-    const duration = stop - start + part.duration;
-    let sortedLogs = null;
     let node = logs;
     logs = null;
+    const duration = stop - start + part.duration;
+    let sortedLogs = null;
+    const sectionProjection = createTypingProjection();
     while (node !== null) {
       const [_, metrics] = node.value;
       if (metrics.kind === KeyStatus.deleted) {
         if (metrics.status === PromptKeyStatus.correct)
-          projection.deletedCorrect++;
+          sectionProjection.deletedCorrect++;
         else if (metrics.status === PromptKeyStatus.incorrect)
-          projection.deletedIncorrect++;
+          sectionProjection.deletedIncorrect++;
         else break;
       } else {
         switch (metrics.kind) {
           case KeyStatus.match:
-            projection.correct++;
+            sectionProjection.correct++;
             break;
           case KeyStatus.unmatch:
-            projection.incorrect++;
+            sectionProjection.incorrect++;
             break;
           case KeyStatus.extra:
-            projection.extra++;
+            sectionProjection.extra++;
             break;
           case KeyStatus.missed:
-            projection.missed++;
+            sectionProjection.missed++;
             break;
         }
       }
-      projection.total++;
+      sectionProjection.total++;
       sortedLogs = List.make(sortedLogs, node.value);
       node = node.next;
     }
-
+    projection = mergeTypingProjections(projection, sectionProjection);
     const correct = projection.correct - projection.deletedCorrect;
     const incorrect =
       projection.incorrect +
@@ -139,7 +156,7 @@ const keypressProjectionHandler = (part: CoreProjection) => {
 
     return {
       core: { projection: Object.assign({}, projection), duration },
-      meta: { logs: sortedLogs, start, stop },
+      meta: { logs: sortedLogs, sectionProjection, start, stop },
       stats: {
         speed: {
           byKeypress: [wpm, raw],
