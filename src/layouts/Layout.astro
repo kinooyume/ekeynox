@@ -1,4 +1,5 @@
 ---
+import { ViewTransitions } from "astro:transitions";
 import Hud from "../components/Hud.astro";
 interface Props {
   title: string;
@@ -16,9 +17,10 @@ const { title } = Astro.props;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+    <ViewTransitions />
   </head>
   <body>
-    <Hud />
+    <Hud transition:persist="hud" />
     <slot />
   </body>
 </html>

@@ -40,7 +40,9 @@ const gameList = games.map(({ params }) => {
   }
 </style>
 <Layout title="eKeyNox">
-  <main>
+  <main transition:animate="slide">
+    <a href="/custom">Custom</a>
+    <h2>Test</h2>
     <ul class="menu">
       {
         gameList.map(({ url, title }: { url: string; title: string }) => (
@@ -50,7 +52,6 @@ const gameList = games.map(({ params }) => {
         ))
       }
     </ul>
-    <a href="/custom">Custom</a>
   </main>
 </Layout>
 
