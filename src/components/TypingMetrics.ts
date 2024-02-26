@@ -14,13 +14,13 @@ import KeypressMetricsSessions from "./KeypressMetricsSessions";
 import type { TypingProjection } from "./TypingProjection";
 
 export type TypingMetrics = {
-  projection: TypingProjection;
+  projection: KeypressMetricsProjection;
   sessions: LinkedList<TypingProjection>;
   logs: LinkedList<KeypressMetricsProjection>;
 };
 
 const createTypingMetrics = (): TypingMetrics => ({
-  projection: KeypressMetrics.createTypingProjection(),
+  projection: KeypressMetrics.createKeypressProjection(),
   sessions: List.make(null, KeypressMetrics.createTypingProjection()),
   logs: null,
 });
@@ -37,16 +37,18 @@ type Interval = {
   timer: NodeJS.Timer | NodeJS.Timeout;
 };
 
+/* side effect */
 const createTypingMetricsState = (
   setStat: Setter<StatProjection>,
   setTypingMetrics: Setter<TypingMetrics>,
 ): TypingMetricsState => {
-  const makeUpdateStat =
-    (keypressMetrics: PendingKeypressMetrics, metrics: TypingMetrics, isOver: boolean) => () => {
-      const projection = keypressMetrics.getProjection(isOver);
-      setStat(projection.stats);
-      metrics.logs = List.make(metrics.logs, projection);
-    };
+  const updateStat = (
+    projection: KeypressMetricsProjection,
+    metrics: TypingMetrics,
+  ) => {
+    setStat(projection.stats);
+    metrics.logs = List.make(metrics.logs, projection);
+  };
 
   type PendingMetricsProps = {
     keypressMetrics: PendingKeypressMetrics;
@@ -74,10 +76,13 @@ const createTypingMetricsState = (
           });
         case TypingStatusKind.over:
           clearInterval(props.interval.timer);
-          makeUpdateStat(props.keypressMetrics, props.metrics, true)();
-          setTypingMetrics(props.metrics);
           const [overKeypressMetrics, finalProjection] =
-            props.keypressMetrics.pause(false);
+            props.keypressMetrics.pause(true);
+          // side effect
+          updateStat(finalProjection, props.metrics);
+          setTypingMetrics(props.metrics);
+          console.log("metrics", props.metrics);
+          props.metrics.projection = finalProjection;
           return paused({
             keypressMetrics: overKeypressMetrics,
             metrics: props.metrics,
@@ -103,11 +108,12 @@ const createTypingMetricsState = (
           pendingKeypressMetrics.event(status.event);
 
           const interval: Interval = { timer: 0 as unknown as NodeJS.Timer };
-          const updateStat = makeUpdateStat(pendingKeypressMetrics, metrics, false);
+          const update = () =>
+            updateStat(pendingKeypressMetrics.getProjection(false), metrics);
           interval.timer = setTimeout(() => {
-            updateStat();
+            update();
             clearTimeout(interval.timer);
-            interval.timer = setInterval(updateStat, 1000);
+            interval.timer = setInterval(update, 1000);
           }, 1000 - lastDuration);
 
           return pending({
