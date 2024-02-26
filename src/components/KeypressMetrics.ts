@@ -1,4 +1,10 @@
-import { createTypingProjection, updateTypingProjection, type TypingProjection, mergeTypingProjections, createTypingProjectionFromPendingList } from "./TypingProjection";
+import {
+  createTypingProjection,
+  updateTypingProjection,
+  type TypingProjection,
+  mergeTypingProjections,
+  createTypingProjectionFromPendingList,
+} from "./TypingProjection";
 import { updateWordProjection } from "./KpWordMetrics";
 import type { LinkedList } from "./List";
 import List from "./List";
@@ -92,7 +98,8 @@ const keypressProjectionHandler = (props: KeypressMetricsProps) => {
     let node = logs;
     logs = null;
     const duration = stop - start + props.part.duration;
-    const [ sectionProjection, sortedLogs ] = createTypingProjectionFromPendingList(node);
+    const [sectionProjection, sortedLogs] =
+      createTypingProjectionFromPendingList(node);
     /*  Side effect */
     mergeTypingProjections(projection, sectionProjection);
     updateWordProjection(props.words)(node);
