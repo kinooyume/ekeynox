@@ -1,82 +1,16 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Keyboard from "../components/TypingGame";
-import { games } from "../games.json";
-import GameModeMenu from "../components/GameModeMenu";
 
-type ParamsProps = {
-  params: { title: string };
-};
-const gameList = games.map(({ params }) => {
-  return { title: params.title, url: `/typing/${params.title}` };
-});
-
-// https://github.com/aminya/astro-parcel
-// checker terser
-// https://github.com/adamgian/minify-selectors
-// https://straffesites.com/en/blog/optimize-astro-html-post-build
-//
-const gameModeList = [
-  {
-    title: "Monkey",
-    description:
-      "Type random words as quick as possible, try to not make mistake !",
-    url: "/typing/monkey",
-    picture: "/images/monkey.jpg",
-  },
-  {
-    title: "Rabbit",
-    description:
-      "Time is running out ! how many words can you write in the time allowed?",
-    url: "/typing/rabbit",
-    picture: "/images/rabbit.jpg",
-  },
-  {
-    title: "Chameleon",
-    description:
-      "Give a text to type, and test yourself on it. The limit is your imagination",
-    url: "/typing/chameleon",
-    picture: "/images/monkey.jpg",
-  },
-];
+const {title} = Astro.params;
+const {content} = Astro.props;
 ---
 
-<style>
-  .menu {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-  li a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 6px;
-    padding: 10px;
-    height: 40px;
-    border-radius: 14px;
-    background: var(--background-color);
-    box-shadow:
-      2px 2px 7px var(--neu-color),
-      -2px -2px 7px var(--neu-color-alt);
-  }
-  li {
-    list-style: none;
-  }
-</style>
-<Layout title="eKeyNox">
+<Layout title={title || "EkeyNox"}>
   <main>
-    <GameModeMenu client:only gameModes={gameModeList} />
-    <h2>Test</h2>
-    <ul class="menu">
-      {
-        gameList.map(({ url, title }: { url: string; title: string }) => (
-          <li>
-            <a href={url}>{title}</a>
-          </li>
-        ))
-      }
-    </ul>
+    <h1>eKeyNox</h1>
+    <p>Learn touch typing the fun way !</p>
+
+    <a href="typing/">Get Started</a>
   </main>
 </Layout>
 
