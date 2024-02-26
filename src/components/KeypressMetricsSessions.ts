@@ -6,12 +6,12 @@ import type { TypingPending } from "./TypingEngine";
 
 export type PendingKeypressMetrics = {
   event: (key: TypingPending) => void;
-  getProjection: () => KeypressMetricsProjection;
-  pause: () => [PausedKeypressMetrics, KeypressMetricsProjection];
+  getProjection: (isOver: boolean) => KeypressMetricsProjection;
+  pause: (isOver: boolean) => [PausedKeypressMetrics, KeypressMetricsProjection];
 };
 
 export type PausedKeypressMetrics = {
-  getProjection: () => KeypressMetricsProjection;
+  getProjection: (isOver: boolean) => KeypressMetricsProjection;
   resume: () => [PendingKeypressMetrics, stop: number];
 };
 
@@ -22,8 +22,8 @@ const pendingKeypressMetrics = (
   return {
     event: handler.event,
     getProjection: handler.getProjection,
-    pause: () => {
-      const projection = handler.getProjection();
+    pause: (isOver) => {
+      const projection = handler.getProjection(isOver);
       return [
         {
           getProjection: () => projection,
