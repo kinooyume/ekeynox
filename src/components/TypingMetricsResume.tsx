@@ -1,7 +1,7 @@
 import { css } from "solid-styled";
 import type { TypingMetrics } from "./TypingMetrics";
 import TypingKeyboardResume from "./TypingKeyboardResume";
-import type { KeysProjection } from "./KeyMetrics";
+import type { KeysProjection } from "./KeysProjection";
 import type { KeyboardLayout } from "./KeyboardLayout";
 import MetricsChart from "./MetricsChart";
 import type { StatProjection } from "./KeypressMetrics";

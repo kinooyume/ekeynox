@@ -1,5 +1,3 @@
-import { TypingStatusKind, type TypingStatus } from "./TypingEngine";
-
 export enum PromptKeyStatus {
   unstart = "unstart",
   correct = "correct",
@@ -23,7 +21,7 @@ export enum KeyStatus {
   ignore,
 }
 
-type KeyMetrics =
+export type KeyMetrics =
   | { kind: KeyStatus.match }
   | { kind: KeyStatus.extra }
   | { kind: KeyStatus.missed; typed: string }
@@ -35,7 +33,6 @@ type KeyMetrics =
 const blankCharacters = [" ", "Enter"];
 
 export type KeyTuple = [key: string, KeyMetrics];
-export type KeyTimedTuple = [key: string, KeyMetrics, timestamps: number];
 
 type KeyMetricsProps = {
   typed: string;
@@ -72,83 +69,4 @@ const getKeyMetrics = ({ typed, expected }: KeyMetricsProps): KeyTuple => {
   return [typed, { kind: KeyStatus.ignore }];
 };
 
-export type KeyMetricsProjection = {
-  correct: number;
-  incorrect: number;
-  extra: number;
-  missed: number;
-  deletedCorrect: number;
-  deletedIncorrect: number;
-  total: number;
-  expected: Array<string>;
-};
-
-const createKeyMetricsProjection = (): KeyMetricsProjection => ({
-  correct: 0,
-  incorrect: 0,
-  extra: 0,
-  missed: 0,
-  deletedCorrect: 0,
-  deletedIncorrect: 0,
-  total: 0,
-  expected: [],
-});
-
-export type KeysProjection = Record<string, KeyMetricsProjection>;
-
-type KeysProjectionProps = { projection: KeysProjection; status: TypingStatus };
-const updateKeyProjection = ({
-  projection,
-  status,
-}: KeysProjectionProps): KeysProjection => {
-  if (status.kind === TypingStatusKind.unstart) {
-    return {};
-  } else if (status.kind !== TypingStatusKind.pending) {
-    return projection;
-  }
-  const [key, metrics] = status.event.keyMetrics;
-  if (projection[key] === undefined) {
-    projection[key] = createKeyMetricsProjection();
-  }
-  if (metrics.kind === KeyStatus.deleted) {
-    switch (metrics.status) {
-      case PromptKeyStatus.unstart:
-        return projection;
-      case PromptKeyStatus.correct:
-        projection[key].deletedCorrect++;
-        break;
-      case PromptKeyStatus.incorrect:
-        projection[key].deletedIncorrect++;
-        break;
-    }
-
-    projection[key].total++;
-    return projection;
-  }
-  switch (metrics.kind) {
-    case KeyStatus.match:
-      projection[key].correct++;
-      break;
-    case KeyStatus.unmatch:
-      projection[key].incorrect++;
-      projection[key].expected.push(metrics.typed);
-      break;
-    case KeyStatus.extra:
-      projection[key].extra++;
-      break;
-    case KeyStatus.missed:
-      projection[key].missed++;
-      projection[key].expected.push(metrics.typed);
-      break;
-  }
-
-  projection[key].total++;
-  return projection;
-};
-
-export {
-  getKeyMetrics,
-  makeDeletedKeyMetrics,
-  updateKeyProjection,
-  createKeyMetricsProjection,
-};
+export { getKeyMetrics, makeDeletedKeyMetrics };

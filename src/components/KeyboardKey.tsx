@@ -1,6 +1,6 @@
 import { Show } from "solid-js";
 import { css } from "solid-styled";
-import type { KeyMetricsProjection } from "./KeyMetrics";
+import type { TypingProjection } from "./TypingProjection";
 
 type transform = Array<[string, string]>;
 
@@ -32,7 +32,7 @@ export type KeyboardKeyProps = {
   current: boolean;
   size: string;
   used: boolean;
-  data: Array<KeyMetricsProjection | undefined>;
+  data: Array<TypingProjection | undefined>;
   pressed: boolean;
 };
 
@@ -153,7 +153,7 @@ const KeyboardKey = (props: KeyboardKeyProps) => {
     }
   `;
 
-  const status = (data: Array<KeyMetricsProjection | undefined>, k: string) => {
+  const status = (data: Array<TypingProjection | undefined>, k: string) => {
     const info = data.reduce((acc, cur) => {
       if (cur) {
         if (!acc) return cur;

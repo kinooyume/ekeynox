@@ -1,28 +1,14 @@
-import { KeyStatus, PromptKeyStatus } from "./KeyMetrics";
+import {
+  createTypingProjection,
+  updateTypingProjection,
+  type TypingProjection,
+  mergeTypingProjections,
+  createTypingProjectionFromPendingList,
+} from "./TypingProjection";
 import { updateWordProjection } from "./KpWordMetrics";
 import type { LinkedList } from "./List";
 import List from "./List";
 import type { TypingPending } from "./TypingEngine";
-
-export type TypingProjection = {
-  correct: number;
-  incorrect: number;
-  extra: number;
-  missed: number;
-  deletedCorrect: number;
-  deletedIncorrect: number;
-  total: number;
-};
-
-const createTypingProjection = () => ({
-  correct: 0,
-  incorrect: 0,
-  deletedCorrect: 0,
-  deletedIncorrect: 0,
-  extra: 0,
-  missed: 0,
-  total: 0,
-});
 
 export type CoreProjection = {
   projection: TypingProjection;
@@ -92,20 +78,6 @@ const createKeypressProjection = (): KeypressMetricsProjection => ({
   stats: createStatProjection(),
 });
 
-const mergeTypingProjections = (
-  target: TypingProjection,
-  source: TypingProjection,
-) => {
-  target.correct += source.correct;
-  target.incorrect += source.incorrect;
-  target.extra += source.extra;
-  target.missed += source.missed;
-  target.deletedCorrect += source.deletedCorrect;
-  target.deletedIncorrect += source.deletedIncorrect;
-  target.total += source.total;
-  return target;
-};
-
 export type KeypressMetricsProps = {
   part: CoreProjection;
   words: KpWordsMetrics;
@@ -124,41 +96,14 @@ const keypressProjectionHandler = (props: KeypressMetricsProps) => {
   const getProjection = (): KeypressMetricsProjection => {
     const stop = performance.now();
     let node = logs;
-    updateWordProjection(props.words)(logs);
     logs = null;
     const duration = stop - start + props.part.duration;
-    let sortedLogs = null;
-    const sectionProjection = createTypingProjection();
-    while (node !== null) {
-      const { keyMetrics } = node.value;
-      const [_, metrics] = keyMetrics;
-      if (metrics.kind === KeyStatus.deleted) {
-        if (metrics.status === PromptKeyStatus.correct)
-          sectionProjection.deletedCorrect++;
-        else if (metrics.status === PromptKeyStatus.incorrect)
-          sectionProjection.deletedIncorrect++;
-        else break;
-      } else {
-        switch (metrics.kind) {
-          case KeyStatus.match:
-            sectionProjection.correct++;
-            break;
-          case KeyStatus.unmatch:
-            sectionProjection.incorrect++;
-            break;
-          case KeyStatus.extra:
-            sectionProjection.extra++;
-            break;
-          case KeyStatus.missed:
-            sectionProjection.missed++;
-            break;
-        }
-      }
-      sectionProjection.total++;
-      sortedLogs = List.make(sortedLogs, node.value);
-      node = node.next;
-    }
-    projection = mergeTypingProjections(projection, sectionProjection);
+    const [sectionProjection, sortedLogs] =
+      createTypingProjectionFromPendingList(node);
+    /*  Side effect */
+    mergeTypingProjections(projection, sectionProjection);
+    updateWordProjection(props.words)(node);
+    /* *** */
 
     const correct = projection.correct - projection.deletedCorrect;
     const correctWord =
