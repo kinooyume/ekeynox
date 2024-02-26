@@ -71,6 +71,10 @@ const DataMetricsResume = (props: DataMetricsResumeProps) => {
     return `${minutes}:${seconds}`;
   };
 
+  const consistency = (wpm: number, rawWpm: number) => {
+    const cv = (rawWpm / wpm) * 100;
+    return cv.toFixed(2) + "%";
+  };
   return (
     <div class="data">
       <div class="speeds">
@@ -97,6 +101,12 @@ const DataMetricsResume = (props: DataMetricsResumeProps) => {
           <p class="accu-real-data">
             Real : {props.projection.stats.accuracies[1].toFixed(2)}
             <span>%</span>
+          </p>
+          <p class="consistency">
+            Consistency: {consistency(
+              props.projection.stats.speed.byKeypress[0],
+              props.projection.stats.speed.byWord[1],
+            )}
           </p>
         </div>
       </div>
