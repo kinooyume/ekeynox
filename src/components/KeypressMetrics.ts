@@ -1,6 +1,5 @@
 import {
   createTypingProjection,
-  updateTypingProjection,
   type TypingProjection,
   mergeTypingProjections,
   createTypingProjectionFromPendingList,
@@ -47,11 +46,13 @@ const createSpeedProjection = (): SpeedProjection => ({
 export type StatProjection = {
   speed: SpeedProjection;
   accuracies: [corrected: number, real: number];
+  consistency: number;
 };
 
 const createStatProjection = (): StatProjection => ({
   speed: createSpeedProjection(),
   accuracies: [0, 0],
+  consistency: 0,
 });
 
 export type KpWordsMetrics = {
@@ -102,7 +103,7 @@ const keypressProjectionHandler = (props: KeypressMetricsProps) => {
       createTypingProjectionFromPendingList(node);
     /*  Side effect */
     mergeTypingProjections(projection, sectionProjection);
-      updateWordProjection(props.words)(node, isOver);
+    updateWordProjection(props.words)(node, isOver);
     /* *** */
 
     const correct = projection.correct - projection.deletedCorrect;
@@ -130,6 +131,11 @@ const keypressProjectionHandler = (props: KeypressMetricsProps) => {
     const rawAccuracy =
       (correct / (total + projection.deletedIncorrect)) * 100 || 0;
 
+    // NOTE: pas sur que consistency doit etre ici
+    // TODO: stats dans section projection, donc pour quoi pas
+    // un section avec projection et stats.. ?
+    const consistency = byWord[1] / byKeypress[0];
+
     return {
       core: { projection: Object.assign({}, projection), duration },
       words: props.words,
@@ -140,6 +146,7 @@ const keypressProjectionHandler = (props: KeypressMetricsProps) => {
           byWord,
         },
         accuracies: [accuracy, rawAccuracy],
+        consistency: consistency,
       },
     };
   };
