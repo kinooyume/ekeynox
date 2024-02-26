@@ -74,11 +74,6 @@ const mergeTypingProjections = (
   target.expected = target.expected.concat(source.expected);
 };
 
-const updateTypingProjectionPendingList = (
-  target: TypingProjection,
-  list: LinkedList<TypingPending>,
-) => {};
-
 const createTypingProjectionFromPendingList = (
   list: LinkedList<TypingPending>,
 ): [TypingProjection, LinkedList<TypingPending>] => {
@@ -97,7 +92,6 @@ const createTypingProjectionFromPendingList = (
 export {
   createTypingProjection,
   updateTypingProjection,
-  updateTypingProjectionPendingList,
   mergeTypingProjections,
   createTypingProjectionFromPendingList,
 };
