@@ -8,28 +8,34 @@ import {
   mergeTypingProjections,
 } from "./TypingProjection";
 
+const mergeWordProjection = (target: KpWordsMetrics) => {
+  const [sectionProjection, _] = createTypingProjectionFromPendingList(
+    target.word,
+  );
+  target.word = null;
+  /*  Side effect */
+  mergeTypingProjections(target.projection, sectionProjection);
+};
+
 const updateWordProjectionByPending =
   (target: KpWordsMetrics) => (pending: TypingPending) => {
     if (pending.focusIsSeparator) {
-      const [sectionProjection, _] = createTypingProjectionFromPendingList(
-        target.word,
-      );
-      target.word = null;
-      /*  Side effect */
-      mergeTypingProjections(target.projection, sectionProjection);
+      mergeWordProjection(target);
     } else {
       target.word = List.make(target.word, pending);
     }
   };
 
 const updateWordProjection =
-  (target: KpWordsMetrics) => (logs: LinkedList<TypingPending>) => {
+  (target: KpWordsMetrics) =>
+  (logs: LinkedList<TypingPending>, isOver: boolean) => {
     let node = logs;
     const update = updateWordProjectionByPending(target);
     while (node !== null) {
       update(node.value);
       node = node.next;
     }
+    isOver && mergeWordProjection(target);
   };
 
 export { updateWordProjection };

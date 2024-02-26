@@ -93,7 +93,7 @@ const keypressProjectionHandler = (props: KeypressMetricsProps) => {
 
   const start = performance.now();
 
-  const getProjection = (): KeypressMetricsProjection => {
+  const getProjection = (isOver: boolean): KeypressMetricsProjection => {
     const stop = performance.now();
     let node = logs;
     logs = null;
@@ -102,7 +102,7 @@ const keypressProjectionHandler = (props: KeypressMetricsProps) => {
       createTypingProjectionFromPendingList(node);
     /*  Side effect */
     mergeTypingProjections(projection, sectionProjection);
-    updateWordProjection(props.words)(node);
+      updateWordProjection(props.words)(node, isOver);
     /* *** */
 
     const correct = projection.correct - projection.deletedCorrect;
