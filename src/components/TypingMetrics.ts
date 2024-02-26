@@ -1,10 +1,8 @@
 import type { Setter } from "solid-js";
-import { type KeyTimedTuple } from "./KeyMetrics";
 import { TypingStatusKind, type TypingStatus } from "./TypingEngine";
 import KeypressMetrics, {
   type KeypressMetricsProjection,
   type StatProjection,
-  type TypingProjection,
 } from "./KeypressMetrics";
 import type { LinkedList } from "./List";
 import List from "./List";
@@ -13,6 +11,7 @@ import type {
   PendingKeypressMetrics,
 } from "./KeypressMetricsSessions";
 import KeypressMetricsSessions from "./KeypressMetricsSessions";
+import type { TypingProjection } from "./TypingProjection";
 
 export type TypingMetrics = {
   projection: TypingProjection;

@@ -1,7 +1,7 @@
 import { Show } from "solid-js";
 import { css } from "solid-styled";
 import "balloon-css";
-import type { KeyMetricsProjection } from "./KeyMetrics";
+import type { TypingProjection } from "./TypingProjection";
 
 type transform = Array<[string, string]>;
 
@@ -32,7 +32,7 @@ export type KeyboardKeyResumeProps = {
   key: Array<string>;
   size: string;
   used: boolean;
-  data: Array<KeyMetricsProjection | undefined>;
+  data: Array<TypingProjection | undefined>;
   pressed: boolean;
 };
 
@@ -155,7 +155,7 @@ const KeyboardKeyResume = (props: KeyboardKeyResumeProps) => {
     }
   `;
 
-  const getInfo = (data: Array<KeyMetricsProjection | undefined>) =>
+  const getInfo = (data: Array<TypingProjection | undefined>) =>
     data.reduce((acc, cur) => {
       if (cur) {
         if (!acc) return cur;
@@ -171,7 +171,7 @@ const KeyboardKeyResume = (props: KeyboardKeyResumeProps) => {
     });
 
   // show accuracy
-  const infoToString = (data: Array<KeyMetricsProjection | undefined>) => {
+  const infoToString = (data: Array<TypingProjection | undefined>) => {
     const info = getInfo(data);
     return info ? ` ${info.correct - info.deletedCorrect} / ${info.total}` : "";
   };
@@ -186,7 +186,7 @@ const KeyboardKeyResume = (props: KeyboardKeyResumeProps) => {
   // Total: ${info.total}
   // `
   //       : "";
-  const status = (data: Array<KeyMetricsProjection | undefined>, k: string) => {
+  const status = (data: Array<TypingProjection | undefined>, k: string) => {
     const info = getInfo(data);
     if (!info) return "";
     const correct = info?.correct - info?.deletedCorrect;

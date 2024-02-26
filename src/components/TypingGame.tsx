@@ -1,3 +1,28 @@
+import { css } from "solid-styled";
+import {
+  Show,
+  createComputed,
+  createEffect,
+  createMemo,
+  createResource,
+  createSignal,
+} from "solid-js";
+import { createStore } from "solid-js/store";
+import * as i18n from "@solid-primitives/i18n";
+
+// use `type` to not include the actual dictionary in the bundle
+import type * as en from "../../public/i18n/en.json";
+
+export type Locale = "en" | "fr";
+export type RawDictionary = typeof en;
+
+export type Dictionary = i18n.Flatten<RawDictionary>;
+
+async function fetchDictionary(locale: Locale): Promise<Dictionary> {
+  const dict: RawDictionary = (await import(`../../public/i18n/${locale}.ts`)).dict;
+  return i18n.flatten(dict); // flatten the dictionary to make all nested keys available top-level
+}
+
 import Content from "./Content.ts";
 import KeyboardLayout from "./KeyboardLayout.ts";
 
@@ -15,23 +40,21 @@ import {
 } from "./TypingMetrics.ts";
 import TypingMetricsResume from "./TypingMetricsResume";
 
-import { css } from "solid-styled";
-import {
-  Show,
-  createComputed,
-  createEffect,
-  createMemo,
-  createSignal,
-} from "solid-js";
-import { createStore } from "solid-js/store";
-import { updateKeyProjection, type KeysProjection } from "./KeyMetrics.ts";
+import { updateKeyProjection, type KeysProjection } from "./KeysProjection.ts";
 import KeypressMetrics from "./KeypressMetrics.ts";
 
 type TypingGameProps = { source: string };
 
+// https://icon-sets.iconify.design/bi/keyboard-fill/
 // https://icon-sets.iconify.design/line-md/?query=play
 
 const TypingGame = ({ source }: TypingGameProps) => {
+  const [locale, setLocale] = createSignal<Locale>("en");
+
+  // https://www.solidjs.com/tutorial/stores_context
+  const [dict] = createResource(locale, fetchDictionary);
+
+  dict(); // => Dictionary
   const [paragraphs, keySet] = Content.parse(source);
   const [paraStore, setParaStore] = createStore(Content.deepClone(paragraphs));
 
