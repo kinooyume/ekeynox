@@ -8,7 +8,6 @@ import type { StatProjection } from "./KeypressMetrics";
 import DataMetricsResume from "./DataMetricsResume";
 
 type TypingMetricsProps = {
-  stat: StatProjection;
   metrics: TypingMetrics;
   layout: KeyboardLayout;
   keyMetrics: KeysProjection;
@@ -38,7 +37,7 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
   `;
   return (
     <div class="metrics">
-      <DataMetricsResume stat={props.stat} />
+      <DataMetricsResume projection={props.metrics.projection} />
       <div class="details">
         <div class="chart">
           <MetricsChart metrics={props.metrics} />

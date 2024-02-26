@@ -1,8 +1,8 @@
 import { css } from "solid-styled";
-import type { StatProjection } from "./KeypressMetrics";
+import type { KeypressMetricsProjection } from "./KeypressMetrics";
 
 type DataMetricsResumeProps = {
-  stat: StatProjection;
+  projection: KeypressMetricsProjection;
 };
 
 const DataMetricsResume = (props: DataMetricsResumeProps) => {
@@ -24,7 +24,7 @@ const DataMetricsResume = (props: DataMetricsResumeProps) => {
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-    } 
+    }
     .wpm-data {
       font-size: 4em;
       margin: 0;
@@ -63,30 +63,39 @@ const DataMetricsResume = (props: DataMetricsResumeProps) => {
       opacity: 0.6;
     }
   `;
+
+  const getTime = (duration: number) => {
+    // from miliseconds to minutes and seconds
+    const minutes = Math.floor(duration / 60000);
+    const seconds = ((duration % 60000) / 1000).toFixed(0);
+    return `${minutes}:${seconds}`;
+  };
+
   return (
     <div class="data">
       <div class="speeds">
         <p class="title">Speed</p>
         <div class="speed-data">
           <p class="wpm-data">
-            {props.stat.speed.byWord[0].toFixed(2)}
+            {props.projection.stats.speed.byWord[0].toFixed(2)}
             <span>WPM</span>
           </p>
           <p class="raw-data">
-            {props.stat.speed.byKeypress[1].toFixed(2)}
+            {props.projection.stats.speed.byKeypress[1].toFixed(2)}
             <span>Raw</span>
           </p>
+          <p>Duration : {getTime(props.projection.core.duration)}</p>
         </div>
       </div>
       <div class="accuracies">
         <p class="title">Accuracy</p>
         <div class="accuracies-data">
           <p class="accu-data">
-            {Math.trunc(props.stat.accuracies[0])}
+            {Math.trunc(props.projection.stats.accuracies[0])}
             <span>%</span>
           </p>
           <p class="accu-real-data">
-            Real : {props.stat.accuracies[1].toFixed(2)}
+            Real : {props.projection.stats.accuracies[1].toFixed(2)}
             <span>%</span>
           </p>
         </div>
