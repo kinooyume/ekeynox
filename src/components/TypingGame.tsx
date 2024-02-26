@@ -118,7 +118,6 @@ const TypingGame = ({ source }: TypingGameProps) => {
       fallback={
         <TypingMetricsResume
           keyMetrics={keyMetrics()}
-          stat={stat()}
           layout={kbLayout()}
           metrics={typingMetrics()}
           onReset={reset}

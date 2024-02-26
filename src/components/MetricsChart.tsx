@@ -14,7 +14,7 @@ import {
   ScatterController,
 } from "chart.js";
 
-import { DefaultChart, Scatter } from "solid-chartjs";
+import { DefaultChart } from "solid-chartjs";
 import type { TypingMetrics } from "./TypingMetrics";
 import { css } from "solid-styled";
 
@@ -58,7 +58,7 @@ const MyChart = (props: MyChartProps) => {
     let log = props.metrics.logs;
     while (log) {
       const elapsed = Math.round(
-        (log.value.meta.stop - log.value.meta.start) / 1000,
+        (log.value.core.duration) / 1000,
       );
 
       labels.push(elapsed.toString());
