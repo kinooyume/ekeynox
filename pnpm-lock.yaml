@@ -14,12 +14,18 @@ dependencies:
   '@astrojs/solid-js':
     specifier: ^4.0.1
     version: 4.0.1(solid-js@1.8.12)(vite@5.0.12)
+  '@solid-primitives/i18n':
+    specifier: ^2.0.1
+    version: 2.0.1(solid-js@1.8.12)
   '@solid-primitives/map':
     specifier: ^0.4.9
     version: 0.4.9(solid-js@1.8.12)
   '@solid-primitives/refs':
     specifier: ^1.0.6
     version: 1.0.6(solid-js@1.8.12)
+  '@solid-primitives/transition-group':
+    specifier: ^1.0.4
+    version: 1.0.4(solid-js@1.8.12)
   '@types/animejs':
     specifier: ^3.1.12
     version: 3.1.12
@@ -825,6 +831,14 @@ packages:
     dev: false
     optional: true
 
+  /@solid-primitives/i18n@2.0.1(solid-js@1.8.12):
+    resolution: {integrity: sha512-oOsZQUqlfPciJLz+iW+L2l0e0pSUZbx2SrFIRIkuhnaXLKfM5q9oXq59ManOYlhFDkQiE0EigWfBHMR4OjkrSQ==}
+    peerDependencies:
+      solid-js: ^1.6.12
+    dependencies:
+      solid-js: 1.8.12
+    dev: false
+
   /@solid-primitives/map@0.4.9(solid-js@1.8.12):
     resolution: {integrity: sha512-wMbIhfn24QDnNqJHRskFjKJ2bwvcx28/S0xBKoZdRdUaqIPZYWOVT8SM++dfWS44YdC2kJPF4RSTY1022aujLA==}
     peerDependencies:
@@ -840,6 +854,14 @@ packages:
       solid-js: ^1.6.12
     dependencies:
       '@solid-primitives/utils': 6.2.2(solid-js@1.8.12)
+      solid-js: 1.8.12
+    dev: false
+
+  /@solid-primitives/transition-group@1.0.4(solid-js@1.8.12):
+    resolution: {integrity: sha512-9nPg6HYAmEi7riH0C2bSCVw/2asgGSzHuN0yFFYyK9JgmXqJgyeyA+6thZbj7GgUQMRhtBxpH8yG7N2nEh8ttA==}
+    peerDependencies:
+      solid-js: ^1.6.12
+    dependencies:
       solid-js: 1.8.12
     dev: false
 
