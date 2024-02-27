@@ -3,6 +3,7 @@ import type { KeypressMetricsProjection } from "./KeypressMetrics";
 
 type DataMetricsResumeProps = {
   projection: KeypressMetricsProjection;
+  onReset: () => void;
 };
 
 const DataMetricsResume = (props: DataMetricsResumeProps) => {
@@ -102,6 +103,9 @@ const DataMetricsResume = (props: DataMetricsResumeProps) => {
             Consistency: {props.projection.stats.consistency * 100}
           </p>
         </div>
+      </div>
+      <div class="bottom">
+        <button onClick={props.onReset}>Reset</button>
       </div>
     </div>
   );

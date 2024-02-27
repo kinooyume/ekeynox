@@ -41,7 +41,7 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
   `;
   return (
     <div class="metrics">
-      <DataMetricsResume projection={props.metrics.projection} />
+      <DataMetricsResume projection={props.metrics.projection} onReset={props.onReset}/>
       <div class="details">
         <div class="chart">
           <MetricsChart metrics={props.metrics} />
@@ -52,9 +52,6 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
             metrics={props.keyMetrics}
           />
         </div>
-        <button class="reset" onClick={props.onReset}>
-          Restart
-        </button>
       </div>
       <Prompt paragraphs={props.paragraphs} setParagraphs={props.setParagraphs} />
     </div>
