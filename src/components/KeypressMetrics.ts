@@ -154,8 +154,8 @@ const keypressProjectionHandler = (props: KeypressMetricsProps) => {
 };
 
 export default {
-  createTypingProjection,
   keypressProjectionHandler,
+  createTypingProjection,
   createKeypressProjection,
   createCoreProjection,
   createStatProjection,
