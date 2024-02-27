@@ -4,8 +4,12 @@ import { css } from "solid-styled";
 import anime from "animejs/lib/anime.es.js";
 
 import { type Paragraphs } from "./Content.ts";
+import type { SetStoreFunction } from "solid-js/store";
 
-export type PromptProps = { paragraphs: Paragraphs };
+export type PromptProps = {
+  paragraphs: Paragraphs;
+  setParagraphs: SetStoreFunction<Paragraphs>;
+};
 
 const prompt = (props: PromptProps) => {
   css`
@@ -54,15 +58,15 @@ const prompt = (props: PromptProps) => {
       <div class="game"></div>
       <div class="board">
         <For each={props.paragraphs}>
-          {(paragraphs) => (
+          {(paragraphs, pIncdex) => (
             <div class="paragraph">
               <For each={paragraphs}>
-                {(word) => (
+                {(word, wIndex) => (
                   <Word
-                    isSeparator={word.isSeparator}
-                    keys={word.keys}
-                    focus={word.focus}
-                    status={word.status}
+                    {...word}
+                    setWpm={(wpm) => {
+                      props.setParagraphs(pIncdex(), wIndex(), "wpm", wpm);
+                    }}
                   />
                 )}
               </For>
