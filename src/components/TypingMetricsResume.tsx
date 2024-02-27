@@ -6,11 +6,15 @@ import type { KeyboardLayout } from "./KeyboardLayout";
 import MetricsChart from "./MetricsChart";
 import type { StatProjection } from "./KeypressMetrics";
 import DataMetricsResume from "./DataMetricsResume";
+import type { Paragraphs } from "./Content";
+import Prompt from "./Prompt";
 
 type TypingMetricsProps = {
   metrics: TypingMetrics;
   layout: KeyboardLayout;
   keyMetrics: KeysProjection;
+  paragraphs: Paragraphs;
+  setParagraphs: SetStoreFunction<Paragraphs>;
   onReset: () => void;
 };
 
@@ -52,6 +56,7 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
           Restart
         </button>
       </div>
+      <Prompt paragraphs={props.paragraphs} setParagraphs={props.setParagraphs} />
     </div>
   );
 };
