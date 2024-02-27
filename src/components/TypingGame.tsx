@@ -136,7 +136,7 @@ const TypingGame = ({ source }: TypingGameProps) => {
           onKeyDown={keyboard!?.keyDown}
           onKeyUp={keyboard!?.keyUp}
         />
-        <Prompt paragraphs={paraStore} />
+        <Prompt paragraphs={paraStore} setParagraphs={setParaStore}/>
         <TypingNav
           isPaused={status().kind !== TypingStatusKind.pending}
           stat={stat()}

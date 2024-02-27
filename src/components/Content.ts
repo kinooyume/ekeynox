@@ -11,6 +11,7 @@ export type MetaWord = {
   isSeparator: boolean;
   status: WordStatus;
   focus: boolean;
+  wpm: number;
   keys: Array<Metakey>;
 };
 
@@ -21,6 +22,7 @@ const Enter = () => ({
   focus: false,
   status: WordStatus.unstart,
   isSeparator: true,
+  wpm: 0,
   keys: [
     {
       key: "Enter",
@@ -35,26 +37,25 @@ export const parse: Parser = (source) => {
   const keySet = new Set<string>();
   const paragraphs = source
     .split("\n")
-    .map(
-      (line) => {
-        return line
-          .split(/(\s+)/)
-          .map((word) => ({
-            focus: false,
-            status: WordStatus.unstart,
-            isSeparator: word.trim() === "",
-            keys: word.split("").map((key) => {
-              keySet.add(key);
-              return {
-                key,
-                status: PromptKeyStatus.unstart,
-                focus: PromptKeyFocus.unset,
-              };
-            }),
-          }))
-          .filter((word) => word.keys.length > 0);
-      },
-    )
+    .map((line) => {
+      return line
+        .split(/(\s+)/)
+        .map((word) => ({
+          focus: false,
+          status: WordStatus.unstart,
+          wpm: 0,
+          isSeparator: word.trim() === "",
+          keys: word.split("").map((key) => {
+            keySet.add(key);
+            return {
+              key,
+              status: PromptKeyStatus.unstart,
+              focus: PromptKeyFocus.unset,
+            };
+          }),
+        }))
+        .filter((word) => word.keys.length > 0);
+    })
     .filter((paragraph) => paragraph.length > 0);
   if (paragraphs.length > 1) {
     for (let i = 0; i < paragraphs.length - 1; i++) {
