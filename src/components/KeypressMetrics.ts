@@ -56,12 +56,12 @@ const createStatProjection = (): StatProjection => ({
 });
 
 export type KpWordsMetrics = {
-  word: LinkedList<TypingPending>;
+  memory: TypingProjection;
   projection: TypingProjection;
 };
 
 const createKpWordsMetrics = (): KpWordsMetrics => ({
-  word: null,
+  memory: createTypingProjection(),
   projection: createTypingProjection(),
 });
 
