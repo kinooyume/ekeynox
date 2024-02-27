@@ -229,6 +229,8 @@ const TypingEngine = (props: TypingEngineProps) => {
         focusIsSeparator: getCurrent.isSeparator(),
       });
       if (!hasNext) {
+        setCurrent.wordStatus(WordStatus.over, false);
+        setCurrent.keyFocus(PromptKeyFocus.unfocus);
         props.setStatus({ kind: TypingStatusKind.over });
       }
     }
