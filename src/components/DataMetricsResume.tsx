@@ -99,9 +99,8 @@ const DataMetricsResume = (props: DataMetricsResumeProps) => {
             <span>%</span>
           </p>
           <p class="consistency">
-            Consistency: {props.projection.stats.consistency * 100 }
+            Consistency: {props.projection.stats.consistency * 100}
           </p>
-
         </div>
       </div>
     </div>

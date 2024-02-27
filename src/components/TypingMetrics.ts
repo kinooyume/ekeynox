@@ -37,7 +37,6 @@ type Interval = {
   timer: NodeJS.Timer | NodeJS.Timeout;
 };
 
-/* side effect */
 const createTypingMetricsState = (
   setStat: Setter<StatProjection>,
   setTypingMetrics: Setter<TypingMetrics>,
@@ -47,6 +46,7 @@ const createTypingMetricsState = (
     metrics: TypingMetrics,
   ) => {
     setStat(projection.stats);
+    /* side effect */
     metrics.logs = List.make(metrics.logs, projection);
   };
 
@@ -81,7 +81,6 @@ const createTypingMetricsState = (
           // side effect
           updateStat(finalProjection, props.metrics);
           setTypingMetrics(props.metrics);
-          console.log("metrics", props.metrics);
           props.metrics.projection = finalProjection;
           return paused({
             keypressMetrics: overKeypressMetrics,
@@ -90,13 +89,13 @@ const createTypingMetricsState = (
       }
     };
 
-  type pausedMetricsProps = {
+  type PausedMetricsProps = {
     keypressMetrics: PausedKeypressMetrics;
     metrics: TypingMetrics;
   };
 
   const paused =
-    ({ keypressMetrics, metrics }: pausedMetricsProps) =>
+    ({ keypressMetrics, metrics }: PausedMetricsProps) =>
     ({ status }: TypingMetricsProps): TypingMetricsState => {
       switch (status.kind) {
         case TypingStatusKind.unstart:
