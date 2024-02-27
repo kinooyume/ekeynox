@@ -19,7 +19,8 @@ export type RawDictionary = typeof en;
 export type Dictionary = i18n.Flatten<RawDictionary>;
 
 async function fetchDictionary(locale: Locale): Promise<Dictionary> {
-  const dict: RawDictionary = (await import(`../../public/i18n/${locale}.ts`)).dict;
+  const dict: RawDictionary = (await import(`../../public/i18n/${locale}.ts`))
+    .dict;
   return i18n.flatten(dict); // flatten the dictionary to make all nested keys available top-level
 }
 
@@ -71,8 +72,6 @@ const TypingGame = ({ source }: TypingGameProps) => {
     // TODO: manage error
   });
 
-  const pause = () => setStatus({ kind: TypingStatusKind.pause });
-
   /* Metrics */
 
   const [stat, setStat] = createSignal(KeypressMetrics.createStatProjection());
@@ -99,6 +98,7 @@ const TypingGame = ({ source }: TypingGameProps) => {
 
   let resetInput: () => void;
   let focus: () => void;
+  let pause: () => void;
   let keyboard: TypingKeyboardRef;
 
   /* ***  */
@@ -132,15 +132,16 @@ const TypingGame = ({ source }: TypingGameProps) => {
           setStatus={setStatus}
           setFocus={(f) => (focus = f)}
           setReset={(r) => (resetInput = r)}
+          setPause={(p) => (pause = p)}
           setCurrentPromptKey={setCurrentPromptKey}
           onKeyDown={keyboard!?.keyDown}
           onKeyUp={keyboard!?.keyUp}
         />
-        <Prompt paragraphs={paraStore} setParagraphs={setParaStore}/>
+        <Prompt paragraphs={paraStore} setParagraphs={setParaStore} />
         <TypingNav
           isPaused={status().kind !== TypingStatusKind.pending}
           stat={stat()}
-          onPause={pause}
+          onPause={pause!}
           onReset={reset}
         />
         <Keyboard

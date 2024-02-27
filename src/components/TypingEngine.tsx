@@ -39,6 +39,7 @@ export type TypingEngineProps = {
   setCurrentPromptKey: Setter<string>;
   status: TypingStatus;
   setStatus: Setter<TypingStatus>;
+  setPause: (pause: () => void) => void;
   setFocus: (focus: () => void) => void;
   setReset: (reset: () => void) => void;
 };
@@ -176,6 +177,11 @@ const TypingEngine = (props: TypingEngineProps) => {
   };
   /* *** */
 
+  const pause = () => {
+    setCurrent.wordStatus(WordStatus.pause, false);
+    props.setStatus({ kind: TypingStatusKind.pause });
+  };
+
   /* Key Handlers */
 
   const currentKeyMetrics = (typed: string) =>
@@ -208,6 +214,9 @@ const TypingEngine = (props: TypingEngineProps) => {
         focusIsSeparator: getCurrent.isSeparator(),
       });
     } else {
+      if (getCurrent.word().status !== WordStatus.pending) {
+        setCurrent.wordStatus(WordStatus.pending, true);
+      }
       if (keyMetrics[1].kind === KeyStatus.match) {
         setCurrent.keyStatus(PromptKeyStatus.correct);
       } else {
@@ -238,6 +247,7 @@ const TypingEngine = (props: TypingEngineProps) => {
     currentFocus();
     props.setFocus(() => input.focus());
     props.setReset(reset);
+    props.setPause(pause);
     props.setCurrentPromptKey(getCurrent.key().key);
   });
 
