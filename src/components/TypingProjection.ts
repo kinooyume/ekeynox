@@ -1,7 +1,7 @@
 import { KeyStatus, type KeyMetrics, PromptKeyStatus } from "./KeyMetrics";
 import type { LinkedList } from "./List";
 import List from "./List";
-import type { TypingPending } from "./TypingEngine";
+import type { TypingKey } from "./TypingEngine";
 
 export type TypingProjection = {
   correct: number;
@@ -75,8 +75,8 @@ const mergeTypingProjections = (
 };
 
 const createTypingProjectionFromPendingList = (
-  list: LinkedList<TypingPending>,
-): [TypingProjection, LinkedList<TypingPending>] => {
+  list: LinkedList<TypingKey>,
+): [TypingProjection, LinkedList<TypingKey>] => {
   const projection = createTypingProjection();
   const updater = updateTypingProjection(projection);
   let node = list;

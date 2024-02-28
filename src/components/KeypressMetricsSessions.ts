@@ -2,10 +2,10 @@ import KeypressMetrics, {
   type KeypressMetricsProjection,
   type KeypressMetricsProps,
 } from "./KeypressMetrics";
-import type { TypingPending } from "./TypingEngine";
+import type { TypingEvent } from "./TypingEngine";
 
 export type PendingKeypressMetrics = {
-  event: (key: TypingPending) => void;
+  event: (event: TypingEvent) => void;
   getProjection: (isOver: boolean) => KeypressMetricsProjection;
   pause: (isOver: boolean) => [PausedKeypressMetrics, KeypressMetricsProjection];
 };
@@ -30,7 +30,6 @@ const pendingKeypressMetrics = (
           resume: () => [
             pendingKeypressMetrics({
               part: projection.core,
-              words: projection.words,
             }),
             projection.meta.stop,
           ],
@@ -46,7 +45,6 @@ const defaultPausedKeypressMetrics: PausedKeypressMetrics = {
   resume: () => [
     pendingKeypressMetrics({
       part: KeypressMetrics.createCoreProjection(),
-      words: KeypressMetrics.createKpWordsMetrics(),
     }),
     0,
   ],
