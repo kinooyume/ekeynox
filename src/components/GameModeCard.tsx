@@ -1,10 +1,13 @@
+import type { JSXElement } from "solid-js";
 import { css } from "solid-styled";
 
 export type GameModeCardProps = {
   title: string;
   description: string;
-  url: string;
   picture?: string;
+  onClick: () => void;
+  selected?: boolean;
+  children?: JSXElement;
 };
 
 const GameModeCard = (props: GameModeCardProps) => {
@@ -17,7 +20,8 @@ const GameModeCard = (props: GameModeCardProps) => {
       justify-content: center;
       align-items: center;
       width: 300px;
-      height: 400px;
+      cursor: pointer;
+      min-height: 400px;
       border-radius: 8px;
       box-shadow:
         2px 2px 7px #000,
@@ -47,9 +51,21 @@ const GameModeCard = (props: GameModeCardProps) => {
       text-align: center;
       margin-top: 0;
     }
+
+    a .params {
+      display: none;
+    }
+    a.selected .params {
+      display: flex;
+    }
   `;
+
   return (
-    <a href={props.url} class="card">
+    <a
+      onClick={props.onClick}
+      classList={{ selected: props.selected }}
+      class="card"
+    >
       <div class="card-picture">
         <img src={props.picture} alt={props.title} />
       </div>
@@ -57,6 +73,7 @@ const GameModeCard = (props: GameModeCardProps) => {
         <h2>{props.title}</h2>
         <p class="description">{props.description}</p>
       </div>
+      <div class="params">{props.children}</div>
     </a>
   );
 };

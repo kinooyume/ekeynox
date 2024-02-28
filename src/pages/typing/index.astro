@@ -2,6 +2,7 @@
 import Layout from "../../layouts/Layout.astro";
 import { games } from "../../games.json";
 import GameModeMenu from "../../components/GameModeMenu";
+import App from "../../components/App";
 
 type ParamsProps = {
   params: { title: string };
@@ -24,18 +25,18 @@ const gameModeList = [
     picture: "/images/monkey.jpg",
   },
   {
-    title: "Rabbit",
-    description:
-      "Time is running out ! how many words can you write in the time allowed?",
-    url: "/typing/rabbit",
-    picture: "/images/rabbit.jpg",
-  },
-  {
     title: "Chameleon",
     description:
       "Give a text to type, and test yourself on it. The limit is your imagination",
     url: "/typing/chameleon",
     picture: "/images/monkey.jpg",
+  },
+  {
+    title: "Rabbit",
+    description:
+      "Time is running out ! how many words can you write in the time allowed?",
+    url: "/typing/rabbit",
+    picture: "/images/rabbit.jpg",
   },
 ];
 ---
@@ -65,7 +66,7 @@ const gameModeList = [
 </style>
 <Layout title="eKeyNox">
   <main>
-    <GameModeMenu client:only gameModes={gameModeList} />
+    <App client:only/>
     <h2>Test</h2>
     <ul class="menu">
       {
