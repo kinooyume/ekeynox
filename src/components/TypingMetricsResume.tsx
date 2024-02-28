@@ -4,10 +4,11 @@ import TypingKeyboardResume from "./TypingKeyboardResume";
 import type { KeysProjection } from "./KeysProjection";
 import type { KeyboardLayout } from "./KeyboardLayout";
 import MetricsChart from "./MetricsChart";
-import type { StatProjection } from "./KeypressMetrics";
 import DataMetricsResume from "./DataMetricsResume";
 import type { Paragraphs } from "./Content";
 import Prompt from "./Prompt";
+import WordMetricsResume from "./WordMetricsResume";
+import type { SetStoreFunction } from "solid-js/store";
 
 type TypingMetricsProps = {
   metrics: TypingMetrics;
@@ -53,6 +54,7 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
           />
         </div>
       </div>
+      <WordMetricsResume paragraphs={props.paragraphs}/>
       <Prompt paragraphs={props.paragraphs} setParagraphs={props.setParagraphs} />
     </div>
   );

@@ -119,6 +119,7 @@ const TypingGame = ({ source }: TypingGameProps) => {
         <TypingMetricsResume
           keyMetrics={keyMetrics()}
           paragraphs={paraStore}
+          setParagraphs={setParaStore}
           layout={kbLayout()}
           metrics={typingMetrics()}
           onReset={reset}
