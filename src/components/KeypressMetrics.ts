@@ -4,31 +4,42 @@ import {
   mergeTypingProjections,
   createTypingProjectionFromPendingList,
 } from "./TypingProjection";
-import { updateWordProjection } from "./KpWordMetrics";
+import {
+  createWordProjection,
+  createWordProjectionFromList,
+  mergeWordProjections,
+  type WordProjection,
+} from "./KpWordMetrics";
 import type { LinkedList } from "./List";
 import List from "./List";
-import type { TypingPending } from "./TypingEngine";
+import type { TypingEvent, TypingKey, TypingWord } from "./TypingEngine";
 
 export type CoreProjection = {
   projection: TypingProjection;
+  wordProjection: WordProjection;
   duration: number;
 };
 
 const createCoreProjection = (): CoreProjection => ({
   projection: createTypingProjection(),
+  wordProjection: createWordProjection(),
   duration: 0,
 });
 
 export type MetaProjection = {
-  logs: LinkedList<TypingPending>;
+  logs: LinkedList<TypingKey>;
+  wordsLogs: LinkedList<TypingWord>;
   sectionProjection: TypingProjection;
+  sectionWordProjection: WordProjection;
   start: number;
   stop: number;
 };
 
 const createMetaKeypressProjection = (): MetaProjection => ({
   logs: null,
+  wordsLogs: null,
   sectionProjection: createTypingProjection(),
+  sectionWordProjection: createWordProjection(),
   start: 0,
   stop: 0,
 });
@@ -55,60 +66,54 @@ const createStatProjection = (): StatProjection => ({
   consistency: 0,
 });
 
-export type KpWordsMetrics = {
-  memory: TypingProjection;
-  projection: TypingProjection;
-};
-
-const createKpWordsMetrics = (): KpWordsMetrics => ({
-  memory: createTypingProjection(),
-  projection: createTypingProjection(),
-});
-
 export type KeypressMetricsProjection = {
   core: CoreProjection;
-  words: KpWordsMetrics;
   meta: MetaProjection;
   stats: StatProjection;
 };
 
 const createKeypressProjection = (): KeypressMetricsProjection => ({
   core: createCoreProjection(),
-  words: createKpWordsMetrics(),
   meta: createMetaKeypressProjection(),
   stats: createStatProjection(),
 });
 
 export type KeypressMetricsProps = {
   part: CoreProjection;
-  words: KpWordsMetrics;
 };
 
 const keypressProjectionHandler = (props: KeypressMetricsProps) => {
   let projection = Object.assign({}, props.part.projection);
-  let logs: LinkedList<TypingPending> = null;
+  let logs: LinkedList<TypingKey> = null;
 
-  const event = (key: TypingPending) => {
+  let wordProjection = Object.assign({}, props.part.wordProjection);
+  let wordsLogs: LinkedList<TypingWord> = null;
+
+  const event = ({ key, word }: TypingEvent) => {
     logs = List.make(logs, key);
+    wordsLogs = List.make(wordsLogs, word);
   };
 
   const start = performance.now();
 
+  // TODO: refacto key/words
   const getProjection = (isOver: boolean): KeypressMetricsProjection => {
     const stop = performance.now();
     let node = logs;
+    let wordNode = wordsLogs;
     logs = null;
+    wordsLogs = null;
     const duration = stop - start + props.part.duration;
     const [sectionProjection, sortedLogs] =
       createTypingProjectionFromPendingList(node);
+    const [sectionWordProjection, sortedWordLogs] =
+      createWordProjectionFromList(wordNode);
     /*  Side effect */
     mergeTypingProjections(projection, sectionProjection);
-    updateWordProjection(props.words)(node, isOver);
+    mergeWordProjections(wordProjection, sectionWordProjection);
     /* *** */
 
     const correct = projection.correct - projection.deletedCorrect;
-    const correctWord =
-      props.words.projection.correct - props.words.projection.deletedCorrect;
 
     const incorrect =
       projection.incorrect +
@@ -123,8 +128,8 @@ const keypressProjectionHandler = (props: KeypressMetricsProps) => {
       ((projection.total / duration) * 60000) / 5,
     ];
     const byWord: [number, number] = [
-      ((correctWord / duration) * 60000) / 5,
-      ((props.words.projection.total / duration) * 60000) / 5,
+      ((wordProjection.correct / duration) * 60000) / 5,
+      ((wordProjection.correct / duration) * 60000) / 5,
     ];
 
     const accuracy = (correct / total) * 100 || 0;
@@ -137,9 +142,20 @@ const keypressProjectionHandler = (props: KeypressMetricsProps) => {
     const consistency = byWord[1] / byKeypress[0];
 
     return {
-      core: { projection: Object.assign({}, projection), duration },
-      words: props.words,
-      meta: { logs: sortedLogs, sectionProjection, start, stop },
+      core: {
+        projection: Object.assign({}, projection),
+        wordProjection: Object.assign({}, wordProjection),
+        duration,
+      },
+      // words: props.words,
+      meta: {
+        logs: sortedLogs,
+        wordsLogs: sortedWordLogs,
+        sectionProjection,
+        sectionWordProjection,
+        start,
+        stop,
+      },
       stats: {
         speed: {
           byKeypress,
@@ -159,5 +175,4 @@ export default {
   createKeypressProjection,
   createCoreProjection,
   createStatProjection,
-  createKpWordsMetrics,
 };

@@ -64,7 +64,7 @@ const createTypingMetricsState = (
           setStat(KeypressMetrics.createStatProjection());
           return create();
         case TypingStatusKind.pending:
-          props.keypressMetrics.event(status.event);
+          props.keypressMetrics.event(status);
           return pending(props);
         case TypingStatusKind.pause:
           clearInterval(props.interval.timer);
@@ -104,7 +104,7 @@ const createTypingMetricsState = (
         case TypingStatusKind.pending:
           const [pendingKeypressMetrics, lastDuration] =
             keypressMetrics.resume();
-          pendingKeypressMetrics.event(status.event);
+          pendingKeypressMetrics.event(status);
 
           const interval: Interval = { timer: 0 as unknown as NodeJS.Timer };
           const update = () =>

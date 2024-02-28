@@ -11,6 +11,15 @@ import {
   PromptKeyFocus,
 } from "./KeyMetrics.ts";
 
+export enum TypingWordKind {
+  ignore,
+  correct,
+}
+
+export type TypingWord =
+  | { kind: TypingWordKind.ignore }
+  | { kind: TypingWordKind.correct; length: number };
+
 export enum TypingStatusKind {
   unstart,
   pending,
@@ -19,15 +28,24 @@ export enum TypingStatusKind {
   over,
 }
 
-export type TypingPending = {
+export type TypingKey = {
   keyMetrics: KeyTuple;
   timestamp: number;
   focusIsSeparator: boolean;
 };
 
+export type TypingEvent = {
+  key: TypingKey;
+  word: TypingWord;
+};
+
 export type TypingStatus =
   | { kind: TypingStatusKind.unstart }
-  | { kind: TypingStatusKind.pending; event: TypingPending }
+  | {
+      kind: TypingStatusKind.pending;
+      key: TypingKey;
+      word: TypingWord;
+    }
   | { kind: TypingStatusKind.pause }
   | { kind: TypingStatusKind.over };
 
@@ -63,6 +81,12 @@ const TypingEngine = (props: TypingEngineProps) => {
     nbrParagraphs: () => props.paragraphs.length - 1,
     nbrWords: () => props.paragraphs[currentParagraph()].length - 1,
     word: () => props.paragraphs[currentParagraph()][currentWord()],
+    wordIsValid: () => {
+      const word = props.paragraphs[currentParagraph()][currentWord()];
+      return word.keys.every((key) => key.status === PromptKeyStatus.correct);
+    },
+    wordValid: () =>
+      props.paragraphs[currentParagraph()][currentWord()].wasCorrect,
     nbrKeys: () =>
       props.paragraphs[currentParagraph()][currentWord()].keys.length - 1,
     key: () =>
@@ -96,17 +120,34 @@ const TypingEngine = (props: TypingEngineProps) => {
       props.setParagraphs(currentParagraph(), currentWord(), "status", status);
       props.setParagraphs(currentParagraph(), currentWord(), "focus", focus);
     },
+    wordValid: (valid: boolean) => {
+      props.setParagraphs(
+        currentParagraph(),
+        currentWord(),
+        "wasCorrect",
+        valid,
+      );
+    },
   };
 
   /* *** */
 
   const nextWord = () => {
+    let typingWord = null;
+    if (!getCurrent.wordValid() && getCurrent.wordIsValid()) {
+      setCurrent.wordValid(true);
+      typingWord = {
+        kind: TypingWordKind.correct,
+        length: getCurrent.word().keys.length,
+      };
+    }
     setCurrent.wordStatus(WordStatus.over, false);
     setCurrent.keyFocus(PromptKeyFocus.unfocus);
     setCurrentWord(currentWord() + 1);
     setCurrentKey(0);
     setCurrent.wordStatus(WordStatus.pending, true);
     setCurrent.keyFocus(PromptKeyFocus.focus);
+    return typingWord;
   };
 
   const nextParagraph = () => {
@@ -119,17 +160,18 @@ const TypingEngine = (props: TypingEngineProps) => {
     setCurrent.keyFocus(PromptKeyFocus.focus);
   };
 
-  const next = () => {
+  const next = (): [boolean, TypingWord | null] => {
+    let typingWord = null;
     if (currentKey() < getCurrent.nbrKeys()) {
       setCurrent.keyFocus(PromptKeyFocus.unfocus);
       setCurrentKey(currentKey() + 1);
       setCurrent.keyFocus(PromptKeyFocus.focus);
     } else if (currentWord() < getCurrent.nbrWords()) {
-      nextWord();
+      typingWord = nextWord();
     } else if (currentParagraph() < getCurrent.nbrParagraphs()) {
       nextParagraph();
-    } else return false;
-    return true;
+    } else return [false, null];
+    return [true, typingWord];
   };
 
   /* Prev */
@@ -190,10 +232,15 @@ const TypingEngine = (props: TypingEngineProps) => {
       expected: getCurrent.key().key,
     });
 
-  const setStatus = (event: TypingPending) =>
+  type SetStatusProps = {
+    key: TypingKey;
+    word?: TypingWord;
+  };
+  const setStatus = (statusProps: SetStatusProps) =>
     props.setStatus({
       kind: TypingStatusKind.pending,
-      event,
+      word: { kind: TypingWordKind.ignore },
+      ...statusProps,
     });
 
   const handleKeypress = (event: KeyboardEvent) => {
@@ -209,9 +256,11 @@ const TypingEngine = (props: TypingEngineProps) => {
         status: getCurrent.key().status,
       });
       setStatus({
-        keyMetrics: deletedKeyMetrics,
-        timestamp,
-        focusIsSeparator: getCurrent.isSeparator(),
+        key: {
+          keyMetrics: deletedKeyMetrics,
+          timestamp,
+          focusIsSeparator: getCurrent.isSeparator(),
+        },
       });
     } else {
       if (getCurrent.word().status !== WordStatus.pending) {
@@ -222,11 +271,14 @@ const TypingEngine = (props: TypingEngineProps) => {
       } else {
         setCurrent.keyStatus(PromptKeyStatus.incorrect);
       }
-      let hasNext = next();
+      let [hasNext, typingWord] = next();
       setStatus({
-        keyMetrics,
-        timestamp,
-        focusIsSeparator: getCurrent.isSeparator(),
+        key: {
+          keyMetrics,
+          timestamp,
+          focusIsSeparator: getCurrent.isSeparator(),
+        },
+        word: typingWord || { kind: TypingWordKind.ignore },
       });
       if (!hasNext) {
         setCurrent.wordStatus(WordStatus.over, false);

@@ -17,7 +17,7 @@ const updateKeyProjection = ({
   } else if (status.kind !== TypingStatusKind.pending) {
     return projection;
   }
-  const [key, metrics] = status.event.keyMetrics;
+  const [key, metrics] = status.key.keyMetrics;
   if (projection[key] === undefined) {
     projection[key] = createTypingProjection();
   }
