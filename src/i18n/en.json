@@ -1,0 +1,18 @@
+{
+  "accuracy": "accuracy",
+  "speed": "speed",
+  "gameMode": {
+    "monkey": {
+      "title": "monkey",
+      "description": "Type random words as quick as possible, try to not make mistake !"
+    },
+    "rabbit": {
+      "title": "rabbit",
+      "description": "Time is running out ! how many words can you write in the time allowed?"
+    },
+    "chameleon": {
+      "title": "chameleon",
+      "description": "Give a text to type, and test yourself on it. The limit is your imagination"
+    }
+  }
+}

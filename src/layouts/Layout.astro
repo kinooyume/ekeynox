@@ -1,5 +1,6 @@
 ---
 import { ViewTransitions } from "astro:transitions";
+import "../styles/global.css";
 import Hud from "../components/Hud.astro";
 interface Props {
   title: string;
@@ -19,118 +20,6 @@ const { title } = Astro.props;
     <title>{title}</title>
   </head>
   <body>
-    <Hud transition:persist="hud" />
     <slot />
   </body>
 </html>
-
-<style is:global>
-  .toggle {
-    position: relative;
-  }
-  :root {
-    --background-color: #e0e0e0;
-    --text-color: rgb(0, 31, 63);
-    --text-secondary-color: grey;
-
-    --correct-color: green;
-    --correct-bg-color: lightgreen;
-    --incorrect-color: red;
-    --incorrect-bg-color: lightcoral;
-    --corrected-color: orange;
-    --corrected-bg-color: lightyellow;
-    --focus-color: blue;
-    --focus-bg-color: lightblue;
-
-    --test-red: #fe9c9b;
-    --test-orange: #fed79c;
-    --test-green: #61d4bc;
-
-    --test-light-red: #efafaf;
-    --test-light-orange: #f9e2c2;
-    --test-light-green: #90dfcc;
-
-    --key-color: #bebebe;
-    --key-color-alt: #ffffff;
-
-    --key-correct-bg-color: #8ff0a4;
-    --key-correct-color: #7acc8b;
-    --key-correct-color-alt: #a4ffbd;
-
-    --key-incorrect-bg-color: #f66151;
-    --key-incorrect-color: #d15245;
-    --key-incorrect-color-alt: #ff705d;
-
-    --key-corrected-bg-color: #ffbe6f;
-    --key-corrected-color: #d9a25e;
-    --key-corrected-color-alt: #ffdb80;
-
-    --key-focus-bg-color: #99c1f1;
-    --key-focus-color: #82a4cd;
-    --key-focus-color-alt: #b0deff;
-  }
-  .dark {
-    --background-color: #2a2d2f;
-    --text-color: #f6f5f7;
-    --text-secondary-color: grey;
-
-    --correct-color: green;
-    --correct-bg-color: lightgreen;
-    --incorrect-color: red;
-    --incorrect-bg-color: lightcoral;
-    --corrected-color: orange;
-    --corrected-bg-color: lightyellow;
-    --focus-color: blue;
-    --focus-bg-color: lightblue;
-
-    --key-color: #242628;
-    --key-color-alt: #303436;
-
-    --key-correct-bg-color: #126033;
-    --key-correct-color: #0f522b;
-    --key-correct-color-alt: #156e3b;
-
-    --key-incorrect-bg-color: #81180d;
-    --key-incorrect-color: #6e140b;
-    --key-incorrect-color-alt: #941c0f;
-
-    --key-corrected-bg-color: #744307;
-    --key-corrected-color: #633906;
-    --key-corrected-color-alt: #854d08;
-
-    --key-focus-bg-color: #12345c;
-    --key-focus-color: #0f2c4e;
-    --key-focus-color-alt: #153c6a;
-  }
-
-  html {
-    font-family: system-ui, sans-serif;
-    background-size: 224px;
-    padding: 0;
-  }
-  body {
-    display: grid;
-    margin: 0;
-    background-color: var(--background-color);
-  }
-  main {
-    position: relative;
-    margin: 96px 198px 0;
-  }
-  a {
-    color: #000;
-    text-decoration: none;
-    a:hover {
-      text-decoration: underline;
-    }
-  }
-
-  h1,
-  h2,
-  h3,
-  a,
-  p,
-  span {
-    color: var(--text-color);
-  }
-</style>
