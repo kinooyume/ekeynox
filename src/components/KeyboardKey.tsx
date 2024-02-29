@@ -62,7 +62,7 @@ const KeyboardKey = (props: KeyboardKeyProps) => {
         inset -2px -2px 7px var(--key-color-alt);
 
       transform: translate(1px, 1px);
-      transition: 60ms;
+      transition: transform 60ms;
     }
     .concave {
       background: linear-gradient(145deg, #cacaca, #f0f0f0);
