@@ -311,6 +311,7 @@ const TypingEngine = (props: TypingEngineProps) => {
     props.setReset(reset);
     props.setPause(pause);
     props.setCurrentPromptKey(getCurrent.key().key);
+    input.focus();
   });
 
   onCleanup(() => {
