@@ -23,6 +23,9 @@ dependencies:
   '@solid-primitives/refs':
     specifier: ^1.0.6
     version: 1.0.6(solid-js@1.8.12)
+  '@solid-primitives/storage':
+    specifier: ^2.1.3
+    version: 2.1.3(solid-js@1.8.12)
   '@solid-primitives/transition-group':
     specifier: ^1.0.4
     version: 1.0.4(solid-js@1.8.12)
@@ -857,6 +860,19 @@ packages:
       solid-js: 1.8.12
     dev: false
 
+  /@solid-primitives/storage@2.1.3(solid-js@1.8.12):
+    resolution: {integrity: sha512-8bBNMgeX10NMib/lgmD4m7YiQ806onrUSRlUBJnpmhSVS+8n0tcL+M3OWvRhHHPuSNV4Zm0cI9iUNaVQfUoIfA==}
+    peerDependencies:
+      solid-js: ^1.6.12
+      solid-start: '>=0.2.26'
+    peerDependenciesMeta:
+      solid-start:
+        optional: true
+    dependencies:
+      '@solid-primitives/utils': 6.2.3(solid-js@1.8.12)
+      solid-js: 1.8.12
+    dev: false
+
   /@solid-primitives/transition-group@1.0.4(solid-js@1.8.12):
     resolution: {integrity: sha512-9nPg6HYAmEi7riH0C2bSCVw/2asgGSzHuN0yFFYyK9JgmXqJgyeyA+6thZbj7GgUQMRhtBxpH8yG7N2nEh8ttA==}
     peerDependencies:
@@ -876,6 +892,14 @@ packages:
 
   /@solid-primitives/utils@6.2.2(solid-js@1.8.12):
     resolution: {integrity: sha512-11ypVbp987XxETeRqY5Y3OmmTpm8/jZqJXRvo6AyqBthzkvvjEdReuUMU2yVb+pwWGxfZpWHZ6EUCcGXUMhfwg==}
+    peerDependencies:
+      solid-js: ^1.6.12
+    dependencies:
+      solid-js: 1.8.12
+    dev: false
+
+  /@solid-primitives/utils@6.2.3(solid-js@1.8.12):
+    resolution: {integrity: sha512-CqAwKb2T5Vi72+rhebSsqNZ9o67buYRdEJrIFzRXz3U59QqezuuxPsyzTSVCacwS5Pf109VRsgCJQoxKRoECZQ==}
     peerDependencies:
       solid-js: ^1.6.12
     dependencies:
