@@ -14,6 +14,7 @@ const GameModeCard = (props: GameModeCardProps) => {
   css`
     .card {
       display: flex;
+      user-select: none;
       border: 2px solid #000;
       border-radius: 8px;
       flex-direction: column;
