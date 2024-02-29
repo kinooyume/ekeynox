@@ -4,15 +4,15 @@
   "gameMode": {
     "monkey": {
       "title": "monkey",
-      "description": "Type random words as quick as possible, try to not make mistake !"
+      "description": "Tapez des mots au hasard aussi vite que possible, essayez de ne pas faire d'erreur !"
     },
     "rabbit": {
       "title": "rabbit",
-      "description": "Time is running out ! how many words can you write in the time allowed?"
+      "description": "Le temps est compté ! Combien de mots pouvez-vous écrire dans le temps imparti ?"
     },
     "chameleon": {
       "title": "chameleon",
-      "description": "Give a text to type, and test yourself on it. The limit is your imagination"
+      "description": "Donnez un texte à taper et testez-le. La limite est votre imagination"
     }
   }
 }
