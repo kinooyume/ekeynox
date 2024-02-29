@@ -116,10 +116,26 @@ button:hover {
 
 button:active {
   background-color: rgb(255, 56, 86);
-  /*50, 168, 80*/
   box-shadow: rgb(201, 46, 70) 0px 0px 0px 0px;
   transform: translateY(5px);
   transition: 200ms;
+}
+
+textarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 0;
+  font-size: 13px;
+  transition: all 0.06s ease;
+  background-color: var(--key-color);
+  cursor: pointer;
+}
+
+input:focus,
+textarea:focus {
+  outline: none !important;
+  border: 2px solid var(--focus-bg-color);
 }
 
 h1,
