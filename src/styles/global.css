@@ -98,6 +98,30 @@ a {
   }
 }
 
+button {
+  padding: 12px 30px;
+  border-radius: 10px;
+  border: 0;
+  background-color: rgb(255, 56, 86);
+  font-size: 13px;
+  transition: all 0.3s ease;
+  box-shadow: rgb(201, 46, 70) 0px 6px 0px 0px;
+  color: hsl(0, 0%, 100%);
+  cursor: pointer;
+}
+
+button:hover {
+  box-shadow: rgb(201, 46, 70) 0px 4px 0px 0px;
+}
+
+button:active {
+  background-color: rgb(255, 56, 86);
+  /*50, 168, 80*/
+  box-shadow: rgb(201, 46, 70) 0px 0px 0px 0px;
+  transform: translateY(5px);
+  transition: 200ms;
+}
+
 h1,
 h2,
 h3,
