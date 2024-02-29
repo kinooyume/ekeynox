@@ -3,10 +3,14 @@ import { css } from "solid-styled";
 import KeyboardIcon from "./ui/keyboard.tsx";
 import GlobeIcon from "./ui/globe.tsx";
 import DarkModeToggle from "./DarkModeToggle";
-import type { I18nContext } from "./App.tsx";
+import { GameMode, type I18nContext } from "./App.tsx";
+import { Match, Show, Switch } from "solid-js";
+import HeaderNav from "./HeaderNav.tsx";
 
 type HeaderProps = {
-  i18n: I18nContext
+  i18n: I18nContext;
+  toHome: () => void;
+  gameMode: GameMode;
 };
 const Header = (props: HeaderProps) => {
   css`
@@ -48,12 +52,29 @@ const Header = (props: HeaderProps) => {
     .globe:hover {
       fill: var(--text-color);
     }
+
+    .home {
+      cursor: pointer;
+    }
+
+    .header .left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
   `;
 
   return (
     <div class="hud">
       <div class="header">
-        <a href="/">eKeyNox</a>
+        <div class="left">
+          <div class="home" onClick={props.toHome}>
+            eKeyNox
+          </div>
+          <Show when={props.gameMode !== GameMode.none}>
+            <HeaderNav i18n={props.i18n} mode={props.gameMode} />
+          </Show>
+        </div>
         <div class="actions">
           <div class="keyboard">
             <KeyboardIcon />
