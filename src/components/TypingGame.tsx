@@ -4,7 +4,6 @@ import {
   createComputed,
   createEffect,
   createMemo,
-  createResource,
   createSignal,
 } from "solid-js";
 import { createStore } from "solid-js/store";
@@ -29,14 +28,15 @@ import TypingMetricsResume from "./TypingMetricsResume";
 
 import { updateKeyProjection, type KeysProjection } from "./KeysProjection.ts";
 import KeypressMetrics from "./KeypressMetrics.ts";
+import type { I18nContext } from "./App.tsx";
 
-type TypingGameProps = { source: string };
+type TypingGameProps = { source: string, i18n: I18nContext }
 
 // https://icon-sets.iconify.design/bi/keyboard-fill/
 // https://icon-sets.iconify.design/line-md/?query=play
 
-const TypingGame = ({ source }: TypingGameProps) => {
-  const [paragraphs, keySet] = Content.parse(source);
+const TypingGame = (props: TypingGameProps) => {
+  const [paragraphs, keySet] = Content.parse(props.source);
   const [paraStore, setParaStore] = createStore(Content.deepClone(paragraphs));
 
   const [currentPromptKey, setCurrentPromptKey] = createSignal("");
@@ -103,6 +103,7 @@ const TypingGame = ({ source }: TypingGameProps) => {
           layout={kbLayout()}
           metrics={typingMetrics()}
           onReset={reset}
+          i18n={props.i18n}
         />
       }
     >

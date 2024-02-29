@@ -1,6 +1,10 @@
 {
   "accuracy": "accuracy",
   "speed": "speed",
+  "elapsedTime": "elapsed time",
+  "real": "real",
+  "consistency": "consistency",
+  "playAgain": "play again",
   "gameMode": {
     "monkey": {
       "title": "monkey",

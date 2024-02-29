@@ -9,6 +9,7 @@ import type { Paragraphs } from "./Content";
 import Prompt from "./Prompt";
 import WordMetricsResume from "./WordMetricsResume";
 import type { SetStoreFunction } from "solid-js/store";
+import type { I18nContext } from "./App";
 
 type TypingMetricsProps = {
   metrics: TypingMetrics;
@@ -17,6 +18,7 @@ type TypingMetricsProps = {
   paragraphs: Paragraphs;
   setParagraphs: SetStoreFunction<Paragraphs>;
   onReset: () => void;
+  i18n: I18nContext;
 };
 
 const TypingMetricsResume = (props: TypingMetricsProps) => {
@@ -42,7 +44,11 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
   `;
   return (
     <div class="metrics">
-      <DataMetricsResume projection={props.metrics.projection} onReset={props.onReset}/>
+      <DataMetricsResume
+        i18n={props.i18n}
+        projection={props.metrics.projection}
+        onReset={props.onReset}
+      />
       <div class="details">
         <div class="chart">
           <MetricsChart metrics={props.metrics} />
@@ -54,8 +60,11 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
           />
         </div>
       </div>
-      <WordMetricsResume paragraphs={props.paragraphs}/>
-      <Prompt paragraphs={props.paragraphs} setParagraphs={props.setParagraphs} />
+      <WordMetricsResume paragraphs={props.paragraphs} />
+      <Prompt
+        paragraphs={props.paragraphs}
+        setParagraphs={props.setParagraphs}
+      />
     </div>
   );
 };
