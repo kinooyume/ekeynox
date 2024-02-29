@@ -132,14 +132,22 @@ const TypingEngine = (props: TypingEngineProps) => {
 
   /* *** */
 
-  const nextWord = () => {
-    let typingWord = null;
+  const getTypingWord = () => {
     if (!getCurrent.wordValid() && getCurrent.wordIsValid()) {
       setCurrent.wordValid(true);
-      typingWord = {
+      return {
         kind: TypingWordKind.correct,
         length: getCurrent.word().keys.length,
       };
+    } else {
+      return null;
+    }
+  };
+
+  const nextWord = () => {
+    let typingWord = null;
+    if (!getCurrent.wordValid() && getCurrent.wordIsValid()) {
+      typingWord = getTypingWord();
     }
     setCurrent.wordStatus(WordStatus.over, false);
     setCurrent.keyFocus(PromptKeyFocus.unfocus);
@@ -170,7 +178,7 @@ const TypingEngine = (props: TypingEngineProps) => {
       typingWord = nextWord();
     } else if (currentParagraph() < getCurrent.nbrParagraphs()) {
       nextParagraph();
-    } else return [false, null];
+    } else return [false, getTypingWord()]
     return [true, typingWord];
   };
 
