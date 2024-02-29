@@ -1,9 +1,11 @@
 import { css } from "solid-styled";
 import type { KeypressMetricsProjection } from "./KeypressMetrics";
+import type { I18nContext } from "./App";
 
 type DataMetricsResumeProps = {
   projection: KeypressMetricsProjection;
   onReset: () => void;
+  i18n: I18nContext;
 };
 
 const DataMetricsResume = (props: DataMetricsResumeProps) => {
@@ -75,7 +77,7 @@ const DataMetricsResume = (props: DataMetricsResumeProps) => {
   return (
     <div class="data">
       <div class="speeds">
-        <p class="title">Speed</p>
+        <p class="title">{props.i18n.t("speed")}</p>
         <div class="speed-data">
           <p class="wpm-data">
             {props.projection.stats.speed.byWord[0].toFixed(2)}
@@ -85,27 +87,27 @@ const DataMetricsResume = (props: DataMetricsResumeProps) => {
             {props.projection.stats.speed.byKeypress[1].toFixed(2)}
             <span>Raw</span>
           </p>
-          <p>Duration : {getTime(props.projection.core.duration)}</p>
+          <p>{props.i18n.t("elapsedTime")}: {getTime(props.projection.core.duration)}</p>
         </div>
       </div>
       <div class="accuracies">
-        <p class="title">Accuracy</p>
+        <p class="title">{props.i18n.t("accuracy")}</p>
         <div class="accuracies-data">
           <p class="accu-data">
             {Math.trunc(props.projection.stats.accuracies[0])}
             <span>%</span>
           </p>
           <p class="accu-real-data">
-            Real : {props.projection.stats.accuracies[1].toFixed(2)}
+            {props.i18n.t("real")} : {props.projection.stats.accuracies[1].toFixed(2)}
             <span>%</span>
           </p>
           <p class="consistency">
-            Consistency: {props.projection.stats.consistency * 100}
+            {props.i18n.t("consistency")}: {props.projection.stats.consistency * 100}
           </p>
         </div>
       </div>
       <div class="bottom">
-        <button onClick={props.onReset}>Reset</button>
+        <button onClick={props.onReset}>{props.i18n.t("playAgain")}</button>
       </div>
     </div>
   );

@@ -101,13 +101,13 @@ const App = () => {
             />
           </Match>
           <Match when={gameMode() === GameMode.monkey}>
-            <TypingGame source={content()} />
+            <TypingGame i18n={i18nContext} source={content()} />
           </Match>
           <Match when={gameMode() === GameMode.chameleon}>
-            <TypingGame source={content()} />
+            <TypingGame i18n={i18nContext} source={content()} />
           </Match>
           <Match when={gameMode() === GameMode.rabbit}>
-            <TypingGame source={content()} />
+            <TypingGame i18n={i18nContext} source={content()} />
           </Match>
         </Switch>
       </main>
