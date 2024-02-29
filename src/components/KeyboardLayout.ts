@@ -1,4 +1,6 @@
-import kblayout from "./kb-layout.json";
+import type * as layout from "./qwerty-layout.json";
+import qwerty from "./qwerty-layout.json";
+import azerty from "./azerty-layout.json";
 
 export type KeyLayout = {
   primary: string;
@@ -20,6 +22,11 @@ const getDefault: () => KeyboardLayout = () => ({
   layoutFlat: [],
   extra: [],
 });
+
+const kblayout = {
+  qwerty,
+  azerty,
+};
 
 const create = (
   layoutName: string,
