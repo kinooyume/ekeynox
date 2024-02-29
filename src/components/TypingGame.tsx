@@ -30,7 +30,7 @@ import { updateKeyProjection, type KeysProjection } from "./KeysProjection.ts";
 import KeypressMetrics from "./KeypressMetrics.ts";
 import type { I18nContext } from "./App.tsx";
 
-type TypingGameProps = { source: string, i18n: I18nContext }
+type TypingGameProps = { source: string, i18n: I18nContext, kb: string  }
 
 // https://icon-sets.iconify.design/bi/keyboard-fill/
 // https://icon-sets.iconify.design/line-md/?query=play
@@ -47,7 +47,7 @@ const TypingGame = (props: TypingGameProps) => {
   const [kbLayout, setKbLayout] = createSignal(KeyboardLayout.getDefault());
 
   createComputed(() => {
-    const layout = KeyboardLayout.create("qwerty", keySet);
+    const layout = KeyboardLayout.create(props.kb, keySet);
     if (layout !== null) setKbLayout(layout);
     // TODO: manage error
   });
