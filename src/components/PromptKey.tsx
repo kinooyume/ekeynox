@@ -53,6 +53,7 @@ const Key = (props: Metakey) => {
       width: 100%;
       height: 100%;
       border-bottom: 2px solid var(--focus-color);
+      animation: blink 1s infinite;
     }
     span.back {
       opacity: 0.6;
@@ -60,6 +61,18 @@ const Key = (props: Metakey) => {
     span.special {
       opacity: 0.6;
       width: 100%;
+    }
+
+    @keyframes blink {
+      0% {
+        opacity: 0;
+      }
+      50% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+      }
     }
   `;
   return (

@@ -64,6 +64,8 @@ const GameModeCard = (props: GameModeCardProps) => {
     }
     a.selected .params {
       display: flex;
+      width: 100%;
+      padding-bottom: 26px;
     }
   `;
 

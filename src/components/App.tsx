@@ -12,6 +12,9 @@ import { Match, Switch, createMemo, createSignal } from "solid-js";
 import Header from "./Header";
 import GameModeMenu from "./GameModeMenu";
 import TypingGame from "./TypingGame";
+import { createStore } from "solid-js/store";
+import { makePersisted } from "@solid-primitives/storage";
+import HeaderAction from "./HeaderAction";
 
 const dictionaries = {
   en: en_dict,
@@ -28,9 +31,25 @@ export type Dictionary = i18n.Flatten<RawDictionary>;
 export type Translator = i18n.Translator<Dictionary>;
 
 export type I18nContext = {
-  locale: Locale;
-  setLocale: (locale: Locale) => void;
   t: Translator;
+};
+
+export type Kb = "qwerty" | "azerty";
+
+export type Config = {
+  dark: boolean;
+  locale: Locale;
+  kb: Kb;
+};
+
+export type ConfigLists = {
+  locale: Locale[];
+  kb: Kb[];
+};
+
+const configLists: ConfigLists = {
+  locale: ["en", "fr"],
+  kb: ["qwerty", "azerty"],
 };
 
 export enum GameMode {
@@ -41,11 +60,18 @@ export enum GameMode {
 }
 
 const App = () => {
+  const [config, setConfig] = makePersisted(
+    createStore<Config>({
+      dark: window.matchMedia("(prefers-color-scheme: dark)").matches,
+      locale: "en",
+      kb: "qwerty",
+    }),
+    { name: "config" },
+  );
   /* i18n */
-  const [locale, setLocale] = createSignal<Locale>("en");
-  const dict = createMemo(() => i18n.flatten(dictionaries[locale()]));
+  const dict = createMemo(() => i18n.flatten(dictionaries[config.locale]));
   const t = i18n.translator(dict);
-  const i18nContext: I18nContext = { locale: locale(), setLocale, t };
+  const i18nContext: I18nContext = { t };
   /* *** */
 
   const [gameMode, setGameMode] = createSignal<GameMode>(GameMode.none);
@@ -53,30 +79,38 @@ const App = () => {
 
   css``;
   return (
-    <div class="app">
+    <div class="app" classList={{ dark: config.dark }}>
       <Header
         i18n={i18nContext}
         toHome={() => setGameMode(GameMode.none)}
         gameMode={gameMode()}
-      />
-      <Switch>
-        <Match when={gameMode() === GameMode.none}>
-          <GameModeMenu
-            t={t}
-            setGameMode={setGameMode}
-            setContent={setContent}
-          />
-        </Match>
-        <Match when={gameMode() === GameMode.monkey}>
-          <TypingGame source={content()} />
-        </Match>
-        <Match when={gameMode() === GameMode.chameleon}>
-          <TypingGame source={content()} />
-        </Match>
-        <Match when={gameMode() === GameMode.rabbit}>
-          <TypingGame source={content()} />
-        </Match>
-      </Switch>
+      >
+        <HeaderAction
+          config={config}
+          setConfig={setConfig}
+          configLists={configLists}
+        />
+      </Header>
+      <main>
+        <Switch>
+          <Match when={gameMode() === GameMode.none}>
+            <GameModeMenu
+              t={t}
+              setGameMode={setGameMode}
+              setContent={setContent}
+            />
+          </Match>
+          <Match when={gameMode() === GameMode.monkey}>
+            <TypingGame source={content()} />
+          </Match>
+          <Match when={gameMode() === GameMode.chameleon}>
+            <TypingGame source={content()} />
+          </Match>
+          <Match when={gameMode() === GameMode.rabbit}>
+            <TypingGame source={content()} />
+          </Match>
+        </Switch>
+      </main>
     </div>
   );
 };
