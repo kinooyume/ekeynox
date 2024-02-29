@@ -18,10 +18,12 @@ export enum WordStatus {
 type WordProps = { setWpm: (wpm: number) => void } & MetaWord;
 
 const Word = (props: WordProps) => {
+  // on va envoyer 
   const wordMetricsState = createWordMetricsState({
     setWpm: props.setWpm,
     keys: props.keys,
   });
+
   createEffect(
     (metrics: WordMetrics) => metrics({ status: props.status }),
     wordMetricsState,
@@ -64,7 +66,7 @@ const Word = (props: WordProps) => {
       <div class={`${props.status}  ${props.focus ? "focus" : ""} keys`}>
         <For each={props.keys}>{(key) => <Key {...key} />}</For>
       </div>
-      <Show when={props.wpm > 0 && props.keys.length > 5 && props.status === WordStatus.over}>
+      <Show when={props.wpm > 0 && props.keys.length > 4 && props.status === WordStatus.over}>
         <span class="wpm">{Math.trunc(props.wpm)}</span>
       </Show>
     </div>
