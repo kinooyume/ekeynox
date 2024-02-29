@@ -47,6 +47,13 @@ const GameModeCard = (props: GameModeCardProps) => {
       height: 100%;
       border-radius: 8px;
     }
+    .title {
+      font-size: 1.5rem;
+      font-weight: light;
+    }
+    .description {
+      font-weight: normal;
+    }
     .description {
       text-align: center;
       margin-top: 0;
@@ -70,7 +77,7 @@ const GameModeCard = (props: GameModeCardProps) => {
         <img src={props.picture} alt={props.title} />
       </div>
       <div class="card-content">
-        <h2>{props.title}</h2>
+        <p class="title">{props.title}</p>
         <p class="description">{props.description}</p>
       </div>
       <div class="params">{props.children}</div>

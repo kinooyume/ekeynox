@@ -1,0 +1,20 @@
+:root {
+  font-family: Larsseit, system-ui, sans-serif;
+}
+
+@font-face {
+  font-family: Larsseit;
+  src: url("../fonts/Larsseit/Larsseit.otf");
+  }
+
+@font-face {
+  font-family: Larsseit;
+  src: url("../fonts/Larsseit/Larsseit-Bold.otf");
+  font-weight: bold;
+  }
+
+@font-face {
+  font-family: Larsseit;
+  src: url("../fonts/Larsseit/Larsseit-Light.otf");
+  font-weight: light;
+  }
