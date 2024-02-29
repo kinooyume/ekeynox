@@ -54,7 +54,7 @@ const App = () => {
   css``;
   return (
     <div class="app">
-      <Header i18n={i18nContext} />
+      <Header i18n={i18nContext} toHome={() => setGameMode(GameMode.none)} gameMode={gameMode()}/>
       <Switch>
         <Match when={gameMode() === GameMode.none}>
           <GameModeMenu
