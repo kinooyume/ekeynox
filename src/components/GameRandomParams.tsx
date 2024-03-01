@@ -6,15 +6,19 @@ import {
   type Languages,
   type NumberSelection,
   type Translator,
+  WordsCategory,
 } from "./App";
+import RadioGroup from "./RadioGroup";
 
 type GameRandomParamsProps = {
   start: () => void;
   t: Translator;
   words: NumberSelection;
   setWords: (words: NumberSelection) => void;
-  language: string;
+  language: Languages;
   setLanguage: (language: Languages) => void;
+  wordsCategory: string;
+  setWordsCategory: (wordsCategory: WordsCategory) => void;
 };
 
 const GameRandomParams = (props: GameRandomParamsProps) => {
@@ -27,105 +31,36 @@ const GameRandomParams = (props: GameRandomParamsProps) => {
       width: 100%;
       padding: 0 30px;
     }
-    .icon {
-      height: 15px;
-      padding: 4px 8px;
-      padding-top: 0;
-      display: inline-block;
-      justify-content: center;
-      align-items: center;
-    }
-    .lang {
-      padding-top: 2px;
-    }
   `;
 
   return (
     <div class="random-params">
-      <div class="radio-group">
-        <div class="icon lang">
-          <Lang />
-        </div>
-        <input
-          onInput={(_) => props.setLanguage("en")}
-          type="radio"
-          id="english"
-          name="languages"
-          value="en"
-          checked={props.language === "en"}
-        />
-        <label for="english">{props.t("english")}</label>
-        <input
-          onInput={(_) => props.setLanguage("fr")}
-          type="radio"
-          id="french"
-          name="languages"
-          value="fr"
-          checked={props.language === "fr"}
-        />
-        <label for="french">{props.t("french")}</label>
-      </div>
-      <div class="radio-group">
-        <div class="icon">
-          <Word />
-        </div>
-        <input
-          onInput={(_) =>
-            props.setWords({
-              type: NumberSelectionType.selected,
-              value: 10,
-            })
-          }
-          type="radio"
-          id="10"
-          name="characters"
-          value={10}
-          checked={props.words.value === 10}
-        />
-        <label for="10">10</label>
-        <input
-          onInput={(_) =>
-            props.setWords({
-              type: NumberSelectionType.selected,
-              value: 25,
-            })
-          }
-          type="radio"
-          id="25"
-          name="characters"
-          value={25}
-          checked={props.words.value === 25}
-        />
-        <label for="25">25</label>
-        <input
-          onInput={(_) =>
-            props.setWords({
-              type: NumberSelectionType.selected,
-              value: 50,
-            })
-          }
-          type="radio"
-          id="50"
-          name="characters"
-          value={50}
-          checked={props.words.value === 50}
-        />
-        <label for="50">50</label>
-        <input
-          onInput={(_) =>
-            props.setWords({
-              type: NumberSelectionType.selected,
-              value: 100,
-            })
-          }
-          type="radio"
-          id="100"
-          name="characters"
-          value={100}
-          checked={props.words.value === 100}
-        />
-        <label for="100">100</label>
-      </div>
+      <RadioGroup
+        name="languages"
+        values={[
+          { label: props.t("english"), value: "en" },
+          { label: props.t("french"), value: "fr" },
+        ]}
+        checked={props.language}
+        setChecked={props.setLanguage}
+      >
+        <Lang />
+      </RadioGroup>
+      <RadioGroup
+        name="nbrWords"
+        values={[
+          { label: "10", value: 10 },
+          { label: "25", value: 25 },
+          { label: "50", value: 50 },
+          { label: "100", value: 100 },
+        ]}
+        checked={props.words.value}
+        setChecked={(v) =>
+          props.setWords({ type: NumberSelectionType.selected, value: v })
+        }
+      >
+        <Word />
+      </RadioGroup>
 
       <button onClick={() => props.start()}>{props.t("letsGo")}</button>
     </div>
