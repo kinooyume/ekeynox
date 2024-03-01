@@ -97,6 +97,34 @@ const GameRandomParams = (props: GameRandomParamsProps) => {
           checked={props.words.value === 25}
         />
         <label for="25">25</label>
+        <input
+          onInput={(_) =>
+            props.setWords({
+              type: NumberSelectionType.selected,
+              value: 50,
+            })
+          }
+          type="radio"
+          id="50"
+          name="characters"
+          value={50}
+          checked={props.words.value === 50}
+        />
+        <label for="50">50</label>
+        <input
+          onInput={(_) =>
+            props.setWords({
+              type: NumberSelectionType.selected,
+              value: 100,
+            })
+          }
+          type="radio"
+          id="100"
+          name="characters"
+          value={100}
+          checked={props.words.value === 100}
+        />
+        <label for="100">100</label>
       </div>
 
       <button onClick={() => props.start()}>{props.t("letsGo")}</button>
