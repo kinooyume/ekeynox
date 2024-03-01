@@ -75,9 +75,13 @@ const GameModeMenu = (props: GameModeMenuProps) => {
             start={setMonkey}
             words={props.gameOptions.wordNumber}
             language={props.gameOptions.language}
+            wordsCategory={props.gameOptions.wordsCategory}
             setWords={(words) => props.setGameOptions("wordNumber", words)}
             setLanguage={(language) =>
               props.setGameOptions("language", language)
+            }
+            setWordsCategory={(wordsCategory) =>
+              props.setGameOptions("wordsCategory", wordsCategory)
             }
             t={props.t}
           />
