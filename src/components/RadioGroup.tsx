@@ -25,7 +25,8 @@ function RadioGroup<Value>(props: RadioGroupProps<Value>) {
       justify-content: center;
       align-items: center;
     }
-    .icon.languages, .icon.languages-timer {
+    .icon.languages,
+    .icon.languages-timer {
       padding-top: 4px;
     }
     .radio-group {
@@ -108,9 +109,8 @@ function RadioGroup<Value>(props: RadioGroupProps<Value>) {
       </Show>
       <For each={props.values}>
         {(value) => (
-          <div class="input">
+          <div onClick={(_) => props.setChecked(value.value)} class="input">
             <input
-              onInput={(_) => props.setChecked(value.value)}
               type="radio"
               id={value.value as string}
               name={props.name}
