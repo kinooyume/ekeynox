@@ -25,10 +25,11 @@ function RadioGroup<Value>(props: RadioGroupProps<Value>) {
       justify-content: center;
       align-items: center;
     }
-    .icon.languages,
-    .icon.languages-timer {
-      padding-top: 4px;
+
+    .icon.time {
+      padding-top: 3px;
     }
+
     .radio-group {
       padding: 4px;
       border-radius: 10px;
@@ -48,7 +49,8 @@ function RadioGroup<Value>(props: RadioGroupProps<Value>) {
     }
 
     .radio-group input + label {
-      display: inline-block;
+      display: inline-flex;
+      gap: 4px;
       width: auto;
       height: 15px;
       cursor: pointer;
@@ -117,7 +119,9 @@ function RadioGroup<Value>(props: RadioGroupProps<Value>) {
               value={value.value as string}
               checked={props.checked === value.value}
             />
-            <label for={value.value as unknown as string}>{value.label}</label>
+            <label for={value.value as unknown as string}>
+            <Show when={value.icon}>{value.icon}</Show>
+              {value.label}</label>
           </div>
         )}
       </For>
