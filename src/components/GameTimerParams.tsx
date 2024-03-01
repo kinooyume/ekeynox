@@ -1,6 +1,5 @@
 import { css } from "solid-styled";
 import Lang from "./ui/lang";
-import Word from "./ui/word";
 import {
   NumberSelectionType,
   type Languages,
@@ -14,8 +13,8 @@ import { Match, Show, Switch } from "solid-js";
 type GameRandomParamsProps = {
   start: (content?: string) => void;
   t: Translator;
-  words: NumberSelection;
-  setWords: (words: NumberSelection) => void;
+  time: NumberSelection;
+  setTime: (time: NumberSelection) => void;
   language: Languages;
   setLanguage: (language: Languages) => void;
   wordsCategory: WordsCategory;
@@ -24,7 +23,7 @@ type GameRandomParamsProps = {
 
 const GameRandomParams = (props: GameRandomParamsProps) => {
   css`
-    .random-params {
+    .time-params {
       display: flex;
       flex-direction: column;
       gap: 1rem;
@@ -36,13 +35,27 @@ const GameRandomParams = (props: GameRandomParamsProps) => {
 
   const OnClick = () => {
     if (props.wordsCategory === WordsCategory.custom) {
-    return props.start(inputRef.value);
+      return props.start(inputRef.value);
     }
-    props.start()
+    props.start();
   };
   let inputRef: HTMLTextAreaElement;
   return (
-    <div class="random-params">
+    <div class="time-params">
+      <RadioGroup
+        name="time"
+        values={[
+          { label: "10s", value: 10 },
+          { label: "30s", value: 30 },
+          { label: "1m", value: 60 },
+          { label: "2m", value: 120 },
+          { label: "5m", value: 300 },
+        ]}
+        checked={props.time.value}
+        setChecked={(time) =>
+          props.setTime({ type: NumberSelectionType.selected, value: time })
+        }
+      />
       <RadioGroup
         name="wordsCategory-timer"
         values={[
@@ -67,23 +80,6 @@ const GameRandomParams = (props: GameRandomParamsProps) => {
         </RadioGroup>
       </Show>
       <Switch>
-        <Match when={props.wordsCategory === WordsCategory.words1k}>
-          <RadioGroup
-            name="nbrWords-timer"
-            values={[
-              { label: "10", value: 10 },
-              { label: "25", value: 25 },
-              { label: "50", value: 50 },
-              { label: "100", value: 100 },
-            ]}
-            checked={props.words.value}
-            setChecked={(v) =>
-              props.setWords({ type: NumberSelectionType.selected, value: v })
-            }
-          >
-            <Word />
-          </RadioGroup>
-        </Match>
         <Match when={props.wordsCategory === WordsCategory.custom}>
           <textarea ref={inputRef!}></textarea>
         </Match>

@@ -47,6 +47,7 @@ const GameRandomParams = (props: GameRandomParamsProps) => {
         name="wordsCategory"
         values={[
           { label: props.t("words"), value: WordsCategory.words1k },
+          { label: props.t("quotes"), value: WordsCategory.quotes },
           { label: props.t("custom"), value: WordsCategory.custom },
         ]}
         checked={props.wordsCategory}

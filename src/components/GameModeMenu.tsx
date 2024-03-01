@@ -97,10 +97,10 @@ const GameModeMenu = (props: GameModeMenuProps) => {
         >
           <GameTimerParams
             start={setRabbit}
-            words={props.gameOptions.wordNumber}
+            time={props.gameOptions.time}
             language={props.gameOptions.language}
             wordsCategory={props.gameOptions.wordsCategory}
-            setWords={(words) => props.setGameOptions("wordNumber", words)}
+            setTime={(time) => props.setGameOptions("time", time)}
             setLanguage={(language) =>
               props.setGameOptions("language", language)
             }
