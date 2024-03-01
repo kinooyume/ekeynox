@@ -30,10 +30,7 @@ import { updateKeyProjection, type KeysProjection } from "./KeysProjection.ts";
 import KeypressMetrics from "./KeypressMetrics.ts";
 import type { I18nContext } from "./App.tsx";
 
-type TypingGameProps = { source: string, i18n: I18nContext, kb: string  }
-
-// https://icon-sets.iconify.design/bi/keyboard-fill/
-// https://icon-sets.iconify.design/line-md/?query=play
+type TypingGameProps = { source: string, i18n: I18nContext, kb: string, timer?: number  }
 
 const TypingGame = (props: TypingGameProps) => {
   const [paragraphs, keySet] = Content.parse(props.source);
@@ -51,6 +48,18 @@ const TypingGame = (props: TypingGameProps) => {
     if (layout !== null) setKbLayout(layout);
     // TODO: manage error
   });
+
+  /* Timer */
+  createEffect(() => {
+    if (props.timer) {
+      const timer = setTimeout(() => {
+        setStatus({ kind: TypingStatusKind.over });
+      }, props.timer);
+      return () => clearTimeout(timer);
+    }
+  })
+
+  /* *** */
 
   /* Metrics */
 
