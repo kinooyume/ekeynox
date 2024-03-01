@@ -9,15 +9,16 @@ import {
   WordsCategory,
 } from "./App";
 import RadioGroup from "./RadioGroup";
+import { Match, Show, Switch } from "solid-js";
 
 type GameRandomParamsProps = {
-  start: () => void;
+  start: (content?: string) => void;
   t: Translator;
   words: NumberSelection;
   setWords: (words: NumberSelection) => void;
   language: Languages;
   setLanguage: (language: Languages) => void;
-  wordsCategory: string;
+  wordsCategory: WordsCategory;
   setWordsCategory: (wordsCategory: WordsCategory) => void;
 };
 
@@ -33,36 +34,61 @@ const GameRandomParams = (props: GameRandomParamsProps) => {
     }
   `;
 
+  const OnClick = () => {
+    if (props.wordsCategory === WordsCategory.custom) {
+    return props.start(inputRef.value);
+    }
+    props.start()
+  };
+  let inputRef: HTMLTextAreaElement;
   return (
     <div class="random-params">
       <RadioGroup
-        name="languages"
+        name="wordsCategory"
         values={[
-          { label: props.t("english"), value: "en" },
-          { label: props.t("french"), value: "fr" },
+          { label: props.t("words"), value: WordsCategory.words1k },
+          { label: props.t("custom"), value: WordsCategory.custom },
         ]}
-        checked={props.language}
-        setChecked={props.setLanguage}
-      >
-        <Lang />
-      </RadioGroup>
-      <RadioGroup
-        name="nbrWords"
-        values={[
-          { label: "10", value: 10 },
-          { label: "25", value: 25 },
-          { label: "50", value: 50 },
-          { label: "100", value: 100 },
-        ]}
-        checked={props.words.value}
-        setChecked={(v) =>
-          props.setWords({ type: NumberSelectionType.selected, value: v })
-        }
-      >
-        <Word />
-      </RadioGroup>
+        checked={props.wordsCategory}
+        setChecked={props.setWordsCategory}
+      />
+      <Show when={props.wordsCategory !== WordsCategory.custom}>
+        <RadioGroup
+          name="languages"
+          values={[
+            { label: props.t("english"), value: "en" },
+            { label: props.t("french"), value: "fr" },
+          ]}
+          checked={props.language}
+          setChecked={props.setLanguage}
+        >
+          <Lang />
+        </RadioGroup>
+      </Show>
+      <Switch>
+        <Match when={props.wordsCategory === WordsCategory.words1k}>
+          <RadioGroup
+            name="nbrWords"
+            values={[
+              { label: "10", value: 10 },
+              { label: "25", value: 25 },
+              { label: "50", value: 50 },
+              { label: "100", value: 100 },
+            ]}
+            checked={props.words.value}
+            setChecked={(v) =>
+              props.setWords({ type: NumberSelectionType.selected, value: v })
+            }
+          >
+            <Word />
+          </RadioGroup>
+        </Match>
+        <Match when={props.wordsCategory === WordsCategory.custom}>
+          <textarea ref={inputRef!}></textarea>
+        </Match>
+      </Switch>
 
-      <button onClick={() => props.start()}>{props.t("letsGo")}</button>
+      <button onClick={OnClick}>{props.t("letsGo")}</button>
     </div>
   );
 };

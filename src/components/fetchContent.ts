@@ -9,6 +9,7 @@ const fetchWords = async ({
   language,
   wordsCategory,
 }: FetchWordsProps): Promise<string[]> => {
+  if (wordsCategory === WordsCategory.custom) return [];
   const response = await fetch(`/contents/${language}/${wordsCategory}.json`);
   const data = await response.json();
   if (!response.ok) {

@@ -5,7 +5,12 @@ import type { SetStoreFunction } from "solid-js/store";
 import GameCustomParams from "./GameCustomParams";
 import GameRandomParams from "./GameRandomParams";
 import GameModeCard from "./GameModeCard";
-import { GameMode, type GameOptions, type Translator } from "./App";
+import {
+  GameMode,
+  WordsCategory,
+  type GameOptions,
+  type Translator,
+} from "./App";
 
 // Gsap animation
 // https://codepen.io/dev_loop/pen/MWKbJmO
@@ -37,14 +42,10 @@ type GameModeMenuProps = {
 const GameModeMenu = (props: GameModeMenuProps) => {
   const [gameFocus, setGameFocus] = createSignal<GameMode>(GameMode.none);
 
-  // if data is unresolved
-  const setChameleon = (content: string) => {
-    props.setContent(content);
-    props.setGameMode(GameMode.chameleon);
-  };
-
-  const setMonkey = () => {
-    // const wordsList = randomWords(data() || [])(words);
+  const setMonkey = (content?: string) => {
+    if (props.gameOptions.wordsCategory === WordsCategory.custom) {
+      props.setContent(content || "");
+    }
     props.setGameMode(GameMode.monkey);
   };
 
@@ -85,14 +86,6 @@ const GameModeMenu = (props: GameModeMenuProps) => {
             }
             t={props.t}
           />
-        </GameModeCard>
-        <GameModeCard
-          {...props.t("gameMode.chameleon")}
-          picture="/images/monkey.jpg"
-          onClick={() => setGameFocus(GameMode.chameleon)}
-          selected={gameFocus() === GameMode.chameleon}
-        >
-          <GameCustomParams setContent={setChameleon} t={props.t} />
         </GameModeCard>
         <GameModeCard
           {...props.t("gameMode.rabbit")}
