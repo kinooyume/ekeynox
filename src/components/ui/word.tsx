@@ -1,4 +1,4 @@
-const Word = () => <svg xmlns="http://www.w3.org/2000/svg" width="1.2rem" height="1.2rem" viewBox="0 0 24 24">
+const Word = () => <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 24 24">
 	<g fill="none" stroke="var(--text-color)" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
 		<circle cx="7" cy="12" r="3" />
 		<path d="M10 9v6" />
