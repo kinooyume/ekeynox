@@ -20,7 +20,7 @@ const GameModeCard = (props: GameModeCardProps) => {
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      width: 300px;
+      width: 350px;
       cursor: pointer;
       min-height: 400px;
       border-radius: 8px;
