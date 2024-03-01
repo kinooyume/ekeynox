@@ -131,10 +131,10 @@ const App = () => {
   const [gameMode, setGameMode] = createSignal<GameMode>(GameMode.none);
   const [content, setContent] = createSignal<string>("");
 
-  const getSource = () : string => {
+  const getSource = (wordNumber: number): string => {
     switch (gameOptions.wordsCategory) {
       case "words1k":
-        return randomWords(data() || [])(gameOptions.wordNumber.value);
+        return randomWords(data() || [])(wordNumber);
       case "quotes":
         return randomQuote(data() || []);
       case "custom":
@@ -142,6 +142,9 @@ const App = () => {
     }
     return "";
   };
+
+  const getMonkeySource = (): string => getSource(gameOptions.wordNumber.value)
+
   css``;
   return (
     <div class="app" classList={{ dark: config.dark }}>
@@ -173,13 +176,22 @@ const App = () => {
                 <TypingGame
                   i18n={i18nContext}
                   kb={config.kb}
-                  source={getSource()}
+                  source={getMonkeySource()}
                 />
               </Show>
             </Suspense>
           </Match>
           <Match when={gameMode() === GameMode.rabbit}>
-            <TypingGame i18n={i18nContext} kb={config.kb} source={content()} />
+            <Suspense>
+              <Show when={data()}>
+                <TypingGame
+                  i18n={i18nContext}
+                  kb={config.kb}
+                  timer={gameOptions.time.value * 1000}
+                  source={getSource(50)}
+                />
+              </Show>
+            </Suspense>
           </Match>
         </Switch>
       </main>
