@@ -12,14 +12,15 @@ const fetchWords = async ({
   if (wordsCategory === WordsCategory.custom) return [];
   const response = await fetch(`/contents/${language}/${wordsCategory}.json`);
   const data = await response.json();
+  const key = wordsCategory === WordsCategory.quotes ? "quotes" : "words"
   if (!response.ok) {
     throw new Error(data.message);
-  } else if (!data.words) {
+  } else if (!data[key]) {
     throw new Error("No words found");
-  } else if (!Array.isArray(data.words)) {
+  } else if (!Array.isArray(data[key])) {
     throw new Error("Invalid data");
   }
-  return data.words;
+  return data[key];
 };
 
 export { fetchWords };
