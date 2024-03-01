@@ -25,7 +25,7 @@ import { createStore } from "solid-js/store";
 import { makePersisted } from "@solid-primitives/storage";
 import HeaderAction from "./HeaderAction";
 import { fetchWords } from "./fetchContent";
-import randomWords from "./RandomWords";
+import { randomWords, randomQuote } from "./RandomWords";
 
 const dictionaries = {
   en: en_dict,
@@ -136,7 +136,7 @@ const App = () => {
       case "words1k":
         return randomWords(data() || [])(gameOptions.wordNumber.value);
       case "quotes":
-        return randomWords(data() || [])(gameOptions.wordNumber.value);
+        return randomQuote(data() || []);
       case "custom":
         return content();
     }
