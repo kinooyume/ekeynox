@@ -1,8 +1,10 @@
 import { createSignal } from "solid-js";
 import { css } from "solid-styled";
+import type { Translator } from "./App";
 
 type GameCustomParamsProps = {
   setContent: (content: string) => void;
+  t: Translator;
 };
 
 const GameCustomParams = (props: GameCustomParamsProps) => {
@@ -26,7 +28,7 @@ textarea {
     <div>
       <textarea ref={inputRef!}></textarea>
       <button onClick={() => props.setContent(inputRef.value)}>
-        Let's go !
+        {props.t("letsGo")}
       </button>
     </div>
   );

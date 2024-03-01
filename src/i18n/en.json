@@ -5,6 +5,11 @@
   "real": "real",
   "consistency": "consistency",
   "playAgain": "play again",
+  "letsGo": "let's go",
+  "french": "french",
+  "english": "english",
+  "words": "words",
+  "language": "language",
   "gameMode": {
     "monkey": {
       "title": "monkey",

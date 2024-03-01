@@ -1,3 +1,14 @@
+import { css } from "solid-styled";
+import {
+  Match,
+  Show,
+  Suspense,
+  Switch,
+  createMemo,
+  createResource,
+  createSignal,
+} from "solid-js";
+
 /* i18n */
 import * as i18n from "@solid-primitives/i18n";
 
@@ -6,8 +17,6 @@ import en_dict from "../i18n/en.json";
 import fr_dict from "../i18n/fr.json";
 
 /* *** */
-import { css } from "solid-styled";
-import { Match, Switch, createMemo, createSignal } from "solid-js";
 
 import Header from "./Header";
 import GameModeMenu from "./GameModeMenu";
@@ -15,6 +24,8 @@ import TypingGame from "./TypingGame";
 import { createStore } from "solid-js/store";
 import { makePersisted } from "@solid-primitives/storage";
 import HeaderAction from "./HeaderAction";
+import { fetchWords } from "./fetchContent";
+import randomWords from "./RandomWords";
 
 const dictionaries = {
   en: en_dict,
@@ -52,6 +63,30 @@ const configLists: ConfigLists = {
   kb: ["qwerty", "azerty"],
 };
 
+export enum NumberSelectionType {
+  selected,
+  custom,
+}
+
+export type NumberSelection =
+  | { type: NumberSelectionType.selected; value: number }
+  | { type: NumberSelectionType.custom; value: number };
+
+export enum WordsCategory {
+  words1k = "words1k",
+  quotes = "quotes",
+  custom = "custom",
+}
+
+export type Languages = "en" | "fr";
+
+export type GameOptions = {
+  wordNumber: NumberSelection;
+  wordsCategory: WordsCategory;
+  time: NumberSelection;
+  language: Languages;
+};
+
 export enum GameMode {
   monkey,
   rabbit,
@@ -67,6 +102,26 @@ const App = () => {
       kb: "qwerty",
     }),
     { name: "config" },
+  );
+
+  const [gameOptions, setGameOptions] = makePersisted(
+    createStore<GameOptions>(
+      {
+        wordNumber: { type: NumberSelectionType.selected, value: 10 },
+        time: { type: NumberSelectionType.selected, value: 10 },
+        wordsCategory: WordsCategory.words1k,
+        language: "en",
+      },
+      { name: "gameOptions" },
+    ),
+  );
+
+  const [data] = createResource(
+    () => ({
+      language: gameOptions.language,
+      wordsCategory: gameOptions.wordsCategory
+    }),
+    fetchWords,
   );
   /* i18n */
   const dict = createMemo(() => i18n.flatten(dictionaries[config.locale]));
@@ -98,10 +153,22 @@ const App = () => {
               t={t}
               setGameMode={setGameMode}
               setContent={setContent}
+              setGameOptions={setGameOptions}
+              gameOptions={gameOptions}
             />
           </Match>
           <Match when={gameMode() === GameMode.monkey}>
-            <TypingGame i18n={i18nContext} kb={config.kb} source={content()} />
+            <Suspense>
+              <Show when={data()}>
+                <TypingGame
+                  i18n={i18nContext}
+                  kb={config.kb}
+                  source={randomWords(data() || [])(
+                    gameOptions.wordNumber.value,
+                  )}
+                />
+              </Show>
+            </Suspense>
           </Match>
           <Match when={gameMode() === GameMode.chameleon}>
             <TypingGame i18n={i18nContext} kb={config.kb} source={content()} />
