@@ -25,7 +25,7 @@ function RadioGroup<Value>(props: RadioGroupProps<Value>) {
       justify-content: center;
       align-items: center;
     }
-    .icon.languages {
+    .icon.languages, .icon.languages-timer {
       padding-top: 4px;
     }
     .radio-group {

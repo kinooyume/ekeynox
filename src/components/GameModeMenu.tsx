@@ -2,7 +2,6 @@ import { css } from "solid-styled";
 import { createSignal } from "solid-js";
 import type { SetStoreFunction } from "solid-js/store";
 
-import GameCustomParams from "./GameCustomParams";
 import GameRandomParams from "./GameRandomParams";
 import GameModeCard from "./GameModeCard";
 import {
@@ -11,6 +10,7 @@ import {
   type GameOptions,
   type Translator,
 } from "./App";
+import GameTimerParams from "./GameTimerParams";
 
 // Gsap animation
 // https://codepen.io/dev_loop/pen/MWKbJmO
@@ -49,8 +49,10 @@ const GameModeMenu = (props: GameModeMenuProps) => {
     props.setGameMode(GameMode.monkey);
   };
 
-  const setRabbit = (content: string) => {
-    props.setContent(content);
+  const setRabbit = (content?: string) => {
+    if (props.gameOptions.wordsCategory === WordsCategory.custom) {
+      props.setContent(content || "");
+    }
     props.setGameMode(GameMode.rabbit);
   };
   css`
@@ -93,7 +95,20 @@ const GameModeMenu = (props: GameModeMenuProps) => {
           onClick={() => setGameFocus(GameMode.rabbit)}
           selected={gameFocus() === GameMode.rabbit}
         >
-          <GameCustomParams setContent={setRabbit} t={props.t} />
+          <GameTimerParams
+            start={setRabbit}
+            words={props.gameOptions.wordNumber}
+            language={props.gameOptions.language}
+            wordsCategory={props.gameOptions.wordsCategory}
+            setWords={(words) => props.setGameOptions("wordNumber", words)}
+            setLanguage={(language) =>
+              props.setGameOptions("language", language)
+            }
+            setWordsCategory={(wordsCategory) =>
+              props.setGameOptions("wordsCategory", wordsCategory)
+            }
+            t={props.t}
+          />
         </GameModeCard>
       </div>
     </div>
