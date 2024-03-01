@@ -90,7 +90,6 @@ export type GameOptions = {
 export enum GameMode {
   monkey,
   rabbit,
-  chameleon,
   none,
 }
 
@@ -119,7 +118,7 @@ const App = () => {
   const [data] = createResource(
     () => ({
       language: gameOptions.language,
-      wordsCategory: gameOptions.wordsCategory
+      wordsCategory: gameOptions.wordsCategory,
     }),
     fetchWords,
   );
@@ -132,6 +131,17 @@ const App = () => {
   const [gameMode, setGameMode] = createSignal<GameMode>(GameMode.none);
   const [content, setContent] = createSignal<string>("");
 
+  const getSource = () : string => {
+    switch (gameOptions.wordsCategory) {
+      case "words1k":
+        return randomWords(data() || [])(gameOptions.wordNumber.value);
+      case "quotes":
+        return randomWords(data() || [])(gameOptions.wordNumber.value);
+      case "custom":
+        return content();
+    }
+    return "";
+  };
   css``;
   return (
     <div class="app" classList={{ dark: config.dark }}>
@@ -163,15 +173,10 @@ const App = () => {
                 <TypingGame
                   i18n={i18nContext}
                   kb={config.kb}
-                  source={randomWords(data() || [])(
-                    gameOptions.wordNumber.value,
-                  )}
+                  source={getSource()}
                 />
               </Show>
             </Suspense>
-          </Match>
-          <Match when={gameMode() === GameMode.chameleon}>
-            <TypingGame i18n={i18nContext} kb={config.kb} source={content()} />
           </Match>
           <Match when={gameMode() === GameMode.rabbit}>
             <TypingGame i18n={i18nContext} kb={config.kb} source={content()} />

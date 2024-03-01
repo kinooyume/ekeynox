@@ -9,6 +9,8 @@
   "french": "french",
   "english": "english",
   "words": "words",
+  "quotes": "quotes",
+  "custom": "custom",
   "language": "language",
   "gameMode": {
     "monkey": {
