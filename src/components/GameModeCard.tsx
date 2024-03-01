@@ -1,4 +1,4 @@
-import type { JSXElement } from "solid-js";
+import { Show, type JSXElement } from "solid-js";
 import { css } from "solid-styled";
 
 export type GameModeCardProps = {
@@ -60,10 +60,7 @@ const GameModeCard = (props: GameModeCardProps) => {
       margin-top: 0;
     }
 
-    a .params {
-      display: none;
-    }
-    a.selected .params {
+    .params {
       display: flex;
       width: 100%;
       padding-bottom: 26px;
@@ -83,7 +80,9 @@ const GameModeCard = (props: GameModeCardProps) => {
         <p class="title">{props.title}</p>
         <p class="description">{props.description}</p>
       </div>
-      <div class="params">{props.children}</div>
+      <Show when={props.selected}>
+        <div class="params">{props.children}</div>
+      </Show>
     </a>
   );
 };
