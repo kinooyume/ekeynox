@@ -1,15 +1,8 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import { games } from "../../games.json";
 import GameModeMenu from "../../components/GameModeMenu";
 import App from "../../components/App";
 
-type ParamsProps = {
-  params: { title: string };
-};
-const gameList = games.map(({ params }) => {
-  return { title: params.title, url: `/typing/${params.title}` };
-});
 
 // https://github.com/aminya/astro-parcel
 // checker terser
