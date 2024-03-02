@@ -131,19 +131,19 @@ const App = () => {
   const [gameMode, setGameMode] = createSignal<GameMode>(GameMode.none);
   const [content, setContent] = createSignal<string>("");
 
-  const getSource = (wordNumber: number): string => {
+  const getSource = (wordNumber: number): (() => string) => {
     switch (gameOptions.wordsCategory) {
-      case "words1k":
-        return randomWords(data() || [])(wordNumber);
-      case "quotes":
-        return randomQuote(data() || []);
-      case "custom":
-        return content();
+      case WordsCategory.words1k:
+        return () => randomWords(data() || [])(wordNumber);
+      case WordsCategory.quotes:
+        return () => randomQuote(data() || []);
+      case WordsCategory.custom:
+        return content;
     }
-    return "";
   };
 
-  const getMonkeySource = (): string => getSource(gameOptions.wordNumber.value)
+  const getMonkeySource = (): (() => string) =>
+    getSource(gameOptions.wordNumber.value);
 
   css``;
   return (
@@ -176,7 +176,7 @@ const App = () => {
                 <TypingGame
                   i18n={i18nContext}
                   kb={config.kb}
-                  getSource={getMonkeySource}
+                  getSource={getMonkeySource()}
                 />
               </Show>
             </Suspense>
@@ -188,7 +188,7 @@ const App = () => {
                   i18n={i18nContext}
                   kb={config.kb}
                   timer={gameOptions.time.value * 1000}
-                  getSource={() => getSource(50)}
+                  getSource={getSource(gameOptions.time.value * 4)}
                 />
               </Show>
             </Suspense>
