@@ -28,6 +28,7 @@ import TypingMetricsResume from "./TypingMetricsResume";
 import { updateKeyProjection, type KeysProjection } from "./KeysProjection.ts";
 import KeypressMetrics from "./KeypressMetrics.ts";
 import type { I18nContext } from "./App.tsx";
+import { createTimerEffect, type TimerEffect } from "./Timer.ts";
 
 type TypingGameProps = {
   getContent: () => ContentData;
@@ -38,7 +39,9 @@ type TypingGameProps = {
 
 const TypingGame = (props: TypingGameProps) => {
   const [content, setContent] = createSignal(props.getContent());
-  const [paraStore, setParaStore] = createStore(Content.deepClone(content().paragraphs));
+  const [paraStore, setParaStore] = createStore(
+    Content.deepClone(content().paragraphs),
+  );
 
   const [currentPromptKey, setCurrentPromptKey] = createSignal("");
   const [status, setStatus] = createSignal<TypingStatus>({
@@ -53,15 +56,25 @@ const TypingGame = (props: TypingGameProps) => {
     // TODO: manage error
   });
 
+  const over = () => setStatus({ kind: TypingStatusKind.over });
   /* Timer */
-  createEffect(() => {
-    if (props.timer) {
-      const timer = setTimeout(() => {
-        setStatus({ kind: TypingStatusKind.over });
-      }, props.timer);
-      return () => clearTimeout(timer);
-    }
-  });
+
+  // NOTE: should not exist without timer
+  const [timeCounter, setTimeCounter] = createSignal(
+    props.timer?.toFixed(0) || "",
+  );
+
+  // NOTE: no reactivity on timer
+  if (props.timer) {
+    const timerEffect = createTimerEffect({
+      duration: props.timer,
+      onOver: over,
+      updateCounter: setTimeCounter,
+    });
+    createEffect((timer: TimerEffect) => {
+      return timer({ status: status() });
+    }, timerEffect);
+  }
 
   /* *** */
 
@@ -75,6 +88,8 @@ const TypingGame = (props: TypingGameProps) => {
       typingMetricsState({ status: status() }),
     updateMetrics,
   );
+
+  createEffect(() => {});
 
   const keyMetrics = createMemo(
     (projection: KeysProjection) =>
@@ -132,7 +147,7 @@ const TypingGame = (props: TypingGameProps) => {
           setCurrentPromptKey={setCurrentPromptKey}
           onKeyDown={keyboard!?.keyDown}
           onKeyUp={keyboard!?.keyUp}
-          onOver={() => setStatus({ kind: TypingStatusKind.over })}
+          onOver={over}
         />
         <Prompt paragraphs={paraStore} setParagraphs={setParaStore} />
         <TypingNav
@@ -140,7 +155,9 @@ const TypingGame = (props: TypingGameProps) => {
           stat={stat()}
           onPause={pause!}
           onReset={reset}
-        />
+        >
+          <Show when={props.timer}>{timeCounter()}</Show>
+        </TypingNav>
         <Keyboard
           metrics={keyMetrics()}
           currentKey={currentPromptKey()}
