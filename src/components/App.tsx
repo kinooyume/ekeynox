@@ -25,7 +25,7 @@ import { createStore } from "solid-js/store";
 import { makePersisted } from "@solid-primitives/storage";
 import HeaderAction from "./HeaderAction";
 import { fetchWords } from "./fetchContent";
-import { randomWords, randomQuote } from "./RandomWords";
+import { randomWords, randomQuote } from "./randomContent";
 
 const dictionaries = {
   en: en_dict,
@@ -176,7 +176,7 @@ const App = () => {
                 <TypingGame
                   i18n={i18nContext}
                   kb={config.kb}
-                  source={getMonkeySource()}
+                  getSource={getMonkeySource}
                 />
               </Show>
             </Suspense>
@@ -188,7 +188,7 @@ const App = () => {
                   i18n={i18nContext}
                   kb={config.kb}
                   timer={gameOptions.time.value * 1000}
-                  source={getSource(50)}
+                  getSource={() => getSource(50)}
                 />
               </Show>
             </Suspense>
