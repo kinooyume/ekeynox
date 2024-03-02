@@ -26,6 +26,7 @@ import { makePersisted } from "@solid-primitives/storage";
 import HeaderAction from "./HeaderAction";
 import { fetchWords } from "./fetchContent";
 import { randomWords, randomQuote } from "./randomContent";
+import Content, { type ContentData } from "./Content";
 
 const dictionaries = {
   en: en_dict,
@@ -131,18 +132,18 @@ const App = () => {
   const [gameMode, setGameMode] = createSignal<GameMode>(GameMode.none);
   const [content, setContent] = createSignal<string>("");
 
-  const getSource = (wordNumber: number): (() => string) => {
+  const getSource = (wordNumber: number): (() => ContentData) => {
     switch (gameOptions.wordsCategory) {
       case WordsCategory.words1k:
-        return () => randomWords(data() || [])(wordNumber);
+        return () => Content.parseWords(randomWords(data() || [])(wordNumber));
       case WordsCategory.quotes:
-        return () => randomQuote(data() || []);
+        return () => Content.parse(randomQuote(data() || []));
       case WordsCategory.custom:
-        return content;
+        return () => Content.parse(content());
     }
   };
 
-  const getMonkeySource = (): (() => string) =>
+  const getMonkeySource = (): (() => ContentData) =>
     getSource(gameOptions.wordNumber.value);
 
   css``;
@@ -176,7 +177,7 @@ const App = () => {
                 <TypingGame
                   i18n={i18nContext}
                   kb={config.kb}
-                  getSource={getMonkeySource()}
+                  getContent={getMonkeySource()}
                 />
               </Show>
             </Suspense>
@@ -188,7 +189,7 @@ const App = () => {
                   i18n={i18nContext}
                   kb={config.kb}
                   timer={gameOptions.time.value * 1000}
-                  getSource={getSource(gameOptions.time.value * 4)}
+                  getContent={getSource(gameOptions.time.value * 4)}
                 />
               </Show>
             </Suspense>

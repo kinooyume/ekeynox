@@ -8,8 +8,7 @@ import {
 } from "solid-js";
 import { createStore } from "solid-js/store";
 
-
-import Content from "./Content.ts";
+import Content, { type ContentData } from "./Content.ts";
 import KeyboardLayout from "./KeyboardLayout.ts";
 
 import TypingEngine, {
@@ -30,10 +29,15 @@ import { updateKeyProjection, type KeysProjection } from "./KeysProjection.ts";
 import KeypressMetrics from "./KeypressMetrics.ts";
 import type { I18nContext } from "./App.tsx";
 
-type TypingGameProps = { getSource: () => string, i18n: I18nContext, kb: string, timer?: number  }
+type TypingGameProps = {
+  getContent: () => ContentData;
+  i18n: I18nContext;
+  kb: string;
+  timer?: number;
+};
 
 const TypingGame = (props: TypingGameProps) => {
-  const [paragraphs, keySet] = Content.parse(props.getSource());
+  const [paragraphs, keySet] = props.getContent();
   const [paraStore, setParaStore] = createStore(Content.deepClone(paragraphs));
 
   const [currentPromptKey, setCurrentPromptKey] = createSignal("");
@@ -57,7 +61,7 @@ const TypingGame = (props: TypingGameProps) => {
       }, props.timer);
       return () => clearTimeout(timer);
     }
-  })
+  });
 
   /* *** */
 
