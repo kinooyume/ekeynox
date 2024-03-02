@@ -49,7 +49,8 @@ const makeSpace = () => ({
   ],
 });
 
-export type ContentData = [Paragraphs, Set<string>];
+export type ContentData = { paragraphs: Paragraphs, keySet: Set<string> };
+
 const parseWord =
   (keySet: Set<string>) =>
   ({ word }: { word: string }) => ({
@@ -87,7 +88,7 @@ export const parse: Parser = (source) => {
       paragraphs[i].push(makeEnter());
     }
   }
-  return [paragraphs, keySet];
+  return { paragraphs, keySet };
 };
 
 const parseWords = (source: Array<string>): ContentData => {
@@ -98,7 +99,7 @@ const parseWords = (source: Array<string>): ContentData => {
       ? [wordParser({ word }), makeSpace()]
       : wordParser({ word }),
   );
-  return [[words], keySet];
+  return { paragraphs: [words], keySet };
 };
 
 const deepClone = (paragraphs: Paragraphs) =>
