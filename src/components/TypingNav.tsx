@@ -2,10 +2,12 @@ import { css } from "solid-styled";
 import Play from "./ui/play.tsx";
 import Reset from "./ui/reset.tsx";
 import type { StatProjection } from "./KeypressMetrics.ts";
+import { Show, type JSXElement } from "solid-js";
 
 type TypingNavProps = {
   isPaused: boolean;
   stat: StatProjection;
+  children?: JSXElement;
   onPause: () => void;
   onReset: () => void;
 };
@@ -39,6 +41,9 @@ const TypingNav = (props: TypingNavProps) => {
       <span class="wpm">
         Real Accuracy: {Math.trunc(props.stat.accuracies[1])}%
       </span>
+      <Show when={props.children}>
+        <div class="child">{props.children}</div>
+      </Show>
     </nav>
   );
 };
