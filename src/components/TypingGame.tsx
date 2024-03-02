@@ -37,8 +37,8 @@ type TypingGameProps = {
 };
 
 const TypingGame = (props: TypingGameProps) => {
-  const [paragraphs, keySet] = props.getContent();
-  const [paraStore, setParaStore] = createStore(Content.deepClone(paragraphs));
+  const [content, setContent] = createSignal(props.getContent());
+  const [paraStore, setParaStore] = createStore(Content.deepClone(content().paragraphs));
 
   const [currentPromptKey, setCurrentPromptKey] = createSignal("");
   const [status, setStatus] = createSignal<TypingStatus>({
@@ -48,7 +48,7 @@ const TypingGame = (props: TypingGameProps) => {
   const [kbLayout, setKbLayout] = createSignal(KeyboardLayout.getDefault());
 
   createComputed(() => {
-    const layout = KeyboardLayout.create(props.kb, keySet);
+    const layout = KeyboardLayout.create(props.kb, content().keySet);
     if (layout !== null) setKbLayout(layout);
     // TODO: manage error
   });
@@ -83,7 +83,7 @@ const TypingGame = (props: TypingGameProps) => {
   );
 
   const reset = () => {
-    setParaStore(Content.deepClone(paragraphs));
+    setParaStore(Content.deepClone(content().paragraphs));
     setStatus({ kind: TypingStatusKind.unstart });
     resetInput();
     focus!();
