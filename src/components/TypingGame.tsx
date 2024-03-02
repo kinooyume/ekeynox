@@ -30,10 +30,10 @@ import { updateKeyProjection, type KeysProjection } from "./KeysProjection.ts";
 import KeypressMetrics from "./KeypressMetrics.ts";
 import type { I18nContext } from "./App.tsx";
 
-type TypingGameProps = { source: string, i18n: I18nContext, kb: string, timer?: number  }
+type TypingGameProps = { getSource: () => string, i18n: I18nContext, kb: string, timer?: number  }
 
 const TypingGame = (props: TypingGameProps) => {
-  const [paragraphs, keySet] = Content.parse(props.source);
+  const [paragraphs, keySet] = Content.parse(props.getSource());
   const [paraStore, setParaStore] = createStore(Content.deepClone(paragraphs));
 
   const [currentPromptKey, setCurrentPromptKey] = createSignal("");
@@ -128,6 +128,7 @@ const TypingGame = (props: TypingGameProps) => {
           setCurrentPromptKey={setCurrentPromptKey}
           onKeyDown={keyboard!?.keyDown}
           onKeyUp={keyboard!?.keyUp}
+          onOver={() => setStatus({ kind: TypingStatusKind.over })}
         />
         <Prompt paragraphs={paraStore} setParagraphs={setParaStore} />
         <TypingNav
