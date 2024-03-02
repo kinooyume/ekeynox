@@ -7,12 +7,12 @@ const randomQuote = (data: Array<string>) => data[random(data.length)];
 
 const randomWords =
   (data: Array<string>) =>
-  (nbr: number): string => {
+  (nbr: number): Array<string> => {
     const words = [];
     for (let i = 0; i < nbr; i++) {
       words.push(data[random(data.length)]);
     }
-    return words.join(" ");
+    return words;
   };
 
 export { randomWords, randomQuote }
