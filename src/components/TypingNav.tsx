@@ -3,6 +3,8 @@ import Play from "./ui/play.tsx";
 import Reset from "./ui/reset.tsx";
 import type { StatProjection } from "./KeypressMetrics.ts";
 import { Show, type JSXElement } from "solid-js";
+import NavLeft from "./ui/navLeft";
+import NavRight from "./ui/navRight";
 
 type TypingNavProps = {
   isPaused: boolean;
@@ -19,31 +21,54 @@ const TypingNav = (props: TypingNavProps) => {
       margin-right: 16px;
     }
     nav {
+      bottom: 0;
+      position: fixed;
       display: flex;
+      justify-content: center;
+      padding: 0 16px;
+    }
+    .content {
+      display: flex;
+      align-items: center;
       justify-content: space-between;
-      padding: 16px;
+      min-width: 600px;
+      gap: 16px;
+      background-color: var(--key-color);
+    }
+    .remote {
+      display: flex;
+      align-items: center;
     }
   `;
   return (
     <nav>
-      <div onClick={props.onPause}>
-        <Play pause={props.isPaused} />
+      <NavLeft />
+      <div class="content">
+        <div class="remote">
+          <div onClick={props.onPause}>
+            <Play pause={props.isPaused} />
+          </div>
+          <div onclick={props.onReset}>
+            <Reset />
+          </div>
+        </div>
+        <div class="stat">
+          <span class="wpm">WPM: {Math.trunc(props.stat.speed.byWord[0])}</span>
+          <span class="wpm">
+            Raw: {Math.trunc(props.stat.speed.byKeypress[1])}
+          </span>
+          <span class="wpm">
+            Accurracy: {Math.trunc(props.stat.accuracies[0])}%
+          </span>
+          <span class="wpm">
+            Real Accuracy: {Math.trunc(props.stat.accuracies[1])}%
+          </span>
+        </div>
+        <Show when={props.children}>
+          <div class="child">{props.children}</div>
+        </Show>
       </div>
-      <div onclick={props.onReset}>
-        <Reset />
-      </div>
-      <br />
-      <span class="wpm">WPM: {Math.trunc(props.stat.speed.byWord[0])}</span>
-      <span class="wpm">Raw: {Math.trunc(props.stat.speed.byKeypress[1])}</span>
-      <span class="wpm">
-        Accurracy: {Math.trunc(props.stat.accuracies[0])}%
-      </span>
-      <span class="wpm">
-        Real Accuracy: {Math.trunc(props.stat.accuracies[1])}%
-      </span>
-      <Show when={props.children}>
-        <div class="child">{props.children}</div>
-      </Show>
+      <NavRight />
     </nav>
   );
 };

@@ -150,6 +150,12 @@ const TypingGame = (props: TypingGameProps) => {
           onOver={over}
         />
         <Prompt paragraphs={paraStore} setParagraphs={setParaStore} />
+        <Keyboard
+          metrics={keyMetrics()}
+          currentKey={currentPromptKey()}
+          layout={kbLayout()}
+          ref={(k) => (keyboard = k)}
+        />
         <TypingNav
           isPaused={status().kind !== TypingStatusKind.pending}
           stat={stat()}
@@ -158,12 +164,6 @@ const TypingGame = (props: TypingGameProps) => {
         >
           <Show when={props.timer}>{timeCounter()}</Show>
         </TypingNav>
-        <Keyboard
-          metrics={keyMetrics()}
-          currentKey={currentPromptKey()}
-          layout={kbLayout()}
-          ref={(k) => (keyboard = k)}
-        />
       </div>
     </Show>
   );
