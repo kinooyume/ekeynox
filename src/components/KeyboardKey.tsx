@@ -50,13 +50,13 @@ const KeyboardKey = (props: KeyboardKeyProps) => {
       height: 40px;
       color: var(--text-color);
       border-radius: 8px;
-      background: var(--background-color);
+      background: var(--key-bg-color);
       box-shadow:
         2px 2px 7px var(--key-color),
         -2px -2px 7px var(--key-color-alt);
     }
     .pressed {
-      background: var(--background-color);
+      background: var(--key-bg-color);
       box-shadow:
         inset 2px 2px 7px var(--key-color),
         inset -2px -2px 7px var(--key-color-alt);
@@ -119,10 +119,10 @@ const KeyboardKey = (props: KeyboardKeyProps) => {
         inset -2px -2px 7px var(--key-correct-color-alt);
     }
     .incorrect {
+      background: var(--key-incorrect-bg-color);
       box-shadow:
         2px 2px 7px var(--key-incorrect-color),
         -2px -2px 7px var(--key-incorrect-color-alt);
-      background: var(--key-incorrect-bg-color);
     }
     .incorrect.pressed {
       box-shadow:

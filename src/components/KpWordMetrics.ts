@@ -3,10 +3,6 @@ import List from "./List";
 import { TypingWordKind, type TypingWord } from "./TypingEngine";
 import { createTypingProjection } from "./TypingProjection";
 
-// NOTE: we create too much typingprojection
-// but I don't want to rely on "foundOperator"
-// on doit pouvoir faire un truc avec des fonctions..
-
 export type WordProjection = {
   correct: number;
 };

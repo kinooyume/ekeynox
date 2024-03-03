@@ -28,11 +28,6 @@ const Key = (props: Metakey) => {
       white-space: pre;
     }
 
-    span.focus {
-      position: relative;
-      color: var(--focus-color);
-      background-color: var(--focus-bg-color);
-    }
     span.correct {
       color: var(--correct-color);
       background-color: var(--correct-bg-color);
@@ -44,6 +39,11 @@ const Key = (props: Metakey) => {
     span.wasInvalid.correct {
       color: var(--corrected-color);
       background-color: var(--corrected-bg-color);
+    }
+    span.focus {
+      position: relative;
+      color: var(--focus-color);
+      background-color: var(--focus-bg-color);
     }
     span.focus::before {
       content: " ";
