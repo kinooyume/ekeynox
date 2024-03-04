@@ -67,13 +67,13 @@
   --key-correct-color: #0d6250;
   --key-correct-color-alt: #11846c;
 
-  --key-incorrect-bg-color: linear-gradient(145deg, #a43d2c, #8a3325);
-  --key-incorrect-color: #823023;
-  --key-incorrect-color-alt: #b0422f;
+  --key-incorrect-bg-color: linear-gradient(145deg, #a83f3f, #8d3535);
+  --key-incorrect-color: #853232;
+  --key-incorrect-color-alt: #b54444;
 
-  --key-corrected-bg-color: linear-gradient(145deg, #ab720c, #90600a);
-  --key-corrected-color: #885b09;
-  --key-corrected-color-alt: #b87b0d;
+  --key-corrected-bg-color: linear-gradient(145deg, #b16f4c, #955e40);
+  --key-corrected-color: #8c583c;
+  --key-corrected-color-alt: #be7852;
 
   --key-focus-bg-color: linear-gradient(145deg, #2b5e7a, #244f67);
   --key-focus-color: #224b61;
