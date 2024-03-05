@@ -81,18 +81,20 @@ export enum WordsCategory {
 
 export type Languages = "en" | "fr";
 
+export enum GameMode {
+  monkey = "monkey",
+  rabbit = "rabbit"
+}
+
+export type GameModePending = GameMode | "none";
 export type GameOptions = {
+  lastGameMode: GameMode;
   wordNumber: NumberSelection;
   wordsCategory: WordsCategory;
   time: NumberSelection;
   language: Languages;
 };
 
-export enum GameMode {
-  monkey,
-  rabbit,
-  none,
-}
 
 const App = () => {
   const [config, setConfig] = makePersisted(
@@ -107,6 +109,7 @@ const App = () => {
   const [gameOptions, setGameOptions] = makePersisted(
     createStore<GameOptions>(
       {
+        lastGameMode: GameMode.monkey,
         wordNumber: { type: NumberSelectionType.selected, value: 10 },
         time: { type: NumberSelectionType.selected, value: 10 },
         wordsCategory: WordsCategory.words1k,
@@ -129,7 +132,7 @@ const App = () => {
   const i18nContext: I18nContext = { t };
   /* *** */
 
-  const [gameMode, setGameMode] = createSignal<GameMode>(GameMode.none);
+  const [gameMode, setGameMode] = createSignal<GameModePending>("none");
   const [content, setContent] = createSignal<string>("");
 
   const getSource = (wordNumber: number): (() => ContentData) => {
@@ -151,7 +154,7 @@ const App = () => {
     <div class="app" classList={{ dark: config.dark }}>
       <Header
         i18n={i18nContext}
-        toHome={() => setGameMode(GameMode.none)}
+        toHome={() => setGameMode("none")}
         gameMode={gameMode()}
       >
         <HeaderAction
@@ -162,7 +165,7 @@ const App = () => {
       </Header>
       <main>
         <Switch>
-          <Match when={gameMode() === GameMode.none}>
+          <Match when={gameMode() === "none"}>
             <GameModeMenu
               t={t}
               setGameMode={setGameMode}

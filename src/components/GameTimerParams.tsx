@@ -32,9 +32,11 @@ const GameRandomParams = (props: GameRandomParamsProps) => {
       display: flex;
       flex-direction: column;
       gap: 1rem;
-      align-items: center;
-      width: 100%;
-      padding: 0 30px;
+      align-items: flex-start;
+    }
+
+    button {
+      margin-top: 64px;
     }
   `;
 
@@ -48,11 +50,39 @@ const GameRandomParams = (props: GameRandomParamsProps) => {
   return (
     <div class="time-params">
       <RadioGroup
+        name="time"
+        values={[
+          { label: "10s", value: 10 },
+          { label: "30s", value: 30 },
+          { label: "1m", value: 60 },
+          { label: "2m", value: 120 },
+          { label: "5m", value: 300 },
+        ]}
+        checked={props.time.value}
+        setChecked={(time) =>
+          props.setTime({ type: NumberSelectionType.selected, value: time })
+        }
+      >
+        <Stopwatch />
+      </RadioGroup>
+      <RadioGroup
         name="wordsCategory-timer"
         values={[
-          { label: props.t("words"), value: WordsCategory.words1k, icon: <Text /> },
-          { label: props.t("quotes"), value: WordsCategory.quotes, icon: <Quote /> },
-          { label: props.t("custom"), value: WordsCategory.custom, icon: <Customizer /> },
+          {
+            label: props.t("words"),
+            value: WordsCategory.words1k,
+            icon: <Text />,
+          },
+          {
+            label: props.t("quotes"),
+            value: WordsCategory.quotes,
+            icon: <Quote />,
+          },
+          {
+            label: props.t("custom"),
+            value: WordsCategory.custom,
+            icon: <Customizer />,
+          },
         ]}
         checked={props.wordsCategory}
         setChecked={props.setWordsCategory}
@@ -75,22 +105,6 @@ const GameRandomParams = (props: GameRandomParamsProps) => {
           <textarea ref={inputRef!}></textarea>
         </Match>
       </Switch>
-      <RadioGroup
-        name="time"
-        values={[
-          { label: "10s", value: 10 },
-          { label: "30s", value: 30 },
-          { label: "1m", value: 60 },
-          { label: "2m", value: 120 },
-          { label: "5m", value: 300 },
-        ]}
-        checked={props.time.value}
-        setChecked={(time) =>
-          props.setTime({ type: NumberSelectionType.selected, value: time })
-        }
-        >
-        <Stopwatch />
-      </RadioGroup>
       <button onClick={OnClick}>{props.t("letsGo")}</button>
     </div>
   );

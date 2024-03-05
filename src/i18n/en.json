@@ -12,14 +12,20 @@
   "quotes": "quotes",
   "custom": "custom",
   "language": "language",
+  "chooseYour": "choose your",
+  "playingMode": "playing mode",
   "gameMode": {
     "monkey": {
       "title": "monkey",
-      "description": "Type random words as quick as possible, try to not make mistake !"
+      "subtitle": "type the words as fast as possible",
+      "description": "Type random words as quick as possible, try to not make mistake !",
+      "hugeDescription": " Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ut erat sed nulla ornare accumsan a quis diam. Nullam ut pharetra dui."
     },
     "rabbit": {
       "title": "rabbit",
-      "description": "Time is running out ! how many words can you write in the time allowed?"
+      "subtitle": "Against the clock !",
+      "description": "Time is running out ! how many words can you write in the time allowed?",
+      "hugeDescription": " Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ut erat sed nulla ornare accumsan a quis diam. Nullam ut pharetra dui. Donec quis velit placerat est dictum gravida. Pellentesque maximus libero sed dui aliquet scelerisque. Duis nec purus interdum, posuere lacus non, aliquam leo. In sodales vehicula lorem eu eleifend. Ut ut dolor eget ante gravida rutrum at vel. "
     },
     "chameleon": {
       "title": "chameleon",
