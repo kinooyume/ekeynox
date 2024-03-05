@@ -12,14 +12,20 @@
   "quotes": "citations",
   "custom": "personnalisé",
   "language": "language",
+  "chooseYour": "Choisissez votre",
+  "playingMode": "mode de jeu",
   "gameMode": {
     "monkey": {
       "title": "monkey",
-      "description": "Tapez des mots au hasard aussi vite que possible, essayez de ne pas faire d'erreur !"
+      "subtitle": "taper les mots le plus rapidement possible",
+      "description": "Tapez des mots au hasard aussi vite que possible, essayez de ne pas faire d'erreur !",
+      "hugeDescription": " Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ut erat sed nulla ornare accumsan a quis diam. Nullam ut pharetra dui."
     },
     "rabbit": {
       "title": "rabbit",
-      "description": "Le temps est compté ! Combien de mots pouvez-vous écrire dans le temps imparti ?"
+      "subtitle": "Contre la montre !",
+      "description": "Le temps est compté ! Combien de mots pouvez-vous écrire dans le temps imparti ?",
+      "hugeDescription": " Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ut erat sed nulla ornare accumsan a quis diam. Nullam ut pharetra dui."
     },
     "chameleon": {
       "title": "chameleon",

@@ -1,8 +1,8 @@
 import { Match, Switch } from "solid-js";
-import { GameMode, type I18nContext } from "./App";
+import { GameMode, type GameModePending, type I18nContext } from "./App";
 
 type HeaderNavProps = {
-  mode: GameMode;
+  mode: GameModePending;
   i18n: I18nContext;
 };
 
@@ -14,9 +14,6 @@ const HeaderNav = (props: HeaderNavProps) => {
       </Match>
       <Match when={props.mode === GameMode.rabbit}>
         <p>{props.i18n.t("gameMode.rabbit.title")}</p>
-      </Match>
-      <Match when={props.mode === GameMode.chameleon}>
-        <p>{props.i18n.t("gameMode.chameleon.title")}</p>
       </Match>
     </Switch>
   );

@@ -12,5 +12,11 @@
 @font-face {
   font-family: Larsseit;
   src: url("../fonts/Larsseit/Larsseit-Light.otf");
-  font-weight: light;
+  font-weight: 200;
+  }
+
+@font-face {
+  font-family: Larsseit;
+  src: url("../fonts/Larsseit/Larsseit-Thin.otf");
+  font-weight: 100;
   }

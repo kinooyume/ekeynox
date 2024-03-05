@@ -31,9 +31,11 @@ const GameRandomParams = (props: GameRandomParamsProps) => {
       display: flex;
       flex-direction: column;
       gap: 1rem;
-      align-items: center;
-      width: 100%;
-      padding: 0 30px;
+      align-items: flex-start;
+    }
+
+    button {
+      margin-top: 64px;
     }
   `;
 

@@ -84,6 +84,7 @@ function TinySelect<State>(props: TinySelectProps<State>) {
     .option {
       padding: 0.5rem;
       border-radius: 0.5rem;
+      color: var(--text-color);
       cursor: pointer;
     }
     .option:hover {

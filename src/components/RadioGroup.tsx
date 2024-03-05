@@ -33,15 +33,18 @@ function RadioGroup<Value>(props: RadioGroupProps<Value>) {
     .radio-group {
       padding: 4px;
       border-radius: 10px;
-      background-color: var(--key-color);
+      background-color: var(--color-surface-200);
       position: relative;
       display: flex;
-      border: 1px solid var(--key-color);
+      border: 1px solid var(--color-surface-200);
       transition: all 100ms linear;
     }
 
-    .radio-group:hover {
-      border-color: var(--focus-bg-color);
+    .radio-group input + label:hover {
+      color: var(--color-primary-100);
+    }
+    .radio-group input + label:hover svg path {
+      fill: var(--color-primary-100);
     }
 
     .radio-group input {
@@ -56,14 +59,14 @@ function RadioGroup<Value>(props: RadioGroupProps<Value>) {
       cursor: pointer;
       border-radius: 6px;
       padding: 4px 8px;
-      background: var(--key-color);
       color: var(--text-color);
       font-size: 14px;
       transition: all 100ms linear;
     }
 
     .radio-group input:checked + label {
-      background-color: var(--key-focus-bg-color);
+      background-color: var(--color-primary-400);
+      color: black;
       animation: rubberBand 0.6s both;
     }
 
@@ -120,8 +123,9 @@ function RadioGroup<Value>(props: RadioGroupProps<Value>) {
               checked={props.checked === value.value}
             />
             <label for={value.value as unknown as string}>
-            <Show when={value.icon}>{value.icon}</Show>
-              {value.label}</label>
+              <Show when={value.icon}>{value.icon}</Show>
+              {value.label}
+            </label>
           </div>
         )}
       </For>
