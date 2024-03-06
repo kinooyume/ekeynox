@@ -168,13 +168,13 @@ const App = () => {
           onEnter={(el, done) => {
             console.log(el)
             const a = el.animate([{ opacity: 0 }, { opacity: 1 }], {
-              duration: 600,
+              duration: 300,
             });
             a.finished.then(done);
           }}
           onExit={(el, done) => {
             const a = el.animate([{ opacity: 1 }, { opacity: 0 }], {
-              duration: 600,
+              duration: 0,
                
             });
             a.finished.then(done);
