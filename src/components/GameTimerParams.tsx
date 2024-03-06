@@ -56,7 +56,6 @@ const GameRandomParams = (props: GameRandomParamsProps) => {
           { label: "30s", value: 30 },
           { label: "1m", value: 60 },
           { label: "2m", value: 120 },
-          { label: "5m", value: 300 },
         ]}
         checked={props.time.value}
         setChecked={(time) =>
