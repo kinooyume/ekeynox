@@ -27,6 +27,7 @@ import HeaderAction from "./HeaderAction";
 import { fetchWords } from "./fetchContent";
 import { randomWords, randomQuote } from "./randomContent";
 import Content, { type ContentData } from "./Content";
+import { Transition } from "solid-transition-group";
 
 const dictionaries = {
   en: en_dict,
@@ -83,7 +84,7 @@ export type Languages = "en" | "fr";
 
 export enum GameMode {
   monkey = "monkey",
-  rabbit = "rabbit"
+  rabbit = "rabbit",
 }
 
 export type GameModePending = GameMode | "none";
@@ -94,7 +95,6 @@ export type GameOptions = {
   time: NumberSelection;
   language: Languages;
 };
-
 
 const App = () => {
   const [config, setConfig] = makePersisted(
@@ -164,40 +164,57 @@ const App = () => {
         />
       </Header>
       <main>
-        <Switch>
-          <Match when={gameMode() === "none"}>
-            <GameModeMenu
-              t={t}
-              setGameMode={setGameMode}
-              setContent={setContent}
-              setGameOptions={setGameOptions}
-              gameOptions={gameOptions}
-            />
-          </Match>
-          <Match when={gameMode() === GameMode.monkey}>
-            <Suspense>
-              <Show when={data()}>
-                <TypingGame
-                  i18n={i18nContext}
-                  kb={config.kb}
-                  getContent={getMonkeySource()}
-                />
-              </Show>
-            </Suspense>
-          </Match>
-          <Match when={gameMode() === GameMode.rabbit}>
-            <Suspense>
-              <Show when={data()}>
-                <TypingGame
-                  i18n={i18nContext}
-                  kb={config.kb}
-                  timer={gameOptions.time.value * 1000}
-                  getContent={getSource(gameOptions.time.value * 4)}
-                />
-              </Show>
-            </Suspense>
-          </Match>
-        </Switch>
+        <Transition
+          onEnter={(el, done) => {
+            console.log(el)
+            const a = el.animate([{ opacity: 0 }, { opacity: 1 }], {
+              duration: 600,
+            });
+            a.finished.then(done);
+          }}
+          onExit={(el, done) => {
+            const a = el.animate([{ opacity: 1 }, { opacity: 0 }], {
+              duration: 600,
+               
+            });
+            a.finished.then(done);
+          }}
+        >
+          <Switch>
+            <Match when={gameMode() === "none"}>
+              <GameModeMenu
+                t={t}
+                setGameMode={setGameMode}
+                setContent={setContent}
+                setGameOptions={setGameOptions}
+                gameOptions={gameOptions}
+              />
+            </Match>
+            <Match when={gameMode() === GameMode.monkey}>
+              <Suspense>
+                <Show when={data()}>
+                  <TypingGame
+                    i18n={i18nContext}
+                    kb={config.kb}
+                    getContent={getMonkeySource()}
+                  />
+                </Show>
+              </Suspense>
+            </Match>
+            <Match when={gameMode() === GameMode.rabbit}>
+              <Suspense>
+                <Show when={data()}>
+                  <TypingGame
+                    i18n={i18nContext}
+                    kb={config.kb}
+                    timer={gameOptions.time.value * 1000}
+                    getContent={getSource(gameOptions.time.value * 4)}
+                  />
+                </Show>
+              </Suspense>
+            </Match>
+          </Switch>
+        </Transition>
       </main>
     </div>
   );
