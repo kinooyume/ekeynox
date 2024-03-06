@@ -23,6 +23,7 @@ const Key = (props: Metakey) => {
   css`
     .prompt-key {
       font-family: "OdudoMono", monospace;
+      font-optical-sizing: auto;
       transform-origin: 0 100%;
     }
     span {
