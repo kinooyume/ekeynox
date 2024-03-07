@@ -1,6 +1,6 @@
 import { css } from "solid-styled";
 
-import { type GameModePending,type I18nContext } from "./App.tsx";
+import { type GameModePending, type I18nContext } from "./App.tsx";
 import HeaderNav from "./HeaderNav.tsx";
 import { Show, type JSXElement } from "solid-js";
 
@@ -13,24 +13,18 @@ type HeaderProps = {
 
 const Header = (props: HeaderProps) => {
   css`
-    .hud {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    .header {
       position: fixed;
       top: 0;
       right: 0;
-      width: 100%;
-      background-color: var(--bg-secondary-color);
-      border-bottom: 1px solid var(--border-color);
-    }
-    .header {
+      left: 0;
+      z-index: 100;
       display: flex;
-      width: 100%;
-      height: 72px;
-      padding: 1rem 2rem;
       align-items: center;
       justify-content: space-between;
+      height: 72px;
+      padding: 1rem 2rem;
+      background-color: var(--bg-secondary-color);
     }
 
     .header .left {
@@ -41,11 +35,10 @@ const Header = (props: HeaderProps) => {
   `;
 
   return (
-    <div class="hud">
       <div class="header">
         <div class="left">
           <div class="home" onClick={props.toHome}>
-            eKeyNox
+            <p>eKeyNox</p>
           </div>
           <Show when={props.gameMode !== "none"}>
             <HeaderNav i18n={props.i18n} mode={props.gameMode} />
@@ -53,7 +46,6 @@ const Header = (props: HeaderProps) => {
         </div>
         {props.children}
       </div>
-    </div>
   );
 };
 
