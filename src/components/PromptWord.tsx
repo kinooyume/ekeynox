@@ -15,10 +15,13 @@ export enum WordStatus {
   over = "over",
 }
 
-type WordProps = { setWpm: (wpm: number) => void } & MetaWord;
+type WordProps = {
+  setWpm: (wpm: number) => void;
+  observer: IntersectionObserver | null;
+} & MetaWord;
 
 const Word = (props: WordProps) => {
-  // on va envoyer 
+  const [isObserved, setIsObserved] = createSignal(false);
   const wordMetricsState = createWordMetricsState({
     setWpm: props.setWpm,
     keys: props.keys,
@@ -28,6 +31,16 @@ const Word = (props: WordProps) => {
     (metrics: WordMetrics) => metrics({ status: props.status }),
     wordMetricsState,
   );
+
+ const createObserver = (ref: Element) => createEffect(() => {
+    if (props.status === WordStatus.pending && !isObserved()) {
+      props.observer?.observe(ref);
+      setIsObserved(true);
+    } else if (props.status === WordStatus.over ||  props.status === WordStatus.unstart) {
+      props.observer?.unobserve(ref);
+      setIsObserved(false);
+    }
+  });
 
   css`
     .keys {
@@ -61,12 +74,19 @@ const Word = (props: WordProps) => {
       font-size: 0.5em;
     }
   `;
+
   return (
-    <div class="word">
+    <div class="word" ref={createObserver}>
       <div class={`${props.status}  ${props.focus ? "focus" : ""} keys`}>
         <For each={props.keys}>{(key) => <Key {...key} />}</For>
       </div>
-      <Show when={props.wpm > 0 && props.keys.length > 4 && props.status === WordStatus.over}>
+      <Show
+        when={
+          props.wpm > 0 &&
+          props.keys.length > 4 &&
+          props.status === WordStatus.over
+        }
+      >
         <span class="wpm">{Math.trunc(props.wpm)}</span>
       </Show>
     </div>
