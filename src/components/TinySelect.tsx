@@ -1,5 +1,6 @@
-import { createSignal, type JSXElement } from "solid-js";
+import { createSignal, Show, type JSXElement } from "solid-js";
 import { css } from "solid-styled";
+import { Transition } from "solid-transition-group";
 
 type TinySelectProps<State> = {
   children: JSXElement;
@@ -17,110 +18,142 @@ function TinySelect<State>(props: TinySelectProps<State>) {
     .tiny-select {
       position: relative;
       box-sizing: border-box;
-      width: fit-content;
-      height: 100%;
+      height: 40px;
       cursor: pointer;
     }
     .selected-container {
       box-sizing: border-box;
       position: relative;
       height: 40px;
-      width: 40px;
       display: flex;
-      flex-direction: row-reverse;
+      flex-direction: row;
       align-items: center;
       justify-content: center;
-      border-radius: 160px;
-      transition: all 0.3s ease;
+      transition: all 0.3s ease-out;
+      overflow: hidden;
     }
 
     .value-box {
-      height: 0;
-      width: 0;
       display: flex;
+      max-width: 0;
+      margin-botto: 4px;
+      opacity: 0;
       align-items: center;
       justify-content: center;
       overflow: hidden;
-    }
-    .selected-container:hover .value-box {
-      box-sizing: border-box;
-      height: 100%;
-      width: 100%;
-      background-color: transparent;
-      border: none;
-      outline: none;
-      padding-bottom: 4px;
-      padding-left: 10px;
       font-size: 1em;
-      color: white;
-      transition: all 0.3s ease;
+      transition: all 0.25s ease-out;
     }
 
+    .value-box span {
+      color: var(--text-color);
+    }
 
-    .selected-container:hover {
-      width: 130px;
+    .value-box span:last-child {
+      font-size: 0.8em;
+      margin-left: 4px;
+    }
 
-      background: var(--background-color);
-      box-shadow:
-        inset 2px 2px 7px var(--key-color),
-        inset -2px -2px 7px var(--key-color-alt);
+    .tiny-select:hover .selected-container .value-box,
+    .open .selected-container .value-box {
+      opacity: 1;
+      max-width: 100px;
     }
 
     .options {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      display: none;
-      flex-direction: column;
-      gap: 0.5rem;
-      padding: 0.5rem;
-      border-radius: 0.5rem;
-      background-color: var(--bg-secondary-color);
-      box-shadow: 0 0 4px var(--shadow-color);
-    }
-    .options.open {
       display: flex;
+      height: object-fit;
+      background-color: var(--color-surface-100);
+      transition: all 0.25s ease-out;
+      flex-direction: column;
+      justify-content: flex-end;
+      border-radius: 10px;
+      border: 1px solid var(--color-surface-200);
+      box-shadow:
+        2.8px 2.8px 2.2px rgba(0, 0, 0, 0.02),
+        6.7px 6.7px 5.3px rgba(0, 0, 0, 0.028),
+        12.5px 12.5px 10px rgba(0, 0, 0, 0.035),
+        22.3px 22.3px 17.9px rgba(0, 0, 0, 0.042),
+        41.8px 41.8px 33.4px rgba(0, 0, 0, 0.05),
+        100px 100px 80px rgba(0, 0, 0, 0.07);
     }
+
     .option {
-      padding: 0.5rem;
+      display: inline-flex;
+      justify-content: flex-start;
+      padding: 1rem;
       border-radius: 0.5rem;
       color: var(--text-color);
       cursor: pointer;
     }
-    .option:hover {
-      background-color: var(--bg-tertiary-color);
+
+    .option p {
+      margin: 0;
+    }
+    .option:hover p {
+      color: var(--ui-primary-color);
     }
     .icon-container {
       padding: 0.5rem;
     }
     .icon-container {
-      fill: var(--text-secondary-color);
+      fill: var(--ui-secondary-color);
+      transition: all 0.25s ease-out;
+    }
+    .tiny-select:hover .selected-container .icon-container {
+      fill: var(--text-color);
+    }
+    .tiny-select.open .selected-container .icon-container {
+      fill: var(--ui-primary-color);
     }
   `;
 
   return (
-    <div class="tiny-select">
+    <div
+      class="tiny-select"
+      classList={{ open: open() }}
+      onMouseLeave={() => {
+        if (open() === true) setOpen(false);
+      }}
+    >
       <div class="selected-container" onClick={() => setOpen(!open())}>
+        <div class="icon-container">{props.children}</div>
         <div class="value-box">
           <span>{props.selected as string}</span>
           <span>{open() ? "▲" : "▼"}</span>
         </div>
-
-        <div class="icon-container">{props.children}</div>
       </div>
-      <div class={`options ${open() ? "open" : ""}`}>
-        {props.list.filter( (e) => e !== props.selected ).map((item) => (
-          <div
-            class="option"
-            onClick={() => {
-              props.action(item);
-              setOpen(false);
-            }}
-          >
-            {item as string}
+      <Transition
+        onEnter={(el, done) => {
+          const a = el.animate([{ opacity: 0 }, { opacity: 1 }], {
+            duration: 80,
+          });
+          a.finished.then(done);
+        }}
+        onExit={(el, done) => {
+          const a = el.animate([{ opacity: 1 }, { opacity: 0 }], {
+            duration: 0,
+          });
+          a.finished.then(done);
+        }}
+      >
+        <Show when={open() === true}>
+          <div class="options">
+            {props.list
+              .filter((e) => e !== props.selected)
+              .map((item) => (
+                <div
+                  class="option"
+                  onClick={() => {
+                    props.action(item);
+                  }}
+                >
+                  <p>{item as string}</p>
+                </div>
+              ))}
           </div>
-        ))}
-      </div>
+        </Show>
+      </Transition>
     </div>
   );
 }

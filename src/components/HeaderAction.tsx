@@ -43,7 +43,6 @@ const HeaderAction = (props: HeaderActionProps) => {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 0.3rem;
     }
   `;
   return (
