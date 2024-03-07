@@ -64,6 +64,20 @@ const Keyboard = (props: KeyboardProps) => {
 
   return (
     <div class="kb">
+      <div class="extraKeys">
+        <For each={props.layout.extra}>
+          {(lKey) => (
+            <KeyboardKey
+              key={lKey.all}
+              used={lKey.used}
+              current={lKey.all.includes(props.currentKey)}
+              data={lKey.all.map((c) => props.metrics[c])}
+              size={lKey.size}
+              pressed={pressedKeys().includes(lKey.primary)}
+            />
+          )}
+        </For>
+      </div>
       <For each={props.layout.layout}>
         {(row) => (
           <div class="row">
@@ -82,20 +96,6 @@ const Keyboard = (props: KeyboardProps) => {
           </div>
         )}
       </For>
-      <div class="extraKeys">
-        <For each={props.layout.extra}>
-          {(lKey) => (
-            <KeyboardKey
-              key={lKey.all}
-              used={lKey.used}
-              current={lKey.all.includes(props.currentKey)}
-              data={lKey.all.map((c) => props.metrics[c])}
-              size={lKey.size}
-              pressed={pressedKeys().includes(lKey.primary)}
-            />
-          )}
-        </For>
-      </div>
     </div>
   );
 };
