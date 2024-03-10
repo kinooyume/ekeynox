@@ -5,7 +5,7 @@
   font-family: Larsseit, system-ui, sans-serif;
   --background-color: #e0e0e0;
   --text-color: rgb(0, 31, 63);
-  --text-secondary-color: grey;
+  --text-secondary-color: #654f3e;
 
   --color-primary-100: #e7af5c;
   --color-primary-200: #ebb86e;
@@ -13,6 +13,9 @@
   --color-primary-400: #f2c992;
   --color-primary-500: #f6d2a4;
   --color-primary-600: #f8dbb6;
+
+  --ui-primary-color:#654f3e;
+  --ui-secondary-color: grey;
 
   --shadow-color: #a28840;
   --button-text-color: #2d2e3b;
@@ -49,8 +52,8 @@
   --test-light-orange: #f9e2c2;
   --test-light-green: #90dfcc;
 
-  --key-bg-color: #e0e0e0;
-  --key-color: #bebebe;
+  --key-bg-color: #e7eef4;
+  --key-color: #c4cacf;
   --key-color-alt: #ffffff;
 
   --key-correct-bg-color: #b5dd9d;
@@ -70,8 +73,6 @@
   --key-focus-color-alt: #a4e6fa;
 }
 .dark {
-  --background-color: #1f2233;
-
   --color-primary-100: #e7af5c;
   --color-primary-200: #ebb86e;
   --color-primary-300: #efc080;
@@ -95,8 +96,12 @@
   --color-surface-mixed-500: #a7998e;
   --color-surface-mixed-600: #b9aca4;
 
+  --background-color: #1f2233;
+  --text-secondary-color: #f8dbb6;
   --text-color: #f6f5f7;
-  --text-secondary-color: grey;
+
+  --ui-primary-color:#f8dbb6;
+  --ui-secondary-color: grey;
 
   --correct-color: #61f4b2;
   --correct-bg-color: #124f48;
@@ -178,7 +183,9 @@ button {
   color: var(--button-text-color);
   cursor: pointer;
 }
-
+/* https://uiverse.io/cssbuttons-io/friendly-dragon-76 */
+/* https://uiverse.io/cssbuttons-io/evil-monkey-41 */
+/* https://codepen.io/havardob/pen/qBvYdXL */
 button:hover {
   box-shadow: var(--shadow-color) 0px 4px 0px 0px;
 }
