@@ -3,6 +3,7 @@ import { css } from "solid-styled";
 import type { GameMode, Translator } from "./App";
 import ChooseClip from "./ui/choose-clip";
 import Bunny from "./ui/bunny";
+import { Transition, TransitionGroup } from "solid-transition-group";
 
 type GameModePicto = Record<GameMode, JSXElement>;
 
@@ -50,7 +51,7 @@ const GameModeSelection = (props: GameModeSelectionProps) => {
     .info .description {
       margin-top: 4px;
       font-size: 1rem;
-      color: var(--color-primary-600);
+      color: var(--text-secondary-color);
     }
     .main-view {
       width: 100%;
@@ -104,10 +105,12 @@ const GameModeSelection = (props: GameModeSelectionProps) => {
     }
   `;
 
-  onCleanup(() => labelRef.forEach(( el ) => {
-    el.removeEventListener("mouseenter", () => {});
-    el.removeEventListener("mouseleave", () => {});
-  }))
+  onCleanup(() =>
+    labelRef.forEach((el) => {
+      el.removeEventListener("mouseenter", () => {});
+      el.removeEventListener("mouseleave", () => {});
+    }),
+  );
 
   let labelRef: Array<HTMLLabelElement> = [];
   const [labelHovered, setLabelHovered] = createSignal<GameMode | null>(null);
@@ -115,10 +118,27 @@ const GameModeSelection = (props: GameModeSelectionProps) => {
   return (
     <div class="mode-selection">
       <div class="info">
-        <Show when={labelHovered() !== null}>
-        <p class="title">{props.modes[labelHovered() as GameMode].title}</p>
-        <p class="description">{props.modes[labelHovered() as GameMode].subtitle}</p>
-        </Show>
+        <TransitionGroup
+          onEnter={(el, done) => {
+            const a = el.animate([{ opacity: 0 }, { opacity: 1 }], {
+              duration: 160,
+            });
+            a.finished.then(done);
+          }}
+          onExit={(el, done) => {
+            const a = el.animate([{ opacity: 1 }, { opacity: 0 }], {
+              duration: 0,
+            });
+            a.finished.then(done);
+          }}
+        >
+          <Show when={labelHovered() !== null}>
+            <p class="title">{props.modes[labelHovered() as GameMode].title}</p>
+            <p class="description">
+              {props.modes[labelHovered() as GameMode].subtitle}
+            </p>
+          </Show>
+        </TransitionGroup>
       </div>
       <div class="modes">
         <For each={Object.keys(props.modes)}>

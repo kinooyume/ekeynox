@@ -1,9 +1,8 @@
 import { css } from "solid-styled";
-import { Match, Switch, createSignal } from "solid-js";
+import { Match, Switch } from "solid-js";
 import type { SetStoreFunction } from "solid-js/store";
 
 import GameRandomParams from "./GameRandomParams";
-import GameModeCard from "./GameModeCard";
 import {
   GameMode,
   WordsCategory,
@@ -64,8 +63,12 @@ const GameModeMenu = (props: GameModeMenuProps) => {
       object-fit: cover;
       background-size: cover;
       background-color: var(--color-surface-alt);
+    }
+
+    .cliped,
+    .hud {
       width: 100%;
-      height: calc(100vw - 122px);
+      height: calc(100vh - 122px);
       max-height: 800px;
       display: flex;
       display: grid;
@@ -74,6 +77,10 @@ const GameModeMenu = (props: GameModeMenuProps) => {
       grid-column-gap: 0px;
       grid-row-gap: 0px;
       overflow: hidden;
+    }
+
+    .hud {
+      position: absolute;
     }
     .title {
       position: absolute;
@@ -102,7 +109,7 @@ const GameModeMenu = (props: GameModeMenuProps) => {
     }
     .title span {
       margin: 0;
-      color: var(--color-primary-600);
+      color: var(--text-secondary-color);
       font-size: 1.1rem;
     }
     .title h1 {
@@ -125,7 +132,7 @@ const GameModeMenu = (props: GameModeMenuProps) => {
       margin-top: 8px;
       margin-bottom: 46px;
       font-weight: 200;
-      color: var(--color-primary-600);
+      color: var(--text-secondary-color);
     }
     .description {
       max-width: 80%;
@@ -134,10 +141,24 @@ const GameModeMenu = (props: GameModeMenuProps) => {
   return (
     <div class="menu">
       <div class="main-view">
-        <div class="title">
-          <div class="title-content">
-            <span>{props.t("chooseYour")}</span>
-            <h1>{props.t("playingMode")}</h1>
+        <div class="hud">
+          <div class="title">
+            <div class="title-content">
+              <span>{props.t("chooseYour")}</span>
+              <h1>{props.t("playingMode")}</h1>
+            </div>
+          </div>
+
+          <div class="selection">
+            <GameModeSelection
+              t={props.t}
+              modes={{
+                rabbit: props.t("gameMode.rabbit"),
+                monkey: props.t("gameMode.monkey"),
+              }}
+              selected={props.gameOptions.lastGameMode}
+              setSelected={(mode) => props.setGameOptions("lastGameMode", mode)}
+            />
           </div>
         </div>
         <div class="cliped">
@@ -211,17 +232,6 @@ const GameModeMenu = (props: GameModeMenuProps) => {
               </div>
             </Match>
           </Switch>
-        </div>
-        <div class="selection">
-          <GameModeSelection
-            t={props.t}
-            modes={{
-              rabbit: props.t("gameMode.rabbit"),
-              monkey: props.t("gameMode.monkey"),
-            }}
-            selected={props.gameOptions.lastGameMode}
-            setSelected={(mode) => props.setGameOptions("lastGameMode", mode)}
-          />
         </div>
       </div>
     </div>
