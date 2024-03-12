@@ -170,7 +170,6 @@ const App = () => {
     }),
     { name: "config" },
   );
-
   /* i18n */
   const dict = createMemo(() => i18n.flatten(dictionaries[config.locale]));
   const t = i18n.translator(dict);
@@ -198,7 +197,7 @@ const App = () => {
   );
 
   const [contentGeneration, setContentGeneration] =
-    createStore<ContentGeneration>(gameOptions.generation);
+    createSignal<ContentGeneration>(gameOptions.generation);
 
   const [randomSource] = createResource(contentGeneration, fetchWords);
 
