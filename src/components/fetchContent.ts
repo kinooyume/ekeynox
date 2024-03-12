@@ -1,18 +1,16 @@
-import { type Languages, WordsCategory } from "./App";
-
-type FetchWordsProps = {
-  wordsCategory: WordsCategory;
-  language: Languages;
-};
+import {
+  type ContentGeneration,
+  WordsGenerationCategory,
+} from "./App";
 
 const fetchWords = async ({
   language,
-  wordsCategory,
-}: FetchWordsProps): Promise<string[]> => {
-  if (wordsCategory === WordsCategory.custom) return [];
+  category: wordsCategory,
+}: ContentGeneration): Promise<string[]> => {
   const response = await fetch(`/contents/${language}/${wordsCategory}.json`);
   const data = await response.json();
-  const key = wordsCategory === WordsCategory.quotes ? "quotes" : "words"
+  const key =
+    wordsCategory === WordsGenerationCategory.quotes ? "quotes" : "words";
   if (!response.ok) {
     throw new Error(data.message);
   } else if (!data[key]) {

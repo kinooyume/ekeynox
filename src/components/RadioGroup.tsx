@@ -10,7 +10,7 @@ type InputProps<Value> = {
 type RadioGroupProps<Value> = {
   name: string;
   values: InputProps<Value>[];
-  checked: Value;
+  compare: (value: Value) => boolean;
   setChecked: (value: Value) => void;
   children?: JSXElement;
 };
@@ -114,15 +114,19 @@ function RadioGroup<Value>(props: RadioGroupProps<Value>) {
       </Show>
       <For each={props.values}>
         {(value) => (
-          <div onClick={(_) => props.setChecked(value.value)} class="input">
+          <div class="input">
             <input
               type="radio"
               id={value.value as string}
               name={props.name}
               value={value.value as string}
-              checked={props.checked === value.value}
+              checked={props.compare(value.value)}
             />
-            <label for={value.value as unknown as string}>
+            <label
+              onClick={(_) =>
+                props.setChecked(value.value)
+              }
+            >
               <Show when={value.icon}>{value.icon}</Show>
               {value.label}
             </label>

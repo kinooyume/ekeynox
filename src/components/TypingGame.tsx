@@ -27,18 +27,24 @@ import TypingMetricsResume from "./TypingMetricsResume";
 
 import { updateKeyProjection, type KeysProjection } from "./KeysProjection.ts";
 import KeypressMetrics from "./KeypressMetrics.ts";
-import type { I18nContext } from "./App.tsx";
+import {
+  GameModeKind,
+  type GameModeContent,
+  type GameOptions,
+  type Translator,
+} from "./App.tsx";
 import { createTimerEffect, type TimerEffect } from "./Timer.ts";
 
 type TypingGameProps = {
-  getContent: () => ContentData;
-  i18n: I18nContext;
+  t: Translator;
+  contentMode: GameModeContent;
+  currentGameOptions: GameOptions;
+  setGameOptions: (options: GameOptions) => void;
   kb: string;
-  timer?: number;
 };
 
 const TypingGame = (props: TypingGameProps) => {
-  const [content, setContent] = createSignal(props.getContent());
+  const [content, setContent] = createSignal(props.contentMode.getContent());
   const [paraStore, setParaStore] = createStore(
     Content.deepClone(content().paragraphs),
   );
@@ -61,13 +67,15 @@ const TypingGame = (props: TypingGameProps) => {
 
   // NOTE: should not exist without timer
   const [timeCounter, setTimeCounter] = createSignal(
-    props.timer?.toFixed(0) || "",
+    props.contentMode.kind === GameModeKind.rabbit
+      ? props.contentMode.time.toFixed(0)
+      : "",
   );
 
   // NOTE: no reactivity on timer
-  if (props.timer) {
+  if (props.contentMode.kind === GameModeKind.rabbit) {
     const timerEffect = createTimerEffect({
-      duration: props.timer,
+      duration: props.contentMode.time,
       onOver: over,
       updateCounter: setTimeCounter,
     });
@@ -125,13 +133,16 @@ const TypingGame = (props: TypingGameProps) => {
       when={status().kind !== TypingStatusKind.over}
       fallback={
         <TypingMetricsResume
+          t={props.t}
           keyMetrics={keyMetrics()}
           paragraphs={paraStore}
           setParagraphs={setParaStore}
+          currentGameOptions={props.currentGameOptions}
+          setGameOptions={props.setGameOptions}
           layout={kbLayout()}
           metrics={typingMetrics()}
           onReset={reset}
-          i18n={props.i18n}
+          setContent={setContent}
         />
       }
     >
@@ -162,7 +173,9 @@ const TypingGame = (props: TypingGameProps) => {
           onPause={pause!}
           onReset={reset}
         >
-          <Show when={props.timer}>{timeCounter()}</Show>
+          <Show when={props.contentMode.kind === GameModeKind.rabbit}>
+            <p>{timeCounter()}</p>
+          </Show>
         </TypingNav>
       </div>
     </Show>
