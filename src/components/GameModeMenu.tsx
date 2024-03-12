@@ -1,18 +1,19 @@
 import { css } from "solid-styled";
 import { Match, Switch } from "solid-js";
-import type { SetStoreFunction } from "solid-js/store";
+import { createStore, type SetStoreFunction } from "solid-js/store";
 
 import GameRandomParams from "./GameRandomParams";
 import {
-  GameMode,
-  WordsCategory,
   type GameOptions,
   type Translator,
+  type ContentGeneration,
+  GameModeKind,
 } from "./App";
 import GameTimerParams from "./GameTimerParams";
-import GameModeSelection from "./GameModeSelection";
 import Bunny from "./ui/bunny";
 import { Transition } from "solid-transition-group";
+import CustomInput, { type CustomInputRef } from "./CustomInput";
+import GameModeSelection from "./GameModeSelection";
 // Gsap animation
 // https://codepen.io/dev_loop/pen/MWKbJmO
 // Store like this
@@ -32,28 +33,26 @@ import { Transition } from "solid-transition-group";
 // https://uiverse.io/Yaya12085/silent-liger-85
 //
 // take a list and make cards
-type GameModeMenuProps = {
+type GameModeKindMenuProps = {
   t: Translator;
-  setGameMode: (mode: GameMode) => void;
-  setContent: (content: string) => void;
   gameOptions: GameOptions;
-  setGameOptions: SetStoreFunction<GameOptions>;
+  setContentGeneration: (type: ContentGeneration) => void;
+  start: (opts: GameOptions, customSource: string) => void;
 };
 
-const GameModeMenu = (props: GameModeMenuProps) => {
-  const setMonkey = (content?: string) => {
-    if (props.gameOptions.wordsCategory === WordsCategory.custom) {
-      props.setContent(content || "");
-    }
-    props.setGameMode(GameMode.monkey);
+const customRef: CustomInputRef = {
+  ref: undefined,
+};
+
+const GameModeKindMenu = (props: GameModeKindMenuProps) => {
+  const [gameOptions, setGameOptions] = createStore<GameOptions>(
+    Object.assign({}, props.gameOptions),
+  );
+
+  const start = () => {
+    props.start(gameOptions, customRef.ref ? customRef.ref.value : "");
   };
 
-  const setRabbit = (content?: string) => {
-    if (props.gameOptions.wordsCategory === WordsCategory.custom) {
-      props.setContent(content || "");
-    }
-    props.setGameMode(GameMode.rabbit);
-  };
   css`
     .main-view {
       position: relative;
@@ -137,7 +136,12 @@ const GameModeMenu = (props: GameModeMenuProps) => {
     .description {
       max-width: 80%;
     }
+
+    button {
+      margin-top: 64px;
+    }
   `;
+
   return (
     <div class="menu">
       <div class="main-view">
@@ -152,12 +156,9 @@ const GameModeMenu = (props: GameModeMenuProps) => {
           <div class="selection">
             <GameModeSelection
               t={props.t}
-              modes={{
-                rabbit: props.t("gameMode.rabbit"),
-                monkey: props.t("gameMode.monkey"),
-              }}
-              selected={props.gameOptions.lastGameMode}
-              setSelected={(mode) => props.setGameOptions("lastGameMode", mode)}
+              modes={props.t("gameMode")}
+              selected={gameOptions.mode}
+              setSelected={(mode: GameModeKind) => setGameOptions("mode", mode)}
             />
           </div>
         </div>
@@ -165,77 +166,68 @@ const GameModeMenu = (props: GameModeMenuProps) => {
           <div class="illustration">
             <div class="illustration-container">
               <Switch>
-                <Match
-                  when={props.gameOptions.lastGameMode === GameMode.monkey}
-                >
+                <Match when={gameOptions.mode === GameModeKind.monkey}>
                   <Bunny />
                 </Match>
-                <Match
-                  when={props.gameOptions.lastGameMode === GameMode.rabbit}
-                >
+                <Match when={gameOptions.mode === GameModeKind.rabbit}>
                   <Bunny />
                 </Match>
               </Switch>
             </div>
           </div>
-          <Switch>
-            <Match when={props.gameOptions.lastGameMode === GameMode.monkey}>
-              <div class="option">
-                <div class="text">
-                  <h2>{props.t("gameMode.monkey.title")}</h2>
-                  <h3>{props.t("gameMode.monkey.subtitle")}</h3>
-                  <p class="description">
-                    {props.t("gameMode.monkey.hugeDescription")}
-                  </p>
+          <div class="game-optons">
+            <Switch>
+              <Match when={gameOptions.mode === GameModeKind.monkey}>
+                <div class="option">
+                  <div class="text">
+                    <h2>{props.t("gameMode.monkey.title")}</h2>
+                    <h3>{props.t("gameMode.monkey.subtitle")}</h3>
+                    <p class="description">
+                      {props.t("gameMode.monkey.hugeDescription")}
+                    </p>
+                  </div>
+                  <GameRandomParams
+                    t={props.t}
+                    gameOptions={gameOptions}
+                    setGameOptions={setGameOptions}
+                  >
+                    <CustomInput
+                      value={customRef.ref ? customRef?.ref.value : ""}
+                      customInput={customRef}
+                    />
+                  </GameRandomParams>
                 </div>
-                <GameRandomParams
-                  start={setMonkey}
-                  words={props.gameOptions.wordNumber}
-                  language={props.gameOptions.language}
-                  wordsCategory={props.gameOptions.wordsCategory}
-                  setWords={(words) =>
-                    props.setGameOptions("wordNumber", words)
-                  }
-                  setLanguage={(language) =>
-                    props.setGameOptions("language", language)
-                  }
-                  setWordsCategory={(wordsCategory) =>
-                    props.setGameOptions("wordsCategory", wordsCategory)
-                  }
-                  t={props.t}
-                />
-              </div>
-            </Match>
-            <Match when={props.gameOptions.lastGameMode === GameMode.rabbit}>
-              <div class="option">
-                <div class="text">
-                  <h2>{props.t("gameMode.rabbit.title")}</h2>
-                  <h3>{props.t("gameMode.rabbit.subtitle")}</h3>
-                  <p class="description">
-                    {props.t("gameMode.rabbit.hugeDescription")}
-                  </p>
+              </Match>
+              <Match when={gameOptions.mode === GameModeKind.rabbit}>
+                <div class="option">
+                  <div class="text">
+                    <h2>{props.t("gameMode.rabbit.title")}</h2>
+                    <h3>{props.t("gameMode.rabbit.subtitle")}</h3>
+                    <p class="description">
+                      {props.t("gameMode.rabbit.hugeDescription")}
+                    </p>
+                  </div>
+                  <GameTimerParams
+                    t={props.t}
+                    gameOptions={gameOptions}
+                    setGameOptions={setGameOptions}
+                  >
+                    <CustomInput
+                      value={customRef.ref ? customRef?.ref.value : ""}
+                      customInput={customRef}
+                    />
+                  </GameTimerParams>
                 </div>
-                <GameTimerParams
-                  start={setRabbit}
-                  time={props.gameOptions.time}
-                  language={props.gameOptions.language}
-                  wordsCategory={props.gameOptions.wordsCategory}
-                  setTime={(time) => props.setGameOptions("time", time)}
-                  setLanguage={(language) =>
-                    props.setGameOptions("language", language)
-                  }
-                  setWordsCategory={(wordsCategory) =>
-                    props.setGameOptions("wordsCategory", wordsCategory)
-                  }
-                  t={props.t}
-                />
-              </div>
-            </Match>
-          </Switch>
+              </Match>
+            </Switch>
+            <button class="primary" onClick={start}>
+              {props.t("letsGo")}
+            </button>
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default GameModeMenu;
+export default GameModeKindMenu;

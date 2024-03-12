@@ -1,11 +1,11 @@
 import { For, onCleanup, type JSXElement, createSignal, Show } from "solid-js";
 import { css } from "solid-styled";
-import type { GameMode, Translator } from "./App";
+import type { GameMode, GameModeKind, Translator } from "./App";
 import ChooseClip from "./ui/choose-clip";
 import Bunny from "./ui/bunny";
 import { Transition, TransitionGroup } from "solid-transition-group";
 
-type GameModePicto = Record<GameMode, JSXElement>;
+type GameModePicto = Record<GameModeKind, JSXElement>;
 
 const pictos: GameModePicto = {
   monkey: <Bunny />,
@@ -20,9 +20,9 @@ type GameModePreview = {
 
 type GameModeSelectionProps = {
   t: Translator;
-  modes: Record<GameMode, GameModePreview>;
-  selected: GameMode;
-  setSelected: (mode: GameMode) => void;
+  modes: Record<GameModeKind, GameModePreview>;
+  selected: GameModeKind;
+  setSelected: (mode: GameModeKind) => void;
 };
 
 const GameModeSelection = (props: GameModeSelectionProps) => {
@@ -113,7 +113,7 @@ const GameModeSelection = (props: GameModeSelectionProps) => {
   );
 
   let labelRef: Array<HTMLLabelElement> = [];
-  const [labelHovered, setLabelHovered] = createSignal<GameMode | null>(null);
+  const [labelHovered, setLabelHovered] = createSignal<GameModeKind | null>(null);
 
   return (
     <div class="mode-selection">
@@ -133,9 +133,9 @@ const GameModeSelection = (props: GameModeSelectionProps) => {
           }}
         >
           <Show when={labelHovered() !== null}>
-            <p class="title">{props.modes[labelHovered() as GameMode].title}</p>
+            <p class="title">{props.modes[labelHovered() as GameModeKind].title}</p>
             <p class="description">
-              {props.modes[labelHovered() as GameMode].subtitle}
+              {props.modes[labelHovered() as GameModeKind].subtitle}
             </p>
           </Show>
         </TransitionGroup>
@@ -150,13 +150,13 @@ const GameModeSelection = (props: GameModeSelectionProps) => {
                 class="select"
                 id={modeKey}
                 checked={props.selected === modeKey}
-                onChange={() => props.setSelected(modeKey as GameMode)}
+                onChange={() => props.setSelected(modeKey as GameModeKind)}
               />
               <label
                 ref={(el) => {
                   labelRef.push(el);
                   el.addEventListener("mouseenter", () => {
-                    setLabelHovered(modeKey as GameMode);
+                    setLabelHovered(modeKey as GameModeKind);
                   });
                   el.addEventListener("mouseleave", () => {
                     if (labelHovered() === modeKey) setLabelHovered(null);
@@ -164,7 +164,7 @@ const GameModeSelection = (props: GameModeSelectionProps) => {
                 }}
                 for={modeKey}
               >
-                <div class="icon"> {pictos[modeKey as GameMode]}</div>
+                <div class="icon"> {pictos[modeKey as GameModeKind]}</div>
               </label>
             </div>
           )}

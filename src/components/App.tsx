@@ -25,9 +25,9 @@ import { createStore } from "solid-js/store";
 import { makePersisted } from "@solid-primitives/storage";
 import HeaderAction from "./HeaderAction";
 import { fetchWords } from "./fetchContent";
-import { randomWords, randomQuote } from "./randomContent";
-import Content, { type ContentData } from "./Content";
+import { type ContentData } from "./Content";
 import { Transition } from "solid-transition-group";
+import { makeGetContent } from "./TypingGameSource";
 
 const dictionaries = {
   en: en_dict,
@@ -65,6 +65,27 @@ const configLists: ConfigLists = {
   kb: ["qwerty", "azerty"],
 };
 
+export type Languages = "en" | "fr";
+
+export enum WordsGenerationCategory {
+  words1k = "words1k",
+  quotes = "quotes",
+}
+
+export type ContentGeneration = {
+  category: WordsGenerationCategory;
+  language: Languages;
+};
+
+export enum ContentTypeKind {
+  generation,
+  custom,
+}
+
+export type ContentType =
+  | { kind: ContentTypeKind.custom }
+  | { kind: ContentTypeKind.generation; category: WordsGenerationCategory };
+
 export enum NumberSelectionType {
   selected,
   custom,
@@ -74,29 +95,73 @@ export type NumberSelection =
   | { type: NumberSelectionType.selected; value: number }
   | { type: NumberSelectionType.custom; value: number };
 
-export enum WordsCategory {
-  words1k = "words1k",
-  quotes = "quotes",
-  custom = "custom",
+export enum GameStatusKind {
+  menu,
+  pending,
+  resume,
 }
 
-export type Languages = "en" | "fr";
+export type GameStatus =
+  | { kind: GameStatusKind.menu }
+  | { kind: GameStatusKind.pending; content: GameModeContent }
+  | { kind: GameStatusKind.resume };
 
-export enum GameMode {
+export enum GameModeKind {
   monkey = "monkey",
   rabbit = "rabbit",
 }
 
-export type GameModePending = GameMode | "none";
+export enum WordsCategoryKind {
+  words1k = "words1k",
+  quotes = "quotes",
+  custom = "custom",
+}
+/* *** */
+// NOTE: Do we need this ?
+//
+export type WordsCategory =
+  | {
+      kind: WordsCategoryKind.words1k;
+      data: string[];
+    }
+  | { kind: WordsCategoryKind.quotes; data: string[] }
+  | { kind: WordsCategoryKind.custom; data: string };
+
+export type GameMode =
+  | {
+      kind: GameModeKind.monkey;
+      number: NumberSelection;
+      category: WordsCategory;
+    }
+  | {
+      kind: GameModeKind.rabbit;
+      time: NumberSelection;
+      category: WordsCategory;
+    };
+/* __ */
+
+export type GameModeContent =
+  | {
+      kind: GameModeKind.monkey;
+      getContent: () => ContentData;
+    }
+  | {
+      kind: GameModeKind.rabbit;
+      getContent: () => ContentData;
+      time: number;
+    };
+
 export type GameOptions = {
-  lastGameMode: GameMode;
-  wordNumber: NumberSelection;
-  wordsCategory: WordsCategory;
-  time: NumberSelection;
-  language: Languages;
+  mode: GameModeKind;
+  contentType: ContentType;
+  generation: ContentGeneration;
+  custom: string;
+  random: NumberSelection;
+  timer: NumberSelection;
 };
 
 const App = () => {
+
   const [config, setConfig] = makePersisted(
     createStore<Config>({
       dark: window.matchMedia("(prefers-color-scheme: dark)").matches,
@@ -106,56 +171,73 @@ const App = () => {
     { name: "config" },
   );
 
-  const [gameOptions, setGameOptions] = makePersisted(
-    createStore<GameOptions>(
-      {
-        lastGameMode: GameMode.monkey,
-        wordNumber: { type: NumberSelectionType.selected, value: 10 },
-        time: { type: NumberSelectionType.selected, value: 10 },
-        wordsCategory: WordsCategory.words1k,
-        language: "en",
-      },
-      { name: "gameOptions" },
-    ),
-  );
-
-  const [data] = createResource(
-    () => ({
-      language: gameOptions.language,
-      wordsCategory: gameOptions.wordsCategory,
-    }),
-    fetchWords,
-  );
   /* i18n */
   const dict = createMemo(() => i18n.flatten(dictionaries[config.locale]));
   const t = i18n.translator(dict);
   const i18nContext: I18nContext = { t };
   /* *** */
 
-  const [gameMode, setGameMode] = createSignal<GameModePending>("none");
-  const [content, setContent] = createSignal<string>("");
+  const [gameOptions, setGameOptions] = makePersisted(
+    createStore<GameOptions>(
+      {
+        mode: GameModeKind.monkey,
+        contentType: {
+          kind: ContentTypeKind.generation,
+          category: WordsGenerationCategory.words1k,
+        },
+        generation: {
+          category: WordsGenerationCategory.words1k,
+          language: "en",
+        },
+        custom: "",
+        random: { type: NumberSelectionType.selected, value: 10 },
+        timer: { type: NumberSelectionType.selected, value: 10 },
+      },
+      { name: "gameOptions" },
+    ),
+  );
 
-  const getSource = (wordNumber: number): (() => ContentData) => {
-    switch (gameOptions.wordsCategory) {
-      case WordsCategory.words1k:
-        return () => Content.parseWords(randomWords(data() || [])(wordNumber));
-      case WordsCategory.quotes:
-        return () => Content.parse(randomQuote(data() || []));
-      case WordsCategory.custom:
-        return () => Content.parse(content());
-    }
+  const [contentGeneration, setContentGeneration] =
+    createStore<ContentGeneration>(gameOptions.generation);
+
+  const [randomSource] = createResource(contentGeneration, fetchWords);
+
+  const start = (opts: GameOptions, customSource: string) => {
+    setGameOptions(opts);
+    setGameOptions("custom", customSource);
+    const content = makeGetContent(opts, {
+      random: randomSource() || [],
+      custom: customSource,
+    });
+    setGameStatus({ kind: GameStatusKind.pending, content });
   };
 
-  const getMonkeySource = (): (() => ContentData) =>
-    getSource(gameOptions.wordNumber.value);
+  const [gameStatus, setGameStatus] = createSignal<GameStatus>({
+    kind: GameStatusKind.menu,
+  });
 
-  css``;
+  css`
+    .app {
+      display: grid;
+      margin: 0;
+      min-height: 100%;
+      background-color: var(--color-surface-100);
+    }
+    main {
+      margin-top: 96px;
+      display: grid;
+      grid-template-columns:
+        1fr
+        min(1400px, 100%)
+        1fr;
+      grid-template-rows: 1f;
+    }
+  `;
   return (
     <div class="app" classList={{ dark: config.dark }}>
       <Header
         i18n={i18nContext}
-        toHome={() => setGameMode("none")}
-        gameMode={gameMode()}
+        toHome={() => setGameStatus({ kind: GameStatusKind.menu })}
       >
         <HeaderAction
           config={config}
@@ -179,34 +261,23 @@ const App = () => {
           }}
         >
           <Switch>
-            <Match when={gameMode() === "none"}>
+            <Match when={gameStatus().kind === GameStatusKind.menu}>
               <GameModeMenu
                 t={t}
-                setGameMode={setGameMode}
-                setContent={setContent}
-                setGameOptions={setGameOptions}
                 gameOptions={gameOptions}
+                setContentGeneration={setContentGeneration}
+                start={start}
               />
             </Match>
-            <Match when={gameMode() === GameMode.monkey}>
+            <Match when={gameStatus().kind === GameStatusKind.pending}>
               <Suspense>
-                <Show when={data()}>
+                <Show when={randomSource()}>
                   <TypingGame
-                    i18n={i18nContext}
+                    t={t}
+                    contentMode={(gameStatus() as any).content}
+                    currentGameOptions={Object.assign({}, gameOptions)}
+                    setGameOptions={setGameOptions}
                     kb={config.kb}
-                    getContent={getMonkeySource()}
-                  />
-                </Show>
-              </Suspense>
-            </Match>
-            <Match when={gameMode() === GameMode.rabbit}>
-              <Suspense>
-                <Show when={data()}>
-                  <TypingGame
-                    i18n={i18nContext}
-                    kb={config.kb}
-                    timer={gameOptions.time.value * 1000}
-                    getContent={getSource(gameOptions.time.value * 4)}
                   />
                 </Show>
               </Suspense>

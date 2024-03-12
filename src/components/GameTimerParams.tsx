@@ -2,31 +2,30 @@ import { css } from "solid-styled";
 import Lang from "./ui/lang";
 import {
   NumberSelectionType,
-  type Languages,
-  type NumberSelection,
   type Translator,
-  WordsCategory,
+  type GameOptions,
+  ContentTypeKind,
+  WordsGenerationCategory,
+  type ContentType,
+  type Languages,
 } from "./App";
 import RadioGroup from "./RadioGroup";
-import { Match, Show, Switch } from "solid-js";
+import { Match, Show, Switch, type JSXElement } from "solid-js";
 
 import Quote from "./ui/quote";
 import Text from "./ui/text";
 import Customizer from "./ui/customizer";
 import Stopwatch from "./ui/stopwatch";
+import type { SetStoreFunction } from "solid-js/store";
 
 type GameRandomParamsProps = {
-  start: (content?: string) => void;
   t: Translator;
-  time: NumberSelection;
-  setTime: (time: NumberSelection) => void;
-  language: Languages;
-  setLanguage: (language: Languages) => void;
-  wordsCategory: WordsCategory;
-  setWordsCategory: (wordsCategory: WordsCategory) => void;
+  gameOptions: GameOptions;
+  setGameOptions: SetStoreFunction<GameOptions>;
+  children: JSXElement;
 };
 
-const GameRandomParams = (props: GameRandomParamsProps) => {
+const GameTimerParams = (props: GameRandomParamsProps) => {
   css`
     .time-params {
       display: flex;
@@ -34,19 +33,8 @@ const GameRandomParams = (props: GameRandomParamsProps) => {
       gap: 1rem;
       align-items: flex-start;
     }
-
-    button {
-      margin-top: 64px;
-    }
   `;
 
-  const OnClick = () => {
-    if (props.wordsCategory === WordsCategory.custom) {
-      return props.start(inputRef.value);
-    }
-    props.start();
-  };
-  let inputRef: HTMLTextAreaElement;
   return (
     <div class="time-params">
       <RadioGroup
@@ -57,9 +45,12 @@ const GameRandomParams = (props: GameRandomParamsProps) => {
           { label: "1m", value: 60 },
           { label: "2m", value: 120 },
         ]}
-        checked={props.time.value}
+        compare={(v) => v === props.gameOptions.timer.value}
         setChecked={(time) =>
-          props.setTime({ type: NumberSelectionType.selected, value: time })
+          props.setGameOptions("timer", {
+            type: NumberSelectionType.selected,
+            value: time,
+          })
         }
       >
         <Stopwatch />
@@ -69,44 +60,63 @@ const GameRandomParams = (props: GameRandomParamsProps) => {
         values={[
           {
             label: props.t("words"),
-            value: WordsCategory.words1k,
+            value: {
+              kind: ContentTypeKind.generation,
+              category: WordsGenerationCategory.words1k,
+            } as ContentType,
             icon: <Text />,
           },
           {
             label: props.t("quotes"),
-            value: WordsCategory.quotes,
+            value: {
+              kind: ContentTypeKind.generation,
+              category: WordsGenerationCategory.quotes,
+            } as ContentType,
             icon: <Quote />,
           },
           {
             label: props.t("custom"),
-            value: WordsCategory.custom,
+            value: { kind: ContentTypeKind.custom } as ContentType,
             icon: <Customizer />,
           },
         ]}
-        checked={props.wordsCategory}
-        setChecked={props.setWordsCategory}
+        compare={(v) => {
+          switch (props.gameOptions.contentType.kind) {
+            case ContentTypeKind.custom:
+              return v.kind === ContentTypeKind.custom;
+            case ContentTypeKind.generation:
+              return (
+                v.kind === ContentTypeKind.generation &&
+                v.category === props.gameOptions.contentType.category
+              );
+          }
+        }}
+        setChecked={(value) => props.setGameOptions("contentType", value)}
       />
-      <Show when={props.wordsCategory !== WordsCategory.custom}>
+      <Show
+        when={props.gameOptions.contentType.kind !== ContentTypeKind.custom}
+      >
         <RadioGroup
           name="languages-timer"
           values={[
-            { label: props.t("english"), value: "en" },
-            { label: props.t("french"), value: "fr" },
+            { label: props.t("english"), value: "en" as Languages },
+            { label: props.t("french"), value: "fr" as Languages },
           ]}
-          checked={props.language}
-          setChecked={props.setLanguage}
+          compare={(v) => v === props.gameOptions.generation.language}
+          setChecked={(l) => props.setGameOptions("generation", "language", l)}
         >
           <Lang />
         </RadioGroup>
       </Show>
       <Switch>
-        <Match when={props.wordsCategory === WordsCategory.custom}>
-          <textarea ref={inputRef!}></textarea>
+        <Match
+          when={props.gameOptions.contentType.kind === ContentTypeKind.custom}
+        >
+          {props.children}
         </Match>
       </Switch>
-      <button onClick={OnClick}>{props.t("letsGo")}</button>
     </div>
   );
 };
 
-export default GameRandomParams;
+export default GameTimerParams;
