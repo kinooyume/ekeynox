@@ -1,5 +1,5 @@
 import { css } from "solid-styled";
-import { Match, Switch } from "solid-js";
+import { Match, Switch, createEffect } from "solid-js";
 import { createStore, type SetStoreFunction } from "solid-js/store";
 
 import GameRandomParams from "./GameRandomParams";
@@ -48,6 +48,13 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
   const [gameOptions, setGameOptions] = createStore<GameOptions>(
     Object.assign({}, props.gameOptions),
   );
+
+  createEffect(() => {
+    props.setContentGeneration({
+      language: gameOptions.generation.language,
+      category: gameOptions.generation.category,
+    });
+  });
 
   const start = () => {
     props.start(gameOptions, customRef.ref ? customRef.ref.value : "");
