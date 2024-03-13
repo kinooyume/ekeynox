@@ -1,11 +1,10 @@
 import { type Config, type ConfigLists, type Locale } from "./App.tsx";
-import DarkModeToggle from "./DarkModeToggle.tsx";
-import KeyboardIcon from "./ui/keyboard.tsx";
-import GlobeIcon from "./ui/globe.tsx";
-import TinySelect from "./TinySelect.tsx";
+import DarkModeToggle from "./ui/DarkModeToggle.tsx";
+import KeyboardIcon from "./svgs/keyboard.tsx";
+import GlobeIcon from "./svgs/globe.tsx";
+import TinySelect from "./ui/TinySelect.tsx";
 import type { SetStoreFunction } from "solid-js/store";
 import { css } from "solid-styled";
-import ToggleDarkMode from "./ToggleDarkMode.tsx";
 
 type HeaderActionProps = {
   config: Config;

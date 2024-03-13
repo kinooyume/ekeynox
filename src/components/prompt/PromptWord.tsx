@@ -2,11 +2,11 @@ import { css } from "solid-styled";
 import { For, Show, createEffect, createSignal } from "solid-js";
 
 import Key from "./PromptKey.tsx";
-import type { MetaWord } from "./Content.ts";
+import type { MetaWord } from "../content/Content.ts";
 import {
   createWordMetricsState,
   type WordMetrics,
-} from "./PromptWordMetrics.ts";
+} from "../metrics/PromptWordMetrics.ts";
 
 export enum WordStatus {
   unstart = "unstart",

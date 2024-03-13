@@ -1,6 +1,6 @@
-import type { LinkedList } from "./List";
-import List from "./List";
-import { TypingWordKind, type TypingWord } from "./TypingEngine";
+import type { LinkedList } from "../List";
+import List from "../List";
+import { TypingWordKind, type TypingWord } from "../typing/TypingEngine";
 import { createTypingProjection } from "./TypingProjection";
 
 export type WordProjection = {
