@@ -140,20 +140,6 @@ body {
   margin: 0;
   height: 100%;
 }
-.app {
-  display: grid;
-  margin: 0;
-  min-height: 100%;
-  background-color: var(--color-surface-100);
-}
-main {
-  margin-top: 96px;
-  display: grid;
-  grid-template-columns:
-    1fr
-    min(1400px, 100%)
-    1fr;
-}
 
 main > * {
   grid-column: 2;
@@ -172,12 +158,16 @@ a {
 }
 
 button {
-  padding: 12px 30px;
-  border-radius: 10px;
   border: 0;
-  background-color: var(--color-primary-200);
+  background: none;
   font-size: 14px;
   text-transform: capitalize;
+}
+
+button.primary {
+  padding: 12px 30px;
+  border-radius: 10px;
+  background-color: var(--color-primary-200);
   transition: all 0.3s ease;
   box-shadow: var(--shadow-color) 0px 6px 0px 0px;
   color: var(--button-text-color);
@@ -186,14 +176,23 @@ button {
 /* https://uiverse.io/cssbuttons-io/friendly-dragon-76 */
 /* https://uiverse.io/cssbuttons-io/evil-monkey-41 */
 /* https://codepen.io/havardob/pen/qBvYdXL */
-button:hover {
+button.primary:hover {
   box-shadow: var(--shadow-color) 0px 4px 0px 0px;
 }
 
-button:active {
+button.primary:active {
   box-shadow: var(--shadow-color) 0px 0px 0px 0px;
   transform: translateY(5px);
   transition: 200ms;
+}
+
+button.secondary {
+  color: var(--color-primary-200);
+}
+
+button.secondary:hover {
+  text-decoration: underline;
+  background-color: transparent;
 }
 
 textarea {

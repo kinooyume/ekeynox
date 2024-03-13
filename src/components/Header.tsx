@@ -1,13 +1,12 @@
 import { css } from "solid-styled";
 
-import { type GameModePending, type I18nContext } from "./App.tsx";
+import {  type I18nContext } from "./App.tsx";
 import HeaderNav from "./HeaderNav.tsx";
 import { Show, type JSXElement } from "solid-js";
 
 type HeaderProps = {
   i18n: I18nContext;
   toHome: () => void;
-  gameMode: GameModePending;
   children: JSXElement;
 };
 
@@ -40,9 +39,9 @@ const Header = (props: HeaderProps) => {
           <div class="home" onClick={props.toHome}>
             <p>eKeyNox</p>
           </div>
-          <Show when={props.gameMode !== "none"}>
-            <HeaderNav i18n={props.i18n} mode={props.gameMode} />
-          </Show>
+          {/* <Show when={props.gameMode !== "none"}> */}
+          {/*   <HeaderNav i18n={props.i18n} mode={props.gameMode} /> */}
+          {/* </Show> */}
         </div>
         {props.children}
       </div>

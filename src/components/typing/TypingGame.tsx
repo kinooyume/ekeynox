@@ -8,32 +8,37 @@ import {
 } from "solid-js";
 import { createStore } from "solid-js/store";
 
-import Content, { type ContentData } from "./Content.ts";
-import KeyboardLayout from "./KeyboardLayout.ts";
+import Content from "../content/Content.ts";
+import KeyboardLayout from "../keyboard/KeyboardLayout.ts";
 
 import TypingEngine, {
   type TypingStatus,
   TypingStatusKind,
 } from "./TypingEngine";
-import Prompt from "./Prompt.tsx";
+import Prompt from "../prompt/Prompt.tsx";
 import TypingNav from "./TypingNav.tsx";
-import Keyboard, { type TypingKeyboardRef } from "./TypingKeyboard.tsx";
+import Keyboard, {
+  type TypingKeyboardRef,
+} from "../keyboard/TypingKeyboard.tsx";
 import {
   createTypingMetrics,
   createTypingMetricsState,
   type TypingMetricsState,
-} from "./TypingMetrics.ts";
-import TypingMetricsResume from "./TypingMetricsResume";
+} from "../metrics/TypingMetrics.ts";
+import TypingMetricsResume from "../resume/TypingMetricsResume";
 
-import { updateKeyProjection, type KeysProjection } from "./KeysProjection.ts";
-import KeypressMetrics from "./KeypressMetrics.ts";
+import {
+  updateKeyProjection,
+  type KeysProjection,
+} from "../metrics/KeysProjection.ts";
+import KeypressMetrics from "../metrics/KeypressMetrics.ts";
 import {
   GameModeKind,
   type GameModeContent,
   type GameOptions,
   type Translator,
-} from "./App.tsx";
-import { createTimerEffect, type TimerEffect } from "./Timer.ts";
+} from "../App.tsx";
+import { createTimerEffect, type TimerEffect } from "../metrics/Timer.ts";
 
 type TypingGameProps = {
   t: Translator;
@@ -134,13 +139,13 @@ const TypingGame = (props: TypingGameProps) => {
       fallback={
         <TypingMetricsResume
           t={props.t}
-          keyMetrics={keyMetrics()}
           paragraphs={paraStore}
-          setParagraphs={setParaStore}
           currentGameOptions={props.currentGameOptions}
           setGameOptions={props.setGameOptions}
           layout={kbLayout()}
           metrics={typingMetrics()}
+          keyMetrics={keyMetrics()}
+          setParagraphs={setParaStore}
           onReset={reset}
           setContent={setContent}
         />

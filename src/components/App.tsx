@@ -8,6 +8,9 @@ import {
   createResource,
   createSignal,
 } from "solid-js";
+import { createStore } from "solid-js/store";
+import { makePersisted } from "@solid-primitives/storage";
+import { Transition } from "solid-transition-group";
 
 /* i18n */
 import * as i18n from "@solid-primitives/i18n";
@@ -19,15 +22,12 @@ import fr_dict from "../i18n/fr.json";
 /* *** */
 
 import Header from "./Header";
-import GameModeMenu from "./GameModeMenu";
-import TypingGame from "./TypingGame";
-import { createStore } from "solid-js/store";
-import { makePersisted } from "@solid-primitives/storage";
 import HeaderAction from "./HeaderAction";
-import { fetchWords } from "./fetchContent";
-import { type ContentData } from "./Content";
-import { Transition } from "solid-transition-group";
-import { makeGetContent } from "./TypingGameSource";
+import { fetchWords } from "./content/fetchContent";
+import { type ContentData } from "./content/Content";
+import { makeGetContent } from "./content/TypingGameSource";
+import GameModeMenu from "./gameSelection/GameModeMenu";
+import TypingGame from "./typing/TypingGame";
 
 const dictionaries = {
   en: en_dict,

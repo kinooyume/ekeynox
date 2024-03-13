@@ -1,11 +1,11 @@
 import type { Setter } from "solid-js";
-import { TypingStatusKind, type TypingStatus } from "./TypingEngine";
+import { TypingStatusKind, type TypingStatus } from "../typing/TypingEngine";
 import KeypressMetrics, {
   type KeypressMetricsProjection,
   type StatProjection,
 } from "./KeypressMetrics";
-import type { LinkedList } from "./List";
-import List from "./List";
+import type { LinkedList } from "../List";
+import List from "../List";
 import type {
   PausedKeypressMetrics,
   PendingKeypressMetrics,

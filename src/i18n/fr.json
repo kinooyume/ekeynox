@@ -6,8 +6,10 @@
   "consistency": "consistence",
   "playAgain": "rejouer",
   "letsGo": "C'est parti !",
+  "next": "suivant",
   "french": "français",
   "english": "anglais",
+  "keyboardLayout": "disposition du clavier",
   "words": "mots",
   "quotes": "citations",
   "custom": "personnalisé",
@@ -17,8 +19,8 @@
   "gameMode": {
     "monkey": {
       "title": "monkey",
-      "subtitle": "taper les mots le plus rapidement possible",
-      "description": "Tapez des mots au hasard aussi vite que possible, essayez de ne pas faire d'erreur !",
+      "subtitle": "Ecrivez les mots le plus rapidement possible",
+      "description": "Ecrivez des mots au hasard aussi vite que possible, essayez de ne pas faire d'erreur !",
       "hugeDescription": " Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ut erat sed nulla ornare accumsan a quis diam. Nullam ut pharetra dui."
     },
     "rabbit": {
@@ -26,10 +28,6 @@
       "subtitle": "Contre la montre !",
       "description": "Le temps est compté ! Combien de mots pouvez-vous écrire dans le temps imparti ?",
       "hugeDescription": " Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ut erat sed nulla ornare accumsan a quis diam. Nullam ut pharetra dui."
-    },
-    "chameleon": {
-      "title": "chameleon",
-      "description": "Donnez un texte à taper et testez-le. La limite est votre imagination"
     }
   }
 }

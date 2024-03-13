@@ -1,6 +1,6 @@
 import { createSignal, onCleanup, onMount, type Setter } from "solid-js";
-import { WordStatus } from "./PromptWord.tsx";
-import { type Paragraphs } from "./Content.ts";
+import { WordStatus } from "../prompt/PromptWord.tsx";
+import { type Paragraphs } from "../content/Content.ts";
 import type { SetStoreFunction } from "solid-js/store";
 import {
   KeyStatus,
@@ -9,7 +9,7 @@ import {
   getKeyMetrics,
   makeDeletedKeyMetrics,
   PromptKeyFocus,
-} from "./KeyMetrics.ts";
+} from "../metrics/KeyMetrics.ts";
 
 export enum TypingWordKind {
   ignore,

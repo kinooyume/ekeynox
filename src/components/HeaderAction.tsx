@@ -5,6 +5,7 @@ import GlobeIcon from "./ui/globe.tsx";
 import TinySelect from "./TinySelect.tsx";
 import type { SetStoreFunction } from "solid-js/store";
 import { css } from "solid-styled";
+import ToggleDarkMode from "./ToggleDarkMode.tsx";
 
 type HeaderActionProps = {
   config: Config;
@@ -61,6 +62,12 @@ const HeaderAction = (props: HeaderActionProps) => {
       >
         <GlobeIcon />
       </TinySelect>
+      {/* <div class="toggle"> */}
+      {/*   <ToggleDarkMode */}
+      {/*     dark={props.config.dark} */}
+      {/*     setDark={(dark) => props.setConfig("dark", dark)} */}
+      {/*   /> */}
+      {/* </div> */}
       <div class="toggle">
         <DarkModeToggle
           dark={props.config.dark}
