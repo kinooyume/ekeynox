@@ -3,13 +3,12 @@ import type { SetStoreFunction } from "solid-js/store";
 import { css } from "solid-styled";
 import {
   NumberSelectionType,
-  type Translator,
   type GameOptions,
   ContentTypeKind,
   WordsGenerationCategory,
   type ContentType,
   type Languages,
-} from "../App";
+} from "./GameOptions";
 import RadioGroup from "../ui/RadioGroup";
 
 import Lang from "../svgs/lang";
@@ -17,6 +16,7 @@ import Quote from "../svgs/quote";
 import Text from "../svgs/text";
 import Customizer from "../svgs/customizer";
 import Stopwatch from "../svgs/stopwatch";
+import type { Translator } from "../App";
 
 type GameRandomParamsProps = {
   t: Translator;

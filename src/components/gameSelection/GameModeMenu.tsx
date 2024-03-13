@@ -5,15 +5,15 @@ import { createStore, type SetStoreFunction } from "solid-js/store";
 import GameRandomParams from "./GameRandomParams";
 import {
   type GameOptions,
-  type Translator,
   type ContentGeneration,
   GameModeKind,
-} from "../App";
+} from "./GameOptions";
 import GameTimerParams from "./GameTimerParams";
 import Bunny from "../svgs/bunny";
 import { Transition } from "solid-transition-group";
 import CustomInput, { type CustomInputRef } from "../ui/CustomInput";
 import GameModeSelection from "./GameModeSelection";
+import type { Translator } from "../App";
 // Gsap animation
 // https://codepen.io/dev_loop/pen/MWKbJmO
 // Store like this

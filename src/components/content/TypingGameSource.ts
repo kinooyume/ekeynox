@@ -4,7 +4,7 @@ import {
   WordsGenerationCategory,
   type GameModeContent,
   ContentTypeKind,
-} from "../App";
+} from "../gameSelection/GameOptions";
 import type { ContentData } from "./Content";
 import Content from "./Content";
 import { randomQuote, randomWords } from "./randomContent";

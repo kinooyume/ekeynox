@@ -1,5 +1,6 @@
 import { Match, Switch } from "solid-js";
-import { GameModeKind, type I18nContext } from "./App";
+import { type I18nContext } from "./App";
+import type { GameModeKind } from "./gameSelection/GameOptions";
 
 type HeaderNavProps = {
   mode: GameModeKind;
