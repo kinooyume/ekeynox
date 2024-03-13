@@ -3,7 +3,7 @@ import Word from "./PromptWord.tsx";
 import { css } from "solid-styled";
 import anime from "animejs/lib/anime.es.js";
 
-import { type Paragraphs } from "./Content.ts";
+import { type Paragraphs } from "../content/Content.ts";
 import type { SetStoreFunction } from "solid-js/store";
 
 export type PromptProps = {

@@ -1,7 +1,7 @@
 import {
   type ContentGeneration,
   WordsGenerationCategory,
-} from "./App";
+} from "../App";
 
 const fetchWords = async ({
   language,

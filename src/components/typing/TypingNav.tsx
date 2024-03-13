@@ -1,10 +1,10 @@
 import { css } from "solid-styled";
-import Play from "./svgs/play.tsx";
-import Reset from "./svgs/reset.tsx";
-import type { StatProjection } from "./KeypressMetrics.ts";
+import Play from "../svgs/play.tsx";
+import Reset from "../svgs/reset.tsx";
+import type { StatProjection } from "../metrics/KeypressMetrics.ts";
 import { Show, type JSXElement } from "solid-js";
-import NavLeft from "./svgs/navLeft.tsx";
-import NavRight from "./svgs/navRight.tsx";
+import NavLeft from "../svgs/navLeft.tsx";
+import NavRight from "../svgs/navRight.tsx";
 
 type TypingNavProps = {
   isPaused: boolean;

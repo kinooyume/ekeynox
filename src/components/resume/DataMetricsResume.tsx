@@ -1,8 +1,7 @@
 import { css } from "solid-styled";
-import type { KeypressMetricsProjection } from "./KeypressMetrics";
-import type { GameOptions, I18nContext, Translator } from "./App";
-import GameModeSelectionTiny from "./GameModeSelectionTiny";
-import type { ContentData } from "./Content";
+import type { KeypressMetricsProjection } from "../metrics/KeypressMetrics";
+import type { GameOptions, Translator } from "../App";
+import type { ContentData } from "../content/Content";
 
 type DataMetricsResumeProps = {
   projection: KeypressMetricsProjection;

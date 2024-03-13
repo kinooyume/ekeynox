@@ -1,5 +1,5 @@
-import { WordStatus } from "./PromptWord.tsx";
-import { PromptKeyFocus, PromptKeyStatus } from "./KeyMetrics.ts";
+import { WordStatus } from "../prompt/PromptWord.tsx";
+import { PromptKeyFocus, PromptKeyStatus } from "../metrics/KeyMetrics.ts";
 
 export type Metakey = {
   status: PromptKeyStatus;

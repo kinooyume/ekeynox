@@ -1,4 +1,3 @@
-import type * as layout from "./layout/qwerty.json";
 import qwerty from "./layout/qwerty.json";
 import azerty from "./layout/azerty.json";
 

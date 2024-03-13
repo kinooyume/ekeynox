@@ -1,7 +1,6 @@
 import { KeyStatus, type KeyMetrics, PromptKeyStatus } from "./KeyMetrics";
-import type { LinkedList } from "./List";
-import List from "./List";
-import type { TypingKey } from "./TypingEngine";
+import List, { type LinkedList} from "../List";
+import type { TypingKey } from "../typing/TypingEngine";
 
 export type TypingProjection = {
   correct: number;

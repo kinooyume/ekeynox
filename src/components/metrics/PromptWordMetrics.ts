@@ -1,12 +1,11 @@
-import type { PromptKeyStatus } from "./KeyMetrics";
-import { type Metakey } from "./Content.ts";
+import { type Metakey } from "../content/Content.ts";
 import {
   promptKeypressHandler,
   type PendingPromptKeypressMetrics,
   type PausedPromptKeypressMetrics,
   PromptWpmKind,
 } from "./PromptKeypressMetrics.ts";
-import { WordStatus } from "./PromptWord";
+import { WordStatus } from "../prompt/PromptWord";
 
 type createWordMetricsStateProps = {
   setWpm: (wpm: number) => void;

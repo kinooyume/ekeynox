@@ -10,9 +10,9 @@ import {
   mergeWordProjections,
   type WordProjection,
 } from "./KpWordMetrics";
-import type { LinkedList } from "./List";
-import List from "./List";
-import type { TypingEvent, TypingKey, TypingWord } from "./TypingEngine";
+import type { LinkedList } from "../List";
+import List from "../List";
+import type { TypingEvent, TypingKey, TypingWord } from "../typing/TypingEngine";
 
 export type CoreProjection = {
   projection: TypingProjection;
