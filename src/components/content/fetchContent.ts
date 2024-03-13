@@ -1,7 +1,7 @@
 import {
   type ContentGeneration,
   WordsGenerationCategory,
-} from "../App";
+} from  "../gameSelection/GameOptions.ts";
 
 const fetchWords = async ({
   language,

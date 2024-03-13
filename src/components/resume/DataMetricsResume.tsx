@@ -1,6 +1,7 @@
 import { css } from "solid-styled";
 import type { KeypressMetricsProjection } from "../metrics/KeypressMetrics";
-import type { GameOptions, Translator } from "../App";
+import type { GameOptions } from "../gameSelection/GameOptions";
+import type { Translator } from "../App";
 import type { ContentData } from "../content/Content";
 
 type DataMetricsResumeProps = {
@@ -9,7 +10,7 @@ type DataMetricsResumeProps = {
   t: Translator;
   currentGameOptions: GameOptions;
   setGameOptions: (options: GameOptions) => void;
-  setContent: (content: ContentData ) => void;
+  setContent: (content: ContentData) => void;
 };
 
 const DataMetricsResume = (props: DataMetricsResumeProps) => {
@@ -77,11 +78,11 @@ const DataMetricsResume = (props: DataMetricsResumeProps) => {
   };
 
   css`
-.actions {
-  display: flex;
-  gap: 1rem;
-}
-`
+    .actions {
+      display: flex;
+      gap: 1rem;
+    }
+  `;
   return (
     <div class="data">
       <div class="speeds">
@@ -118,8 +119,7 @@ const DataMetricsResume = (props: DataMetricsResumeProps) => {
           </p>
         </div>
       </div>
-      <div class="bottom">
-      </div>
+      <div class="bottom"></div>
     </div>
   );
 };

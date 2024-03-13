@@ -36,9 +36,9 @@ import {
   GameModeKind,
   type GameModeContent,
   type GameOptions,
-  type Translator,
-} from "../App.tsx";
+} from "../gameSelection/GameOptions";
 import { createTimerEffect, type TimerEffect } from "../metrics/Timer.ts";
+import type { Translator } from "../App.tsx";
 
 type TypingGameProps = {
   t: Translator;

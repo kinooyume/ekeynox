@@ -5,17 +5,17 @@ import Lang from "../svgs/lang";
 import Word from "../svgs/word";
 import {
   NumberSelectionType,
-  type Translator,
   type GameOptions,
   ContentTypeKind,
   WordsGenerationCategory,
   type ContentType,
   type Languages,
-} from "../App";
+} from "./GameOptions";
 import RadioGroup from "../ui/RadioGroup";
 import Quote from "../svgs/quote";
 import Text from "../svgs/text";
 import Customizer from "../svgs/customizer";
+import type { Translator } from "../App";
 
 type GameRandomParamsProps = {
   t: Translator;
