@@ -1,6 +1,6 @@
-import type * as layout from "./qwerty-layout.json";
-import qwerty from "./qwerty-layout.json";
-import azerty from "./azerty-layout.json";
+import type * as layout from "./layout/qwerty.json";
+import qwerty from "./layout/qwerty.json";
+import azerty from "./layout/azerty.json";
 
 export type KeyLayout = {
   primary: string;

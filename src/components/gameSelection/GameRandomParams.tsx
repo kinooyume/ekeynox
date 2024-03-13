@@ -1,6 +1,8 @@
+import { Match, Show, Switch, type JSXElement } from "solid-js";
+import type { SetStoreFunction } from "solid-js/store";
 import { css } from "solid-styled";
-import Lang from "./ui/lang";
-import Word from "./ui/word";
+import Lang from "../svgs/lang";
+import Word from "../svgs/word";
 import {
   NumberSelectionType,
   type Translator,
@@ -9,13 +11,11 @@ import {
   WordsGenerationCategory,
   type ContentType,
   type Languages,
-} from "./App";
-import RadioGroup from "./RadioGroup";
-import { Match, Show, Switch, type JSXElement } from "solid-js";
-import Quote from "./ui/quote";
-import Text from "./ui/text";
-import Customizer from "./ui/customizer";
-import type { SetStoreFunction } from "solid-js/store";
+} from "../App";
+import RadioGroup from "../ui/RadioGroup";
+import Quote from "../svgs/quote";
+import Text from "../svgs/text";
+import Customizer from "../svgs/customizer";
 
 type GameRandomParamsProps = {
   t: Translator;
@@ -72,7 +72,12 @@ const GameRandomParams = (props: GameRandomParamsProps) => {
               );
           }
         }}
-        setChecked={(value) => props.setGameOptions("contentType", value)}
+        setChecked={(value) => {
+          if (value.kind === ContentTypeKind.generation) {
+            props.setGameOptions("generation", "category", value.category);
+          }
+          props.setGameOptions("contentType", value);
+        }}
       />
       <Show
         when={props.gameOptions.contentType.kind !== ContentTypeKind.custom}

@@ -1,22 +1,25 @@
 import { css } from "solid-styled";
 import type { KeypressMetricsProjection } from "./KeypressMetrics";
-import type { I18nContext } from "./App";
+import type { GameOptions, I18nContext, Translator } from "./App";
+import GameModeSelectionTiny from "./GameModeSelectionTiny";
+import type { ContentData } from "./Content";
 
 type DataMetricsResumeProps = {
   projection: KeypressMetricsProjection;
   onReset: () => void;
-  i18n: I18nContext;
+  t: Translator;
+  currentGameOptions: GameOptions;
+  setGameOptions: (options: GameOptions) => void;
+  setContent: (content: ContentData ) => void;
 };
 
 const DataMetricsResume = (props: DataMetricsResumeProps) => {
   css`
     .data {
       display: flex;
-      position: fixed;
-      right: 224px;
       flex-direction: column;
       align-items: flex-start;
-      max-width: 400px;
+      justify-content: space-between;
     }
     .speeds {
       display: flex;
@@ -51,7 +54,7 @@ const DataMetricsResume = (props: DataMetricsResumeProps) => {
       align-items: center;
     }
     .accu-data {
-      font-size: 3em;
+      font-size: 2em;
       margin: 0;
     }
     .accu-data span {
@@ -59,7 +62,7 @@ const DataMetricsResume = (props: DataMetricsResumeProps) => {
       opacity: 0.6;
     }
     .accu-real {
-      font-size: 2rem;
+      font-size: 1.8rem;
     }
     .accu-real-data span {
       font-size: 0.9rem;
@@ -74,10 +77,16 @@ const DataMetricsResume = (props: DataMetricsResumeProps) => {
     return `${minutes}:${seconds}`;
   };
 
+  css`
+.actions {
+  display: flex;
+  gap: 1rem;
+}
+`
   return (
     <div class="data">
       <div class="speeds">
-        <p class="title">{props.i18n.t("speed")}</p>
+        <p class="title">{props.t("speed")}</p>
         <div class="speed-data">
           <p class="wpm-data">
             {props.projection.stats.speed.byWord[0].toFixed(2)}
@@ -87,27 +96,30 @@ const DataMetricsResume = (props: DataMetricsResumeProps) => {
             {props.projection.stats.speed.byKeypress[1].toFixed(2)}
             <span>Raw</span>
           </p>
-          <p>{props.i18n.t("elapsedTime")}: {getTime(props.projection.core.duration)}</p>
+          <p>
+            {props.t("elapsedTime")}: {getTime(props.projection.core.duration)}
+          </p>
         </div>
       </div>
       <div class="accuracies">
-        <p class="title">{props.i18n.t("accuracy")}</p>
+        <p class="title">{props.t("accuracy")}</p>
         <div class="accuracies-data">
           <p class="accu-data">
             {Math.trunc(props.projection.stats.accuracies[0])}
             <span>%</span>
           </p>
           <p class="accu-real-data">
-            {props.i18n.t("real")} : {props.projection.stats.accuracies[1].toFixed(2)}
+            {props.t("real")} :{" "}
+            {props.projection.stats.accuracies[1].toFixed(2)}
             <span>%</span>
           </p>
           <p class="consistency">
-            {props.i18n.t("consistency")}: {props.projection.stats.consistency * 100}
+            {props.t("consistency")}:{" "}
+            {(props.projection.stats.consistency * 100).toFixed(2)}
           </p>
         </div>
       </div>
       <div class="bottom">
-        <button onClick={props.onReset}>{props.i18n.t("playAgain")}</button>
       </div>
     </div>
   );

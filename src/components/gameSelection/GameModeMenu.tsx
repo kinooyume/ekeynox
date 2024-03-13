@@ -8,11 +8,11 @@ import {
   type Translator,
   type ContentGeneration,
   GameModeKind,
-} from "./App";
+} from "../App";
 import GameTimerParams from "./GameTimerParams";
-import Bunny from "./ui/bunny";
+import Bunny from "../svgs/bunny";
 import { Transition } from "solid-transition-group";
-import CustomInput, { type CustomInputRef } from "./CustomInput";
+import CustomInput, { type CustomInputRef } from "../ui/CustomInput";
 import GameModeSelection from "./GameModeSelection";
 // Gsap animation
 // https://codepen.io/dev_loop/pen/MWKbJmO
@@ -33,6 +33,7 @@ import GameModeSelection from "./GameModeSelection";
 // https://uiverse.io/Yaya12085/silent-liger-85
 //
 // take a list and make cards
+
 type GameModeKindMenuProps = {
   t: Translator;
   gameOptions: GameOptions;

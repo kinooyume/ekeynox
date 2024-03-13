@@ -1,10 +1,10 @@
 import { css } from "solid-styled";
-import Play from "./ui/play.tsx";
-import Reset from "./ui/reset.tsx";
+import Play from "./svgs/play.tsx";
+import Reset from "./svgs/reset.tsx";
 import type { StatProjection } from "./KeypressMetrics.ts";
 import { Show, type JSXElement } from "solid-js";
-import NavLeft from "./ui/navLeft";
-import NavRight from "./ui/navRight";
+import NavLeft from "./svgs/navLeft.tsx";
+import NavRight from "./svgs/navRight.tsx";
 
 type TypingNavProps = {
   isPaused: boolean;
@@ -33,8 +33,13 @@ const TypingNav = (props: TypingNavProps) => {
       justify-content: space-between;
       min-width: 600px;
       gap: 16px;
-      background-color: var(--key-color);
+      background-color: var(--color-surface-alt);
     }
+    nav svg path {
+      fill: var(--color-surface-alt);
+      stroke: var(--color-surface-alt);
+    }
+
     .remote {
       display: flex;
       align-items: center;

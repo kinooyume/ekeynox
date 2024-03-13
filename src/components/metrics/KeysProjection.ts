@@ -1,4 +1,4 @@
-import { TypingStatusKind, type TypingStatus } from "./TypingEngine";
+import { TypingStatusKind, type TypingStatus } from "../typing/TypingEngine";
 import {
   createTypingProjection,
   updateTypingProjection,

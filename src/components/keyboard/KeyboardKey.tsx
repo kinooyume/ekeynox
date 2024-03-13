@@ -1,6 +1,6 @@
 import { Show } from "solid-js";
 import { css } from "solid-styled";
-import type { TypingProjection } from "./TypingProjection";
+import type { TypingProjection } from "../metrics/TypingProjection";
 
 type transform = Array<[string, string]>;
 

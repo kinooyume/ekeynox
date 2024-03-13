@@ -6,8 +6,10 @@
   "consistency": "consistency",
   "playAgain": "play again",
   "letsGo": "let's go !",
+  "next": "next",
   "french": "french",
   "english": "english",
+  "keyboardLayout": "keyboard layout",
   "words": "words",
   "quotes": "quotes",
   "custom": "custom",
@@ -25,11 +27,7 @@
       "title": "rabbit",
       "subtitle": "Against the clock !",
       "description": "Time is running out ! how many words can you write in the time allowed?",
-      "hugeDescription": " Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ut erat sed nulla ornare accumsan a quis diam. Nullam ut pharetra dui. Donec quis velit placerat est dictum gravida. Pellentesque maximus libero sed dui aliquet scelerisque. Duis nec purus interdum, posuere lacus non, aliquam leo. In sodales vehicula lorem eu eleifend. Ut ut dolor eget ante gravida rutrum at vel. "
-    },
-    "chameleon": {
-      "title": "chameleon",
-      "description": "Give a text to type, and test yourself on it. The limit is your imagination"
+      "hugeDescription": " Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ut erat sed nulla ornare accumsan a quis diam. Nullam ut pharetra dui."
     }
   }
 }
