@@ -9,9 +9,7 @@ import {
 import { createStore } from "solid-js/store";
 
 import Content from "../content/Content.ts";
-import KeyboardLayout, {
-  type HigherKeyboard,
-} from "../keyboard/KeyboardLayout.ts";
+import { type HigherKeyboard } from "../keyboard/KeyboardLayout.ts";
 
 import TypingEngine, {
   type TypingStatus,
@@ -44,14 +42,14 @@ import type { Metrics } from "../metrics/Metrics.ts";
 
 type TypingGameProps = {
   t: Translator;
-  contentMode: GameModeContent;
+  content: GameModeContent;
   gameOptions: GameOptions;
   kbLayout: HigherKeyboard;
-  onOver: (metrics: Metrics) => void;
+  onOver: (metrics: Metrics, content: GameModeContent) => void;
 };
 
 const TypingGame = (props: TypingGameProps) => {
-  const [content, setContent] = createSignal(props.contentMode.getContent());
+  const [content, setContent] = createSignal(props.content.getContent());
   const [paraStore, setParaStore] = createStore(
     Content.deepClone(content().paragraphs),
   );
@@ -72,27 +70,30 @@ const TypingGame = (props: TypingGameProps) => {
 
   const over = () => {
     setStatus({ kind: TypingStatusKind.over });
-    props.onOver({
-      content: { ...content(), paragraphs: paraStore },
-      gameOptions: props.gameOptions,
-      typing: typingMetrics(),
-      keys: keyMetrics(),
-    });
+    props.onOver(
+      {
+        content: { ...content(), paragraphs: paraStore },
+        gameOptions: props.gameOptions,
+        typing: typingMetrics(),
+        keys: keyMetrics(),
+      },
+      props.content,
+    );
   };
 
   /* Timer */
 
   // NOTE: should not exist without timer
   const [timeCounter, setTimeCounter] = createSignal(
-    props.contentMode.kind === GameModeKind.rabbit
-      ? props.contentMode.time.toFixed(0)
+    props.content.kind === GameModeKind.rabbit
+      ? props.content.time.toFixed(0)
       : "",
   );
 
   // NOTE: no reactivity on timer
-  if (props.contentMode.kind === GameModeKind.rabbit) {
+  if (props.content.kind === GameModeKind.rabbit) {
     const timerEffect = createTimerEffect({
-      duration: props.contentMode.time,
+      duration: props.content.time,
       onOver: over,
       updateCounter: setTimeCounter,
     });
@@ -173,7 +174,7 @@ const TypingGame = (props: TypingGameProps) => {
         onPause={pause!}
         onReset={reset}
       >
-        <Show when={props.contentMode.kind === GameModeKind.rabbit}>
+        <Show when={props.content.kind === GameModeKind.rabbit}>
           <p>{timeCounter()}</p>
         </Show>
       </TypingNav>

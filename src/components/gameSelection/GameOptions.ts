@@ -84,7 +84,7 @@ export type GameOptions = {
   timer: NumberSelection;
 };
 
-const getDefaultGameOptions = () : GameOptions => ({
+const getDefaultGameOptions = (): GameOptions => ({
   mode: GameModeKind.monkey,
   contentType: {
     kind: ContentTypeKind.generation,

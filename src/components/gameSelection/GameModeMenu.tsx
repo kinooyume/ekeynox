@@ -160,7 +160,6 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
               <h1>{props.t("playingMode")}</h1>
             </div>
           </div>
-
           <div class="selection">
             <GameModeSelection
               t={props.t}

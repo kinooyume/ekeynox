@@ -1,9 +1,10 @@
 import { For, onCleanup, type JSXElement, createSignal, Show } from "solid-js";
 import { css } from "solid-styled";
-import type { GameMode, GameModeKind, Translator } from "../App";
+import type { Translator } from "../App";
 import ChooseClip from "../svgs/choose-clip";
 import Bunny from "../svgs/bunny";
 import { Transition, TransitionGroup } from "solid-transition-group";
+import type { GameModeKind } from "./GameOptions";
 
 type GameModePicto = Record<GameModeKind, JSXElement>;
 

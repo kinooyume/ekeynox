@@ -37,6 +37,7 @@ import {
 import type { Metrics } from "./metrics/Metrics";
 import TypingMetricsResume from "./resume/TypingMetricsResume";
 import KeyboardLayout, { type HigherKeyboard } from "./keyboard/KeyboardLayout";
+import GameModeMenuTiny from "./gameSelection/GameModeMenuTiny";
 
 const dictionaries = {
   en: en_dict,
@@ -83,7 +84,7 @@ export enum GameStatusKind {
 export type GameStatus =
   | { kind: GameStatusKind.menu }
   | { kind: GameStatusKind.pending; content: GameModeContent }
-  | { kind: GameStatusKind.resume; metrics: Metrics };
+  | { kind: GameStatusKind.resume; metrics: Metrics; content: GameModeContent };
 
 const App = () => {
   const [config, setConfig] = makePersisted(
@@ -120,6 +121,9 @@ const App = () => {
 
   const [randomSource] = createResource(contentGeneration, fetchWords);
 
+  const launch = (content: GameModeContent) =>
+    setGameStatus({ kind: GameStatusKind.pending, content });
+
   const start = (opts: GameOptions, customSource: string) => {
     setGameOptions(opts);
     setGameOptions("custom", customSource);
@@ -127,11 +131,11 @@ const App = () => {
       random: randomSource() || [],
       custom: customSource,
     });
-    setGameStatus({ kind: GameStatusKind.pending, content });
+    launch(content);
   };
 
-  const over = (metrics: Metrics) =>
-    setGameStatus({ kind: GameStatusKind.resume, metrics });
+  const over = (metrics: Metrics, content: GameModeContent) =>
+    setGameStatus({ kind: GameStatusKind.resume, metrics, content });
 
   const [gameStatus, setGameStatus] = createSignal<GameStatus>({
     kind: GameStatusKind.menu,
@@ -195,7 +199,7 @@ const App = () => {
                 <Show when={randomSource()}>
                   <TypingGame
                     t={t}
-                    contentMode={(gameStatus() as any).content}
+                    content={(gameStatus() as any).content}
                     gameOptions={Object.assign({}, gameOptions)}
                     kbLayout={kbLayout()}
                     onOver={over}
@@ -208,7 +212,16 @@ const App = () => {
                 t={t}
                 kbLayout={kbLayout()}
                 metrics={(gameStatus() as any).metrics}
-              />
+              >
+                <GameModeMenuTiny
+                  t={t}
+                  gameOptions={gameOptions}
+                  content={(gameStatus() as any).content}
+                  setContentGeneration={setContentGeneration}
+                  start={start}
+                  launch={launch}
+                />
+              </TypingMetricsResume>
             </Match>
           </Switch>
         </Transition>

@@ -1,20 +1,18 @@
 import { css } from "solid-styled";
-import TypingKeyboardResume from "../resume/TypingKeyboardResume";
-import type {
-  HigherKeyboard,
-  KeyboardLayout,
-} from "../keyboard/KeyboardLayout";
+import type { HigherKeyboard } from "../keyboard/KeyboardLayout";
 import MetricsChart from "./charts/MetricsChart";
 import DataMetricsResume from "./DataMetricsResume";
 import Prompt from "./PromptResume";
 import type { Translator } from "../App";
 import type { Metrics } from "../metrics/Metrics";
-import { createComputed, createSignal } from "solid-js";
+import { createComputed, createSignal, type JSXElement } from "solid-js";
+import TypingKeyboardResume from "./TypingKeyboardResume";
 
 type TypingMetricsProps = {
   t: Translator;
   kbLayout: HigherKeyboard;
   metrics: Metrics;
+  children: JSXElement;
 };
 
 const TypingMetricsResume = (props: TypingMetricsProps) => {
@@ -26,6 +24,7 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
     const layout = props.kbLayout(props.metrics.content.keySet);
     setKbLayout(layout);
   });
+
   css`
     .metrics {
       display: grid;
@@ -33,6 +32,7 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
       grid-template-rows: 1fr;
       grid-column-gap: 10px;
       overflow: hidden;
+      max-height: 100%;
     }
 
     .keyboard {
@@ -41,10 +41,15 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
     .reset {
       margin: 64px;
     }
-    .content {
+    .content-wrapper {
+      position: relative;
       grid-column: 2;
       overflow-y: scroll;
       padding: 32px;
+      height: 100%;
+    }
+
+    .content {
     }
     .sidebar-wrapper {
       grid-column: 3;
@@ -57,18 +62,20 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
   `;
   return (
     <div class="metrics full-bleed">
-      <div class="content">
-        <div class="chart">
-          <MetricsChart metrics={props.metrics.typing} />
+      <div class="content-wrapper">
+        <div class="content">
+          <div class="chart">
+            <MetricsChart metrics={props.metrics.typing} />
+          </div>
+          <div class="keyboard">
+            <TypingKeyboardResume
+              layout={kbLayout()}
+              metrics={props.metrics.keys}
+            />
+          </div>
+          {/* <WordMetricsResume paragraphs={props.paragraphs} /> */}
+          <Prompt paragraphs={props.metrics.content.paragraphs} />
         </div>
-        <div class="keyboard">
-          <TypingKeyboardResume
-            layout={kbLayout()}
-            metrics={props.metrics.keys}
-          />
-        </div>
-        {/* <WordMetricsResume paragraphs={props.paragraphs} /> */}
-        <Prompt paragraphs={props.metrics.content.paragraphs} />
       </div>
       <div class="sidebar-wrapper">
         <div class="sidebar">
@@ -77,6 +84,9 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
             t={props.t}
             projection={props.metrics.typing.projection}
           />
+          <div class="actions-wrapper">
+            <div class="actions">{props.children}</div>
+          </div>
         </div>
       </div>
     </div>
