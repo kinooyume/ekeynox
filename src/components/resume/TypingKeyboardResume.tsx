@@ -1,8 +1,8 @@
 import { For, createSignal, onMount } from "solid-js";
 import { css } from "solid-styled";
 import KeyboardKeyResume from "./KeyboardKeyResume";
-import type { KeysProjection } from "./KeysProjection";
-import type { KeyboardLayout } from "./KeyboardLayout";
+import type { KeysProjection } from "../metrics/KeysProjection";
+import type { KeyboardLayout } from "../keyboard/KeyboardLayout";
 
 export type TypingKeyboardRef = {
   keyUp: (key: string) => void;
@@ -13,7 +13,6 @@ type KeyboardProps = {
   ref?: (ref: TypingKeyboardRef) => void;
   metrics: KeysProjection;
   layout: KeyboardLayout;
-  // children: (props: KeyboardKeyProps) => JSX.Element;
 };
 
 const KeyboardResume = (props: KeyboardProps) => {

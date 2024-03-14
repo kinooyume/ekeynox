@@ -7,13 +7,14 @@ import {
   Match,
 } from "solid-js";
 import { css } from "solid-styled";
-import { GameModeKind, type GameOptions, type Translator } from "../App";
+import { type Translator } from "../App";
 import Bunny from "../svgs/bunny";
 import { TransitionGroup } from "solid-transition-group";
 import { createStore } from "solid-js/store";
 import GameRandomParams from "./GameRandomParams";
 import GameTimerParams from "./GameTimerParams";
 import CustomInput, { type CustomInputRef } from "../ui/CustomInput";
+import { GameModeKind, type ContentGeneration, type GameOptions, type GameModeContent } from "./GameOptions";
 
 type GameModePicto = Record<GameModeKind, JSXElement>;
 
@@ -30,9 +31,11 @@ type GameModePreview = {
 
 type GameModeSelectionProps = {
   t: Translator;
-  modes: Record<GameModeKind, GameModePreview>;
   gameOptions: GameOptions;
-  setGameOptions: (options: GameOptions) => void;
+  content: GameModeContent;
+  setContentGeneration: (type: ContentGeneration) => void;
+  start: (opts: GameOptions, customSource: string) => void;
+  launch: (content: GameModeContent) => void;
 };
 
 const GameModeSelectionTiny = (props: GameModeSelectionProps) => {
@@ -126,13 +129,17 @@ const GameModeSelectionTiny = (props: GameModeSelectionProps) => {
     null,
   );
 
+  const start = () => {
+    props.start(gameOptions, customRef.ref ? customRef.ref.value : "");
+  };
+
   const customRef: CustomInputRef = {
     ref: undefined,
   };
   return (
     <div class="mode-selection">
       <div class="modes">
-        <For each={Object.keys(props.modes) as GameModeKind[]}>
+        <For each={Object.keys(props.t("gameMode")) as GameModeKind[]}>
           {(modeKey) => (
             <div class={`radio ${modeKey}`}>
               <input
@@ -177,24 +184,26 @@ const GameModeSelectionTiny = (props: GameModeSelectionProps) => {
           }}
         >
           <p class="title">
-            {props.modes[labelHovered() || gameOptions.mode].title}
+            {
+              (props.t("gameMode") as Record<GameModeKind, GameModePreview>)[
+                (labelHovered() || gameOptions.mode) as GameModeKind
+              ].title
+            }
           </p>
           <p class="description">
-            {props.modes[labelHovered() || gameOptions.mode].subtitle}
+            {
+              (props.t("gameMode") as Record<GameModeKind, GameModePreview>)[
+                (labelHovered() || gameOptions.mode) as GameModeKind
+              ].subtitle
+            }
           </p>
         </TransitionGroup>
         <Switch>
           <Match when={gameOptions.mode === GameModeKind.monkey}>
             <GameRandomParams
-              words={gameOptions.wordNumber}
-              language={gameOptions.language}
-              wordsCategory={gameOptions.wordsCategory}
-              setWords={(words) => setGameOptions("wordNumber", words)}
-              setLanguage={(language) => setGameOptions("language", language)}
-              setWordsCategory={(wordsCategory) =>
-                setGameOptions("wordsCategory", wordsCategory)
-              }
               t={props.t}
+              gameOptions={gameOptions}
+              setGameOptions={setGameOptions}
             >
               <CustomInput
                 value={customRef.ref ? customRef?.ref.value : ""}
@@ -202,17 +211,11 @@ const GameModeSelectionTiny = (props: GameModeSelectionProps) => {
               />
             </GameRandomParams>
           </Match>
-          <Match when={gameOptions.lastGameMode === GameMode.rabbit}>
+          <Match when={gameOptions.mode === GameModeKind.rabbit}>
             <GameTimerParams
-              time={gameOptions.time}
-              language={gameOptions.language}
-              wordsCategory={gameOptions.wordsCategory}
-              setTime={(time) => setGameOptions("time", time)}
-              setLanguage={(language) => setGameOptions("language", language)}
-              setWordsCategory={(wordsCategory) =>
-                setGameOptions("wordsCategory", wordsCategory)
-              }
               t={props.t}
+              gameOptions={gameOptions}
+              setGameOptions={setGameOptions}
             >
               <CustomInput
                 value={customRef.ref ? customRef?.ref.value : ""}
@@ -223,10 +226,10 @@ const GameModeSelectionTiny = (props: GameModeSelectionProps) => {
         </Switch>
       </div>
       <div class="actions">
-        <button class="secondary" onClick={props.onReset}>
+        <button class="secondary" onClick={() => props.launch(props.content)}>
           {props.t("playAgain")}
         </button>
-        <button class="primary" onClick={props.onReset}>
+        <button class="primary" onClick={start}>
           {props.t("next")}
         </button>
       </div>
