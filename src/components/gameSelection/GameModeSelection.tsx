@@ -29,12 +29,14 @@ type GameModeSelectionProps = {
 const GameModeSelection = (props: GameModeSelectionProps) => {
   css`
     .mode-selection {
-      width: 400px;
-      height: 100px;
       display: flex;
       flex-direction: row;
-      align-items: flex-start;
-      justify-content: space-between;
+      justify-content: flex-end;
+      align-items: center;
+      max-width: 400px;
+      max-height: 100px;
+      height: 100%;
+      width: 100%;
     }
 
     .info {
@@ -114,7 +116,9 @@ const GameModeSelection = (props: GameModeSelectionProps) => {
   );
 
   let labelRef: Array<HTMLLabelElement> = [];
-  const [labelHovered, setLabelHovered] = createSignal<GameModeKind | null>(null);
+  const [labelHovered, setLabelHovered] = createSignal<GameModeKind | null>(
+    null,
+  );
 
   return (
     <div class="mode-selection">
@@ -134,7 +138,9 @@ const GameModeSelection = (props: GameModeSelectionProps) => {
           }}
         >
           <Show when={labelHovered() !== null}>
-            <p class="title">{props.modes[labelHovered() as GameModeKind].title}</p>
+            <p class="title">
+              {props.modes[labelHovered() as GameModeKind].title}
+            </p>
             <p class="description">
               {props.modes[labelHovered() as GameModeKind].subtitle}
             </p>
