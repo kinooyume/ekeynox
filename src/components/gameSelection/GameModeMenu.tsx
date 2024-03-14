@@ -65,6 +65,15 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
     .main-view {
       position: relative;
     }
+
+    /* .main-view:before { */
+    /*   display: block; */
+    /*   content: ""; */
+    /*   width: 100%; */
+    /*   height: 100%; */
+    /*   padding-top: calc(106/203 * 100%); */
+    /**/
+    /* } */
     .cliped {
       clip-path: url(#choose-clip);
       object-fit: cover;
@@ -74,11 +83,14 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
 
     .cliped,
     .hud {
-      width: 100%;
-      height: calc(100vh - 122px);
-      max-height: 800px;
       display: flex;
       display: grid;
+      aspect-ratio: 203/106;
+      /* position: absolute; */
+      /* top: 0; */
+      /* left: 0; */
+      /* right: 0; */
+      /* bottom: 0; */
       grid-template-columns: 1fr 1fr;
       grid-template-rows: 1fr;
       grid-column-gap: 0px;
@@ -88,13 +100,26 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
 
     .hud {
       position: absolute;
+      height: 100%;
+      display: grid;
+      grid-template-rows: 1.2fr 8fr 2fr;
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-column-gap: 0px;
+      grid-row-gap: 0px;
     }
     .title {
-      position: absolute;
+      grid-area: 1 / 1 / 2 / 2;
       display: flex;
       flex-direction: column;
+      padding-left: 64px;
+    }
+
+    .selection {
+      display: flex;
       align-items: flex-end;
-      width: 360px;
+      justify-content: flex-end;
+      padding-right: 20px;
+      grid-area: 3 / 3 / 4 / 4;
     }
     .illustration {
       padding-top: 91px;
@@ -122,20 +147,16 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
     .title h1 {
       margin: 0;
       font-weight: 200;
-      font-size: 3rem;
-    }
-    .selection {
-      position: absolute;
-      bottom: 0;
-      right: 32px;
+      font-size: 2.8rem;
     }
     h2 {
-      font-size: 4rem;
+      font-size: 3.8rem;
       margin-bottom: 0;
       text-transform: capitalize;
       font-weight: 100;
     }
     h3 {
+      font-size: 1.1em;
       margin-top: 8px;
       margin-bottom: 46px;
       font-weight: 200;
