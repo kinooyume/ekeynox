@@ -30,17 +30,6 @@ export type NumberSelection =
   | { type: NumberSelectionType.selected; value: number }
   | { type: NumberSelectionType.custom; value: number };
 
-export enum GameStatusKind {
-  menu,
-  pending,
-  resume,
-}
-
-export type GameStatus =
-  | { kind: GameStatusKind.menu }
-  | { kind: GameStatusKind.pending; content: GameModeContent }
-  | { kind: GameStatusKind.resume };
-
 export enum GameModeKind {
   monkey = "monkey",
   rabbit = "rabbit",

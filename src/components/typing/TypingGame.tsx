@@ -9,7 +9,9 @@ import {
 import { createStore } from "solid-js/store";
 
 import Content from "../content/Content.ts";
-import KeyboardLayout from "../keyboard/KeyboardLayout.ts";
+import KeyboardLayout, {
+  type HigherKeyboard,
+} from "../keyboard/KeyboardLayout.ts";
 
 import TypingEngine, {
   type TypingStatus,
@@ -25,7 +27,6 @@ import {
   createTypingMetricsState,
   type TypingMetricsState,
 } from "../metrics/TypingMetrics.ts";
-import TypingMetricsResume from "../resume/TypingMetricsResume";
 
 import {
   updateKeyProjection,
@@ -39,13 +40,14 @@ import {
 } from "../gameSelection/GameOptions";
 import { createTimerEffect, type TimerEffect } from "../metrics/Timer.ts";
 import type { Translator } from "../App.tsx";
+import type { Metrics } from "../metrics/Metrics.ts";
 
 type TypingGameProps = {
   t: Translator;
   contentMode: GameModeContent;
-  currentGameOptions: GameOptions;
-  setGameOptions: (options: GameOptions) => void;
-  kb: string;
+  gameOptions: GameOptions;
+  kbLayout: HigherKeyboard;
+  onOver: (metrics: Metrics) => void;
 };
 
 const TypingGame = (props: TypingGameProps) => {
@@ -59,15 +61,25 @@ const TypingGame = (props: TypingGameProps) => {
     kind: TypingStatusKind.unstart,
   });
 
-  const [kbLayout, setKbLayout] = createSignal(KeyboardLayout.getDefault());
+  const [kbLayout, setKbLayout] = createSignal(
+    props.kbLayout(content().keySet),
+  );
 
   createComputed(() => {
-    const layout = KeyboardLayout.create(props.kb, content().keySet);
-    if (layout !== null) setKbLayout(layout);
-    // TODO: manage error
+    const layout = props.kbLayout(content().keySet);
+    setKbLayout(layout);
   });
 
-  const over = () => setStatus({ kind: TypingStatusKind.over });
+  const over = () => {
+    setStatus({ kind: TypingStatusKind.over });
+    props.onOver({
+      content: { ...content(), paragraphs: paraStore },
+      gameOptions: props.gameOptions,
+      typing: typingMetrics(),
+      keys: keyMetrics(),
+    });
+  };
+
   /* Timer */
 
   // NOTE: should not exist without timer
@@ -134,56 +146,38 @@ const TypingGame = (props: TypingGameProps) => {
     }
   `;
   return (
-    <Show
-      when={status().kind !== TypingStatusKind.over}
-      fallback={
-        <TypingMetricsResume
-          t={props.t}
-          paragraphs={paraStore}
-          currentGameOptions={props.currentGameOptions}
-          setGameOptions={props.setGameOptions}
-          layout={kbLayout()}
-          metrics={typingMetrics()}
-          keyMetrics={keyMetrics()}
-          setParagraphs={setParaStore}
-          onReset={reset}
-          setContent={setContent}
-        />
-      }
-    >
-      <div class="mega" onClick={() => focus()}>
-        <TypingEngine
-          paragraphs={paraStore}
-          setParagraphs={setParaStore}
-          status={status()}
-          setStatus={setStatus}
-          setFocus={(f) => (focus = f)}
-          setReset={(r) => (resetInput = r)}
-          setPause={(p) => (pause = p)}
-          setCurrentPromptKey={setCurrentPromptKey}
-          onKeyDown={keyboard!?.keyDown}
-          onKeyUp={keyboard!?.keyUp}
-          onOver={over}
-        />
-        <Prompt paragraphs={paraStore} setParagraphs={setParaStore} />
-        <Keyboard
-          metrics={keyMetrics()}
-          currentKey={currentPromptKey()}
-          layout={kbLayout()}
-          ref={(k) => (keyboard = k)}
-        />
-        <TypingNav
-          isPaused={status().kind !== TypingStatusKind.pending}
-          stat={stat()}
-          onPause={pause!}
-          onReset={reset}
-        >
-          <Show when={props.contentMode.kind === GameModeKind.rabbit}>
-            <p>{timeCounter()}</p>
-          </Show>
-        </TypingNav>
-      </div>
-    </Show>
+    <div class="mega" onClick={() => focus()}>
+      <TypingEngine
+        paragraphs={paraStore}
+        setParagraphs={setParaStore}
+        status={status()}
+        setStatus={setStatus}
+        setFocus={(f) => (focus = f)}
+        setReset={(r) => (resetInput = r)}
+        setPause={(p) => (pause = p)}
+        setCurrentPromptKey={setCurrentPromptKey}
+        onKeyDown={keyboard!?.keyDown}
+        onKeyUp={keyboard!?.keyUp}
+        onOver={over}
+      />
+      <Prompt paragraphs={paraStore} setParagraphs={setParaStore} />
+      <Keyboard
+        metrics={keyMetrics()}
+        currentKey={currentPromptKey()}
+        layout={kbLayout()}
+        ref={(k) => (keyboard = k)}
+      />
+      <TypingNav
+        isPaused={status().kind !== TypingStatusKind.pending}
+        stat={stat()}
+        onPause={pause!}
+        onReset={reset}
+      >
+        <Show when={props.contentMode.kind === GameModeKind.rabbit}>
+          <p>{timeCounter()}</p>
+        </Show>
+      </TypingNav>
+    </div>
   );
 };
 

@@ -2,15 +2,11 @@ import { css } from "solid-styled";
 import type { KeypressMetricsProjection } from "../metrics/KeypressMetrics";
 import type { GameOptions } from "../gameSelection/GameOptions";
 import type { Translator } from "../App";
-import type { ContentData } from "../content/Content";
 
 type DataMetricsResumeProps = {
-  projection: KeypressMetricsProjection;
-  onReset: () => void;
   t: Translator;
+  projection: KeypressMetricsProjection;
   currentGameOptions: GameOptions;
-  setGameOptions: (options: GameOptions) => void;
-  setContent: (content: ContentData) => void;
 };
 
 const DataMetricsResume = (props: DataMetricsResumeProps) => {
