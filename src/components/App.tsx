@@ -4,6 +4,7 @@ import {
   Show,
   Suspense,
   Switch,
+  createEffect,
   createMemo,
   createResource,
   createSignal,
@@ -28,16 +29,14 @@ import { makeGetContent } from "./content/TypingGameSource";
 import GameModeMenu from "./gameSelection/GameModeMenu";
 import TypingGame from "./typing/TypingGame";
 import {
-  ContentTypeKind,
-  GameModeKind,
-  WordsGenerationCategory,
   type GameOptions,
-  NumberSelectionType,
   getDefaultGameOptions,
   type ContentGeneration,
-  GameStatusKind,
-  type GameStatus,
+  type GameModeContent,
 } from "./gameSelection/GameOptions";
+import type { Metrics } from "./metrics/Metrics";
+import TypingMetricsResume from "./resume/TypingMetricsResume";
+import KeyboardLayout, { type HigherKeyboard } from "./keyboard/KeyboardLayout";
 
 const dictionaries = {
   en: en_dict,
@@ -75,6 +74,17 @@ const configLists: ConfigLists = {
   kb: ["qwerty", "azerty"],
 };
 
+export enum GameStatusKind {
+  menu,
+  pending,
+  resume,
+}
+
+export type GameStatus =
+  | { kind: GameStatusKind.menu }
+  | { kind: GameStatusKind.pending; content: GameModeContent }
+  | { kind: GameStatusKind.resume; metrics: Metrics };
+
 const App = () => {
   const [config, setConfig] = makePersisted(
     createStore<Config>({
@@ -94,6 +104,17 @@ const App = () => {
     createStore<GameOptions>(getDefaultGameOptions(), { name: "gameOptions" }),
   );
 
+  /* Keyboard */
+  const [kbLayout, setKbLayout] = createSignal<HigherKeyboard>(
+    KeyboardLayout.create(config.kb),
+  );
+
+  createEffect(() => {
+    setKbLayout(() => KeyboardLayout.create(config.kb));
+  });
+
+  /* *** */
+
   const [contentGeneration, setContentGeneration] =
     createSignal<ContentGeneration>(gameOptions.generation);
 
@@ -108,6 +129,9 @@ const App = () => {
     });
     setGameStatus({ kind: GameStatusKind.pending, content });
   };
+
+  const over = (metrics: Metrics) =>
+    setGameStatus({ kind: GameStatusKind.resume, metrics });
 
   const [gameStatus, setGameStatus] = createSignal<GameStatus>({
     kind: GameStatusKind.menu,
@@ -172,12 +196,19 @@ const App = () => {
                   <TypingGame
                     t={t}
                     contentMode={(gameStatus() as any).content}
-                    currentGameOptions={Object.assign({}, gameOptions)}
-                    setGameOptions={setGameOptions}
-                    kb={config.kb}
+                    gameOptions={Object.assign({}, gameOptions)}
+                    kbLayout={kbLayout()}
+                    onOver={over}
                   />
                 </Show>
               </Suspense>
+            </Match>
+            <Match when={gameStatus().kind === GameStatusKind.resume}>
+              <TypingMetricsResume
+                t={t}
+                kbLayout={kbLayout()}
+                metrics={(gameStatus() as any).metrics}
+              />
             </Match>
           </Switch>
         </Transition>

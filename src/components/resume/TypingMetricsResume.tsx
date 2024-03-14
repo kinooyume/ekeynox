@@ -1,29 +1,31 @@
 import { css } from "solid-styled";
-import type { TypingMetrics } from "../metrics/TypingMetrics";
 import TypingKeyboardResume from "../resume/TypingKeyboardResume";
-import type { KeysProjection } from "../metrics/KeysProjection";
-import type { KeyboardLayout } from "../keyboard/KeyboardLayout";
+import type {
+  HigherKeyboard,
+  KeyboardLayout,
+} from "../keyboard/KeyboardLayout";
 import MetricsChart from "./charts/MetricsChart";
 import DataMetricsResume from "./DataMetricsResume";
-import type { ContentData, Paragraphs } from "../content/Content";
-import Prompt from "../prompt/Prompt";
-import type { SetStoreFunction } from "solid-js/store";
-import type { GameOptions, Translator } from "../App";
+import Prompt from "./PromptResume";
+import type { Translator } from "../App";
+import type { Metrics } from "../metrics/Metrics";
+import { createComputed, createSignal } from "solid-js";
 
 type TypingMetricsProps = {
-  metrics: TypingMetrics;
-  layout: KeyboardLayout;
-  keyMetrics: KeysProjection;
-  paragraphs: Paragraphs;
-  setParagraphs: SetStoreFunction<Paragraphs>;
-  onReset: () => void;
   t: Translator;
-  currentGameOptions: GameOptions;
-  setGameOptions: (options: GameOptions) => void;
-  setContent: (content: ContentData) => void;
+  kbLayout: HigherKeyboard;
+  metrics: Metrics;
 };
 
 const TypingMetricsResume = (props: TypingMetricsProps) => {
+  const [kbLayout, setKbLayout] = createSignal(
+    props.kbLayout(props.metrics.content.keySet),
+  );
+
+  createComputed(() => {
+    const layout = props.kbLayout(props.metrics.content.keySet);
+    setKbLayout(layout);
+  });
   css`
     .metrics {
       display: grid;
@@ -57,29 +59,23 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
     <div class="metrics full-bleed">
       <div class="content">
         <div class="chart">
-          <MetricsChart metrics={props.metrics} />
+          <MetricsChart metrics={props.metrics.typing} />
         </div>
         <div class="keyboard">
           <TypingKeyboardResume
-            layout={props.layout}
-            metrics={props.keyMetrics}
+            layout={kbLayout()}
+            metrics={props.metrics.keys}
           />
         </div>
         {/* <WordMetricsResume paragraphs={props.paragraphs} /> */}
-        <Prompt
-          paragraphs={props.paragraphs}
-          setParagraphs={props.setParagraphs}
-        />
+        <Prompt paragraphs={props.metrics.content.paragraphs} />
       </div>
       <div class="sidebar-wrapper">
         <div class="sidebar">
           <DataMetricsResume
-            currentGameOptions={props.currentGameOptions}
-            setGameOptions={props.setGameOptions}
-            setContent={props.setContent}
+            currentGameOptions={props.metrics.gameOptions}
             t={props.t}
-            projection={props.metrics.projection}
-            onReset={props.onReset}
+            projection={props.metrics.typing.projection}
           />
         </div>
       </div>
