@@ -12,7 +12,7 @@ export type CircularList<T> = {
   value: T;
   prev: CircularList<T>;
   next: CircularList<T>;
-};
+} | null;
 
 const makeCircular = <T>(
   value: T,
