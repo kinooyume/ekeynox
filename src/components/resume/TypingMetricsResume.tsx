@@ -1,6 +1,6 @@
 import { css } from "solid-styled";
 import type { HigherKeyboard } from "../keyboard/KeyboardLayout";
-import MetricsChart from "./charts/MetricsChart";
+import SpeedChart from "./charts/SpeedChart";
 import DataMetricsResume from "./DataMetricsResume";
 import Prompt from "./PromptResume";
 import type { Translator } from "../App";
@@ -67,7 +67,7 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
       <div class="content-wrapper">
         <div class="content">
           <div class="chart">
-            <MetricsChart metrics={metricsResume.chart} />
+            <SpeedChart metrics={metricsResume.chart} />
           </div>
           <div class="keyboard">
             <TypingKeyboardResume
