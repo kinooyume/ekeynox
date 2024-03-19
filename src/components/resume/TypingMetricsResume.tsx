@@ -4,7 +4,7 @@ import MetricsChart from "./charts/MetricsChart";
 import DataMetricsResume from "./DataMetricsResume";
 import Prompt from "./PromptResume";
 import type { Translator } from "../App";
-import type { Metrics } from "../metrics/Metrics";
+import { createMetricsResume, type Metrics } from "../metrics/Metrics";
 import { createComputed, createSignal, type JSXElement } from "solid-js";
 import TypingKeyboardResume from "./TypingKeyboardResume";
 
@@ -19,6 +19,8 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
   const [kbLayout, setKbLayout] = createSignal(
     props.kbLayout(props.metrics.content.keySet),
   );
+
+  const metricsResume = createMetricsResume(props.metrics)
 
   createComputed(() => {
     const layout = props.kbLayout(props.metrics.content.keySet);
@@ -65,7 +67,7 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
       <div class="content-wrapper">
         <div class="content">
           <div class="chart">
-            <MetricsChart metrics={props.metrics.typing} />
+            <MetricsChart metrics={metricsResume.chart} />
           </div>
           <div class="keyboard">
             <TypingKeyboardResume
