@@ -80,9 +80,9 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
       <div class="sidebar-wrapper">
         <div class="sidebar">
           <DataMetricsResume
-            currentGameOptions={props.metrics.gameOptions}
             t={props.t}
-            projection={props.metrics.typing.projection}
+            currentGameOptions={props.metrics.gameOptions}
+            projection={props.metrics.typing.logs!.value}
           />
           <div class="actions-wrapper">
             <div class="actions">{props.children}</div>
