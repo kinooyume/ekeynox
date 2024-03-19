@@ -20,7 +20,7 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
     props.kbLayout(props.metrics.content.keySet),
   );
 
-  const metricsResume = createMetricsResume(props.metrics)
+  const metricsResume = createMetricsResume(props.metrics);
 
   createComputed(() => {
     const layout = props.kbLayout(props.metrics.content.keySet);
@@ -60,6 +60,9 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
 
     .sidebar {
       position: fixed;
+    }
+    .content-wrapper::-webkit-scrollbar {
+      display: none;
     }
   `;
   return (
