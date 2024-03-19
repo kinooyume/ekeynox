@@ -20,7 +20,8 @@ export type ChartMetrics = {
 
 export type MetricsResume = {
   chart: ChartMetrics;
-}
+  words: Array<string>;
+};
 const logsToChartMetrics = (
   logs: LinkedList<KeypressMetricsProjection>,
 ): ChartMetrics => {
@@ -31,15 +32,18 @@ const logsToChartMetrics = (
   let log = logs;
   let prevElapsed = -1;
   while (log) {
+    // NOTE: nope, we need to merge the error
     const elapsed = Math.round(log.value.core.duration / 1000);
+    const secProj = log.value.meta.sectionProjection;
+    const wrong = secProj.incorrect + secProj.missed + secProj.extra;
     if (prevElapsed !== elapsed) {
       wpm.push({ x: elapsed, y: log.value.stats.speed.byWord[0] });
       raw.push({ x: elapsed, y: log.value.stats.speed.byKeypress[1] });
-      let secProj = log.value.meta.sectionProjection;
-      let wrong = secProj.incorrect + secProj.missed + secProj.extra;
       if (wrong > 0) {
         errors.push({ x: elapsed, y: wrong });
       }
+    } else {
+      errors[errors.length - 1].y += wrong;
     }
     prevElapsed = elapsed;
     log = log.next;
@@ -47,8 +51,9 @@ const logsToChartMetrics = (
   return { wpm, raw, errors };
 };
 
-const createMetricsResume = ( metrics: Metrics ): MetricsResume => ({
-    chart: logsToChartMetrics(metrics.typing.logs),
-})
+const createMetricsResume = (metrics: Metrics): MetricsResume => ({
+  chart: logsToChartMetrics(metrics.typing.logs),
+  words: [],
+});
 
 export { createMetricsResume };
