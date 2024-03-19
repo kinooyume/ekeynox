@@ -9,6 +9,7 @@ import {
   Legend,
   Colors,
   DoughnutController,
+  ArcElement,
 } from "chart.js";
 
 import { DefaultChart } from "solid-chartjs";
@@ -31,6 +32,7 @@ const AccuracyDoughnut = (props: MyChartProps) => {
       PointElement,
       Title,
       Tooltip,
+      ArcElement,
       Legend,
       Colors,
     );
