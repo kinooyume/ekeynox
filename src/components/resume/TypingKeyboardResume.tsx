@@ -4,41 +4,12 @@ import KeyboardKeyResume from "./KeyboardKeyResume";
 import type { KeysProjection } from "../metrics/KeysProjection";
 import type { KeyboardLayout } from "../keyboard/KeyboardLayout";
 
-export type TypingKeyboardRef = {
-  keyUp: (key: string) => void;
-  keyDown: (key: string) => void;
-};
-
 type KeyboardProps = {
-  ref?: (ref: TypingKeyboardRef) => void;
   metrics: KeysProjection;
   layout: KeyboardLayout;
 };
 
 const KeyboardResume = (props: KeyboardProps) => {
-  const [pressedKeys, setPressedKeys] = createSignal<string[]>([]);
-
-  const findPrimaryKey = (key: string) => {
-    const keyFound =
-      props.layout.layoutFlat.find((lKey) => lKey.all.includes(key)) ||
-      props.layout.extra.find((lKey) => lKey.all.includes(key));
-    return keyFound ? keyFound.primary : "";
-  };
-
-  // NOTE: use a store/memo maybe ?
-  const addKey = (key: string) => {
-    const keyFound = findPrimaryKey(key);
-    if (keyFound) setPressedKeys([...pressedKeys(), keyFound]);
-  };
-
-  const removeKey = (key: string) => {
-    const keyFound = findPrimaryKey(key);
-    if (keyFound) setPressedKeys(pressedKeys().filter((k) => k !== keyFound));
-  };
-
-  onMount(() => {
-    props.ref?.({ keyUp: removeKey, keyDown: addKey });
-  });
   css`
     .kb {
       display: flex;
