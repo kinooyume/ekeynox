@@ -1,7 +1,7 @@
 import { Show } from "solid-js";
 import { css } from "solid-styled";
 import "balloon-css";
-import type { TypingProjection } from "./TypingProjection";
+import type { TypingProjection } from "../metrics/TypingProjection";
 
 type transform = Array<[string, string]>;
 
@@ -33,7 +33,6 @@ export type KeyboardKeyResumeProps = {
   size: string;
   used: boolean;
   data: Array<TypingProjection | undefined>;
-  pressed: boolean;
 };
 
 /* faire le truc correct, incorrect, was incorrect */
@@ -56,12 +55,6 @@ const KeyboardKeyResume = (props: KeyboardKeyResumeProps) => {
       box-shadow:
         2px 2px 7px var(--key-color),
         -2px -2px 7px var(--key-color-alt);
-    }
-    .pressed {
-      background: var(--background-color);
-      box-shadow:
-        inset 2px 2px 7px var(--key-color),
-        inset -2px -2px 7px var(--key-color-alt);
     }
     .concave {
       background: linear-gradient(145deg, #cacaca, #f0f0f0);
@@ -199,7 +192,7 @@ const KeyboardKeyResume = (props: KeyboardKeyResumeProps) => {
     <div
       aria-label={infoToString(props.data)}
       data-balloon-pos="up"
-      class={`key ${props.pressed ? "pressed" : ""} ${props.used ? "used" : ""} ${status(props.data, props.key[0])} ${props.size}`}
+      class={`key ${props.used ? "used" : ""} ${status(props.data, props.key[0])} ${props.size}`}
     >
       <Show when={props.key[1] !== undefined}>
         <span class="secondary">{props.key[1]}</span>

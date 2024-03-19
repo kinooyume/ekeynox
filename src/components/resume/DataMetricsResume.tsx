@@ -37,10 +37,10 @@ const DataMetricsResume = (props: DataMetricsResumeProps) => {
       margin-left: 8px;
       opacity: 0.6;
     }
-.raw-data {
-opacity: 0.6;
-margin:0;
-}
+    .raw-data {
+      opacity: 0.6;
+      margin: 0;
+    }
     .raw-data span {
       margin-left: 4px;
     }

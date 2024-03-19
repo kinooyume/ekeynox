@@ -60,6 +60,10 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
 
     .sidebar {
       position: fixed;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: space-between;
     }
     .content-wrapper::-webkit-scrollbar {
       display: none;
