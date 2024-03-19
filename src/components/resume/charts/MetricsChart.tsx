@@ -87,8 +87,10 @@ const MyChart = (props: MyChartProps) => {
         axis: "x",
         type: "linear",
         display: true,
-        min: 1,
         ticks: {
+          precision: 0,
+          autoSkip: true,
+          autoSkipPadding: 20,
           stepSize: 1,
         },
         title: {
@@ -104,8 +106,8 @@ const MyChart = (props: MyChartProps) => {
           text: "Speed",
         },
         beginAtZero: true,
-        min: 0,
         ticks: {
+          precision: 0,
           autoSkip: true,
           autoSkipPadding: 20,
         },
@@ -121,7 +123,6 @@ const MyChart = (props: MyChartProps) => {
           text: "Raw Words per Minute",
         },
         beginAtZero: true,
-        min: 0,
         ticks: {
           precision: 0,
           autoSkip: true,
