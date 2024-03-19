@@ -41,7 +41,6 @@ const AccuracyDoughnut = (props: MyChartProps) => {
   const correct = props.stats.accuracies[1];
   const corrected = props.stats.accuracies[0] - props.stats.accuracies[1];
   const incorrect = 100 - props.stats.accuracies[0];
-  console.log(correct, corrected, incorrect);
   const data = {
     datasets: [
       {

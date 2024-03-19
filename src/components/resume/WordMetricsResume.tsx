@@ -1,28 +1,17 @@
 import { For } from "solid-js";
-import type { Paragraphs } from "./Content";
+import type { WordSpeed } from "../metrics/Metrics";
 
 type WordMetricsResumeProps = {
-  paragraphs: Paragraphs;
+  words: WordSpeed[];
 };
 
 const WordMetricsResume = (props: WordMetricsResumeProps) => {
-  const wordsWpm = props.paragraphs
-    .map((paragraph) => {
-      // TODO: take average if multiple time the same words, keep count
-      return paragraph.map((word) => {
-        return {
-          word: word.keys.map(k => k.key).join(""),
-          wpm: word.wpm,
-        };
-      }).filter((word) => word.word.length > 1);
-    })
-    .flat();
   return (
     <ul class="wordsWpm">
-      <For each={wordsWpm}>
+      <For each={props.words}>
         {(word) => (
           <li>
-            {word.word}: {word.wpm.toFixed(2)} Wpm
+            {word.word}: {word.averageWpm} Wpm
           </li>
         )}
       </For>
