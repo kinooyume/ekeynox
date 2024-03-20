@@ -1,9 +1,10 @@
 import { WordStatus } from "../prompt/PromptWord.tsx";
-import { PromptKeyFocus, PromptKeyStatus } from "../metrics/KeyMetrics.ts";
+import { KeyFocus, KeyStatus } from "../metrics/KeyMetrics.ts";
 
 export type Metakey = {
-  status: PromptKeyStatus;
-  focus: PromptKeyFocus;
+  status: KeyStatus;
+  focus: KeyFocus;
+  // wasInvalid: boolean;
   key: string;
 };
 
@@ -28,8 +29,8 @@ const makeEnter = () => ({
   keys: [
     {
       key: "Enter",
-      status: PromptKeyStatus.unstart,
-      focus: PromptKeyFocus.unset,
+      status: KeyStatus.unset,
+      focus: KeyFocus.unset,
     },
   ],
 });
@@ -43,8 +44,8 @@ const makeSpace = () => ({
   keys: [
     {
       key: " ",
-      status: PromptKeyStatus.unstart,
-      focus: PromptKeyFocus.unset,
+      status: KeyStatus.unset,
+      focus: KeyFocus.unset,
     },
   ],
 });
@@ -63,8 +64,8 @@ const parseWord =
       keySet.add(key);
       return {
         key,
-        status: PromptKeyStatus.unstart,
-        focus: PromptKeyFocus.unset,
+        status: KeyStatus.unset,
+        focus: KeyFocus.unset,
       };
     }),
   });
