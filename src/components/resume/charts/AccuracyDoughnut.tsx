@@ -20,6 +20,7 @@ type MyChartProps = {
   stats: StatProjection;
   children: JSXElement;
 };
+
 const AccuracyDoughnut = (props: MyChartProps) => {
   /**
    * You must register optional elements before using the chart,
@@ -50,6 +51,12 @@ const AccuracyDoughnut = (props: MyChartProps) => {
     ],
   } as ChartData;
 
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    cutout: "80%",
+  };
+
   css`
     .chart {
       position: relative;
@@ -68,12 +75,6 @@ const AccuracyDoughnut = (props: MyChartProps) => {
       justify-content: center;
     }
   `;
-  const options = {
-    responsive: true,
-    maintainAspectRatio: false,
-    cutout: "80%",
-  };
-
   return (
     <div class="chart">
       <DefaultChart type="doughnut" data={data} options={options} />
