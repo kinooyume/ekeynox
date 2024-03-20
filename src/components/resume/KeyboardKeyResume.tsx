@@ -1,7 +1,12 @@
 import { Show } from "solid-js";
 import { css } from "solid-styled";
 import "balloon-css";
-import type { TypingProjection } from "../metrics/TypingProjection";
+import {
+  createTypingProjection,
+  diffKeyStatusProjections,
+  mergeTypingProjections,
+  type TypingProjection,
+} from "../metrics/TypingProjection";
 
 type transform = Array<[string, string]>;
 
@@ -32,7 +37,7 @@ export type KeyboardKeyResumeProps = {
   key: Array<string>;
   size: string;
   used: boolean;
-  data: Array<TypingProjection | undefined>;
+  data: Array<TypingProjection>;
 };
 
 /* faire le truc correct, incorrect, was incorrect */
@@ -51,10 +56,19 @@ const KeyboardKeyResume = (props: KeyboardKeyResumeProps) => {
       height: 40px;
       color: var(--text-color);
       border-radius: 8px;
-      background: var(--background-color);
+      background: var(--key-bg-color);
       box-shadow:
         2px 2px 7px var(--key-color),
         -2px -2px 7px var(--key-color-alt);
+    }
+    .pressed {
+      background: var(--key-bg-color);
+      box-shadow:
+        inset 2px 2px 7px var(--key-color),
+        inset -2px -2px 7px var(--key-color-alt);
+
+      transform: translate(1px, 1px);
+      transition: all 300ms cubic-bezier(0.23, 1, 0.32, 1);
     }
     .concave {
       background: linear-gradient(145deg, #cacaca, #f0f0f0);
@@ -111,10 +125,10 @@ const KeyboardKeyResume = (props: KeyboardKeyResumeProps) => {
         inset -2px -2px 7px var(--key-correct-color-alt);
     }
     .incorrect {
+      background: var(--key-incorrect-bg-color);
       box-shadow:
         2px 2px 7px var(--key-incorrect-color),
         -2px -2px 7px var(--key-incorrect-color-alt);
-      background: var(--key-incorrect-bg-color);
     }
     .incorrect.pressed {
       box-shadow:
@@ -148,51 +162,49 @@ const KeyboardKeyResume = (props: KeyboardKeyResumeProps) => {
     }
   `;
 
-  const getInfo = (data: Array<TypingProjection | undefined>) =>
-    data.reduce((acc, cur) => {
-      if (cur) {
-        if (!acc) return cur;
-        acc.correct += cur.correct;
-        acc.incorrect += cur.incorrect;
-        acc.deletedCorrect += cur.deletedCorrect;
-        acc.deletedIncorrect += cur.deletedIncorrect;
-        acc.missed += cur.missed;
-        acc.extra += cur.extra;
-        acc.total += cur.total;
-      }
-      return acc;
-    });
+  // duplicate getInfo
+  const getInfo = (data: Array<TypingProjection>) => {
+    const info =
+      data.length === 1
+        ? data[0]
+        : data.reduce((acc, cur) => {
+            if (cur) mergeTypingProjections(acc, cur);
+            return acc;
+          }, createTypingProjection());
+    return [diffKeyStatusProjections(info), info.total];
+  };
 
   // show accuracy
-  const infoToString = (data: Array<TypingProjection | undefined>) => {
-    const info = getInfo(data);
-    return info ? ` ${info.correct - info.deletedCorrect} / ${info.total}` : "";
+  const infoToString = (data: Array<TypingProjection>) => {
+    const [info, total] = getInfo(data);
+    return info ? ` ${info.match} / ${total}` : "";
   };
 
-  //   const infoToString = () =>
-  //     info
-  //       ? `
-  // Correct: ${info.correct - info.deletedCorrect}\n
-  // Incorrect: ${info.incorrect}\n
-  // Missed: ${info.missed}\n
-  // Extra: ${info.extra}\n
-  // Total: ${info.total}
-  // `
-  //       : "";
-  const status = (data: Array<TypingProjection | undefined>, k: string) => {
-    const info = getInfo(data);
-    if (!info) return "";
-    const correct = info?.correct - info?.deletedCorrect;
-    const incorrect = info?.incorrect - info?.deletedIncorrect;
+  // PERF: lot of stuff at each keypress
+  const status = (data: Array<TypingProjection>) => {
+    if (data.length === 0) return "";
+    const info =
+      data.length === 1
+        ? data[0]
+        : data.reduce((acc, cur) => {
+            if (cur) mergeTypingProjections(acc, cur);
+            return acc;
+          }, createTypingProjection());
+    const result = diffKeyStatusProjections(info);
+
+    const incorrect = result.unmatch + result.missed + result.extra;
+    const wasIncorrect =
+      info.added.unmatch + info.added.missed + info.added.extra;
     if (incorrect > 0) return "incorrect";
-    if (correct > 0) return info?.incorrect > 0 ? "corrected" : "correct";
+    if (result.match > 0) return wasIncorrect > 0 ? "corrected" : "correct";
   };
+  // PERF: finda better way for "was incorrect" ? linked to promptKey
 
   return (
     <div
       aria-label={infoToString(props.data)}
       data-balloon-pos="up"
-      class={`key ${props.used ? "used" : ""} ${status(props.data, props.key[0])} ${props.size}`}
+      class={`key ${props.used ? "used" : ""} ${status(props.data)} ${props.size}`}
     >
       <Show when={props.key[1] !== undefined}>
         <span class="secondary">{props.key[1]}</span>

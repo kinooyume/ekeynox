@@ -1,6 +1,6 @@
 import { css } from "solid-styled";
 import { createSignal, createEffect } from "solid-js";
-import { PromptKeyStatus } from "../metrics/KeyMetrics";
+import { KeyStatus } from "../metrics/KeyMetrics";
 import { type Metakey } from "../content/Content.ts";
 
 const transformDict = [
@@ -17,7 +17,7 @@ const Key = (props: Metakey) => {
     transformDict.find(([key]) => key === char)?.[1] || char;
 
   createEffect(() => {
-    if (props.status === PromptKeyStatus.incorrect) setWasInvalid(true);
+    if (props.status !== KeyStatus.match && props.status !== KeyStatus.unset) setWasInvalid(true);
   });
 
   css`
@@ -30,15 +30,15 @@ const Key = (props: Metakey) => {
       white-space: pre;
     }
 
-    span.correct {
+    span.match {
       color: var(--correct-color);
       background-color: var(--correct-bg-color);
     }
-    span.incorrect {
+    span.unmatch, span.extra, span.missed {
       color: var(--incorrect-color);
       background-color: var(--incorrect-bg-color);
     }
-    span.wasInvalid.correct {
+    span.wasInvalid.match {
       color: var(--corrected-color);
       background-color: var(--corrected-bg-color);
     }

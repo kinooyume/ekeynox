@@ -3,6 +3,7 @@ import {
   type TypingProjection,
   mergeTypingProjections,
   createTypingProjectionFromPendingList,
+  diffKeyStatusProjections,
 } from "./TypingProjection";
 import {
   createWordProjection,
@@ -12,7 +13,11 @@ import {
 } from "./KpWordMetrics";
 import type { LinkedList } from "../List";
 import List from "../List";
-import type { TypingEvent, TypingKey, TypingWord } from "../typing/TypingEngine";
+import type {
+  TypingEvent,
+  TypingKey,
+  TypingWord,
+} from "../typing/TypingEngine";
 
 export type CoreProjection = {
   projection: TypingProjection;
@@ -97,7 +102,7 @@ const keypressProjectionHandler = (props: KeypressMetricsProps) => {
   const start = performance.now();
 
   // TODO: refacto key/words
-  const getProjection = (isOver: boolean): KeypressMetricsProjection => {
+  const getProjection = (): KeypressMetricsProjection => {
     const stop = performance.now();
     let node = logs;
     let wordNode = wordsLogs;
@@ -113,13 +118,14 @@ const keypressProjectionHandler = (props: KeypressMetricsProps) => {
     mergeWordProjections(wordProjection, sectionWordProjection);
     /* *** */
 
-    const correct = projection.correct - projection.deletedCorrect;
+    const projectionResult = diffKeyStatusProjections(projection);
+
+    const correct = projectionResult.match;
 
     const incorrect =
-      projection.incorrect +
-      projection.extra +
-      projection.missed -
-      projection.deletedIncorrect;
+      projectionResult.unmatch +
+      projectionResult.missed +
+      projectionResult.extra;
 
     const total = correct + incorrect;
 
@@ -134,7 +140,7 @@ const keypressProjectionHandler = (props: KeypressMetricsProps) => {
 
     const accuracy = (correct / total) * 100 || 0;
     const rawAccuracy =
-      (correct / (total + projection.deletedIncorrect)) * 100 || 0;
+      (correct / (total + projection.deleted.total)) * 100 || 0;
 
     // NOTE: pas sur que consistency doit etre ici
     // TODO: stats dans section projection, donc pour quoi pas

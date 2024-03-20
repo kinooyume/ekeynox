@@ -42,9 +42,8 @@ const KeyboardResume = (props: KeyboardProps) => {
                 <KeyboardKeyResume
                   key={lKey.all}
                   used={lKey.used}
-                  data={lKey.all.map((c) => props.metrics[c])}
+                  data={lKey.all.map((c) => props.metrics[c]).filter((c) => c)}
                   size={lKey.size}
-                  pressed={pressedKeys().includes(lKey.primary)}
                 />
               )}
             </For>
@@ -57,9 +56,8 @@ const KeyboardResume = (props: KeyboardProps) => {
             <KeyboardKeyResume
               key={lKey.all}
               used={lKey.used}
-              data={lKey.all.map((c) => props.metrics[c])}
+              data={lKey.all.map((c) => props.metrics[c]).filter((c) => c)}
               size={lKey.size}
-              pressed={pressedKeys().includes(lKey.primary)}
             />
           )}
         </For>

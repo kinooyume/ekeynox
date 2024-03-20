@@ -4,6 +4,7 @@ import type { GameOptions } from "../gameSelection/GameOptions";
 import type { KeypressMetricsProjection } from "./KeypressMetrics";
 import type { KeysProjection } from "./KeysProjection";
 import type { TypingMetrics } from "./TypingMetrics";
+import type { TypingProjection } from "./TypingProjection";
 
 export type Metrics = {
   content: ContentData;
@@ -27,7 +28,16 @@ export type WordSpeed = {
 export type MetricsResume = {
   chart: ChartMetrics;
   words: Array<WordSpeed>;
+  // keys: [string, TypingProjection][];
 };
+
+const sortKeys = (keys: KeysProjection): KeysProjection => {
+  const sorted = Object.entries(keys).sort(
+    ([, a], [, b]) => b.correct - a.correct,
+  );
+  return Object.fromEntries(sorted);
+};
+
 const logsToChartMetrics = (
   logs: LinkedList<KeypressMetricsProjection>,
 ): ChartMetrics => {

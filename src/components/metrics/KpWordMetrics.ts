@@ -33,7 +33,7 @@ const mergeWordProjections = (
 const createWordProjectionFromList = (
   logs: LinkedList<TypingWord>,
 ): [WordProjection, LinkedList<TypingWord>] => {
-  const projection = createTypingProjection();
+  const projection = { correct: 0 };
   const updater = updateWordProjection(projection);
   let node = logs;
   let sortedLogs = null;
