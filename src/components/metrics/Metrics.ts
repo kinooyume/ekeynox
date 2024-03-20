@@ -33,7 +33,7 @@ export type MetricsResume = {
 
 const sortKeys = (keys: KeysProjection): KeysProjection => {
   const sorted = Object.entries(keys).sort(
-    ([, a], [, b]) => b.correct - a.correct,
+    ([, a], [, b]) => b.added.match - a.added.match,
   );
   return Object.fromEntries(sorted);
 };
@@ -50,7 +50,7 @@ const logsToChartMetrics = (
   while (log) {
     const elapsed = Math.round(log.value.core.duration / 1000);
     const secProj = log.value.meta.sectionProjection;
-    const wrong = secProj.incorrect + secProj.missed + secProj.extra;
+    const wrong = secProj.added.unmatch + secProj.added.missed + secProj.added.extra;
     if (prevElapsed !== elapsed) {
       wpm.push({ x: elapsed, y: log.value.stats.speed.byWord[0] });
       raw.push({ x: elapsed, y: log.value.stats.speed.byKeypress[1] });

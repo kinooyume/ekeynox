@@ -2,7 +2,7 @@ import KeypressMetrics, {
   type KeypressMetricsProjection,
   type KeypressMetricsProps,
 } from "./KeypressMetrics";
-import type { TypingEvent } from "./TypingEngine";
+import type { TypingEvent } from "../typing/TypingEngine";
 
 export type PendingKeypressMetrics = {
   event: (event: TypingEvent) => void;
@@ -23,7 +23,7 @@ const pendingKeypressMetrics = (
     event: handler.event,
     getProjection: handler.getProjection,
     pause: (isOver) => {
-      const projection = handler.getProjection(isOver);
+      const projection = handler.getProjection();
       return [
         {
           getProjection: () => projection,
