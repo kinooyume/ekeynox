@@ -1,5 +1,5 @@
 import type { LinkedList } from "../List";
-import type { ContentData } from "../content/Content";
+import type { ContentData, MetaWord } from "../content/Content";
 import type { GameOptions } from "../gameSelection/GameOptions";
 import type { KeypressMetricsProjection } from "./KeypressMetrics";
 import type { KeysProjection } from "./KeysProjection";
@@ -18,9 +18,15 @@ export type ChartMetrics = {
   errors: Array<{ x: number; y: number }>;
 };
 
+export type WordSpeed = {
+  word: string;
+  averageWpm: number;
+  wpm: number[];
+};
+
 export type MetricsResume = {
   chart: ChartMetrics;
-  words: Array<string>;
+  words: Array<WordSpeed>;
 };
 const logsToChartMetrics = (
   logs: LinkedList<KeypressMetricsProjection>,
@@ -42,7 +48,7 @@ const logsToChartMetrics = (
       if (wrong > 0) {
         errors.push({ x: elapsed, y: wrong });
       }
-    } else {
+    } else if (errors.length > 0) {
       errors[errors.length - 1].y += wrong;
     }
     prevElapsed = elapsed;
@@ -51,9 +57,37 @@ const logsToChartMetrics = (
   return { wpm, raw, errors };
 };
 
+const averageWordWpm = (words: Array<MetaWord>): Array<WordSpeed> => {
+  let result = [] as WordSpeed[];
+  words.forEach((word) => {
+    if (word.wpm === 0) return;
+    // NOTE: maybe in metaWord
+    const keys = word.keys.map((k) => k.key).join("");
+    if (keys.length < 5) return;
+
+    const wordResult = result.find((r) => r.word === keys);
+    if (wordResult) {
+      wordResult.wpm.push(word.wpm);
+      wordResult.averageWpm = Math.round(
+        wordResult.wpm.reduce((a, b) => a + b, 0) / wordResult.wpm.length,
+      );
+    } else {
+      result.push({
+        word: keys,
+        wpm: [word.wpm],
+        averageWpm: word.wpm,
+      });
+    }
+  });
+  console.log(result);
+  return result;
+};
+
 const createMetricsResume = (metrics: Metrics): MetricsResume => ({
   chart: logsToChartMetrics(metrics.typing.logs),
-  words: [],
+  words: averageWordWpm(metrics.content.paragraphs.flat()).sort(
+    (a, b) => b.averageWpm - a.averageWpm,
+  ),
 });
 
 export { createMetricsResume };
