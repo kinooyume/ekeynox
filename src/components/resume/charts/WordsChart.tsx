@@ -1,18 +1,18 @@
-import { onMount, For, type JSXElement } from "solid-js";
+import { onMount } from "solid-js";
 import {
   Chart,
   CategoryScale,
   PointElement,
-  type ChartData,
   Title,
   Tooltip,
   Legend,
   Colors,
   DoughnutController,
   ArcElement,
+  BarController,
 } from "chart.js";
 
-import { DefaultChart } from "solid-chartjs";
+import { Bar, DefaultChart } from "solid-chartjs";
 import { css } from "solid-styled";
 
 import type { WordSpeed } from "../../metrics/Metrics";
@@ -25,8 +25,8 @@ const WordsChart = (props: WordMetricsResumeProps) => {
   onMount(() => {
     Chart.register(
       CategoryScale,
-      DoughnutController,
       PointElement,
+      BarController,
       Title,
       Tooltip,
       ArcElement,
