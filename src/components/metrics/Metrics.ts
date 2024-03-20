@@ -38,7 +38,6 @@ const logsToChartMetrics = (
   let log = logs;
   let prevElapsed = -1;
   while (log) {
-    // NOTE: nope, we need to merge the error
     const elapsed = Math.round(log.value.core.duration / 1000);
     const secProj = log.value.meta.sectionProjection;
     const wrong = secProj.incorrect + secProj.missed + secProj.extra;
@@ -79,7 +78,6 @@ const averageWordWpm = (words: Array<MetaWord>): Array<WordSpeed> => {
       });
     }
   });
-  console.log(result);
   return result;
 };
 

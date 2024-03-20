@@ -7,7 +7,7 @@ import type { Translator } from "../App";
 import { createMetricsResume, type Metrics } from "../metrics/Metrics";
 import { createComputed, createSignal, type JSXElement } from "solid-js";
 import TypingKeyboardResume from "./TypingKeyboardResume";
-import WordMetricsResume from "./WordMetricsResume";
+import WordMetricsResume from "./charts/WordsChart";
 
 type TypingMetricsProps = {
   t: Translator;
@@ -77,13 +77,13 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
           <div class="chart">
             <SpeedChart metrics={metricsResume.chart} />
           </div>
+          <WordMetricsResume words={metricsResume.words} />
           <div class="keyboard">
             <TypingKeyboardResume
               layout={kbLayout()}
               metrics={props.metrics.keys}
             />
           </div>
-          <WordMetricsResume words={metricsResume.words} />
           <Prompt paragraphs={props.metrics.content.paragraphs} />
         </div>
       </div>
