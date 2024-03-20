@@ -9,9 +9,10 @@ import {
   Colors,
   ArcElement,
   BarController,
+  BarElement,
 } from "chart.js";
 
-import { Bar, DefaultChart } from "solid-chartjs";
+import { DefaultChart } from "solid-chartjs";
 import { css } from "solid-styled";
 
 import type { WordSpeed } from "../../metrics/Metrics";
@@ -26,6 +27,7 @@ const WordsChart = (props: WordMetricsResumeProps) => {
       CategoryScale,
       PointElement,
       BarController,
+      BarElement,
       Title,
       Tooltip,
       ArcElement,
