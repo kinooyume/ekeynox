@@ -7,7 +7,6 @@ import {
   Tooltip,
   Legend,
   Colors,
-  DoughnutController,
   ArcElement,
   BarController,
 } from "chart.js";

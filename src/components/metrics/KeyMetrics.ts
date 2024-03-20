@@ -1,38 +1,40 @@
-export enum PromptKeyStatus {
-  unstart = "unstart",
-  correct = "correct",
-  incorrect = "incorrect",
+export enum KeyStatus {
+  unset = "unset",
+  match = "match",
+  unmatch = "unmatch",
+  extra = "extra",
+  missed = "missed",
 }
 
-export enum PromptKeyFocus {
+export enum KeyFocus {
   unset = "unset",
   focus = "focus",
   unfocus = "unfocus",
   back = "back",
 }
 
-export enum KeyStatus {
-  match,
-  unmatch,
-  extra,
-  missed,
+export type KeyAdded =
+  | { kind: KeyStatus.match }
+  | { kind: KeyStatus.extra }
+  | { kind: KeyStatus.missed; typed: string }
+  | { kind: KeyStatus.unmatch; typed: string };
+
+export enum KeyEventKind {
+  added,
   deleted,
   back,
   ignore,
 }
 
-export type KeyMetrics =
-  | { kind: KeyStatus.match }
-  | { kind: KeyStatus.extra }
-  | { kind: KeyStatus.missed; typed: string }
-  | { kind: KeyStatus.unmatch; typed: string }
-  | { kind: KeyStatus.deleted; status: PromptKeyStatus }
-  | { kind: KeyStatus.back }
-  | { kind: KeyStatus.ignore };
+export type KeyEvent =
+  | { kind: KeyEventKind.added; status: KeyAdded }
+  | { kind: KeyEventKind.deleted; status: KeyStatus }
+  | { kind: KeyEventKind.back }
+  | { kind: KeyEventKind.ignore };
 
 const blankCharacters = [" ", "Enter"];
 
-export type KeyTuple = [key: string, KeyMetrics];
+export type KeyTuple = [key: string, KeyEvent];
 
 type KeyMetricsProps = {
   typed: string;
@@ -41,7 +43,7 @@ type KeyMetricsProps = {
 
 type KeyDeletedMetricsProps = {
   expected: string;
-  status: PromptKeyStatus;
+  status: KeyStatus;
 };
 
 const makeDeletedKeyMetrics = ({
@@ -49,24 +51,42 @@ const makeDeletedKeyMetrics = ({
   status,
 }: KeyDeletedMetricsProps): KeyTuple => [
   expected,
-  { kind: KeyStatus.deleted, status },
+  { kind: KeyEventKind.deleted, status },
 ];
 
-const getKeyMetrics = ({ typed, expected }: KeyMetricsProps): KeyTuple => {
-  if (typed === "Backspace") {
-    return [typed, { kind: KeyStatus.back }];
-  } else if (typed.length === 1 || typed === "Enter") {
+const getAddedKeyMetrics = ({ typed, expected }: KeyMetricsProps): KeyTuple => {
+  if (typed.length === 1 || typed === "Enter") {
     if (expected === typed) {
-      return [expected, { kind: KeyStatus.match }];
+      return [
+        expected,
+        { kind: KeyEventKind.added, status: { kind: KeyStatus.match } },
+      ];
     } else if (blankCharacters.includes(expected)) {
-      return [typed, { kind: KeyStatus.extra }];
+      return [
+        typed,
+        { kind: KeyEventKind.added, status: { kind: KeyStatus.extra } },
+      ];
     } else if (blankCharacters.includes(typed)) {
-      return [expected, { kind: KeyStatus.missed, typed }];
+      return [
+        expected,
+        { kind: KeyEventKind.added, status: { kind: KeyStatus.missed, typed } },
+      ];
     } else {
-      return [expected, { kind: KeyStatus.unmatch, typed }];
+      return [
+        expected,
+        { kind: KeyEventKind.added, status: { kind: KeyStatus.unmatch, typed } },
+      ];
     }
   }
-  return [typed, { kind: KeyStatus.ignore }];
+  return [typed, { kind: KeyEventKind.ignore }];
+};
+const getKeyMetrics = ({ typed, expected }: KeyMetricsProps): KeyTuple => {
+  if (typed === "Backspace") {
+    return [typed, { kind: KeyEventKind.back }];
+  } else if (typed.length === 1 || typed === "Enter") {
+    return getAddedKeyMetrics({ typed, expected });
+  }
+  return [typed, { kind: KeyEventKind.ignore }];
 };
 
 export { getKeyMetrics, makeDeletedKeyMetrics };

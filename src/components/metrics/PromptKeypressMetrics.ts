@@ -1,5 +1,5 @@
-import type { Metakey } from "./Content";
-import { PromptKeyStatus } from "./KeyMetrics";
+import type { Metakey } from "../content/Content";
+import { KeyStatus } from "./KeyMetrics";
 
 // TODO: rename, WordWpmCounter ?
 export type PendingPromptKeypressMetrics = {
@@ -25,7 +25,7 @@ const promptKeypressHandler = (): PausedPromptKeypressMetrics => {
     const start = performance.now();
     const getWpm = (keys: Array<Metakey>): PromptWpm => {
       const stop = performance.now();
-      if (!keys.every((key) => key.status === PromptKeyStatus.correct))
+      if (!keys.every((key) => key.status === KeyStatus.match))
         return { kind: PromptWpmKind.pending };
       const duration = stop - start + lastDuration;
       const wpm = ((keys.length / duration) * 60000) / 5;

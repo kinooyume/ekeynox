@@ -1,6 +1,11 @@
 import { Show } from "solid-js";
 import { css } from "solid-styled";
-import type { TypingProjection } from "../metrics/TypingProjection";
+import {
+  createTypingProjection,
+  diffKeyStatusProjections,
+  mergeTypingProjections,
+  type TypingProjection,
+} from "../metrics/TypingProjection";
 
 type transform = Array<[string, string]>;
 
@@ -32,7 +37,7 @@ export type KeyboardKeyProps = {
   current: boolean;
   size: string;
   used: boolean;
-  data: Array<TypingProjection | undefined>;
+  data: Array<TypingProjection>;
   pressed: boolean;
 };
 
@@ -156,27 +161,28 @@ const KeyboardKey = (props: KeyboardKeyProps) => {
     }
   `;
 
-  const status = (data: Array<TypingProjection | undefined>, k: string) => {
-    const info = data.reduce((acc, cur) => {
-      if (cur) {
-        if (!acc) return cur;
-        acc.correct += cur.correct;
-        acc.incorrect += cur.incorrect;
-        acc.deletedCorrect += cur.deletedCorrect;
-        acc.deletedIncorrect += cur.deletedIncorrect;
-      }
-      return acc;
-    });
-    if (!info) return "";
-    const correct = info?.correct - info?.deletedCorrect;
-    const incorrect = info?.incorrect - info?.deletedIncorrect;
+  // PERF: lot of stuff at each keypress
+  const status = (data: Array<TypingProjection>) => {
+    if (data.length === 0) return "";
+    const info =
+      data.length === 1
+        ? data[0]
+        : data.reduce((acc, cur) => {
+            if (cur) mergeTypingProjections(acc, cur);
+            return acc;
+          }, createTypingProjection());
+    const result = diffKeyStatusProjections(info);
+
+    const incorrect = result.unmatch + result.missed + result.extra;
+    const wasIncorrect = info.added.unmatch + info.added.missed + info.added.extra;
     if (incorrect > 0) return "incorrect";
-    if (correct > 0) return info?.incorrect > 0 ? "corrected" : "correct";
+    if (result.match > 0) return wasIncorrect > 0 ? "corrected" : "correct";
   };
+  // PERF: finda better way for "was incorrect" ? linked to promptKey
 
   return (
     <div
-      class={`key ${props.pressed ? "pressed" : ""} ${props.used ? "used" : ""} ${props.current ? "current" : ""} ${status(props.data, props.key[0])} ${props.size}`}
+      class={`key ${props.pressed ? "pressed" : ""} ${props.used ? "used" : ""} ${props.current ? "current" : ""} ${status(props.data)} ${props.size}`}
     >
       <Show when={props.key[1] !== undefined}>
         <span class="secondary">{props.key[1]}</span>
