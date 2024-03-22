@@ -88,14 +88,10 @@ const DataMetricsResume = (props: DataMetricsResumeProps) => {
           </p>
         </div>
       </div>
-      <div class="accuracies">
-        <p class="title">{props.t("consistency")}</p>
-        <div class="accuracies-data">
-          <p class="consistency">
-            {(props.projection.stats.consistency * 100).toFixed(2)}
-          </p>
-        </div>
-      </div>
+      <p>
+        {(props.projection.stats.consistency * 100).toFixed(0)}% 
+         {props.t("consistency")}
+      </p>
       <div class="bottom"></div>
     </div>
   );

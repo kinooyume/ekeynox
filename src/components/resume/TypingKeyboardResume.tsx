@@ -32,6 +32,8 @@ const KeyboardResume = (props: KeyboardProps) => {
     }
   `;
 
+  // TODO: Keypress metrics, better handle separator
+  const blankCharacters = [" ", "Enter"];
   return (
     <div class="kb">
       <For each={props.layout.layout}>
@@ -42,7 +44,11 @@ const KeyboardResume = (props: KeyboardProps) => {
                 <KeyboardKeyResume
                   key={lKey.all}
                   used={lKey.used}
-                  data={lKey.all.map((c) => props.metrics[c]).filter((c) => c)}
+                  data={
+                    blankCharacters.includes(lKey.primary)
+                      ? []
+                      : lKey.all.map((c) => props.metrics[c]).filter((c) => c)
+                  }
                   size={lKey.size}
                 />
               )}

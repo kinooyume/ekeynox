@@ -5,9 +5,11 @@ import DataMetricsResume from "./DataMetricsResume";
 import Prompt from "./PromptResume";
 import type { Translator } from "../App";
 import { createMetricsResume, type Metrics } from "../metrics/Metrics";
-import { createComputed, createSignal, type JSXElement } from "solid-js";
+import { createComputed, createSignal, Show, type JSXElement } from "solid-js";
 import TypingKeyboardResume from "./TypingKeyboardResume";
 import WordMetricsResume from "./charts/WordsChart";
+import TabContainer from "../ui/TabContainer";
+import CharacterChart from "./charts/CharacterChart";
 
 type TypingMetricsProps = {
   t: Translator;
@@ -21,6 +23,7 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
     props.kbLayout(props.metrics.content.keySet),
   );
 
+  const [metricIndex, setMetricIndex] = createSignal(0);
   const metricsResume = createMetricsResume(props.metrics);
 
   createComputed(() => {
@@ -69,6 +72,34 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
     .content-wrapper::-webkit-scrollbar {
       display: none;
     }
+
+    .action-title {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+      margin: 16px 0;
+    }
+
+    .action-title span {
+      color: var(--text-secondary-color);
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .action-title p {
+      color: var(--text-color);
+      margin: 0;
+      font-size: 2.1rem;
+      font-weight: 200;
+      text-transform: capitalize;
+    }
+
+    .stat-title {
+      margin: 16px 0;
+      font-size: 2.4rem;
+      font-weight: 200;
+    }
   `;
   return (
     <div class="metrics full-bleed">
@@ -77,14 +108,31 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
           <div class="chart">
             <SpeedChart metrics={metricsResume.chart} />
           </div>
-          <WordMetricsResume words={metricsResume.words} />
-          <div class="keyboard">
-            <TypingKeyboardResume
-              layout={kbLayout()}
-              metrics={props.metrics.keys}
+          <div>
+            <h2 class="stat-title">{props.t("statistics")}</h2>
+            <TabContainer
+              onTabChange={setMetricIndex}
+              isChecked={metricIndex()}
+              elems={[props.t("words"), props.t("characters")]}
             />
           </div>
-          <Prompt paragraphs={props.metrics.content.paragraphs} />
+          <Show when={metricIndex() === 0}>
+            <div class="words-metrics">
+              <WordMetricsResume words={metricsResume.words} />
+              <Prompt paragraphs={props.metrics.content.paragraphs} />
+            </div>
+          </Show>
+          <Show when={metricIndex() === 1}>
+            <div class="characters-metrics">
+              <div class="keyboard">
+                <TypingKeyboardResume
+                  layout={kbLayout()}
+                  metrics={props.metrics.keys}
+                />
+                <CharacterChart keys={metricsResume.keys} />
+              </div>
+            </div>
+          </Show>
         </div>
       </div>
       <div class="sidebar-wrapper">
@@ -95,6 +143,10 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
             projection={props.metrics.typing.logs!.value}
           />
           <div class="actions-wrapper">
+            <div class="action-title">
+              <span>{props.t("newGame.one")}</span>
+              <p>{props.t("newGame.two")}</p>
+            </div>
             <div class="actions">{props.children}</div>
           </div>
         </div>

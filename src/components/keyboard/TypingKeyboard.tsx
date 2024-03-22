@@ -68,7 +68,9 @@ const Keyboard = (props: KeyboardProps) => {
   // OUAI ! Ou alors juste, on recupere les used separement
   // et on crée un signal pour key
   // qui lui envois le nouveau truc du coup
-  
+
+  // TODO: Keypress metrics, better handle separator
+  const blankCharacters = [" ", "Enter"];
   return (
     <div class="kb">
       <For each={props.layout.layout}>
@@ -80,7 +82,11 @@ const Keyboard = (props: KeyboardProps) => {
                   key={lKey.all}
                   used={lKey.used}
                   current={lKey.all.includes(props.currentKey)}
-                  data={lKey.all.map((c) => props.metrics[c]).filter((c) => c)}
+                  data={
+                    blankCharacters.includes(lKey.primary)
+                      ? []
+                      : lKey.all.map((c) => props.metrics[c]).filter((c) => c)
+                  }
                   size={lKey.size}
                   pressed={pressedKeys().includes(lKey.primary)}
                 />
@@ -96,7 +102,7 @@ const Keyboard = (props: KeyboardProps) => {
               key={lKey.all}
               used={lKey.used}
               current={lKey.all.includes(props.currentKey)}
-              data={lKey.all.map((c) => props.metrics[c])}
+              data={lKey.all.map((c) => props.metrics[c]).filter((c) => c)}
               size={lKey.size}
               pressed={pressedKeys().includes(lKey.primary)}
             />

@@ -12,7 +12,6 @@ export type PromptProps = {
 const prompt = (props: PromptProps) => {
   css`
     .prompt {
-      height: 230px;
       margin-bottom: 2rem;
       max-width: 900px;
       overflow: hidden;

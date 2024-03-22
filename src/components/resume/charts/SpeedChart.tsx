@@ -81,6 +81,12 @@ const MyChart = (props: MyChartProps) => {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: "bottom",
+        display: true,
+      },
+    },
     tension: 0.4,
     scales: {
       x: {

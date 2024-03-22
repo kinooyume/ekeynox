@@ -4,7 +4,10 @@ import type { GameOptions } from "../gameSelection/GameOptions";
 import type { KeypressMetricsProjection } from "./KeypressMetrics";
 import type { KeysProjection } from "./KeysProjection";
 import type { TypingMetrics } from "./TypingMetrics";
-import type { TypingProjection } from "./TypingProjection";
+import {
+  diffKeyStatusProjections,
+  type KeyStatusProjection,
+} from "./TypingProjection";
 
 export type Metrics = {
   content: ContentData;
@@ -25,10 +28,28 @@ export type WordSpeed = {
   wpm: number[];
 };
 
+export type KeyResume = { [k: string]: KeyStatusProjection };
+
 export type MetricsResume = {
   chart: ChartMetrics;
   words: Array<WordSpeed>;
-  // keys: [string, TypingProjection][];
+  keys: [KeyResume, Map<string, number>];
+};
+
+const blankCharacters = [" ", "Enter"];
+const makeKeysResume = (
+  keys: KeysProjection,
+): [KeyResume, Map<string, number>] => {
+  const expected = new Map<string, number>();
+  const result = Object.entries(keys).reduce((acc, [key, value]) => {
+    // TODO: Keypress metrics, better handle separator
+    if (blankCharacters.includes(key)) return acc;
+    value.expected.forEach((e) => {
+      expected.set(e, (expected.get(e) || 0) + 1);
+    });
+    return { ...acc, [key]: diffKeyStatusProjections(value) };
+  }, {});
+  return [result, expected];
 };
 
 const sortKeys = (keys: KeysProjection): KeysProjection => {
@@ -50,7 +71,8 @@ const logsToChartMetrics = (
   while (log) {
     const elapsed = Math.round(log.value.core.duration / 1000);
     const secProj = log.value.meta.sectionProjection;
-    const wrong = secProj.added.unmatch + secProj.added.missed + secProj.added.extra;
+    const wrong =
+      secProj.added.unmatch + secProj.added.missed + secProj.added.extra;
     if (prevElapsed !== elapsed) {
       wpm.push({ x: elapsed, y: log.value.stats.speed.byWord[0] });
       raw.push({ x: elapsed, y: log.value.stats.speed.byKeypress[1] });
@@ -69,7 +91,7 @@ const logsToChartMetrics = (
 const averageWordWpm = (words: Array<MetaWord>): Array<WordSpeed> => {
   let result = [] as WordSpeed[];
   words.forEach((word) => {
-    if (word.wpm === 0) return;
+    if (word.wpm === 0 || blankCharacters.includes(word.keys[0].key)) return;
     // NOTE: maybe in metaWord
     const keys = word.keys.map((k) => k.key).join("");
     if (keys.length < 5) return;
@@ -96,6 +118,7 @@ const createMetricsResume = (metrics: Metrics): MetricsResume => ({
   words: averageWordWpm(metrics.content.paragraphs.flat()).sort(
     (a, b) => b.averageWpm - a.averageWpm,
   ),
+  keys: makeKeysResume(sortKeys(metrics.keys)),
 });
 
 export { createMetricsResume };

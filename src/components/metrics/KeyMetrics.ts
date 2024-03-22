@@ -24,6 +24,7 @@ export enum KeyEventKind {
   deleted,
   back,
   ignore,
+  // separator - Added/deleted
 }
 
 export type KeyEvent =
@@ -54,32 +55,31 @@ const makeDeletedKeyMetrics = ({
   { kind: KeyEventKind.deleted, status },
 ];
 
+// TODO: better handling of separators/blankCharacters, as special events.
 const getAddedKeyMetrics = ({ typed, expected }: KeyMetricsProps): KeyTuple => {
-  if (typed.length === 1 || typed === "Enter") {
-    if (expected === typed) {
-      return [
-        expected,
-        { kind: KeyEventKind.added, status: { kind: KeyStatus.match } },
-      ];
-    } else if (blankCharacters.includes(expected)) {
-      return [
-        typed,
-        { kind: KeyEventKind.added, status: { kind: KeyStatus.extra } },
-      ];
-    } else if (blankCharacters.includes(typed)) {
-      return [
-        expected,
-        { kind: KeyEventKind.added, status: { kind: KeyStatus.missed, typed } },
-      ];
-    } else {
-      return [
-        expected,
-        { kind: KeyEventKind.added, status: { kind: KeyStatus.unmatch, typed } },
-      ];
-    }
+  if (expected === typed) {
+    return [
+      expected,
+      { kind: KeyEventKind.added, status: { kind: KeyStatus.match } },
+    ];
+  } else if (blankCharacters.includes(expected)) {
+    return [
+      typed,
+      { kind: KeyEventKind.added, status: { kind: KeyStatus.extra } },
+    ];
+  } else if (blankCharacters.includes(typed)) {
+    return [
+      expected,
+      { kind: KeyEventKind.added, status: { kind: KeyStatus.missed, typed } },
+    ];
+  } else {
+    return [
+      expected,
+      { kind: KeyEventKind.added, status: { kind: KeyStatus.unmatch, typed } },
+    ];
   }
-  return [typed, { kind: KeyEventKind.ignore }];
 };
+
 const getKeyMetrics = ({ typed, expected }: KeyMetricsProps): KeyTuple => {
   if (typed === "Backspace") {
     return [typed, { kind: KeyEventKind.back }];
