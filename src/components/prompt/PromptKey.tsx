@@ -17,7 +17,8 @@ const Key = (props: Metakey) => {
     transformDict.find(([key]) => key === char)?.[1] || char;
 
   createEffect(() => {
-    if (props.status !== KeyStatus.match && props.status !== KeyStatus.unset) setWasInvalid(true);
+    if (props.status !== KeyStatus.match && props.status !== KeyStatus.unset)
+      setWasInvalid(true);
   });
 
   css`
@@ -34,7 +35,9 @@ const Key = (props: Metakey) => {
       color: var(--correct-color);
       background-color: var(--correct-bg-color);
     }
-    span.unmatch, span.extra, span.missed {
+    span.unmatch,
+    span.extra,
+    span.missed {
       color: var(--incorrect-color);
       background-color: var(--incorrect-bg-color);
     }

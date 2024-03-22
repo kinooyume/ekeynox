@@ -11,11 +11,17 @@
   "english": "anglais",
   "keyboardLayout": "disposition du clavier",
   "words": "mots",
+  "characters": " caractères",
   "quotes": "citations",
   "custom": "personnalisé",
   "language": "language",
   "chooseYour": "Choisissez votre",
   "playingMode": "mode de jeu",
+  "newGame": {
+    "one": "nouvelle",
+    "two": "partie"
+  },
+  "statistics": "statistiques",
   "gameMode": {
     "monkey": {
       "title": "monkey",
