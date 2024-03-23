@@ -1,4 +1,3 @@
-import { onMount } from "solid-js";
 import {
   Chart,
   CategoryScale,
@@ -22,19 +21,6 @@ type WordMetricsResumeProps = {
 };
 
 const WordsChart = (props: WordMetricsResumeProps) => {
-  onMount(() => {
-    Chart.register(
-      CategoryScale,
-      PointElement,
-      BarController,
-      BarElement,
-      Title,
-      Tooltip,
-      ArcElement,
-      Legend,
-      Colors,
-    );
-  });
 
   // get the first 10 words
   const words = props.words.slice(0, 10);
@@ -104,7 +90,22 @@ const WordsChart = (props: WordMetricsResumeProps) => {
   `;
   return (
     <div class="chart">
-      <DefaultChart type="bar" data={data} options={options} />
+      <DefaultChart
+        type="bar"
+        data={data}
+        plugins={[
+          CategoryScale,
+          PointElement,
+          BarController,
+          BarElement,
+          Title,
+          Tooltip,
+          ArcElement,
+          Legend,
+          Colors,
+        ]}
+        options={options}
+      />
     </div>
   );
 };

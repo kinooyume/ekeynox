@@ -1,18 +1,15 @@
-import { onMount } from "solid-js";
 import {
-  Chart,
   LineController,
-  CategoryScale,
   PointElement,
   LineElement,
   LinearScale,
   type ChartData,
-  Title,
   Tooltip,
-  Legend,
   Colors,
   ScatterController,
 } from "chart.js";
+
+import gradient from "chartjs-plugin-gradient";
 
 import { DefaultChart } from "solid-chartjs";
 import { css } from "solid-styled";
@@ -26,20 +23,6 @@ const MyChart = (props: MyChartProps) => {
    * You must register optional elements before using the chart,
    * otherwise you will have the most primitive UI
    */
-  onMount(() => {
-    Chart.register(
-      LineController,
-      CategoryScale,
-      PointElement,
-      LineElement,
-      LinearScale,
-      Title,
-      Tooltip,
-      Legend,
-      Colors,
-      ScatterController,
-    );
-  });
 
   const data = {
     datasets: [
@@ -48,8 +31,18 @@ const MyChart = (props: MyChartProps) => {
         label: "WPM",
         order: 2,
         yAxisID: "wpm",
-        borderColor: "#744307",
+        borderColor: "#8c583c",
         data: props.metrics.wpm,
+        // fill: true,
+        // gradient: {
+        //   backgroundColor: {
+        //     axis: "y",
+        //     colors: {
+        //       0: "rgba(0, 0, 0, 0)",
+        //       100: "#b16f4c",
+        //     },
+        //   },
+        // },
       },
       {
         type: "line",
@@ -84,7 +77,11 @@ const MyChart = (props: MyChartProps) => {
     plugins: {
       legend: {
         position: "bottom",
-        display: true,
+        display: false,
+      },
+      tooltip: {
+        mode: "index",
+        intersect: true,
       },
     },
     tension: 0.4,
@@ -161,7 +158,20 @@ const MyChart = (props: MyChartProps) => {
 
   return (
     <div class="chart">
-      <DefaultChart data={data} options={options} />
+      <DefaultChart
+        data={data}
+        plugins={[
+          LineController,
+          PointElement,
+          LineElement,
+          LinearScale,
+          Tooltip,
+          Colors,
+          ScatterController,
+          gradient,
+        ]}
+        options={options}
+      />
     </div>
   );
 };
