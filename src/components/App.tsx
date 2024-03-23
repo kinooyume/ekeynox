@@ -24,7 +24,7 @@ import fr_dict from "../i18n/fr.json";
 
 import Header from "./Header";
 import HeaderAction from "./HeaderAction";
-import { fetchWords } from "./content/fetchContent";
+import { createFetchWords } from "./content/fetchContent";
 import { makeGetContent } from "./content/TypingGameSource";
 import GameModeMenu from "./gameSelection/GameModeMenu";
 import TypingGame from "./typing/TypingGame";
@@ -119,7 +119,10 @@ const App = () => {
   const [contentGeneration, setContentGeneration] =
     createSignal<ContentGeneration>(gameOptions.generation);
 
-  const [randomSource] = createResource(contentGeneration, fetchWords);
+  const fetchWords = createFetchWords();
+  const [randomSource] = createResource(contentGeneration, fetchWords, {
+    initialValue: [],
+  });
 
   const launch = (content: GameModeContent) =>
     setGameStatus({ kind: GameStatusKind.pending, content });
@@ -128,7 +131,7 @@ const App = () => {
     setGameOptions(opts);
     setGameOptions("custom", customSource);
     const content = makeGetContent(opts, {
-      random: randomSource() || [],
+      random: randomSource(),
       custom: customSource,
     });
     launch(content);
