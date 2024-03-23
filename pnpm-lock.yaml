@@ -47,6 +47,9 @@ dependencies:
   chart.js:
     specifier: ^4.4.1
     version: 4.4.1
+  chartjs-plugin-gradient:
+    specifier: ^0.6.1
+    version: 0.6.1(chart.js@4.4.1)
   prettier-plugin-astro:
     specifier: ^0.13.0
     version: 0.13.0
@@ -1405,6 +1408,14 @@ packages:
     engines: {pnpm: '>=7'}
     dependencies:
       '@kurkle/color': 0.3.2
+    dev: false
+
+  /chartjs-plugin-gradient@0.6.1(chart.js@4.4.1):
+    resolution: {integrity: sha512-TGHNIh8KqQMLdb+UfY80cBHYRyOC47eeokmgkeajRdKGbFt462lJiyiq4ZJ25fiM7BGsmzoBLhmVyEw4B3gQxw==}
+    peerDependencies:
+      chart.js: '>=2.6.0'
+    dependencies:
+      chart.js: 4.4.1
     dev: false
 
   /chokidar@3.5.3:
