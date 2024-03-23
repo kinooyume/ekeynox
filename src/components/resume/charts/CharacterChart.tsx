@@ -1,4 +1,3 @@
-import { onMount } from "solid-js";
 import {
   Chart,
   CategoryScale,
@@ -10,34 +9,18 @@ import {
   ArcElement,
   BarController,
   BarElement,
-  type ChartData,
-  type TooltipItem,
 } from "chart.js";
 
 import { DefaultChart } from "solid-chartjs";
 import { css } from "solid-styled";
 
 import type { KeyResume } from "../../metrics/Metrics";
-import type { ChartTooltipItem, ScriptableTooltipContext } from "chart.js";
 
 type CharacterCharProps = {
   keys: [KeyResume, Map<string, number>];
 };
 
 const CharacterChart = (props: CharacterCharProps) => {
-  onMount(() => {
-    Chart.register(
-      CategoryScale,
-      PointElement,
-      BarController,
-      BarElement,
-      Title,
-      Tooltip,
-      ArcElement,
-      Legend,
-      Colors,
-    );
-  });
 
   // get the first 10 words
   // const words = props.words.slice(0, 10);
@@ -107,14 +90,14 @@ const CharacterChart = (props: CharacterCharProps) => {
       },
       tooltip: {
         callbacks: {
-          label: (context: ChartTooltipItem) => {
-            console.log(context)
+          // label: (context: ChartTooltipItem) => {
+          //   console.log(context);
             // let ds = data.datasets[tooltipItem.datasetIndex];
             // console.log(ds);
             // return (
             //   ds.label + ": " + Math.abs(ds.data[tooltipItem.index] as number)
             // );
-          },
+          // },
         },
       },
     },
@@ -168,7 +151,22 @@ const CharacterChart = (props: CharacterCharProps) => {
   `;
   return (
     <div class="chart">
-      <DefaultChart type="bar" data={data} options={options} />
+      <DefaultChart
+        type="bar"
+        data={data}
+        plugins={[
+          CategoryScale,
+          PointElement,
+          BarController,
+          BarElement,
+          Title,
+          Tooltip,
+          ArcElement,
+          Legend,
+          Colors,
+        ]}
+        options={options}
+      />
     </div>
   );
 };

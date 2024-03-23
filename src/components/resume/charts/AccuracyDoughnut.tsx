@@ -1,4 +1,3 @@
-import { onMount, type JSXElement } from "solid-js";
 import {
   Chart,
   CategoryScale,
@@ -15,6 +14,7 @@ import {
 import { DefaultChart } from "solid-chartjs";
 import { css } from "solid-styled";
 import type { StatProjection } from "../../metrics/KeypressMetrics";
+import type { JSXElement } from "solid-js";
 
 type MyChartProps = {
   stats: StatProjection;
@@ -22,22 +22,6 @@ type MyChartProps = {
 };
 
 const AccuracyDoughnut = (props: MyChartProps) => {
-  /**
-   * You must register optional elements before using the chart,
-   * otherwise you will have the most primitive UI
-   */
-  onMount(() => {
-    Chart.register(
-      CategoryScale,
-      DoughnutController,
-      PointElement,
-      Title,
-      Tooltip,
-      ArcElement,
-      Legend,
-      Colors,
-    );
-  });
 
   const correct = props.stats.accuracies[1];
   const corrected = props.stats.accuracies[0] - props.stats.accuracies[1];
@@ -77,7 +61,16 @@ const AccuracyDoughnut = (props: MyChartProps) => {
   `;
   return (
     <div class="chart">
-      <DefaultChart type="doughnut" data={data} options={options} />
+      <DefaultChart type="doughnut" data={data} plugins={[
+      CategoryScale,
+      DoughnutController,
+      PointElement,
+      Title,
+      Tooltip,
+      ArcElement,
+      Legend,
+      Colors,
+      ]} options={options} />
       <div class="center">{props.children}</div>
     </div>
   );
