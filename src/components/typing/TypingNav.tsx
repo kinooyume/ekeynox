@@ -8,13 +8,17 @@ import {
   createSignal,
   onMount,
   onCleanup,
+  Switch,
+  Match,
 } from "solid-js";
 import Nav from "../svgs/nav-abs.tsx";
 import Gauge from "../svgs/gauge.tsx";
 import Accuracy from "../svgs/accuracy.tsx";
 import Cross from "../svgs/cross.tsx";
+import type { Translator } from "../App.tsx";
 
 type TypingNavProps = {
+  t: Translator;
   isPaused: boolean;
   stat: StatProjection;
   children?: JSXElement;
@@ -100,6 +104,20 @@ const TypingNav = (props: TypingNavProps) => {
       cursor: pointer;
       padding-top: 2px;
     }
+    .help {
+      opacity: 0.6;
+    }
+    .help,
+    .help span {
+      color: grey;
+    }
+
+    .help .key {
+      background-color: grey;
+      color: var(--color-surface-alt);
+      font-size: 12px;
+      padding: 4px;
+    }
   `;
 
   return (
@@ -119,9 +137,23 @@ const TypingNav = (props: TypingNavProps) => {
             <div class="child">{props.children}</div>
           </Show>
         </div>
+        <div class="help">
+          <Switch>
+            <Match when={props.isPaused}>
+              <span>{props.t("typingGame.typeToPlay")}</span>
+            </Match>
+            <Match when={!props.isPaused}>
+              <div>
+                <span class="key">Ctrl</span> +<span class="key">Shift</span> +
+                <span class="key">{props.t("space")}</span>
+                <span> {props.t("typingGame.toPause")}</span>
+              </div>
+            </Match>
+          </Switch>
+        </div>
         <div class="stats">
           <div class="stat wpm">
-            <Gauge />
+            <Gauge speed={props.stat.speed.byWord[0]} />
             <span>{Math.trunc(props.stat.speed.byWord[0])}</span>
           </div>
           <div class="stat accuracy">
