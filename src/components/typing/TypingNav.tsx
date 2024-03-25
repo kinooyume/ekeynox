@@ -10,12 +10,14 @@ import {
   onCleanup,
   Switch,
   Match,
+  createEffect,
 } from "solid-js";
 import Nav from "../svgs/nav-abs.tsx";
 import Gauge from "../svgs/gauge.tsx";
 import Accuracy from "../svgs/accuracy.tsx";
 import Cross from "../svgs/cross.tsx";
 import type { Translator } from "../App.tsx";
+import anime from "animejs";
 
 type TypingNavProps = {
   t: Translator;
@@ -46,6 +48,42 @@ const TypingNav = (props: TypingNavProps) => {
     setNavWidth(getNavWidth(vw));
     setNavBorder(getNavBorder(vw));
   };
+
+  let wpmElem: HTMLSpanElement;
+  let accuracyElem: HTMLSpanElement;
+
+  createEffect((prevAnim: anime.AnimeInstance | undefined) => {
+    const wpm = Math.trunc(props.stat.speed.byWord[0]);
+    const wpmFromElem = parseInt(wpmElem.innerHTML);
+
+    if (wpm === 0) anime.remove(wpmElem);
+    const duration = wpm === 0 ? 100 : wpmFromElem === 0 ? 200 : 1000;
+
+    return anime({
+      targets: wpmElem,
+      innerHTML: [wpmFromElem, wpm],
+      easing: "easeInExpo",
+      duration,
+      round: 1,
+    });
+  });
+
+  createEffect(() => {
+    const acc = Math.trunc(props.stat.accuracies[1]);
+    const accFromElem = parseInt(accuracyElem.innerHTML);
+
+    if (acc === 0) anime.remove(accuracyElem);
+    const duration = acc === 0 ? 100 : accFromElem === 0 ? 200 : 1000;
+
+    return anime({
+      targets: accuracyElem,
+      innerHTML: [accFromElem, acc],
+      easing: "easeInExpo",
+      duration,
+      round: 1,
+    });
+  });
+
   onMount(() => {
     window.addEventListener("resize", resize);
   });
@@ -120,6 +158,9 @@ const TypingNav = (props: TypingNavProps) => {
     }
   `;
 
+  // pitetre interessant: https://codepen.io/juliangarnier/pen/XvjWvx
+  // https://codepen.io/AlikinVV/pen/OrmJxj
+
   return (
     <nav>
       <div class="svg-wrapper">
@@ -154,11 +195,13 @@ const TypingNav = (props: TypingNavProps) => {
         <div class="stats">
           <div class="stat wpm">
             <Gauge speed={props.stat.speed.byWord[0]} />
-            <span>{Math.trunc(props.stat.speed.byWord[0])}</span>
+            <span ref={wpmElem!}>0</span>
           </div>
           <div class="stat accuracy">
             <Accuracy correct={props.stat.accuracies[1] === 100} />
-            <span>{Math.trunc(props.stat.accuracies[1])}%</span>{" "}
+            <span>
+              <span ref={accuracyElem!}>0</span>%
+            </span>
           </div>
           <div class="cross">
             <Cross />
