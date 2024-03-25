@@ -169,6 +169,7 @@ const TypingGame = (props: TypingGameProps) => {
         ref={(k) => (keyboard = k)}
       />
       <TypingNav
+        t={props.t}
         isPaused={status().kind !== TypingStatusKind.pending}
         stat={stat()}
         onPause={() => pause()}

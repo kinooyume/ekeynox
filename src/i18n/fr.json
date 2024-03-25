@@ -21,6 +21,11 @@
     "one": "nouvelle",
     "two": "partie"
   },
+  "typingGame": {
+    "typeToPlay": "Ecrivez pour continuer.",
+    "toPause": "pour mettre en pause."
+  },
+  "space": "Espace",
   "statistics": "statistiques",
   "gameMode": {
     "monkey": {

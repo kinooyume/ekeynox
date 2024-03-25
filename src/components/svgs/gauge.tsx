@@ -1,107 +1,105 @@
-const Gauge = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    height="23"
-    width="23"
-  >
-    <g
-      fill="none"
-      stroke="currentColor"
-      stroke-linecap="round"
-      stroke-width="2"
-    >
-      <path
-        stroke-dasharray="60"
-        stroke-dashoffset="60"
-        d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"
+type GaugeProps = {
+  speed: number;
+};
+
+const speedToRotate = (speed: number) => (speed > 180 ? 180 : speed);
+
+const Gauge = (props: GaugeProps) => {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" height="23" width="23">
+      <g
+        fill="none"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-width="2"
       >
-        <animate
-          fill="freeze"
-          attributeName="stroke-dashoffset"
-          dur="0.5s"
-          values="60;0"
-        />
-      </path>
-      <path d="M12 12H12" opacity="0">
-        <animate
-          fill="freeze"
-          attributeName="d"
-          begin="1.2s"
-          dur="0.2s"
-          values="M12 12H12;M12 12H6.5"
-        />
-        <set attributeName="opacity" begin="1.2s" to="1" />
-        <animateTransform
-          fill="freeze"
-          attributeName="transform"
-          begin="1.4s"
-          dur="0.4s"
-          type="rotate"
-          values="0 12 12;65 12 12"
-        />
-      </path>
-    </g>
-    <g fill="currentColor">
-      <path
-        fill-opacity="0"
-        d="M12 21C9.41 21 7.15 20.79 5.94 19L12 21L18.06 19C16.85 20.79 14.59 21 12 21Z"
-      >
-        <set attributeName="fill-opacity" begin="0.5s" to="1" />
-        <animate
-          fill="freeze"
-          attributeName="d"
-          begin="0.5s"
-          dur="0.4s"
-          values="M12 21C9.41 21 7.15 20.79 5.94 19L12 21L18.06 19C16.85 20.79 14.59 21 12 21Z;M12 16C9.41 16 7.15 17.21 5.94 19L12 21L18.06 19C16.85 17.21 14.59 16 12 16Z"
-        />
-      </path>
-      <circle cx="7" cy="12" r="0" transform="rotate(15 12 12)">
-        <animate
-          fill="freeze"
-          attributeName="r"
-          begin="0.8s"
-          dur="0.2s"
-          values="0;1"
-        />
-      </circle>
-      <circle cx="7" cy="12" r="0" transform="rotate(65 12 12)">
-        <animate
-          fill="freeze"
-          attributeName="r"
-          begin="0.85s"
-          dur="0.2s"
-          values="0;1"
-        />
-      </circle>
-      <circle cx="7" cy="12" r="0" transform="rotate(115 12 12)">
-        <animate
-          fill="freeze"
-          attributeName="r"
-          begin="0.9s"
-          dur="0.2s"
-          values="0;1"
-        />
-      </circle>
-      <circle cx="7" cy="12" r="0" transform="rotate(165 12 12)">
-        <animate
-          fill="freeze"
-          attributeName="r"
-          begin="0.95s"
-          dur="0.2s"
-          values="0;1"
-        />
-      </circle>
-      <circle cx="12" cy="12" r="0">
-        <animate
-          fill="freeze"
-          attributeName="r"
-          begin="1.2s"
-          dur="0.2s"
-          values="0;2"
-        />
-      </circle>
-    </g>
-  </svg>
-);
+        <path
+          stroke-dasharray="60"
+          stroke-dashoffset="60"
+          d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"
+        >
+          <animate
+            fill="freeze"
+            attributeName="stroke-dashoffset"
+            dur="0.5s"
+            values="60;0"
+          />
+        </path>
+        <path
+          d="M12 12H12"
+          transform={`rotate(${speedToRotate(props.speed)} 12 12)`}
+        >
+          <animate
+            fill="freeze"
+            attributeName="d"
+            begin="1.2s"
+            dur="0.2s"
+            values="M12 12H12;M12 12H6.5"
+          />
+        </path>
+      </g>
+      <g fill="currentColor">
+        <path
+          fill-opacity="0"
+          d="M12 21C9.41 21 7.15 20.79 5.94 19L12 21L18.06 19C16.85 20.79 14.59 21 12 21Z"
+        >
+          <set attributeName="fill-opacity" begin="0.5s" to="1" />
+          <animate
+            fill="freeze"
+            attributeName="d"
+            begin="0.5s"
+            dur="0.4s"
+            values="M12 21C9.41 21 7.15 20.79 5.94 19L12 21L18.06 19C16.85 20.79 14.59 21 12 21Z;M12 16C9.41 16 7.15 17.21 5.94 19L12 21L18.06 19C16.85 17.21 14.59 16 12 16Z"
+          />
+        </path>
+        <circle cx="7" cy="12" r="0" transform="rotate(15 12 12)">
+          <animate
+            fill="freeze"
+            attributeName="r"
+            begin="0.8s"
+            dur="0.2s"
+            values="0;1"
+          />
+        </circle>
+        <circle cx="7" cy="12" r="0" transform="rotate(65 12 12)">
+          <animate
+            fill="freeze"
+            attributeName="r"
+            begin="0.85s"
+            dur="0.2s"
+            values="0;1"
+          />
+        </circle>
+        <circle cx="7" cy="12" r="0" transform="rotate(115 12 12)">
+          <animate
+            fill="freeze"
+            attributeName="r"
+            begin="0.9s"
+            dur="0.2s"
+            values="0;1"
+          />
+        </circle>
+        <circle cx="7" cy="12" r="0" transform="rotate(165 12 12)">
+          <animate
+            fill="freeze"
+            attributeName="r"
+            begin="0.95s"
+            dur="0.2s"
+            values="0;1"
+          />
+        </circle>
+        <circle cx="12" cy="12" r="0">
+          <animate
+            fill="freeze"
+            attributeName="r"
+            begin="1.2s"
+            dur="0.2s"
+            values="0;2"
+          />
+        </circle>
+      </g>
+    </svg>
+  );
+};
 
 export default Gauge;
