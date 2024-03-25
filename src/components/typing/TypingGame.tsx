@@ -171,7 +171,7 @@ const TypingGame = (props: TypingGameProps) => {
       <TypingNav
         isPaused={status().kind !== TypingStatusKind.pending}
         stat={stat()}
-        onPause={pause!}
+        onPause={() => pause()}
         onReset={reset}
       >
         <Show when={props.content.kind === GameModeKind.rabbit}>
