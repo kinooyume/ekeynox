@@ -60,7 +60,7 @@ export type TypingEngineProps = {
   setPause: (pause: () => void) => void;
   setFocus: (focus: () => void) => void;
   setReset: (reset: () => void) => void;
-  onOver : () => void;
+  onOver: () => void;
 };
 
 const TypingEngine = (props: TypingEngineProps) => {
@@ -179,7 +179,7 @@ const TypingEngine = (props: TypingEngineProps) => {
       typingWord = nextWord();
     } else if (currentParagraph() < getCurrent.nbrParagraphs()) {
       nextParagraph();
-    } else return [false, getTypingWord()]
+    } else return [false, getTypingWord()];
     return [true, typingWord];
   };
 
@@ -229,6 +229,7 @@ const TypingEngine = (props: TypingEngineProps) => {
   /* *** */
 
   const pause = () => {
+    console.log("pause");
     setCurrent.wordStatus(WordStatus.pause, false);
     props.setStatus({ kind: TypingStatusKind.pause });
   };
@@ -316,18 +317,24 @@ const TypingEngine = (props: TypingEngineProps) => {
   onCleanup(() => {
     if (!input) return;
     input.removeEventListener("keydown", handleKeypress);
-    input.addEventListener("keyup", handleKeyUp);
+    input.removeEventListener("keyup", handleKeyUp);
   });
   /****/
 
   return (
     <input
       ref={input!}
+      type="text"
       autofocus
-      autocomplete="off"
       autocorrect="off"
+      autocomplete="off"
       autocapitalize="none"
+      list="autocompleteOff"
+      spellcheck={false}
       aria-hidden
+      data-gramm="false"
+      data-gramm_editor="false"
+      data-enable-grammarly="false"
       style="position: fixed; top: -100px"
     ></input>
   );
