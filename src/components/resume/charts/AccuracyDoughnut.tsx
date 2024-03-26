@@ -51,7 +51,7 @@ const AccuracyDoughnut = (props: MyChartProps) => {
       const yCoor = (innerRadius + radius) * Math.sin(endAngle + i);
       coordinates.push({ x: xCoor, y: yCoor });
     }
-    return { radius, color: "black", coordinates };
+    return { radius, color, coordinates };
   };
 
   const overlappingSegments = {
@@ -77,7 +77,7 @@ const AccuracyDoughnut = (props: MyChartProps) => {
         ctx.fillStyle = color;
         ctx.beginPath();
         coordinates.forEach(({ x, y }) => {
-          ctx.arc(-x, y, radius -1, 0, angle * 360, false);
+          ctx.arc(-x, y, radius - 1, 0, angle * 360, false);
         });
         ctx.fill();
 

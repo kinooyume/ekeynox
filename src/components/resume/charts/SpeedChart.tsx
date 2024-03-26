@@ -19,10 +19,6 @@ type MyChartProps = {
   metrics: ChartMetrics;
 };
 const MyChart = (props: MyChartProps) => {
-  /**
-   * You must register optional elements before using the chart,
-   * otherwise you will have the most primitive UI
-   */
 
   const data = {
     datasets: [
