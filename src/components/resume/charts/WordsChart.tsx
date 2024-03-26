@@ -39,6 +39,7 @@ const WordsChart = (props: WordMetricsResumeProps) => {
       {
         data: speeds,
         backgroundColor: "#2b5e7a",
+        borderRadius: 10,
       },
     ],
   };
@@ -74,7 +75,7 @@ const WordsChart = (props: WordMetricsResumeProps) => {
     .chart {
       position: relative;
       width: 90%;
-      height: 260px;
+      height: 400px;
     }
     .center {
       position: absolute;

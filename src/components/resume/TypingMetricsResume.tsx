@@ -90,8 +90,7 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
     .action-title p {
       color: var(--text-color);
       margin: 0;
-      font-size: 2.1rem;
-      font-weight: 200;
+      font-size: 1.4rem;
       text-transform: capitalize;
     }
 
@@ -144,8 +143,7 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
           />
           <div class="actions-wrapper">
             <div class="action-title">
-              <span>{props.t("newGame.one")}</span>
-              <p>{props.t("newGame.two")}</p>
+              <p>{props.t("newGame.one")} {props.t("newGame.two")}</p>
             </div>
             <div class="actions">{props.children}</div>
           </div>
