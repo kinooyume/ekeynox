@@ -9,6 +9,7 @@ import {
   getKeyMetrics,
   makeDeletedKeyMetrics,
   KeyFocus,
+  getKeyDownMetrics,
 } from "../metrics/KeyMetrics.ts";
 
 export enum TypingWordKind {
@@ -253,25 +254,33 @@ const TypingEngine = (props: TypingEngineProps) => {
       ...statusProps,
     });
 
-  const handleKeypress = (event: KeyboardEvent) => {
+  const handleInputEvent = (event: Event) => {
     const timestamp = performance.now();
-    const keyMetrics = currentKeyMetrics(event.key);
-    props.onKeyDown(event.key);
+    const input = event.target as HTMLInputElement;
+    const value = input.value;
+    input.value = "";
+    return handleKeypress(value, timestamp);
+  };
+
+  const handleBackPress = (timestamp: number) => {
+    if (!prev()) return;
+    const deletedKeyMetrics = makeDeletedKeyMetrics({
+      expected: getCurrent.key().key,
+      status: getCurrent.key().status,
+    });
+    setStatus({
+      key: {
+        keyMetrics: deletedKeyMetrics,
+        timestamp,
+        focusIsSeparator: getCurrent.isSeparator(),
+      },
+    });
+  };
+
+  const handleKeypress = (typed: string, timestamp: number) => {
+    const keyMetrics = currentKeyMetrics(typed);
     if (keyMetrics[1].kind === KeyEventKind.ignore) {
       return;
-    } else if (keyMetrics[1].kind === KeyEventKind.back) {
-      if (!prev()) return;
-      const deletedKeyMetrics = makeDeletedKeyMetrics({
-        expected: getCurrent.key().key,
-        status: getCurrent.key().status,
-      });
-      setStatus({
-        key: {
-          keyMetrics: deletedKeyMetrics,
-          timestamp,
-          focusIsSeparator: getCurrent.isSeparator(),
-        },
-      });
     } else {
       if (getCurrent.word().status !== WordStatus.pending) {
         setCurrent.wordStatus(WordStatus.pending, true);
@@ -299,12 +308,24 @@ const TypingEngine = (props: TypingEngineProps) => {
 
   const handleKeyUp = (event: KeyboardEvent) => {
     props.onKeyUp(event.key);
+    switch (getKeyDownMetrics(event.key)) {
+      case KeyEventKind.added:
+        return handleKeypress(event.key, performance.now());
+      case KeyEventKind.back:
+        return handleBackPress(performance.now());
+    }
+  };
+
+  const handleKeyDown = (event: KeyboardEvent) => {
+    props.onKeyDown(event.key);
   };
 
   /* *** */
 
   onMount(() => {
-    input.addEventListener("keydown", handleKeypress);
+    /* NOTE: input event to handle android/chrome */
+    input.addEventListener("input", handleInputEvent);
+    input.addEventListener("keydown", handleKeyDown);
     input.addEventListener("keyup", handleKeyUp);
     currentFocus();
     props.setFocus(() => input.focus());
@@ -316,7 +337,8 @@ const TypingEngine = (props: TypingEngineProps) => {
 
   onCleanup(() => {
     if (!input) return;
-    input.removeEventListener("keydown", handleKeypress);
+    input.removeEventListener("input", handleInputEvent);
+    input.removeEventListener("keydown", handleKeyDown);
     input.removeEventListener("keyup", handleKeyUp);
   });
   /****/
@@ -329,7 +351,6 @@ const TypingEngine = (props: TypingEngineProps) => {
       autocorrect="off"
       autocomplete="off"
       autocapitalize="none"
-      list="autocompleteOff"
       spellcheck={false}
       aria-hidden
       data-gramm="false"
