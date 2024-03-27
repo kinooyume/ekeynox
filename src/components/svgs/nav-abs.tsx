@@ -13,4 +13,3 @@ const Nav = (props: NavProps) => (
 );
 
 export default Nav;
-
