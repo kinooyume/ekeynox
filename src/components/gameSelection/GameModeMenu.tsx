@@ -259,4 +259,3 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
 };
 
 export default GameModeKindMenu;
-
