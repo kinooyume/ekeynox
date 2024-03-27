@@ -80,6 +80,16 @@ const getAddedKeyMetrics = ({ typed, expected }: KeyMetricsProps): KeyTuple => {
   }
 };
 
+const getKeyDownMetrics = (typed: string) => {
+  switch (typed) {
+    case "Backspace":
+      return KeyEventKind.back;
+    case "Enter" || "Tab":
+      return KeyEventKind.added;
+  }
+  return KeyEventKind.ignore;
+};
+
 const getKeyMetrics = ({ typed, expected }: KeyMetricsProps): KeyTuple => {
   if (typed === "Backspace") {
     return [typed, { kind: KeyEventKind.back }];
@@ -89,4 +99,4 @@ const getKeyMetrics = ({ typed, expected }: KeyMetricsProps): KeyTuple => {
   return [typed, { kind: KeyEventKind.ignore }];
 };
 
-export { getKeyMetrics, makeDeletedKeyMetrics };
+export { getKeyMetrics, getKeyDownMetrics, makeDeletedKeyMetrics };
