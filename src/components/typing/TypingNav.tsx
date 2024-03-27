@@ -57,7 +57,7 @@ const TypingNav = (props: TypingNavProps) => {
     const wpmFromElem = parseInt(wpmElem.innerHTML);
 
     if (wpm === 0) anime.remove(wpmElem);
-    const duration = wpm === 0 ? 100 : wpmFromElem === 0 ? 200 : 1000;
+    const duration = wpm === 0 ? 100 : wpmFromElem === 0 ? 200 : 960;
 
     return anime({
       targets: wpmElem,
@@ -73,7 +73,8 @@ const TypingNav = (props: TypingNavProps) => {
     const accFromElem = parseInt(accuracyElem.innerHTML);
 
     if (acc === 0) anime.remove(accuracyElem);
-    const duration = acc === 0 ? 100 : accFromElem === 0 ? 200 : 1000;
+    const duration = acc === 0 ? 100 : accFromElem === 0 ? 200 : 960;
+
 
     return anime({
       targets: accuracyElem,
