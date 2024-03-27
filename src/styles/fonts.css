@@ -1,26 +1,25 @@
 @font-face {
   font-family: Larsseit;
-  src: url("../fonts/Larsseit/Larsseit.otf");
+  src: url("../fonts/Larsseit/Larsseit.woff2");
   font-display: swap;
   }
 
 @font-face {
   font-family: Larsseit;
-  src: url("../fonts/Larsseit/Larsseit-Bold.otf");
+  src: url("../fonts/Larsseit/Larsseit-Bold.woff2");
   font-weight: bold;
   font-display: swap;
   }
 
 @font-face {
   font-family: Larsseit;
-  src: url("../fonts/Larsseit/Larsseit-Light.otf");
+  src: url("../fonts/Larsseit/Larsseit-Light.woff2");
   font-weight: 200;
-  font-display: swap;
   }
 
 @font-face {
   font-family: Larsseit;
-  src: url("../fonts/Larsseit/Larsseit-Thin.otf");
+  src: url("../fonts/Larsseit/Larsseit-Thin.woff2");
   font-weight: 100;
   font-display: swap;
   }
