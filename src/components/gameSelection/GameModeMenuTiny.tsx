@@ -5,6 +5,7 @@ import {
   createSignal,
   Switch,
   Match,
+  createEffect,
 } from "solid-js";
 import { css } from "solid-styled";
 import { type Translator } from "../App";
@@ -43,6 +44,12 @@ const GameModeSelectionTiny = (props: GameModeSelectionProps) => {
     props.gameOptions,
   );
 
+  createEffect(() => {
+    props.setContentGeneration({
+      language: gameOptions.generation.language,
+      category: gameOptions.generation.category,
+    });
+  });
   css`
     .mode-selection {
       width: 400px;
