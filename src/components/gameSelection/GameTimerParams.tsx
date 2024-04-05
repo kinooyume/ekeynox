@@ -38,24 +38,6 @@ const GameTimerParams = (props: GameRandomParamsProps) => {
   return (
     <div class="time-params">
       <RadioGroup
-        name="time"
-        values={[
-          { label: "10s", value: 10 },
-          { label: "30s", value: 30 },
-          { label: "1m", value: 60 },
-          { label: "2m", value: 120 },
-        ]}
-        compare={(v) => v === props.gameOptions.timer.value}
-        setChecked={(time) =>
-          props.setGameOptions("timer", {
-            type: NumberSelectionType.selected,
-            value: time,
-          })
-        }
-      >
-        <Stopwatch />
-      </RadioGroup>
-      <RadioGroup
         name="wordsCategory-timer"
         values={[
           {
@@ -120,6 +102,24 @@ const GameTimerParams = (props: GameRandomParamsProps) => {
           {props.children}
         </Match>
       </Switch>
+      <RadioGroup
+        name="time"
+        values={[
+          { label: "10s", value: 10 },
+          { label: "30s", value: 30 },
+          { label: "1m", value: 60 },
+          { label: "2m", value: 120 },
+        ]}
+        compare={(v) => v === props.gameOptions.timer.value}
+        setChecked={(time) =>
+          props.setGameOptions("timer", {
+            type: NumberSelectionType.selected,
+            value: time,
+          })
+        }
+      >
+        <Stopwatch />
+      </RadioGroup>
     </div>
   );
 };

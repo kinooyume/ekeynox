@@ -92,7 +92,6 @@ const DataMetricsResume = (props: DataMetricsResumeProps) => {
         {(props.projection.stats.consistency * 100).toFixed(0)}% 
          {props.t("consistency")}
       </p>
-      <div class="bottom"></div>
     </div>
   );
 };
