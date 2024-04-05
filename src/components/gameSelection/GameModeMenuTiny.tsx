@@ -1,5 +1,4 @@
 import {
-  For,
   onCleanup,
   type JSXElement,
   createSignal,
@@ -12,8 +11,8 @@ import { type Translator } from "../App";
 import Bunny from "../svgs/bunny";
 import { TransitionGroup } from "solid-transition-group";
 import { createStore } from "solid-js/store";
-import GameRandomParams from "./GameRandomParams";
-import GameTimerParams from "./GameTimerParams";
+import RandomParamsCompact from "./RandomParamsCompact";
+import TimerParamsCompact from "./TimerParamsCompact";
 import CustomInput, { type CustomInputRef } from "../ui/CustomInput";
 import {
   GameModeKind,
@@ -102,7 +101,7 @@ const GameModeSelectionTiny = (props: GameModeSelectionProps) => {
       <div class="info">
         <Switch>
           <Match when={gameOptions.mode === GameModeKind.monkey}>
-            <GameRandomParams
+            <RandomParamsCompact
               t={props.t}
               gameOptions={gameOptions}
               setGameOptions={setGameOptions}
@@ -111,10 +110,10 @@ const GameModeSelectionTiny = (props: GameModeSelectionProps) => {
                 value={customRef.ref ? customRef?.ref.value : ""}
                 customInput={customRef}
               />
-            </GameRandomParams>
+            </RandomParamsCompact>
           </Match>
           <Match when={gameOptions.mode === GameModeKind.rabbit}>
-            <GameTimerParams
+            <TimerParamsCompact
               t={props.t}
               gameOptions={gameOptions}
               setGameOptions={setGameOptions}
@@ -123,7 +122,7 @@ const GameModeSelectionTiny = (props: GameModeSelectionProps) => {
                 value={customRef.ref ? customRef?.ref.value : ""}
                 customInput={customRef}
               />
-            </GameTimerParams>
+            </TimerParamsCompact>
           </Match>
         </Switch>
       </div>
