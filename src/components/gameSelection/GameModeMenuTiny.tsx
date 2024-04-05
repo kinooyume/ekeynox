@@ -1,6 +1,5 @@
 import {
   onCleanup,
-  type JSXElement,
   createSignal,
   Switch,
   Match,
@@ -8,8 +7,6 @@ import {
 } from "solid-js";
 import { css } from "solid-styled";
 import { type Translator } from "../App";
-import Bunny from "../svgs/bunny";
-import { TransitionGroup } from "solid-transition-group";
 import { createStore } from "solid-js/store";
 import RandomParamsCompact from "./RandomParamsCompact";
 import TimerParamsCompact from "./TimerParamsCompact";
@@ -21,19 +18,6 @@ import {
   type GameModeContent,
 } from "./GameOptions";
 import GameModeDropdown from "./GameModeDropdown";
-
-type GameModePicto = Record<GameModeKind, JSXElement>;
-
-const pictos: GameModePicto = {
-  monkey: <Bunny />,
-  rabbit: <Bunny />,
-};
-
-type GameModePreview = {
-  title: string;
-  description: string;
-  subtitle: string;
-};
 
 type GameModeSelectionProps = {
   t: Translator;
