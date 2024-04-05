@@ -1,8 +1,10 @@
 import { css } from "solid-styled";
 
-import {  type I18nContext } from "./App.tsx";
+import { type I18nContext } from "./App.tsx";
 import HeaderNav from "./HeaderNav.tsx";
 import { Show, type JSXElement } from "solid-js";
+
+import Logo from "./svgs/logo.tsx";
 
 type HeaderProps = {
   i18n: I18nContext;
@@ -34,17 +36,17 @@ const Header = (props: HeaderProps) => {
   `;
 
   return (
-      <div class="header">
-        <div class="left">
-          <div class="home" onClick={props.toHome}>
-            <p>eKeyNox</p>
-          </div>
-          {/* <Show when={props.gameMode !== "none"}> */}
-          {/*   <HeaderNav i18n={props.i18n} mode={props.gameMode} /> */}
-          {/* </Show> */}
+    <div class="header">
+      <div class="left">
+        <div class="home" onClick={props.toHome}>
+          <Logo />
         </div>
-        {props.children}
+        {/* <Show when={props.gameMode !== "none"}> */}
+        {/*   <HeaderNav i18n={props.i18n} mode={props.gameMode} /> */}
+        {/* </Show> */}
       </div>
+      {props.children}
+    </div>
   );
 };
 
