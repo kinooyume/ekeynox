@@ -14,20 +14,23 @@
   --color-primary-500: #f6d2a4;
   --color-primary-600: #f8dbb6;
 
-  --ui-primary-color:#654f3e;
+  --ui-primary-color: #654f3e;
   --ui-secondary-color: grey;
 
   --shadow-color: #a28840;
   --button-text-color: #2d2e3b;
 
   --color-surface-100: #e7eef4;
+  --color-surface-200: #e7eef4;
+  /* 
   --color-surface-200: #eaf0f5;
+*/
   --color-surface-300: #ecf2f6;
   --color-surface-400: #eff4f8;
   --color-surface-500: #f2f6f9;
   --color-surface-600: #f4f7fa;
 
-  --color-surface-alt: #e7e9e5;
+  --color-surface-alt: #e9e8e5;
   --color-surface-mixed-100: #e9e8e5;
   --color-surface-mixed-200: #ebebe8;
   --color-surface-mixed-300: #eeedeb;
@@ -100,7 +103,7 @@
   --text-secondary-color: #f8dbb6;
   --text-color: #f6f5f7;
 
-  --ui-primary-color:#f8dbb6;
+  --ui-primary-color: #f8dbb6;
   --ui-secondary-color: grey;
 
   --correct-color: #61f4b2;
