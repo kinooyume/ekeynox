@@ -230,7 +230,6 @@ const TypingEngine = (props: TypingEngineProps) => {
   /* *** */
 
   const pause = () => {
-    console.log("pause");
     setCurrent.wordStatus(WordStatus.pause, false);
     props.setStatus({ kind: TypingStatusKind.pause });
   };
