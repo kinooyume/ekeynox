@@ -143,7 +143,9 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
           />
           <div class="actions-wrapper">
             <div class="action-title">
-              <p>{props.t("newGame.one")} {props.t("newGame.two")}</p>
+              <p>
+                {props.t("newGame.one")} {props.t("newGame.two")}
+              </p>
             </div>
             <div class="actions">{props.children}</div>
           </div>
