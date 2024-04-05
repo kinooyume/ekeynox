@@ -150,6 +150,7 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
     }
     h2 {
       font-size: 3.8rem;
+      margin-top: 42px;
       margin-bottom: 0;
       text-transform: capitalize;
       font-weight: 100;
@@ -157,16 +158,33 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
     h3 {
       font-size: 1.1em;
       margin-top: 8px;
-      margin-bottom: 46px;
+      margin-bottom: 32px;
       font-weight: 200;
       color: var(--text-secondary-color);
     }
-    .description {
+    .game-description {
       max-width: 80%;
+      margin-bottom: 0;
     }
 
-    button {
-      margin-top: 64px;
+    .game-description {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      height: 75%;
+    }
+
+    .primary {
+      margin-top: auto;
+      margin-left: auto;
+    }
+
+    .options-title {
+      font-size: 22px;
+      opacity: 0.8;
+      font-weight: 300;
+      margin-top: 22px;
+      margin-bottom: 22px;
     }
   `;
 
@@ -202,17 +220,19 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
               </Switch>
             </div>
           </div>
-          <div class="game-optons">
+          <div class="game-description">
             <Switch>
               <Match when={gameOptions.mode === GameModeKind.monkey}>
-                <div class="option">
-                  <div class="text">
-                    <h2>{props.t("gameMode.monkey.title")}</h2>
-                    <h3>{props.t("gameMode.monkey.subtitle")}</h3>
-                    <p class="description">
-                      {props.t("gameMode.monkey.hugeDescription")}
-                    </p>
-                  </div>
+                <div class="text">
+                  <h2>{props.t("gameMode.monkey.title")}</h2>
+                  <h3>{props.t("gameMode.monkey.subtitle")}</h3>
+                  <p class="description">
+                    {props.t("gameMode.monkey.hugeDescription")}
+                  </p>
+                </div>
+
+                <div class="options">
+                  <h2 class="options-title">{props.t("options")}</h2>
                   <RandomParams
                     t={props.t}
                     gameOptions={gameOptions}
@@ -226,14 +246,15 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
                 </div>
               </Match>
               <Match when={gameOptions.mode === GameModeKind.rabbit}>
-                <div class="option">
-                  <div class="text">
-                    <h2>{props.t("gameMode.rabbit.title")}</h2>
-                    <h3>{props.t("gameMode.rabbit.subtitle")}</h3>
-                    <p class="description">
-                      {props.t("gameMode.rabbit.hugeDescription")}
-                    </p>
-                  </div>
+                <div class="text">
+                  <h2>{props.t("gameMode.rabbit.title")}</h2>
+                  <h3>{props.t("gameMode.rabbit.subtitle")}</h3>
+                  <p class="description">
+                    {props.t("gameMode.rabbit.hugeDescription")}
+                  </p>
+                </div>
+                <div class="options">
+                  <h2 class="options-title">{props.t("options")}</h2>
                   <TimerParams
                     t={props.t}
                     gameOptions={gameOptions}
