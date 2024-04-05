@@ -122,11 +122,7 @@ function RadioGroup<Value>(props: RadioGroupProps<Value>) {
               value={value.value as string}
               checked={props.compare(value.value)}
             />
-            <label
-              onClick={(_) =>
-                props.setChecked(value.value)
-              }
-            >
+            <label onClick={(_) => props.setChecked(value.value)}>
               <Show when={value.icon}>{value.icon}</Show>
               {value.label}
             </label>
