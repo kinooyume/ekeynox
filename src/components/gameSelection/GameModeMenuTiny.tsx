@@ -15,7 +15,13 @@ import { createStore } from "solid-js/store";
 import GameRandomParams from "./GameRandomParams";
 import GameTimerParams from "./GameTimerParams";
 import CustomInput, { type CustomInputRef } from "../ui/CustomInput";
-import { GameModeKind, type ContentGeneration, type GameOptions, type GameModeContent } from "./GameOptions";
+import {
+  GameModeKind,
+  type ContentGeneration,
+  type GameOptions,
+  type GameModeContent,
+} from "./GameOptions";
+import GameModeDropdown from "./GameModeDropdown";
 
 type GameModePicto = Record<GameModeKind, JSXElement>;
 
@@ -63,65 +69,6 @@ const GameModeSelectionTiny = (props: GameModeSelectionProps) => {
     .info {
       margin-bottom: 1rem;
     }
-
-    .info .title {
-      text-transform: capitalize;
-      font-size: 1.4rem;
-      font-weight: 200;
-      margin: 0;
-    }
-
-    .info .description {
-      margin-top: 4px;
-      font-size: 1rem;
-      color: var(--text-secondary-color);
-    }
-    .modes {
-      display: flex;
-      gap: 1rem;
-      flex-direction: row;
-      align-items: flex-end;
-      justify-content: center;
-    }
-    label {
-      position: relative;
-      display: block;
-      border-radius: 50%;
-      height: 46px;
-      width: 46px;
-      cursor: pointer;
-      background-color: var(--color-surface-300);
-      overflow: hidden;
-      transition: all 100ms linear;
-    }
-
-    label .icon {
-      position: absolute;
-      bottom: -10px;
-      right: -3px;
-      width: 50px;
-      height: 50px;
-      transition: all 100ms linear;
-    }
-
-    input:checked + label {
-      background-color: var(--color-primary-400);
-    }
-    input + label:hover {
-      background-color: var(--color-primary-100);
-      transform: scale(1.2);
-      overflow: visible;
-    }
-
-    label:hover .icon {
-      transform: translateY(-8px);
-    }
-
-    .radio {
-    }
-    .select {
-      display: none;
-    }
   `;
 
   onCleanup(() =>
@@ -145,66 +92,14 @@ const GameModeSelectionTiny = (props: GameModeSelectionProps) => {
   };
   return (
     <div class="mode-selection">
-      <div class="modes">
-        <For each={Object.keys(props.t("gameMode")) as GameModeKind[]}>
-          {(modeKey) => (
-            <div class={`radio ${modeKey}`}>
-              <input
-                type="radio"
-                name="mode"
-                class="select"
-                id={modeKey}
-                checked={gameOptions.mode === modeKey}
-                onChange={() => setGameOptions("mode", modeKey)}
-              />
-              <label
-                ref={(el) => {
-                  labelRef.push(el);
-                  el.addEventListener("mouseenter", () => {
-                    setLabelHovered(modeKey as GameModeKind);
-                  });
-                  el.addEventListener("mouseleave", () => {
-                    if (labelHovered() === modeKey) setLabelHovered(null);
-                  });
-                }}
-                for={modeKey}
-              >
-                <div class="icon"> {pictos[modeKey as GameModeKind]}</div>
-              </label>
-            </div>
-          )}
-        </For>
-      </div>
+      <GameModeDropdown
+        t={props.t}
+        gameOptions={gameOptions}
+        setGameOptions={setGameOptions}
+        content={props.content}
+        setContentGeneration={props.setContentGeneration}
+      />
       <div class="info">
-        <TransitionGroup
-          onEnter={(el, done) => {
-            const a = el.animate([{ opacity: 0 }, { opacity: 1 }], {
-              duration: 160,
-            });
-            a.finished.then(done);
-          }}
-          onExit={(el, done) => {
-            const a = el.animate([{ opacity: 1 }, { opacity: 0 }], {
-              duration: 0,
-            });
-            a.finished.then(done);
-          }}
-        >
-          <p class="title">
-            {
-              (props.t("gameMode") as Record<GameModeKind, GameModePreview>)[
-                (labelHovered() || gameOptions.mode) as GameModeKind
-              ].title
-            }
-          </p>
-          <p class="description">
-            {
-              (props.t("gameMode") as Record<GameModeKind, GameModePreview>)[
-                (labelHovered() || gameOptions.mode) as GameModeKind
-              ].subtitle
-            }
-          </p>
-        </TransitionGroup>
         <Switch>
           <Match when={gameOptions.mode === GameModeKind.monkey}>
             <GameRandomParams
