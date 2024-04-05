@@ -2,15 +2,14 @@ import { css } from "solid-styled";
 import { Match, Switch, createEffect } from "solid-js";
 import { createStore, type SetStoreFunction } from "solid-js/store";
 
-import GameRandomParams from "./GameRandomParams";
+import RandomParams from "./RandomParams";
 import {
   type GameOptions,
   type ContentGeneration,
   GameModeKind,
 } from "./GameOptions";
-import GameTimerParams from "./GameTimerParams";
+import TimerParams from "./TimerParams";
 import Bunny from "../svgs/bunny";
-import { Transition } from "solid-transition-group";
 import CustomInput, { type CustomInputRef } from "../ui/CustomInput";
 import GameModeSelection from "./GameModeSelection";
 import type { Translator } from "../App";
@@ -214,7 +213,7 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
                       {props.t("gameMode.monkey.hugeDescription")}
                     </p>
                   </div>
-                  <GameRandomParams
+                  <RandomParams
                     t={props.t}
                     gameOptions={gameOptions}
                     setGameOptions={setGameOptions}
@@ -223,7 +222,7 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
                       value={customRef.ref ? customRef?.ref.value : ""}
                       customInput={customRef}
                     />
-                  </GameRandomParams>
+                  </RandomParams>
                 </div>
               </Match>
               <Match when={gameOptions.mode === GameModeKind.rabbit}>
@@ -235,7 +234,7 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
                       {props.t("gameMode.rabbit.hugeDescription")}
                     </p>
                   </div>
-                  <GameTimerParams
+                  <TimerParams
                     t={props.t}
                     gameOptions={gameOptions}
                     setGameOptions={setGameOptions}
@@ -244,7 +243,7 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
                       value={customRef.ref ? customRef?.ref.value : ""}
                       customInput={customRef}
                     />
-                  </GameTimerParams>
+                  </TimerParams>
                 </div>
               </Match>
             </Switch>
