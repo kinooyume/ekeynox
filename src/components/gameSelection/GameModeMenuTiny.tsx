@@ -75,8 +75,6 @@ const GameModeSelectionTiny = (props: GameModeSelectionProps) => {
         t={props.t}
         gameOptions={gameOptions}
         setGameOptions={setGameOptions}
-        content={props.content}
-        setContentGeneration={props.setContentGeneration}
       />
       <div class="info">
         <Switch>

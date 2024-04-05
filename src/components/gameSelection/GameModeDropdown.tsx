@@ -1,7 +1,5 @@
 import {
-  Match,
   Show,
-  Switch,
   type JSXElement,
   createSignal,
   For,
@@ -9,21 +7,18 @@ import {
 import type { Translator } from "../App";
 import {
   GameModeKind,
-  type ContentGeneration,
-  type GameModeContent,
   type GameOptions,
 } from "./GameOptions";
 import type { SetStoreFunction } from "solid-js/store";
 import Bunny from "../svgs/bunny";
 import { css } from "solid-styled";
 
+// NOTE: Similr to HeaderMode
 type GameModeÐropdownProps = {
   t: Translator;
 
   gameOptions: GameOptions;
   setGameOptions: SetStoreFunction<GameOptions>;
-  content: GameModeContent;
-  setContentGeneration: (type: ContentGeneration) => void;
 };
 
 /* doublon */
