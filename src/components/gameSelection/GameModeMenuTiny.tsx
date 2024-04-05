@@ -1,6 +1,5 @@
 import {
   onCleanup,
-  createSignal,
   Switch,
   Match,
   createEffect,
@@ -62,9 +61,6 @@ const GameModeSelectionTiny = (props: GameModeSelectionProps) => {
   );
 
   let labelRef: Array<HTMLLabelElement> = [];
-  const [labelHovered, setLabelHovered] = createSignal<GameModeKind | null>(
-    null,
-  );
 
   const start = () => {
     props.start(gameOptions, customRef.ref ? customRef.ref.value : "");
