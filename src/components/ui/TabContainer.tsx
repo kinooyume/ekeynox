@@ -53,7 +53,7 @@ const TabContainer = (props: TabContainerProps) => {
       height: 28px;
 
       position: relative;
-      z-index: 999;
+      z-index: 201;
 
       display: flex;
       align-items: center;
