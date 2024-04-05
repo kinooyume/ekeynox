@@ -25,14 +25,19 @@
     "typeToPlay": "Type to continue.",
     "toPause": "to pause."
   },
-"space": "Space",
+  "options": "options",
+  "wordCount": "Word count",
+  "languages": "launguages",
+  "content": "content",
+  "timeLimit": "time limit",
+  "space": "Space",
   "statistics": "statistics",
   "gameMode": {
     "monkey": {
-      "title": "monkey",
-      "subtitle": "type the words as fast as possible",
+      "title": "cheetah",
+      "subtitle": "Words sprint !",
       "description": "Type random words as quick as possible, try to not make mistake !",
-      "hugeDescription": " Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ut erat sed nulla ornare accumsan a quis diam. Nullam ut pharetra dui."
+      "hugeDescription": "Get ready to type faster than a cheetah with a jetpack in this keyboard race to the finish line!"
     },
     "rabbit": {
       "title": "rabbit",

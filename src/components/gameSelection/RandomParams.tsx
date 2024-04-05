@@ -32,67 +32,92 @@ const GameRandomParams = (props: GameRandomParamsProps) => {
       gap: 1rem;
       align-items: flex-start;
     }
+    h3 {
+      margin: 0;
+      font-weight: 100;
+      font-size: 16px;
+      text-transform: uppercase;
+    }
+    .option {
+      display: flex;
+      justify-content: space-between;
+      opacity: 0.6;
+      align-items: center;
+      width: 100%;
+      transition: opacity 0.15s ease-in-out;
+    }
+    .option:hover {
+      opacity: 1;
+    }
   `;
 
   return (
     <div class="random-params">
-      <RadioGroup
-        name="wordsCategory"
-        values={[
-          {
-            label: props.t("words"),
-            value: {
-              kind: ContentTypeKind.generation,
-              category: WordsGenerationCategory.words1k,
-            } as ContentType,
-            icon: <Text />,
-          },
-          {
-            label: props.t("quotes"),
-            value: {
-              kind: ContentTypeKind.generation,
-              category: WordsGenerationCategory.quotes,
-            } as ContentType,
-            icon: <Quote />,
-          },
-          {
-            label: props.t("custom"),
-            value: { kind: ContentTypeKind.custom } as ContentType,
-            icon: <Customizer />,
-          },
-        ]}
-        compare={(v) => {
-          switch (props.gameOptions.contentType.kind) {
-            case ContentTypeKind.custom:
-              return v.kind === ContentTypeKind.custom;
-            case ContentTypeKind.generation:
-              return (
-                v.kind === ContentTypeKind.generation &&
-                v.category === props.gameOptions.contentType.category
-              );
-          }
-        }}
-        setChecked={(value) => {
-          if (value.kind === ContentTypeKind.generation) {
-            props.setGameOptions("generation", "category", value.category);
-          }
-          props.setGameOptions("contentType", value);
-        }}
-      />
+      <div class="option">
+        <h3>{props.t("content")}</h3>
+        <RadioGroup
+          name="wordsCategory"
+          values={[
+            {
+              label: props.t("words"),
+              value: {
+                kind: ContentTypeKind.generation,
+                category: WordsGenerationCategory.words1k,
+              } as ContentType,
+              icon: <Text />,
+            },
+            {
+              label: props.t("quotes"),
+              value: {
+                kind: ContentTypeKind.generation,
+                category: WordsGenerationCategory.quotes,
+              } as ContentType,
+              icon: <Quote />,
+            },
+            {
+              label: props.t("custom"),
+              value: { kind: ContentTypeKind.custom } as ContentType,
+              icon: <Customizer />,
+            },
+          ]}
+          compare={(v) => {
+            switch (props.gameOptions.contentType.kind) {
+              case ContentTypeKind.custom:
+                return v.kind === ContentTypeKind.custom;
+              case ContentTypeKind.generation:
+                return (
+                  v.kind === ContentTypeKind.generation &&
+                  v.category === props.gameOptions.contentType.category
+                );
+            }
+          }}
+          setChecked={(value) => {
+            if (value.kind === ContentTypeKind.generation) {
+              props.setGameOptions("generation", "category", value.category);
+            }
+            props.setGameOptions("contentType", value);
+          }}
+        />
+      </div>
       <Show
         when={props.gameOptions.contentType.kind !== ContentTypeKind.custom}
       >
-        <RadioGroup
-          name="languages"
-          values={[
-            { label: props.t("english"), value: "en" as Languages },
-            { label: props.t("french"), value: "fr" as Languages },
-          ]}
-          compare={(v) => v === props.gameOptions.generation.language}
-          setChecked={(l) => props.setGameOptions("generation", "language", l)}
-        >
-          <Lang />
-        </RadioGroup>
+        <div class="option">
+          <h3> {props.t("language")} </h3>
+          <RadioGroup
+            name="languages"
+            values={[
+              { label: props.t("english"), value: "en" as Languages },
+              { label: props.t("french"), value: "fr" as Languages },
+            ]}
+            compare={(v) => v === props.gameOptions.generation.language}
+            setChecked={(l) =>
+              props.setGameOptions("generation", "language", l)
+            }
+          >
+            <Lang />
+          </RadioGroup>
+        </div>
       </Show>
       <Switch>
         <Match
@@ -107,24 +132,27 @@ const GameRandomParams = (props: GameRandomParamsProps) => {
               WordsGenerationCategory.words1k
           }
         >
-          <RadioGroup
-            name="nbrWords"
-            values={[
-              { label: "10", value: 10 },
-              { label: "25", value: 25 },
-              { label: "50", value: 50 },
-              { label: "100", value: 100 },
-            ]}
-            compare={(v) => v === props.gameOptions.random.value}
-            setChecked={(v) =>
-              props.setGameOptions("random", {
-                type: NumberSelectionType.selected,
-                value: v,
-              })
-            }
-          >
-            <Word />
-          </RadioGroup>
+          <div class="option">
+            <h3>{props.t("wordCount")}</h3>
+            <RadioGroup
+              name="nbrWords"
+              values={[
+                { label: "10", value: 10 },
+                { label: "25", value: 25 },
+                { label: "50", value: 50 },
+                { label: "100", value: 100 },
+              ]}
+              compare={(v) => v === props.gameOptions.random.value}
+              setChecked={(v) =>
+                props.setGameOptions("random", {
+                  type: NumberSelectionType.selected,
+                  value: v,
+                })
+              }
+            >
+              <Word />
+            </RadioGroup>
+          </div>
         </Match>
       </Switch>
     </div>
