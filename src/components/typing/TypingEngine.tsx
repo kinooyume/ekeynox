@@ -307,16 +307,16 @@ const TypingEngine = (props: TypingEngineProps) => {
 
   const handleKeyUp = (event: KeyboardEvent) => {
     props.onKeyUp(event.key);
+  };
+
+  const handleKeyDown = (event: KeyboardEvent) => {
+    props.onKeyDown(event.key);
     switch (getKeyDownMetrics(event.key)) {
       case KeyEventKind.added:
         return handleKeypress(event.key, performance.now());
       case KeyEventKind.back:
         return handleBackPress(performance.now());
     }
-  };
-
-  const handleKeyDown = (event: KeyboardEvent) => {
-    props.onKeyDown(event.key);
   };
 
   /* *** */
