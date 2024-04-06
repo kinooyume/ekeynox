@@ -31,8 +31,8 @@ type GameModePreview = {
 type GameModePicto = Record<GameModeKind, JSXElement>;
 
 const pictos: GameModePicto = {
-  monkey: <Bunny />,
-  rabbit: <Bunny />,
+  random: <Bunny />,
+  timer: <Bunny />,
 };
 
 /* *** */

@@ -211,10 +211,10 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
           <div class="illustration">
             <div class="illustration-container">
               <Switch>
-                <Match when={gameOptions.mode === GameModeKind.monkey}>
+                <Match when={gameOptions.mode === GameModeKind.random}>
                   <Bunny />
                 </Match>
-                <Match when={gameOptions.mode === GameModeKind.rabbit}>
+                <Match when={gameOptions.mode === GameModeKind.timer}>
                   <Bunny />
                 </Match>
               </Switch>
@@ -222,12 +222,12 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
           </div>
           <div class="game-description">
             <Switch>
-              <Match when={gameOptions.mode === GameModeKind.monkey}>
+              <Match when={gameOptions.mode === GameModeKind.random}>
                 <div class="text">
-                  <h2>{props.t("gameMode.monkey.title")}</h2>
-                  <h3>{props.t("gameMode.monkey.subtitle")}</h3>
+                  <h2>{props.t("gameMode.random.title")}</h2>
+                  <h3>{props.t("gameMode.random.subtitle")}</h3>
                   <p class="description">
-                    {props.t("gameMode.monkey.hugeDescription")}
+                    {props.t("gameMode.random.hugeDescription")}
                   </p>
                 </div>
 
@@ -245,12 +245,12 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
                   </RandomParams>
                 </div>
               </Match>
-              <Match when={gameOptions.mode === GameModeKind.rabbit}>
+              <Match when={gameOptions.mode === GameModeKind.timer}>
                 <div class="text">
-                  <h2>{props.t("gameMode.rabbit.title")}</h2>
-                  <h3>{props.t("gameMode.rabbit.subtitle")}</h3>
+                  <h2>{props.t("gameMode.timer.title")}</h2>
+                  <h3>{props.t("gameMode.timer.subtitle")}</h3>
                   <p class="description">
-                    {props.t("gameMode.rabbit.hugeDescription")}
+                    {props.t("gameMode.timer.hugeDescription")}
                   </p>
                 </div>
                 <div class="options">

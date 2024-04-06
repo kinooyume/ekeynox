@@ -31,8 +31,8 @@ export type NumberSelection =
   | { type: NumberSelectionType.custom; value: number };
 
 export enum GameModeKind {
-  monkey = "monkey",
-  rabbit = "rabbit",
+  random = "random",
+  timer = "timer",
 }
 
 export enum WordsCategoryKind {
@@ -53,12 +53,12 @@ export type WordsCategory =
 
 export type GameMode =
   | {
-      kind: GameModeKind.monkey;
+      kind: GameModeKind.random;
       number: NumberSelection;
       category: WordsCategory;
     }
   | {
-      kind: GameModeKind.rabbit;
+      kind: GameModeKind.timer;
       time: NumberSelection;
       category: WordsCategory;
     };
@@ -66,11 +66,11 @@ export type GameMode =
 
 export type GameModeContent =
   | {
-      kind: GameModeKind.monkey;
+      kind: GameModeKind.random;
       getContent: () => ContentData;
     }
   | {
-      kind: GameModeKind.rabbit;
+      kind: GameModeKind.timer;
       getContent: () => ContentData;
       time: number;
     };
@@ -85,7 +85,7 @@ export type GameOptions = {
 };
 
 const getDefaultGameOptions = (): GameOptions => ({
-  mode: GameModeKind.monkey,
+  mode: GameModeKind.random,
   contentType: {
     kind: ContentTypeKind.generation,
     category: WordsGenerationCategory.words1k,

@@ -78,7 +78,7 @@ const GameModeSelectionTiny = (props: GameModeSelectionProps) => {
       />
       <div class="info">
         <Switch>
-          <Match when={gameOptions.mode === GameModeKind.monkey}>
+          <Match when={gameOptions.mode === GameModeKind.random}>
             <RandomParamsCompact
               t={props.t}
               gameOptions={gameOptions}
@@ -90,7 +90,7 @@ const GameModeSelectionTiny = (props: GameModeSelectionProps) => {
               />
             </RandomParamsCompact>
           </Match>
-          <Match when={gameOptions.mode === GameModeKind.rabbit}>
+          <Match when={gameOptions.mode === GameModeKind.timer}>
             <TimerParamsCompact
               t={props.t}
               gameOptions={gameOptions}
