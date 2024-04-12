@@ -51,6 +51,7 @@ function RadioGroup<Value>(props: RadioGroupProps<Value>) {
 
     .radio-group input + label {
       display: inline-flex;
+      align-items: center;
       gap: 4px;
       width: auto;
       height: 15px;
@@ -61,6 +62,10 @@ function RadioGroup<Value>(props: RadioGroupProps<Value>) {
       fill: var(--text-color);
       font-size: 14px;
       transition: all 100ms linear;
+    }
+
+    .label-text {
+      padding-top: 2px;
     }
 
     .radio-group input:checked + label {
@@ -124,7 +129,7 @@ function RadioGroup<Value>(props: RadioGroupProps<Value>) {
             />
             <label onClick={(_) => props.setChecked(value.value)}>
               <Show when={value.icon}>{value.icon}</Show>
-              {value.label}
+              <span class="label-text">{value.label}</span>
             </label>
           </div>
         )}
