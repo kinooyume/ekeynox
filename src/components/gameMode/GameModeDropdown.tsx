@@ -1,41 +1,16 @@
-import {
-  Show,
-  type JSXElement,
-  createSignal,
-  For,
-} from "solid-js";
+import { Show, createSignal, For } from "solid-js";
 import type { Translator } from "../App";
-import {
-  GameModeKind,
-  type GameOptions,
-} from "./GameOptions";
+import { type GameOptions } from "./GameOptions";
 import type { SetStoreFunction } from "solid-js/store";
-import Bunny from "../svgs/bunny";
 import { css } from "solid-styled";
+import { gameModesArray } from "./GameMode";
 
 // NOTE: Similr to HeaderMode
 type GameModeÐropdownProps = {
   t: Translator;
-
   gameOptions: GameOptions;
   setGameOptions: SetStoreFunction<GameOptions>;
 };
-
-/* doublon */
-type GameModePreview = {
-  title: string;
-  description: string;
-  subtitle: string;
-};
-
-type GameModePicto = Record<GameModeKind, JSXElement>;
-
-const pictos: GameModePicto = {
-  random: <Bunny />,
-  timer: <Bunny />,
-};
-
-/* *** */
 
 const GameModeDropdown = (props: GameModeÐropdownProps) => {
   css`
@@ -71,9 +46,7 @@ const GameModeDropdown = (props: GameModeÐropdownProps) => {
         5.1px 14.3px 17.9px rgba(0, 0, 0, 0.042),
         9.6px 26.7px 33.4px rgba(0, 0, 0, 0.05),
         23px 64px 80px rgba(0, 0, 0, 0.07);
-
     }
-
 
     .dropdown-wrapper.open .dropdown label {
       background-color: var(--color-surface-100);
@@ -135,10 +108,10 @@ const GameModeDropdown = (props: GameModeÐropdownProps) => {
     }
 
     .icon {
-      display: block;
+      display: flex;
       border-radius: 50%;
-      height: 46px;
-      width: 46px;
+      height: 60px;
+      width: 60px;
       padding: 8px;
       cursor: pointer;
       transition: all 100ms linear;
@@ -178,42 +151,26 @@ const GameModeDropdown = (props: GameModeÐropdownProps) => {
         <Show when={downState() !== DropdownState.open}>
           <span class="cursor">▼</span>
         </Show>
-        <For each={Object.keys(props.t("gameMode")) as GameModeKind[]}>
-          {(modeKey) => (
+        <For each={gameModesArray}>
+          {([modeKind, mode]) => (
             <div
-              class={`radio ${modeKey}`}
-              classList={{ selected: props.gameOptions.mode === modeKey }}
+              class={`radio ${modeKind}`}
+              classList={{ selected: props.gameOptions.mode === modeKind }}
             >
               <input
                 type="radio"
                 name="mode"
                 class="select"
-                id={modeKey}
-                checked={props.gameOptions.mode === modeKey}
-                onChange={() => props.setGameOptions("mode", modeKey)}
+                id={modeKind}
+                checked={props.gameOptions.mode === modeKind}
+                onChange={() => props.setGameOptions("mode", modeKind)}
               />
-              <label for={modeKey} onClick={clickHandler}>
-                <div class="icon"> {pictos[modeKey as GameModeKind]}</div>
+              <label for={modeKind} onClick={clickHandler}>
+                <div class="icon"> {mode.head()}</div>
                 <div class="description">
-                  <p class="title">
-                    {
-                      (
-                        props.t("gameMode") as Record<
-                          GameModeKind,
-                          GameModePreview
-                        >
-                      )[modeKey].title
-                    }
-                  </p>
+                  <p class="title">{props.t("gameMode")[modeKind].title}</p>
                   <p class="description">
-                    {
-                      (
-                        props.t("gameMode") as Record<
-                          GameModeKind,
-                          GameModePreview
-                        >
-                      )[modeKey].subtitle
-                    }
+                    {props.t("gameMode")[modeKind].subtitle}
                   </p>
                 </div>
               </label>

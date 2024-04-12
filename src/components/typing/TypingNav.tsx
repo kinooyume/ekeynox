@@ -75,7 +75,6 @@ const TypingNav = (props: TypingNavProps) => {
     if (acc === 0) anime.remove(accuracyElem);
     const duration = acc === 0 ? 100 : accFromElem === 0 ? 200 : 960;
 
-
     return anime({
       targets: accuracyElem,
       innerHTML: [accFromElem, acc],
@@ -104,17 +103,31 @@ const TypingNav = (props: TypingNavProps) => {
       display: flex;
       align-items: center;
       gap: 2px;
-      color: grey;
+      color: var(--text-secondary-color);
     }
-    .stat span {
-      padding-top: 2px;
-      font-size: 16px;
-      color: grey;
+    .stat span,
+    .pourcent {
+      padding-top: 6px;
+      text-align: right;
+      font-size: 18px;
+      font-weight: 400;
+      color: var(--text-secondary-color);
       min-width: 23px;
     }
-    .accuracy span {
+    .accuracy .pourcent {
       min-width: 36px;
     }
+
+    .wpm span,
+    .accuracy .pourcent {
+      margin-right: 2px;
+    }
+
+    .pourcent {
+      font-size: 14px;
+      font-weight: 800;
+    }
+
     nav {
       height: 63.593px;
       position: fixed;
@@ -143,16 +156,13 @@ const TypingNav = (props: TypingNavProps) => {
       cursor: pointer;
       padding-top: 2px;
     }
-    .help {
-      opacity: 0.6;
-    }
-    .help,
-    .help span {
-      color: grey;
+
+    span {
+      color: var(--text-secondary-color);
     }
 
     .help .key {
-      background-color: grey;
+      background-color: var(--text-secondary-color);
       color: var(--color-surface-alt);
       font-size: 12px;
       padding: 4px;
@@ -195,14 +205,14 @@ const TypingNav = (props: TypingNavProps) => {
         </div>
         <div class="stats">
           <div class="stat wpm">
-            <Gauge speed={props.stat.speed.byWord[0]} />
             <span ref={wpmElem!}>0</span>
+            <Gauge speed={props.stat.speed.byWord[0]} />
           </div>
           <div class="stat accuracy">
-            <Accuracy correct={props.stat.accuracies[1] === 100} />
-            <span>
+            <p class="pourcent">
               <span ref={accuracyElem!}>0</span>%
-            </span>
+            </p>
+            <Accuracy correct={props.stat.accuracies[1] === 100} />
           </div>
           <div class="cross">
             <Cross />

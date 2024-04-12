@@ -1,6 +1,6 @@
 import { css } from "solid-styled";
 import type { KeypressMetricsProjection } from "../metrics/KeypressMetrics";
-import type { GameOptions } from "../gameSelection/GameOptions";
+import type { GameOptions } from "../gameMode/GameOptions";
 import type { Translator } from "../App";
 import AccuracyDoughnut from "./charts/AccuracyDoughnut";
 

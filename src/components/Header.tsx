@@ -1,17 +1,27 @@
 import { css } from "solid-styled";
 
-import { type I18nContext } from "./App.tsx";
-import HeaderNav from "./HeaderNav.tsx";
+import { GameStatusKind, type GameStatus, type Translator } from "./App.tsx";
+import HeaderMode from "./HeaderMode.tsx";
 import { Show, type JSXElement } from "solid-js";
 
 import Logo from "./svgs/logo.tsx";
+import type {
+  ContentGeneration,
+  GameOptions,
+} from "./gameMode/GameOptions.ts";
+import type { SetStoreFunction } from "solid-js/store";
 
 type HeaderProps = {
-  i18n: I18nContext;
+  t: Translator;
   toHome: () => void;
+  gameStatus: GameStatus;
+  gameOptions: GameOptions;
+  setGameOptions: SetStoreFunction<GameOptions>;
+  setContentGeneration: (type: ContentGeneration) => void;
   children: JSXElement;
 };
 
+// NOTE: Similar to GameModeDropdown
 const Header = (props: HeaderProps) => {
   css`
     .header {
@@ -31,7 +41,7 @@ const Header = (props: HeaderProps) => {
     .header .left {
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 36px;
     }
   `;
 
@@ -41,9 +51,15 @@ const Header = (props: HeaderProps) => {
         <div class="home" onClick={props.toHome}>
           <Logo />
         </div>
-        {/* <Show when={props.gameMode !== "none"}> */}
-        {/*   <HeaderNav i18n={props.i18n} mode={props.gameMode} /> */}
-        {/* </Show> */}
+        <Show when={props.gameStatus.kind === GameStatusKind.pending}>
+          <HeaderMode
+            t={props.t}
+            gameOptions={props.gameOptions}
+            content={(props.gameStatus as any).content}
+            setGameOptions={props.setGameOptions}
+            setContentGeneration={props.setContentGeneration}
+          />
+        </Show>
       </div>
       {props.children}
     </div>

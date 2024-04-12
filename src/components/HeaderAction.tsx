@@ -1,6 +1,6 @@
 import { type Config, type ConfigLists, type Locale } from "./App.tsx";
 import DarkModeToggle from "./ui/DarkModeToggle.tsx";
-import KeyboardIcon from "./svgs/keyboard.tsx";
+import KeyboardIcon from "./svgs/keyboardIcon.tsx";
 import GlobeIcon from "./svgs/globe.tsx";
 import TinySelect from "./ui/TinySelect.tsx";
 import type { SetStoreFunction } from "solid-js/store";

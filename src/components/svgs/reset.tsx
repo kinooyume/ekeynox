@@ -6,7 +6,7 @@ const Reset = () => {
       cursor: pointer;
     }
     .arrow path {
-      fill: grey;
+      fill: var(--text-secondary-color);
       transition: ease-in-out 0.2s;
     }
     svg:hover .arrow path {
@@ -15,11 +15,10 @@ const Reset = () => {
     }
     .path {
       stroke: grey;
+      stroke: var(--text-secondary-color);
       transition: ease-in-out 0.2s;
     }
     svg:hover .path {
-      stroke: black;
-      transition: ease-in-out 0.2s;
     }
   `;
   return (

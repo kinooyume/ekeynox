@@ -2,7 +2,7 @@ const Cross = () => (
   <svg xmlns="http://www.w3.org/2000/svg" id="cross" width="20" height="20">
     <path
       fill="none"
-      stroke="grey"
+      stroke="var(--text-secondary-color)"
       stroke-dasharray="7"
       stroke-dashoffset="4"
       stroke-linecap="round"

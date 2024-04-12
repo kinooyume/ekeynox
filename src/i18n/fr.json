@@ -33,15 +33,15 @@
   "space": "Espace",
   "statistics": "statistiques",
   "gameMode": {
-    "monkey": {
-      "title": "guépard",
-      "subtitle": "Course de mots !",
+    "random": {
+      "title": "singe",
+      "subtitle": "Course de mots",
       "description": "Ecrivez des mots au hasard aussi vite que possible, essayez de ne pas faire d'erreur !",
       "hugeDescription": "Préparez-vous à taper plus vite qu'un guépard équipé d'un jetpack dans cette course au clavier jusqu'à la ligne d'arrivée !"
     },
-    "rabbit": {
+    "timer": {
       "title": "lapin",
-      "subtitle": "Contre la montre !",
+      "subtitle": "Contre la montre",
       "description": "Le temps est compté ! Combien de mots pouvez-vous écrire dans le temps imparti ?",
       "hugeDescription": " Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ut erat sed nulla ornare accumsan a quis diam. Nullam ut pharetra dui."
     }

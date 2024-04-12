@@ -1,9 +1,7 @@
-import { Match, Show, Switch, type JSXElement } from "solid-js";
-import type { SetStoreFunction } from "solid-js/store";
+import { Match, Show, Switch } from "solid-js";
 import { css } from "solid-styled";
 import {
   NumberSelectionType,
-  type GameOptions,
   ContentTypeKind,
   WordsGenerationCategory,
   type ContentType,
@@ -16,16 +14,9 @@ import Quote from "../svgs/quote";
 import Text from "../svgs/text";
 import Customizer from "../svgs/customizer";
 import Stopwatch from "../svgs/stopwatch";
-import type { Translator } from "../App";
+import type { GameParams } from "./GameParams";
 
-type GameRandomParamsProps = {
-  t: Translator;
-  gameOptions: GameOptions;
-  setGameOptions: SetStoreFunction<GameOptions>;
-  children: JSXElement;
-};
-
-const GameTimerParams = (props: GameRandomParamsProps) => {
+const TimerParams = (props: GameParams) => {
   css`
     .time-params {
       display: flex;
@@ -35,20 +26,17 @@ const GameTimerParams = (props: GameRandomParamsProps) => {
     }
     h3 {
       margin: 0;
-      font-weight: 100;
+      font-weight: 200;
       font-size: 16px;
       text-transform: uppercase;
+      cursor: default;
     }
     .option {
       display: flex;
       justify-content: space-between;
-      opacity: 0.6;
       align-items: center;
       width: 100%;
       transition: opacity 0.15s ease-in-out;
-    }
-    .option:hover {
-      opacity: 1;
     }
   `;
 
@@ -130,25 +118,26 @@ const GameTimerParams = (props: GameRandomParamsProps) => {
       <div class="option">
         <h3>{props.t("timeLimit")}</h3>
         <RadioGroup
-        name="time"
-        values={[
-          { label: "10s", value: 10 },
-          { label: "30s", value: 30 },
-          { label: "1m", value: 60 },
-          { label: "2m", value: 120 },
-        ]}
-        compare={(v) => v === props.gameOptions.timer.value}
-        setChecked={(time) =>
-          props.setGameOptions("timer", {
-            type: NumberSelectionType.selected,
-            value: time,
-          })
-        }
-      >
-        <Stopwatch />
-      </RadioGroup></div>
+          name="time"
+          values={[
+            { label: "10s", value: 10 },
+            { label: "30s", value: 30 },
+            { label: "1m", value: 60 },
+            { label: "2m", value: 120 },
+          ]}
+          compare={(v) => v === props.gameOptions.timer.value}
+          setChecked={(time) =>
+            props.setGameOptions("timer", {
+              type: NumberSelectionType.selected,
+              value: time,
+            })
+          }
+        >
+          <Stopwatch />
+        </RadioGroup>
+      </div>
     </div>
   );
 };
 
-export default GameTimerParams;
+export default TimerParams;

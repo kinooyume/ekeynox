@@ -21,23 +21,23 @@ import en_dict from "../i18n/en.json";
 import fr_dict from "../i18n/fr.json";
 
 /* *** */
+// inspiration: https://learnhub.top/
 
 import Header from "./Header";
 import HeaderAction from "./HeaderAction";
 import { createFetchWords } from "./content/fetchContent";
-import { makeGetContent } from "./content/TypingGameSource";
-import GameModeMenu from "./gameSelection/GameModeMenu";
+import { makeGetContent, type GameModeContent } from "./content/TypingGameSource";
+import GameModeMenu from "./gameMode/GameModeMenu";
 import TypingGame from "./typing/TypingGame";
 import {
   type GameOptions,
   getDefaultGameOptions,
   type ContentGeneration,
-  type GameModeContent,
-} from "./gameSelection/GameOptions";
+} from "./gameMode/GameOptions";
 import type { Metrics } from "./metrics/Metrics";
 import TypingMetricsResume from "./resume/TypingMetricsResume";
 import KeyboardLayout, { type HigherKeyboard } from "./keyboard/KeyboardLayout";
-import GameModeMenuTiny from "./gameSelection/GameModeMenuTiny";
+import GameModeMenuTiny from "./gameMode/GameModeMenuTiny";
 
 const dictionaries = {
   en: en_dict,
@@ -164,8 +164,12 @@ const App = () => {
   return (
     <div class="app" classList={{ dark: config.dark }}>
       <Header
-        i18n={i18nContext}
+        t={i18nContext.t}
         toHome={() => setGameStatus({ kind: GameStatusKind.menu })}
+        gameStatus={gameStatus()}
+        gameOptions={gameOptions}
+        setGameOptions={setGameOptions}
+        setContentGeneration={setContentGeneration}
       >
         <HeaderAction
           config={config}

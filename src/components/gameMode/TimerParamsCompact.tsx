@@ -1,9 +1,7 @@
-import { Match, Show, Switch, type JSXElement } from "solid-js";
-import type { SetStoreFunction } from "solid-js/store";
+import { Match, Show, Switch } from "solid-js";
 import { css } from "solid-styled";
 import {
   NumberSelectionType,
-  type GameOptions,
   ContentTypeKind,
   WordsGenerationCategory,
   type ContentType,
@@ -16,16 +14,9 @@ import Quote from "../svgs/quote";
 import Text from "../svgs/text";
 import Customizer from "../svgs/customizer";
 import Stopwatch from "../svgs/stopwatch";
-import type { Translator } from "../App";
+import type { GameParams } from "./GameParams";
 
-type GameRandomParamsProps = {
-  t: Translator;
-  gameOptions: GameOptions;
-  setGameOptions: SetStoreFunction<GameOptions>;
-  children: JSXElement;
-};
-
-const TimerParamsCompact = (props: GameRandomParamsProps) => {
+const TimerParamsCompact = (props: GameParams) => {
   css`
     .time-params {
       display: flex;

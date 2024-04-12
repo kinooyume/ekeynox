@@ -1,27 +1,12 @@
-import { For, onCleanup, type JSXElement, createSignal, Show } from "solid-js";
+import { For, onCleanup, createSignal, Show } from "solid-js";
 import { css } from "solid-styled";
 import type { Translator } from "../App";
 import ChooseClip from "../svgs/choose-clip";
-import Bunny from "../svgs/bunny";
-import { Transition, TransitionGroup } from "solid-transition-group";
-import type { GameModeKind } from "./GameOptions";
-
-type GameModePicto = Record<GameModeKind, JSXElement>;
-
-const pictos: GameModePicto = {
-  random: <Bunny />,
-  timer: <Bunny />,
-};
-
-type GameModePreview = {
-  title: string;
-  description: string;
-  subtitle: string;
-};
+import { TransitionGroup } from "solid-transition-group";
+import { gameModesArray, type GameModeKind } from "./GameMode";
 
 type GameModeSelectionProps = {
   t: Translator;
-  modes: Record<GameModeKind, GameModePreview>;
   selected: GameModeKind;
   setSelected: (mode: GameModeKind) => void;
 };
@@ -81,10 +66,10 @@ const GameModeSelection = (props: GameModeSelectionProps) => {
 
     label .icon {
       position: absolute;
-      bottom: -10px;
-      right: -3px;
-      width: 50px;
-      height: 50px;
+      left: -7px;
+      top: 2px;
+      width: 60px;
+      height: 60px;
       transition: all 100ms linear;
     }
 
@@ -98,7 +83,7 @@ const GameModeSelection = (props: GameModeSelectionProps) => {
     }
 
     label:hover .icon {
-      transform: translateY(-8px);
+      transform: translateY(-4px);
     }
 
     .radio {
@@ -139,39 +124,39 @@ const GameModeSelection = (props: GameModeSelectionProps) => {
         >
           <Show when={labelHovered() !== null}>
             <p class="title">
-              {props.modes[labelHovered() as GameModeKind].title}
+              {props.t("gameMode")[labelHovered() as GameModeKind].title}
             </p>
             <p class="description">
-              {props.modes[labelHovered() as GameModeKind].subtitle}
+              {props.t("gameMode")[labelHovered() as GameModeKind].subtitle}
             </p>
           </Show>
         </TransitionGroup>
       </div>
       <div class="modes">
-        <For each={Object.keys(props.modes)}>
-          {(modeKey) => (
-            <div class={`radio ${modeKey}`}>
+        <For each={gameModesArray}>
+          {([modeKind, mode]) => (
+            <div class={`radio ${modeKind}`}>
               <input
                 type="radio"
                 name="mode"
                 class="select"
-                id={modeKey}
-                checked={props.selected === modeKey}
-                onChange={() => props.setSelected(modeKey as GameModeKind)}
+                id={modeKind}
+                checked={props.selected === modeKind}
+                onChange={() => props.setSelected(modeKind)}
               />
               <label
                 ref={(el) => {
                   labelRef.push(el);
                   el.addEventListener("mouseenter", () => {
-                    setLabelHovered(modeKey as GameModeKind);
+                    setLabelHovered(modeKind);
                   });
                   el.addEventListener("mouseleave", () => {
-                    if (labelHovered() === modeKey) setLabelHovered(null);
+                    if (labelHovered() === modeKind) setLabelHovered(null);
                   });
                 }}
-                for={modeKey}
+                for={modeKind}
               >
-                <div class="icon"> {pictos[modeKey as GameModeKind]}</div>
+                <div class="icon"> {mode.head()}</div>
               </label>
             </div>
           )}

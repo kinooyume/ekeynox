@@ -1,11 +1,9 @@
 import { Match, Show, Switch, type JSXElement } from "solid-js";
-import type { SetStoreFunction } from "solid-js/store";
 import { css } from "solid-styled";
 import Lang from "../svgs/lang";
 import Word from "../svgs/word";
 import {
   NumberSelectionType,
-  type GameOptions,
   ContentTypeKind,
   WordsGenerationCategory,
   type ContentType,
@@ -15,16 +13,9 @@ import RadioGroup from "../ui/RadioGroup";
 import Quote from "../svgs/quote";
 import Text from "../svgs/text";
 import Customizer from "../svgs/customizer";
-import type { Translator } from "../App";
+import type { GameParams } from "./GameParams";
 
-type GameRandomParamsProps = {
-  t: Translator;
-  gameOptions: GameOptions;
-  setGameOptions: SetStoreFunction<GameOptions>;
-  children: JSXElement;
-};
-
-const GameRandomParams = (props: GameRandomParamsProps) => {
+const RandomParams = (props: GameParams) => {
   css`
     .random-params {
       display: flex;
@@ -34,20 +25,17 @@ const GameRandomParams = (props: GameRandomParamsProps) => {
     }
     h3 {
       margin: 0;
-      font-weight: 100;
+      font-weight: 200;
       font-size: 16px;
+      cursor: default;
       text-transform: uppercase;
     }
     .option {
       display: flex;
       justify-content: space-between;
-      opacity: 0.6;
       align-items: center;
       width: 100%;
-      transition: opacity 0.15s ease-in-out;
-    }
-    .option:hover {
-      opacity: 1;
+      transition: all 0.15s ease-in-out;
     }
   `;
 
@@ -159,4 +147,4 @@ const GameRandomParams = (props: GameRandomParamsProps) => {
   );
 };
 
-export default GameRandomParams;
+export default RandomParams;
