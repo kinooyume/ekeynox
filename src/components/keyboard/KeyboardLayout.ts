@@ -23,9 +23,11 @@ const kblayout = {
 
 export type HigherKeyboard = (keySet: Set<string>) => KeyboardLayout;
 
-const create = (
-  layoutName: string,
-): HigherKeyboard => {
+const resetLayout = (layout: Array<RowLayout>) => {
+  layout.forEach((row) => row.forEach((key) => (key.used = false)));
+};
+
+const create = (layoutName: string): HigherKeyboard => {
   const source = kblayout[layoutName as keyof typeof kblayout];
   if (!source) throw new Error("Invalid layout");
   const layout = source.keys.map((row) =>
@@ -36,9 +38,11 @@ const create = (
       used: false,
     })),
   );
+
   const layoutFlat = layout.flat();
 
   return (keySet: Set<string>) => {
+    resetLayout(layout);
     let extra = [] as Array<KeyLayout>;
     keySet.forEach((key) => {
       const lKey = layoutFlat.find((k) => k.all.includes(key));
