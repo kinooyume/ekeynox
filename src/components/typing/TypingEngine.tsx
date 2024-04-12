@@ -192,6 +192,8 @@ const TypingEngine = (props: TypingEngineProps) => {
     setCurrentWord(0);
     setCurrentKey(0);
     currentFocus();
+
+    props.setCurrentPromptKey(getCurrent.key().key);
   };
 
   const prevWord = () => {
