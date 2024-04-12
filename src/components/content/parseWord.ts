@@ -1,8 +1,8 @@
 import { WordStatus } from "../prompt/PromptWord.tsx";
-import { PromptKeyFocus, PromptKeyStatus } from "../metrics/KeyMetrics.ts";
+import { KeyFocus, KeyStatus } from "../metrics/KeyMetrics.ts";
 import List from "../List.ts";
-import { keyHooks } from "./ContentNav.ts";
-import { MetaWord } from "./ContentList.ts";
+import { keyHooks } from "./ContentList.ts.bck";
+import { MetaWord } from "./ContentList.ts.bck";
 
 export const parseWord = (keySet: Set<string>) => (word: string): MetaWord => {
     const keys = List.makeDLinkedListFromArray(word.split(""), (key) => {
@@ -11,8 +11,8 @@ export const parseWord = (keySet: Set<string>) => (word: string): MetaWord => {
         return {
             value: {
                 key,
-                status: PromptKeyStatus.unstart,
-                focus: PromptKeyFocus.unset,
+                status: KeyStatus.unstart,
+                focus: KeyFocus.unset,
             },
             hooks: keyHooks,
         };

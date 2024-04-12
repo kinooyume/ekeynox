@@ -1,4 +1,4 @@
-import { type ContentGeneration } from "../gameSelection/GameOptions.ts";
+import { type ContentGeneration } from "../gameMode/GameOptions.ts";
 
 type cached = Record<string, Record<string, string[]>>;
 

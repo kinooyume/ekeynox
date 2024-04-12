@@ -1,22 +1,18 @@
 import { WordStatus } from "../prompt/PromptWord.tsx";
-import { PromptKeyFocus, PromptKeyStatus } from "../metrics/KeyMetrics.ts";
+import { KeyFocus, KeyStatus } from "../metrics/KeyMetrics.ts";
 import List, { type DLinkedList } from "../List.ts";
 import {
   type ContentIterator,
   type NavMeta,
   hookWrapper,
   type MakeNavHooks,
-  curryAndApplyIterator,
-  makeIteratorFromMetaNav,
-  rootIterator,
-  appendParentHooks,
   metaIterator,
 } from "./ContentNav.ts";
 import { wrapParentHooks } from "./ContentIterator.ts";
 
 export type MetaKey = {
-  status: PromptKeyStatus;
-  focus: PromptKeyFocus;
+  status: KeyStatus;
+  focus: KeyFocus;
   key: string;
 };
 
@@ -31,10 +27,10 @@ export type MetaWord = {
 
 const keyHooks: MakeNavHooks<MetaKey> = (key) => ({
   enter: () => {
-    key.focus = PromptKeyFocus.focus;
+    key.focus = KeyFocus.focus;
   },
   exit: ({ back }) => {
-    key.focus = back ? PromptKeyFocus.back : PromptKeyFocus.unfocus;
+    key.focus = back ? KeyFocus.back : KeyFocus.unfocus;
   },
 });
 
@@ -70,8 +66,8 @@ const makeSeparator = (key: string): NavMeta<MetaWord> => {
         hookWrapper(
           {
             key: key,
-            status: PromptKeyStatus.unstart,
-            focus: PromptKeyFocus.unset,
+            status: KeyStatus.unstart,
+            focus: KeyFocus.unset,
           },
           keyHooks,
         ),
@@ -100,8 +96,8 @@ const parseWord =
         keySet.add(key);
         const metaKey = {
           key,
-          status: PromptKeyStatus.unstart,
-          focus: PromptKeyFocus.unset,
+          status: KeyStatus.unstart,
+          focus: KeyFocus.unset,
         };
         return hookWrapper(metaKey, keyHooks);
       },
@@ -189,4 +185,4 @@ const deepCopy = (source: ContentData): ContentData => {
   };
 };
 
-export default { parse, parseWords, deepCopy };
+export default { keyHooks, parse, parseWords, deepCopy };
