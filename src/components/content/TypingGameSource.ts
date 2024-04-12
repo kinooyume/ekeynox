@@ -1,10 +1,9 @@
+import { GameModeKind } from "../gameMode/GameMode";
 import {
   type GameOptions,
-  GameModeKind,
   WordsGenerationCategory,
-  type GameModeContent,
   ContentTypeKind,
-} from "../gameSelection/GameOptions";
+} from "../gameMode/GameOptions";
 import type { ContentData } from "./Content";
 import Content from "./Content";
 import { randomQuote, randomWords } from "./randomContent";
@@ -30,19 +29,30 @@ const getSource = (
   }
 };
 
+export type GameModeContent =
+  | {
+      kind: GameModeKind.random;
+      getContent: () => ContentData;
+    }
+  | {
+      kind: GameModeKind.timer;
+      time: number;
+      getContent: () => ContentData;
+    };
+
 const makeGetContent = (
   opts: GameOptions,
   sources: SourceProps,
 ): GameModeContent => {
   switch (opts.mode) {
-    case GameModeKind.monkey:
+    case GameModeKind.random:
       return {
-        kind: GameModeKind.monkey,
+        kind: GameModeKind.random,
         getContent: getSource(opts, sources, opts.random.value),
       };
-    case GameModeKind.rabbit:
+    case GameModeKind.timer:
       return {
-        kind: GameModeKind.rabbit,
+        kind: GameModeKind.timer,
         time: opts.timer.value * 1000,
         getContent: getSource(opts, sources, opts.timer.value * 4),
       };

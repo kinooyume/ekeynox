@@ -45,7 +45,7 @@ const Play = (props: PlayProps) => {
         classList={{ paused: !props.paused }}
         stroke-linecap="round"
         stroke-linejoin="round"
-        fill="grey"
+        fill="var(--text-secondary-color)"
         stroke-width="2"
       >
         <path class="left" d={paths()[0]} />

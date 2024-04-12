@@ -1,18 +1,16 @@
 import { css } from "solid-styled";
 import { Match, Switch, createEffect } from "solid-js";
-import { createStore, type SetStoreFunction } from "solid-js/store";
+import { createStore } from "solid-js/store";
 
 import RandomParams from "./RandomParams";
-import {
-  type GameOptions,
-  type ContentGeneration,
-  GameModeKind,
-} from "./GameOptions";
+import { type GameOptions, type ContentGeneration } from "./GameOptions";
 import TimerParams from "./TimerParams";
 import Bunny from "../svgs/bunny";
+import Monkey from "../svgs/monkey";
 import CustomInput, { type CustomInputRef } from "../ui/CustomInput";
 import GameModeSelection from "./GameModeSelection";
 import type { Translator } from "../App";
+import { GameModeKind } from "./GameMode";
 // Gsap animation
 // https://codepen.io/dev_loop/pen/MWKbJmO
 // Store like this
@@ -90,7 +88,7 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
       /* left: 0; */
       /* right: 0; */
       /* bottom: 0; */
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1.2fr;
       grid-template-rows: 1fr;
       grid-column-gap: 0px;
       grid-row-gap: 0px;
@@ -121,14 +119,13 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
       grid-area: 3 / 3 / 4 / 4;
     }
     .illustration {
-      padding-top: 91px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
     }
     .illustration-container {
-      height: 300px;
-      width: 300px;
+      height: 340px;
+      width: 380px;
     }
 
     .option {
@@ -149,21 +146,24 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
       font-size: 2.8rem;
     }
     h2 {
-      font-size: 3.8rem;
-      margin-top: 42px;
+      font-size: 4rem;
       margin-bottom: 0;
-      text-transform: capitalize;
       font-weight: 100;
+      text-transform: capitalize;
     }
+
     h3 {
-      font-size: 1.1em;
-      margin-top: 8px;
-      margin-bottom: 32px;
-      font-weight: 200;
       color: var(--text-secondary-color);
+      font-size: 1.1rem;
+      margin-top: 2px;
+      font-weight: 500;
+    }
+
+    .title-mode {
+      margin-top: 100px;
     }
     .game-description {
-      max-width: 80%;
+      max-width: 90%;
       margin-bottom: 0;
     }
 
@@ -174,16 +174,21 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
       height: 75%;
     }
 
+    .description {
+      margin-top: 46px;
+      max-width: 500px;
+    }
+
     .primary {
       margin-top: auto;
-      margin-left: auto;
+      margin-right: auto;
     }
 
     .options-title {
-      font-size: 22px;
-      opacity: 0.8;
+      font-size: 26px;
       font-weight: 300;
       margin-top: 22px;
+      text-transform: capitalize;
       margin-bottom: 22px;
     }
   `;
@@ -201,7 +206,6 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
           <div class="selection">
             <GameModeSelection
               t={props.t}
-              modes={props.t("gameMode")}
               selected={gameOptions.mode}
               setSelected={(mode: GameModeKind) => setGameOptions("mode", mode)}
             />
@@ -212,7 +216,7 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
             <div class="illustration-container">
               <Switch>
                 <Match when={gameOptions.mode === GameModeKind.random}>
-                  <Bunny />
+                  <Monkey />
                 </Match>
                 <Match when={gameOptions.mode === GameModeKind.timer}>
                   <Bunny />
@@ -224,7 +228,7 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
             <Switch>
               <Match when={gameOptions.mode === GameModeKind.random}>
                 <div class="text">
-                  <h2>{props.t("gameMode.random.title")}</h2>
+                  <h2 class="title-mode">{props.t("gameMode.random.title")}</h2>
                   <h3>{props.t("gameMode.random.subtitle")}</h3>
                   <p class="description">
                     {props.t("gameMode.random.hugeDescription")}
@@ -232,7 +236,7 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
                 </div>
 
                 <div class="options">
-                  <h2 class="options-title">{props.t("options")}</h2>
+                  {/* <h2 class="options-title">{props.t("options")}</h2> */}
                   <RandomParams
                     t={props.t}
                     gameOptions={gameOptions}
@@ -247,14 +251,14 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
               </Match>
               <Match when={gameOptions.mode === GameModeKind.timer}>
                 <div class="text">
-                  <h2>{props.t("gameMode.timer.title")}</h2>
+                  <h2 class="title-mode">{props.t("gameMode.timer.title")}</h2>
                   <h3>{props.t("gameMode.timer.subtitle")}</h3>
                   <p class="description">
                     {props.t("gameMode.timer.hugeDescription")}
                   </p>
                 </div>
                 <div class="options">
-                  <h2 class="options-title">{props.t("options")}</h2>
+                  {/* <h2 class="options-title">{props.t("options")}</h2> */}
                   <TimerParams
                     t={props.t}
                     gameOptions={gameOptions}

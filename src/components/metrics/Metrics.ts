@@ -1,6 +1,6 @@
 import type { LinkedList } from "../List";
 import type { ContentData, MetaWord } from "../content/Content";
-import type { GameOptions } from "../gameSelection/GameOptions";
+import type { GameOptions } from "../gameMode/GameOptions";
 import type { KeypressMetricsProjection } from "./KeypressMetrics";
 import type { KeysProjection } from "./KeysProjection";
 import type { TypingMetrics } from "./TypingMetrics";

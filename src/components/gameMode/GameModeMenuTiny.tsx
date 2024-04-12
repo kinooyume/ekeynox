@@ -11,12 +11,12 @@ import RandomParamsCompact from "./RandomParamsCompact";
 import TimerParamsCompact from "./TimerParamsCompact";
 import CustomInput, { type CustomInputRef } from "../ui/CustomInput";
 import {
-  GameModeKind,
   type ContentGeneration,
   type GameOptions,
-  type GameModeContent,
 } from "./GameOptions";
 import GameModeDropdown from "./GameModeDropdown";
+import type { GameModeContent } from "../content/TypingGameSource";
+import { GameModeKind } from "./GameMode";
 
 type GameModeSelectionProps = {
   t: Translator;

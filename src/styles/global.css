@@ -30,7 +30,10 @@
   --color-surface-500: #f2f6f9;
   --color-surface-600: #f4f7fa;
 
-  --color-surface-alt: #e9e8e5;
+  /*
+  --color-surface-alt: #e0bb7b;
+*/
+  --color-surface-alt: #e0bb7bba;
   --color-surface-mixed-100: #e9e8e5;
   --color-surface-mixed-200: #ebebe8;
   --color-surface-mixed-300: #eeedeb;

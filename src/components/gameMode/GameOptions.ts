@@ -1,5 +1,6 @@
-import type { ContentData } from "../content/Content";
+import { GameModeKind } from "./GameMode";
 
+// TODO: should we build it from folder/files ?
 export type Languages = "en" | "fr";
 
 export enum WordsGenerationCategory {
@@ -30,11 +31,6 @@ export type NumberSelection =
   | { type: NumberSelectionType.selected; value: number }
   | { type: NumberSelectionType.custom; value: number };
 
-export enum GameModeKind {
-  random = "random",
-  timer = "timer",
-}
-
 export enum WordsCategoryKind {
   words1k = "words1k",
   quotes = "quotes",
@@ -51,29 +47,7 @@ export type WordsCategory =
   | { kind: WordsCategoryKind.quotes; data: string[] }
   | { kind: WordsCategoryKind.custom; data: string };
 
-export type GameMode =
-  | {
-      kind: GameModeKind.random;
-      number: NumberSelection;
-      category: WordsCategory;
-    }
-  | {
-      kind: GameModeKind.timer;
-      time: NumberSelection;
-      category: WordsCategory;
-    };
 /* __ */
-
-export type GameModeContent =
-  | {
-      kind: GameModeKind.random;
-      getContent: () => ContentData;
-    }
-  | {
-      kind: GameModeKind.timer;
-      getContent: () => ContentData;
-      time: number;
-    };
 
 export type GameOptions = {
   mode: GameModeKind;

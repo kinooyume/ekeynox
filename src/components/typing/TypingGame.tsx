@@ -32,13 +32,13 @@ import {
 } from "../metrics/KeysProjection.ts";
 import KeypressMetrics from "../metrics/KeypressMetrics.ts";
 import {
-  GameModeKind,
-  type GameModeContent,
   type GameOptions,
-} from "../gameSelection/GameOptions";
+} from "../gameMode/GameOptions.ts";
 import { createTimerEffect, type TimerEffect } from "../metrics/Timer.ts";
 import type { Translator } from "../App.tsx";
 import type { Metrics } from "../metrics/Metrics.ts";
+import type { GameModeContent } from "../content/TypingGameSource.ts";
+import { GameModeKind } from "../gameMode/GameMode.ts";
 
 type TypingGameProps = {
   t: Translator;
@@ -85,13 +85,13 @@ const TypingGame = (props: TypingGameProps) => {
 
   // NOTE: should not exist without timer
   const [timeCounter, setTimeCounter] = createSignal(
-    props.content.kind === GameModeKind.rabbit
+    props.content.kind === GameModeKind.timer
       ? props.content.time.toFixed(0)
       : "",
   );
 
   // NOTE: no reactivity on timer
-  if (props.content.kind === GameModeKind.rabbit) {
+  if (props.content.kind === GameModeKind.timer) {
     const timerEffect = createTimerEffect({
       duration: props.content.time,
       onOver: over,
@@ -175,7 +175,7 @@ const TypingGame = (props: TypingGameProps) => {
         onPause={() => pause()}
         onReset={reset}
       >
-        <Show when={props.content.kind === GameModeKind.rabbit}>
+        <Show when={props.content.kind === GameModeKind.timer}>
           <p>{timeCounter()}</p>
         </Show>
       </TypingNav>

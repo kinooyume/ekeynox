@@ -9,8 +9,8 @@ const Accuracy = (props: AccuracyProps) => (
         cx="11.528"
         cy="11.507"
         r="6.091"
-        fill={props.correct ? "grey" : "none"}
-        stroke="grey"
+        fill={props.correct ? "var(--text-secondary-color)" : "none"}
+        stroke="var(--text-secondary-color)"
         stroke-width="1.348"
       />
       <circle
@@ -19,13 +19,13 @@ const Accuracy = (props: AccuracyProps) => (
         r="9.311"
         stroke-width="1.374"
         fill="none"
-        stroke="grey"
+        stroke="var(--text-secondary-color)"
       />
     </g>
     <path
       d="M11.52.632v3.195m.011 15.345v3.195m10.905-10.86h-3.195m-15.413.001H.632"
       fill="none"
-      stroke="grey"
+      stroke="var(--text-secondary-color)"
       stroke-width="1.264"
       stroke-linecap="round"
     />
@@ -40,4 +40,3 @@ const Accuracy = (props: AccuracyProps) => (
 );
 
 export default Accuracy;
-
