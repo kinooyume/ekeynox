@@ -40,6 +40,7 @@ type Interval = {
 const createTypingMetricsState = (
   setStat: Setter<StatProjection>,
   setTypingMetrics: Setter<TypingMetrics>,
+  setCleanup: (cleanup: () => void) => void
 ): TypingMetricsState => {
   const updateStat = (
     projection: KeypressMetricsProjection,
@@ -111,6 +112,7 @@ const createTypingMetricsState = (
             updateStat(pendingKeypressMetrics.getProjection(false), metrics);
           interval.timer = setTimeout(() => {
             update();
+            setCleanup(() => clearTimeout(interval.timer));
             clearTimeout(interval.timer);
             interval.timer = setInterval(update, 1000);
           }, 1000 - lastDuration);

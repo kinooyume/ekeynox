@@ -3,6 +3,7 @@ import { TypingStatusKind, type TypingStatus } from "../typing/TypingEngine";
 type CreateProps = {
   duration: number;
   onOver: () => void;
+  setCleanup: (cleanup: () => void) => void;
   updateCounter: (timeLeft: string) => void;
 };
 
@@ -17,7 +18,7 @@ type CreateTimerPause = (props: {
   interval: NodeJS.Timeout;
 }) => TimerPause;
 
-const create = ({ duration, onOver, updateCounter }: CreateProps) => {
+const create = ({ duration, onOver, updateCounter, setCleanup }: CreateProps) => {
   const resume: CreateTimerPending = (timeLeft) => {
     const start = performance.now();
     const timer = setTimeout(() => {
@@ -29,6 +30,10 @@ const create = ({ duration, onOver, updateCounter }: CreateProps) => {
       const elapsed = now - start;
       updateCounter(((timeLeft - elapsed) / 1000).toFixed(0));
     }, 1000);
+    setCleanup(() => {
+      clearTimeout(timer);
+      clearInterval(interval);
+    });
     return { pause: () => pause({ start, timer, interval }) };
   };
 
