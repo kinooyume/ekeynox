@@ -5,6 +5,7 @@ import {
   createEffect,
   createMemo,
   createSignal,
+  onCleanup,
 } from "solid-js";
 import { createStore } from "solid-js/store";
 
@@ -31,9 +32,7 @@ import {
   type KeysProjection,
 } from "../metrics/KeysProjection.ts";
 import KeypressMetrics from "../metrics/KeypressMetrics.ts";
-import {
-  type GameOptions,
-} from "../gameMode/GameOptions.ts";
+import { type GameOptions } from "../gameMode/GameOptions.ts";
 import { createTimerEffect, type TimerEffect } from "../metrics/Timer.ts";
 import type { Translator } from "../App.tsx";
 import type { Metrics } from "../metrics/Metrics.ts";
@@ -81,41 +80,24 @@ const TypingGame = (props: TypingGameProps) => {
     );
   };
 
-  /* Timer */
-
-  // NOTE: should not exist without timer
-  const [timeCounter, setTimeCounter] = createSignal(
-    props.content.kind === GameModeKind.timer
-      ? props.content.time.toFixed(0)
-      : "",
-  );
-
-  // NOTE: no reactivity on timer
-  if (props.content.kind === GameModeKind.timer) {
-    const timerEffect = createTimerEffect({
-      duration: props.content.time,
-      onOver: over,
-      updateCounter: setTimeCounter,
-    });
-    createEffect((timer: TimerEffect) => {
-      return timer({ status: status() });
-    }, timerEffect);
-  }
-
-  /* *** */
-
   /* Metrics */
 
   const [stat, setStat] = createSignal(KeypressMetrics.createStatProjection());
   const [typingMetrics, setTypingMetrics] = createSignal(createTypingMetrics());
-  const updateMetrics = createTypingMetricsState(setStat, setTypingMetrics);
+
+  let cleanupMetrics = () => {};
+  const updateMetrics = createTypingMetricsState(
+    setStat,
+    setTypingMetrics,
+    (cleanup) => {
+      cleanupMetrics = cleanup;
+    },
+  );
   createEffect(
     (typingMetricsState: TypingMetricsState) =>
       typingMetricsState({ status: status() }),
     updateMetrics,
   );
-
-  createEffect(() => {});
 
   const keyMetrics = createMemo(
     (projection: KeysProjection) =>
@@ -136,6 +118,38 @@ const TypingGame = (props: TypingGameProps) => {
   let keyboard: TypingKeyboardRef;
 
   /* ***  */
+
+  /* Timer */
+
+  // NOTE: should not exist without timer
+  const [timeCounter, setTimeCounter] = createSignal(
+    props.content.kind === GameModeKind.timer
+      ? props.content.time.toFixed(0)
+      : "",
+  );
+
+  // NOTE: no reactivity on duration
+  if (props.content.kind === GameModeKind.timer) {
+    const timerEffect = createTimerEffect({
+      duration: props.content.time,
+      onOver: over,
+      setCleanup: (cleanup) => (cleanupTimer = cleanup),
+      updateCounter: setTimeCounter,
+    });
+    createEffect((timer: TimerEffect) => {
+      return timer({ status: status() });
+    }, timerEffect);
+  }
+
+  let cleanupTimer = () => {};
+
+  onCleanup(() => {
+    cleanupTimer();
+    cleanupMetrics();
+    setStatus({ kind: TypingStatusKind.unstart });
+  });
+
+  /* *** */
 
   css`
     .mega {
