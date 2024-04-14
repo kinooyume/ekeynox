@@ -116,7 +116,17 @@ const TypingGame = (props: TypingGameProps) => {
   let focus: () => void;
   let pause: () => void;
   let keyboard: TypingKeyboardRef;
+  let navHandler: TypingKeyboardRef;
 
+  let onKeyDown = (key: string) => {
+    keyboard!.keyDown(key);
+    navHandler.keyDown(key);
+  };
+
+  let onKeyUp = (key: string) => {
+    keyboard!.keyUp(key);
+    navHandler.keyUp(key);
+  };
   /* ***  */
 
   /* Timer */
@@ -171,8 +181,8 @@ const TypingGame = (props: TypingGameProps) => {
         setReset={(r) => (resetInput = r)}
         setPause={(p) => (pause = p)}
         setCurrentPromptKey={setCurrentPromptKey}
-        onKeyDown={keyboard!?.keyDown}
-        onKeyUp={keyboard!?.keyUp}
+        onKeyDown={onKeyDown}
+        onKeyUp={onKeyUp}
         onOver={over}
       />
       <Prompt paragraphs={paraStore} setParagraphs={setParaStore} />
@@ -187,6 +197,7 @@ const TypingGame = (props: TypingGameProps) => {
         isPaused={status().kind !== TypingStatusKind.pending}
         stat={stat()}
         onPause={() => pause()}
+        keyboard={(k) => (navHandler = k)}
         onReset={reset}
       >
         <Show when={props.content.kind === GameModeKind.timer}>
