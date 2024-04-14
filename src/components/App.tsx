@@ -140,6 +140,7 @@ const App = () => {
   const over = (metrics: Metrics, content: GameModeContent) =>
     setGameStatus({ kind: GameStatusKind.resume, metrics, content });
 
+  const goHome = () => setGameStatus({ kind: GameStatusKind.menu });
   const [gameStatus, setGameStatus] = createSignal<GameStatus>({
     kind: GameStatusKind.menu,
   });
@@ -209,6 +210,7 @@ const App = () => {
                     content={(gameStatus() as any).content}
                     gameOptions={Object.assign({}, gameOptions)}
                     kbLayout={kbLayout()}
+                    onExit={goHome}
                     onOver={over}
                   />
                 </Show>

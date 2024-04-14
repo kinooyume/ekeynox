@@ -45,6 +45,7 @@ type TypingGameProps = {
   gameOptions: GameOptions;
   kbLayout: HigherKeyboard;
   onOver: (metrics: Metrics, content: GameModeContent) => void;
+  onExit: () => void;
 };
 
 const TypingGame = (props: TypingGameProps) => {
@@ -196,9 +197,10 @@ const TypingGame = (props: TypingGameProps) => {
         t={props.t}
         isPaused={status().kind !== TypingStatusKind.pending}
         stat={stat()}
-        onPause={() => pause()}
         keyboard={(k) => (navHandler = k)}
+        onPause={() => pause()}
         onReset={reset}
+        onExit={props.onExit}
       >
         <Show when={props.content.kind === GameModeKind.timer}>
           <p>{timeCounter()}</p>
