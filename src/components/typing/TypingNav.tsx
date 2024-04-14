@@ -34,6 +34,7 @@ type TypingNavProps = {
   keyboard?: (kbHandler: KeyboardHandler) => void;
   onPause: () => void;
   onReset: () => void;
+  onExit: () => void;
 };
 
 const TypingNav = (props: TypingNavProps) => {
@@ -253,7 +254,7 @@ const TypingNav = (props: TypingNavProps) => {
             </p>
             <Accuracy correct={props.stat.accuracies[1] === 100} />
           </div>
-          <div class="cross">
+          <div class="cross" onClick={props.onExit}>
             <Cross />
           </div>
         </div>
