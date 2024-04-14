@@ -19,11 +19,19 @@ import Cross from "../svgs/cross.tsx";
 import type { Translator } from "../App.tsx";
 import anime from "animejs";
 
+/* Doublon */
+export type KeyboardHandler = {
+  keyUp: (key: string) => void;
+  keyDown: (key: string) => void;
+};
+/* *** */
+
 type TypingNavProps = {
   t: Translator;
   isPaused: boolean;
   stat: StatProjection;
   children?: JSXElement;
+  keyboard?: (kbHandler: KeyboardHandler) => void;
   onPause: () => void;
   onReset: () => void;
 };
@@ -84,8 +92,39 @@ const TypingNav = (props: TypingNavProps) => {
     });
   });
 
+  type PauseKeys = {
+    ctrl: boolean;
+    shift: boolean;
+    space: boolean;
+  };
+
+  let [pauseKeys, setPauseKeys] = createSignal<PauseKeys>({
+    ctrl: false,
+    shift: false,
+    space: false,
+  });
+
+  const keyDown = (key: string) => {
+    if (key === "Control") setPauseKeys({ ...pauseKeys(), ctrl: true });
+    else if (key === "Shift") setPauseKeys({ ...pauseKeys(), shift: true });
+    else if (key === " ") setPauseKeys({ ...pauseKeys(), space: true });
+  };
+
+  const keyUp = (key: string) => {
+    if (key === "Control") setPauseKeys({ ...pauseKeys(), ctrl: false });
+    else if (key === "Shift") setPauseKeys({ ...pauseKeys(), shift: false });
+    else if (key === " ") setPauseKeys({ ...pauseKeys(), space: false });
+  };
+
+  createEffect(() => {
+    if (pauseKeys().ctrl && pauseKeys().shift && pauseKeys().space) {
+      props.onPause();
+    }
+  });
+
   onMount(() => {
     window.addEventListener("resize", resize);
+    props.keyboard?.({ keyUp, keyDown });
   });
 
   onCleanup(() => {
