@@ -2,9 +2,6 @@ import { css } from "solid-styled";
 
 const Reset = () => {
   css`
-    svg {
-      cursor: pointer;
-    }
     .arrow path {
       fill: var(--text-secondary-color);
       transition: ease-in-out 0.2s;
@@ -17,8 +14,6 @@ const Reset = () => {
       stroke: grey;
       stroke: var(--text-secondary-color);
       transition: ease-in-out 0.2s;
-    }
-    svg:hover .path {
     }
   `;
   return (

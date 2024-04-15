@@ -16,6 +16,7 @@ import Nav from "../svgs/nav-abs.tsx";
 import Gauge from "../svgs/gauge.tsx";
 import Accuracy from "../svgs/accuracy.tsx";
 import Cross from "../svgs/cross.tsx";
+import Shuffle from "../svgs/shuffle.tsx";
 import type { Translator } from "../App.tsx";
 import anime from "animejs";
 
@@ -28,12 +29,14 @@ export type KeyboardHandler = {
 
 type TypingNavProps = {
   t: Translator;
+  isGenerated: boolean;
   isPaused: boolean;
   stat: StatProjection;
   children?: JSXElement;
   keyboard?: (kbHandler: KeyboardHandler) => void;
   onPause: () => void;
   onReset: () => void;
+  onShuffle: () => void;
   onExit: () => void;
 };
 
@@ -192,8 +195,10 @@ const TypingNav = (props: TypingNavProps) => {
       justify-content: space-between;
       gap: 16px;
     }
-    .cross {
+    .clickable {
       cursor: pointer;
+    }
+    .cross {
       padding-top: 2px;
     }
 
@@ -219,12 +224,17 @@ const TypingNav = (props: TypingNavProps) => {
       </div>
       <div class="content">
         <div class="remote">
-          <div onClick={props.onPause}>
+          <div class="" onClick={props.onPause}>
             <Play paused={props.isPaused} />
           </div>
-          <div onclick={props.onReset}>
+          <div class="clickable" onclick={props.onReset}>
             <Reset />
           </div>
+          <Show when={props.isGenerated}>
+            <div class="clickable" onClick={props.onShuffle}>
+              <Shuffle />
+            </div>
+          </Show>
           <Show when={props.children}>
             <div class="child">{props.children}</div>
           </Show>
@@ -254,7 +264,7 @@ const TypingNav = (props: TypingNavProps) => {
             </p>
             <Accuracy correct={props.stat.accuracies[1] === 100} />
           </div>
-          <div class="cross" onClick={props.onExit}>
+          <div class="cross clickable" onClick={props.onExit}>
             <Cross />
           </div>
         </div>
