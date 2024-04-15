@@ -9,10 +9,7 @@ import {
 } from "solid-js";
 import { createStore } from "solid-js/store";
 
-import Content, {
-  type ContentData,
-  type Paragraphs,
-} from "../content/Content.ts";
+import Content, { type Paragraphs } from "../content/Content.ts";
 import { type HigherKeyboard } from "../keyboard/KeyboardLayout.ts";
 
 import TypingEngine, {
@@ -68,9 +65,17 @@ const TypingGame = (props: TypingGameProps) => {
     Content.deepClone(contentHandler().data.paragraphs),
   );
 
+  // NOTE: shitty way to handle that
+  const [extraEnd, setExtraEnd] = createSignal<[number, number] | undefined>(
+    undefined,
+  );
+
   const updateContent = () => {
     const { data, next } = contentHandler();
     const newContent = next();
+    const lastParagraph = paraStore.length - 1;
+    const lastWord = paraStore[lastParagraph].length - 1;
+    setExtraEnd([lastParagraph, lastWord]);
     // NOTE: create two keysets for the same content
     setContentHandler(newContent(data));
     setParaStore(
@@ -94,6 +99,7 @@ const TypingGame = (props: TypingGameProps) => {
   };
 
   let onPromptEnd = over;
+
   /* timer stuff */
   // NOTE: probably too much condition
   if (
@@ -102,6 +108,7 @@ const TypingGame = (props: TypingGameProps) => {
         WordsGenerationCategory.words1k) ||
     props.gameOptions.generation.infinite
   ) {
+    const paragraphsEnd = contentHandler().data.paragraphs.length - 1;
     updateContent();
     onPromptEnd = updateContent;
   }
@@ -234,6 +241,7 @@ const TypingGame = (props: TypingGameProps) => {
         setReset={(r) => (resetInput = r)}
         setPause={(p) => (pause = p)}
         setGetPosition={(p) => (getPosition = p)}
+        extraEnd={extraEnd()}
         setCurrentPromptKey={setCurrentPromptKey}
         onKeyDown={onKeyDown}
         onKeyUp={onKeyUp}
