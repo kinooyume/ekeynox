@@ -166,6 +166,7 @@ const HeaderMode = (props: HeaderModeProps) => {
         props.setContentGeneration({
           language: gameOptions.generation.language,
           category: gameOptions.generation.category,
+          infinite: gameOptions.generation.infinite,
         });
       },
       { defer: true },
