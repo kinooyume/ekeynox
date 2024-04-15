@@ -9,7 +9,10 @@ import {
 } from "solid-js";
 import { createStore } from "solid-js/store";
 
-import Content, { type Paragraphs } from "../content/Content.ts";
+import Content, {
+  type ContentData,
+  type Paragraphs,
+} from "../content/Content.ts";
 import { type HigherKeyboard } from "../keyboard/KeyboardLayout.ts";
 
 import TypingEngine, {
@@ -33,13 +36,19 @@ import {
   type KeysProjection,
 } from "../metrics/KeysProjection.ts";
 import KeypressMetrics from "../metrics/KeypressMetrics.ts";
-import { type GameOptions } from "../gameMode/GameOptions.ts";
+import {
+  ContentTypeKind,
+  WordsGenerationCategory,
+  type GameOptions,
+} from "../gameMode/GameOptions.ts";
 import { createTimerEffect, type TimerEffect } from "../metrics/Timer.ts";
 import type { Translator } from "../App.tsx";
 import type { Metrics } from "../metrics/Metrics.ts";
-import type { GameModeContent } from "../content/TypingGameSource.ts";
+import {
+  type GameModeContent,
+  type ContentHandler,
+} from "../content/TypingGameSource.ts";
 import { GameModeKind } from "../gameMode/GameMode.ts";
-import { KeyFocus } from "../metrics/KeyMetrics.ts";
 
 type TypingGameProps = {
   t: Translator;
@@ -51,36 +60,24 @@ type TypingGameProps = {
 };
 
 const TypingGame = (props: TypingGameProps) => {
-  const [content, setContent] = createSignal(props.content.getContent());
-  const [paraStore, setParaStore] = createStore(
-    Content.deepClone(content().paragraphs),
+  const [contentHandler, setContentHandler] = createSignal<ContentHandler>(
+    props.content.getContent(),
   );
 
-  const [currentPromptKey, setCurrentPromptKey] = createSignal("");
-  const [status, setStatus] = createSignal<TypingStatus>({
-    kind: TypingStatusKind.unstart,
-  });
-
-  const [kbLayout, setKbLayout] = createSignal(
-    props.kbLayout(content().keySet),
+  const [paraStore, setParaStore] = createStore<Paragraphs>(
+    Content.deepClone(contentHandler().data.paragraphs),
   );
 
-  createComputed(() => {
-    const layout = props.kbLayout(content().keySet);
-    setKbLayout(layout);
-  });
-
-  /* timer stuff */
-  const cleanParagraphs = (
-    paragraphs: Paragraphs,
-    [pIndex, wIndex]: [number, number, number],
-  ): Paragraphs => {
-    const cleanParagraphs = paragraphs.slice(0, pIndex + 1);
-    cleanParagraphs[pIndex] = paragraphs[pIndex].slice(0, wIndex + 1);
-    return cleanParagraphs;
+  const updateContent = () => {
+    const { data, next } = contentHandler();
+    const newContent = next();
+    // NOTE: create two keysets for the same content
+    setContentHandler(newContent(data));
+    setParaStore(
+      newContent({ paragraphs: paraStore, keySet: data.keySet }).data
+        .paragraphs,
+    );
   };
-
-  let getPosition: () => Position;
 
   const over = () => {
     const position = getPosition();
@@ -95,6 +92,50 @@ const TypingGame = (props: TypingGameProps) => {
       props.content,
     );
   };
+
+  let onPromptEnd = over;
+  /* timer stuff */
+  // NOTE: probably too much condition
+  if (
+    (props.gameOptions.contentType.kind === ContentTypeKind.generation &&
+      props.gameOptions.generation.category ===
+        WordsGenerationCategory.words1k) ||
+    props.gameOptions.generation.infinite
+  ) {
+    updateContent();
+    onPromptEnd = updateContent;
+  }
+  /* *** */
+
+  createEffect(() => {
+    setParaStore();
+  });
+
+  const [currentPromptKey, setCurrentPromptKey] = createSignal("");
+  const [status, setStatus] = createSignal<TypingStatus>({
+    kind: TypingStatusKind.unstart,
+  });
+
+  const [kbLayout, setKbLayout] = createSignal(
+    props.kbLayout(contentHandler().data.keySet),
+  );
+
+  createComputed(() => {
+    const layout = props.kbLayout(contentHandler().data.keySet);
+    setKbLayout(layout);
+  });
+
+  /* timer stuff */
+  const cleanParagraphs = (
+    paragraphs: Paragraphs,
+    [pIndex, wIndex]: [number, number, number],
+  ): Paragraphs => {
+    const cleanParagraphs = paragraphs.slice(0, pIndex + 1);
+    cleanParagraphs[pIndex] = paragraphs[pIndex].slice(0, wIndex + 1);
+    return cleanParagraphs;
+  };
+
+  let getPosition: () => Position;
 
   /* Metrics */
 
@@ -122,7 +163,7 @@ const TypingGame = (props: TypingGameProps) => {
   );
 
   const reset = () => {
-    setParaStore(Content.deepClone(content().paragraphs));
+    setParaStore(Content.deepClone(contentHandler().data.paragraphs));
     setStatus({ kind: TypingStatusKind.unstart });
     resetInput();
     focus!();
@@ -200,7 +241,7 @@ const TypingGame = (props: TypingGameProps) => {
         setCurrentPromptKey={setCurrentPromptKey}
         onKeyDown={onKeyDown}
         onKeyUp={onKeyUp}
-        onOver={over}
+        onOver={onPromptEnd}
       />
       <Prompt paragraphs={paraStore} setParagraphs={setParaStore} />
       <Keyboard
