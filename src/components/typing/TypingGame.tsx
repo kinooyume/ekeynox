@@ -65,11 +65,6 @@ const TypingGame = (props: TypingGameProps) => {
     Content.deepClone(contentHandler().data.paragraphs),
   );
 
-  const newContent = () => {
-    setContentHandler(props.content.getContent());
-    setParaStore(Content.deepClone(contentHandler().data.paragraphs));
-  };
-
   // NOTE: shitty way to handle that
   const [extraEnd, setExtraEnd] = createSignal<[number, number] | undefined>(
     undefined,
@@ -87,6 +82,20 @@ const TypingGame = (props: TypingGameProps) => {
       newContent({ paragraphs: paraStore, keySet: data.keySet }).data
         .paragraphs,
     );
+  };
+
+  const newContent = () => {
+    setContentHandler(props.content.getContent());
+    // duplicate dettect if multiple content or not
+    if (
+      (props.gameOptions.mode === GameModeKind.timer &&
+        props.gameOptions.generation.category ===
+          WordsGenerationCategory.words1k) ||
+      props.gameOptions.generation.infinite
+    ) {
+      updateContent();
+    }
+    setParaStore(Content.deepClone(contentHandler().data.paragraphs));
   };
 
   const over = () => {
@@ -113,7 +122,6 @@ const TypingGame = (props: TypingGameProps) => {
         WordsGenerationCategory.words1k) ||
     props.gameOptions.generation.infinite
   ) {
-    const paragraphsEnd = contentHandler().data.paragraphs.length - 1;
     updateContent();
     onPromptEnd = updateContent;
   }
