@@ -107,10 +107,6 @@ const TypingGame = (props: TypingGameProps) => {
   }
   /* *** */
 
-  createEffect(() => {
-    setParaStore();
-  });
-
   const [currentPromptKey, setCurrentPromptKey] = createSignal("");
   const [status, setStatus] = createSignal<TypingStatus>({
     kind: TypingStatusKind.unstart,
