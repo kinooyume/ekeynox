@@ -51,6 +51,7 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
     props.setContentGeneration({
       language: gameOptions.generation.language,
       category: gameOptions.generation.category,
+      infinite: gameOptions.generation.infinite,
     });
   });
 
