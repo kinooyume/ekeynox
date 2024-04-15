@@ -16,7 +16,7 @@ const Play = (props: PlayProps) => {
     setPaths(getPaths());
   });
   css`
-    svg {
+    svg .paused {
       cursor: pointer;
     }
     path {

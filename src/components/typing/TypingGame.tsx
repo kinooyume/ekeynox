@@ -65,6 +65,11 @@ const TypingGame = (props: TypingGameProps) => {
     Content.deepClone(contentHandler().data.paragraphs),
   );
 
+  const newContent = () => {
+    setContentHandler(props.content.getContent());
+    setParaStore(Content.deepClone(contentHandler().data.paragraphs));
+  };
+
   // NOTE: shitty way to handle that
   const [extraEnd, setExtraEnd] = createSignal<[number, number] | undefined>(
     undefined,
@@ -103,7 +108,7 @@ const TypingGame = (props: TypingGameProps) => {
   /* timer stuff */
   // NOTE: probably too much condition
   if (
-    (props.gameOptions.contentType.kind === ContentTypeKind.generation &&
+    (props.gameOptions.mode === GameModeKind.timer &&
       props.gameOptions.generation.category ===
         WordsGenerationCategory.words1k) ||
     props.gameOptions.generation.infinite
@@ -256,11 +261,15 @@ const TypingGame = (props: TypingGameProps) => {
       />
       <TypingNav
         t={props.t}
+        isGenerated={
+          props.gameOptions.contentType.kind === ContentTypeKind.generation
+        }
         isPaused={status().kind !== TypingStatusKind.pending}
         stat={stat()}
         keyboard={(k) => (navHandler = k)}
         onPause={() => pause()}
         onReset={reset}
+        onShuffle={newContent}
         onExit={props.onExit}
       >
         <Show when={props.content.kind === GameModeKind.timer}>
