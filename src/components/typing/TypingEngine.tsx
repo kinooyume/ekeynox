@@ -50,6 +50,7 @@ export type TypingStatus =
   | { kind: TypingStatusKind.pause }
   | { kind: TypingStatusKind.over };
 
+export type Position = [number, number, number];
 export type TypingEngineProps = {
   paragraphs: Paragraphs;
   setParagraphs: SetStoreFunction<Paragraphs>;
@@ -61,6 +62,7 @@ export type TypingEngineProps = {
   setPause: (pause: () => void) => void;
   setFocus: (focus: () => void) => void;
   setReset: (reset: () => void) => void;
+  setGetPosition: (getPositions: () => Position) => void;
   onOver: () => void;
 };
 
@@ -321,6 +323,12 @@ const TypingEngine = (props: TypingEngineProps) => {
     }
   };
 
+  const getPositions = (): Position => [
+    currentParagraph(),
+    currentWord(),
+    currentKey(),
+  ];
+
   /* *** */
 
   onMount(() => {
@@ -332,11 +340,14 @@ const TypingEngine = (props: TypingEngineProps) => {
     props.setFocus(() => input.focus());
     props.setReset(reset);
     props.setPause(pause);
+    props.setGetPosition(getPositions);
     props.setCurrentPromptKey(getCurrent.key().key);
     input.focus();
   });
 
   onCleanup(() => {
+    setCurrent.keyFocus(KeyFocus.unfocus);
+    setCurrent.wordStatus(WordStatus.unstart, false);
     if (!input) return;
     input.removeEventListener("input", handleInputEvent);
     input.removeEventListener("keydown", handleKeyDown);

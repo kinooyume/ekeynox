@@ -9,12 +9,13 @@ import {
 } from "solid-js";
 import { createStore } from "solid-js/store";
 
-import Content from "../content/Content.ts";
+import Content, { type Paragraphs } from "../content/Content.ts";
 import { type HigherKeyboard } from "../keyboard/KeyboardLayout.ts";
 
 import TypingEngine, {
   type TypingStatus,
   TypingStatusKind,
+  type Position,
 } from "./TypingEngine";
 import Prompt from "../prompt/Prompt.tsx";
 import TypingNav from "./TypingNav.tsx";
@@ -38,6 +39,7 @@ import type { Translator } from "../App.tsx";
 import type { Metrics } from "../metrics/Metrics.ts";
 import type { GameModeContent } from "../content/TypingGameSource.ts";
 import { GameModeKind } from "../gameMode/GameMode.ts";
+import { KeyFocus } from "../metrics/KeyMetrics.ts";
 
 type TypingGameProps = {
   t: Translator;
@@ -68,11 +70,24 @@ const TypingGame = (props: TypingGameProps) => {
     setKbLayout(layout);
   });
 
+  /* timer stuff */
+  const cleanParagraphs = (
+    paragraphs: Paragraphs,
+    [pIndex, wIndex]: [number, number, number],
+  ): Paragraphs => {
+    const cleanParagraphs = paragraphs.slice(0, pIndex + 1);
+    cleanParagraphs[pIndex] = paragraphs[pIndex].slice(0, wIndex + 1);
+    return cleanParagraphs;
+  };
+
+  let getPosition: () => Position;
+
   const over = () => {
+    const position = getPosition();
     setStatus({ kind: TypingStatusKind.over });
     props.onOver(
       {
-        content: { ...content(), paragraphs: paraStore },
+        paragraphs: cleanParagraphs(paraStore, position),
         gameOptions: props.gameOptions,
         typing: typingMetrics(),
         keys: keyMetrics(),
@@ -139,6 +154,8 @@ const TypingGame = (props: TypingGameProps) => {
       : "",
   );
 
+  let cleanupTimer = () => {};
+
   // NOTE: no reactivity on duration
   if (props.content.kind === GameModeKind.timer) {
     const timerEffect = createTimerEffect({
@@ -151,8 +168,6 @@ const TypingGame = (props: TypingGameProps) => {
       return timer({ status: status() });
     }, timerEffect);
   }
-
-  let cleanupTimer = () => {};
 
   onCleanup(() => {
     cleanupTimer();
@@ -181,6 +196,7 @@ const TypingGame = (props: TypingGameProps) => {
         setFocus={(f) => (focus = f)}
         setReset={(r) => (resetInput = r)}
         setPause={(p) => (pause = p)}
+        setGetPosition={(p) => (getPosition = p)}
         setCurrentPromptKey={setCurrentPromptKey}
         onKeyDown={onKeyDown}
         onKeyUp={onKeyUp}

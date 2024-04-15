@@ -1,5 +1,5 @@
 import type { LinkedList } from "../List";
-import type { ContentData, MetaWord } from "../content/Content";
+import type { MetaWord, Paragraphs } from "../content/Content";
 import type { GameOptions } from "../gameMode/GameOptions";
 import type { KeypressMetricsProjection } from "./KeypressMetrics";
 import type { KeysProjection } from "./KeysProjection";
@@ -10,7 +10,7 @@ import {
 } from "./TypingProjection";
 
 export type Metrics = {
-  content: ContentData;
+  paragraphs: Paragraphs;
   gameOptions: GameOptions;
   typing: TypingMetrics;
   keys: KeysProjection;
@@ -115,7 +115,7 @@ const averageWordWpm = (words: Array<MetaWord>): Array<WordSpeed> => {
 
 const createMetricsResume = (metrics: Metrics): MetricsResume => ({
   chart: logsToChartMetrics(metrics.typing.logs),
-  words: averageWordWpm(metrics.content.paragraphs.flat()).sort(
+  words: averageWordWpm(metrics.paragraphs.flat()).sort(
     (a, b) => b.averageWpm - a.averageWpm,
   ),
   keys: makeKeysResume(sortKeys(metrics.keys)),
