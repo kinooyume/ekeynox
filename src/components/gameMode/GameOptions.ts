@@ -11,6 +11,7 @@ export enum WordsGenerationCategory {
 export type ContentGeneration = {
   category: WordsGenerationCategory;
   language: Languages;
+  infinite: boolean;
 };
 
 export enum ContentTypeKind {
@@ -67,6 +68,7 @@ const getDefaultGameOptions = (): GameOptions => ({
   generation: {
     category: WordsGenerationCategory.words1k,
     language: "en",
+    infinite: true,
   },
   custom: "",
   random: { type: NumberSelectionType.selected, value: 10 },

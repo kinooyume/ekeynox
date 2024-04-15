@@ -30,6 +30,10 @@ function RadioGroup<Value>(props: RadioGroupProps<Value>) {
       padding-top: 3px;
     }
 
+    .icon.repeat-content {
+      padding-top: 4px;
+    }
+
     .radio-group {
       padding: 4px;
       border-radius: 10px;
