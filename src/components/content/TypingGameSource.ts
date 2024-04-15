@@ -128,7 +128,7 @@ const makeGetContent = (
         getContent: makeSourceNested({
           opts,
           sources,
-          wordNumber: 2,
+          wordNumber: 40,
         }),
         time: opts.timer.value * 1000,
       };

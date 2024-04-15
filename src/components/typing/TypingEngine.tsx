@@ -63,6 +63,7 @@ export type TypingEngineProps = {
   setFocus: (focus: () => void) => void;
   setReset: (reset: () => void) => void;
   setGetPosition: (getPositions: () => Position) => void;
+  extraEnd?: [number, number];
   onOver: () => void;
 };
 
@@ -300,6 +301,14 @@ const TypingEngine = (props: TypingEngineProps) => {
         },
         word: typingWord || { kind: TypingWordKind.ignore },
       });
+      // NOTE: hum.. extra ifs..
+      if (
+        props.extraEnd &&
+        props.extraEnd[0] === currentParagraph() &&
+        props.extraEnd[1] === currentWord()
+      ) {
+        props.onOver();
+      }
       if (!hasNext) {
         setCurrent.wordStatus(WordStatus.over, false);
         setCurrent.keyFocus(KeyFocus.unfocus);
