@@ -35,13 +35,13 @@
   "gameMode": {
     "random": {
       "title": "monkey",
-      "subtitle": "Words sprint !",
+      "subtitle": "Words sprint",
       "description": "Type random words as quick as possible, try to not make mistake !",
       "hugeDescription": "Get ready to type faster than a cheetah with a jetpack in this keyboard race to the finish line!"
     },
     "timer": {
       "title": "bunny",
-      "subtitle": "Against the clock !",
+      "subtitle": "Against the clock",
       "description": "Time is running out ! how many words can you write in the time allowed?",
       "hugeDescription": " Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ut erat sed nulla ornare accumsan a quis diam. Nullam ut pharetra dui."
     }
