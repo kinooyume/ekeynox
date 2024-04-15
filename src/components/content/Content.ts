@@ -115,4 +115,6 @@ export default {
   parse,
   parseWords,
   deepClone,
+  makeEnter,
+  makeSpace
 };

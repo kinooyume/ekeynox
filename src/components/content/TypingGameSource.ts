@@ -4,40 +4,108 @@ import {
   WordsGenerationCategory,
   ContentTypeKind,
 } from "../gameMode/GameOptions";
-import type { ContentData } from "./Content";
+import type { ContentData, Paragraph } from "./Content";
 import Content from "./Content";
+import type { Paragraphs } from "./ContentList";
 import { randomQuote, randomWords } from "./randomContent";
 
+// NOTE: Static or Dynamic handler here
 type SourceProps = {
   random: Array<string>;
   custom: string;
 };
 
-const getSource = (
-  opts: GameOptions,
-  sources: SourceProps,
-  wordNumber: number,
-): (() => ContentData) => {
+type GetSourceProps = {
+  opts: GameOptions;
+  sources: SourceProps;
+  wordNumber: number;
+};
+
+type NestedSourceProps = {
+  src: () => ContentData;
+  following: boolean;
+};
+
+const getSource = ({
+  opts,
+  sources,
+  wordNumber,
+}: GetSourceProps): NestedSourceProps => {
   if (opts.contentType.kind === ContentTypeKind.custom) {
-    return () => Content.parse(sources.custom);
+    return { src: () => Content.parse(sources.custom), following: false };
   }
   switch (opts.generation.category) {
     case WordsGenerationCategory.words1k:
-      return () => Content.parseWords(randomWords(sources.random)(wordNumber));
+      return {
+        src: () => Content.parseWords(randomWords(sources.random)(wordNumber)),
+        following: true,
+      };
     case WordsGenerationCategory.quotes:
-      return () => Content.parse(randomQuote(sources.random));
+      return {
+        src: () => Content.parse(randomQuote(sources.random)),
+        following: false,
+      };
   }
+};
+
+export type ContentHandler = {
+  data: ContentData;
+  next: () => (prev: ContentData) => ContentHandler;
+};
+
+export type GetContent = () => ContentHandler;
+
+const mergeSource = (
+  prev: ContentData,
+  next: ContentData,
+  following: boolean,
+) => {
+  const nextParagraphs = Content.deepClone(next.paragraphs);
+  const prevParagraphs = Content.deepClone(prev.paragraphs);
+  const prevLast: Paragraph = prevParagraphs.pop() || [];
+
+  let paragraphs;
+  if (following) {
+    const [first, ...rest] = Content.deepClone(nextParagraphs);
+    const newParagraph = prevLast.concat(Content.makeSpace(), first);
+    paragraphs = prevParagraphs.concat([newParagraph, ...rest]);
+  } else {
+    prevLast.push(Content.makeEnter());
+    paragraphs = prevParagraphs.concat([prevLast, ...nextParagraphs]);
+  }
+  const keySet = new Set([...prev.keySet, ...next.keySet]);
+  return { paragraphs, keySet };
+};
+
+const next = (nextContent: GetContent, following: boolean) => () => {
+  const next = nextContent();
+  return (prev: ContentData) => {
+    return {
+      data: mergeSource(prev, next.data, following),
+      next: next.next,
+    };
+  };
+};
+
+const makeSourceNested = (props: GetSourceProps): GetContent => {
+  const nestedSource =
+    (props: NestedSourceProps): GetContent =>
+    () => ({
+      data: props.src(),
+      next: next(nestedSource(props), props.following),
+    });
+  return nestedSource(getSource(props));
 };
 
 export type GameModeContent =
   | {
       kind: GameModeKind.random;
-      getContent: () => ContentData;
+      getContent: GetContent;
     }
   | {
       kind: GameModeKind.timer;
       time: number;
-      getContent: () => ContentData;
+      getContent: GetContent;
     };
 
 const makeGetContent = (
@@ -48,13 +116,21 @@ const makeGetContent = (
     case GameModeKind.random:
       return {
         kind: GameModeKind.random,
-        getContent: getSource(opts, sources, opts.random.value),
+        getContent: makeSourceNested({
+          opts,
+          sources,
+          wordNumber: opts.random.value,
+        }),
       };
     case GameModeKind.timer:
       return {
         kind: GameModeKind.timer,
+        getContent: makeSourceNested({
+          opts,
+          sources,
+          wordNumber: 2,
+        }),
         time: opts.timer.value * 1000,
-        getContent: getSource(opts, sources, opts.timer.value * 4),
       };
   }
 };
