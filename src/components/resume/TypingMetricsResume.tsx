@@ -19,15 +19,14 @@ type TypingMetricsProps = {
 };
 
 const TypingMetricsResume = (props: TypingMetricsProps) => {
-  const [kbLayout, setKbLayout] = createSignal(
-    props.kbLayout(props.metrics.content.keySet),
-  );
+  const keysSet = new Set(Object.keys(props.metrics.keys));
+  const [kbLayout, setKbLayout] = createSignal(props.kbLayout(keysSet));
 
   const [metricIndex, setMetricIndex] = createSignal(0);
   const metricsResume = createMetricsResume(props.metrics);
 
   createComputed(() => {
-    const layout = props.kbLayout(props.metrics.content.keySet);
+    const layout = props.kbLayout(keysSet);
     setKbLayout(layout);
   });
 
@@ -118,7 +117,7 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
           <Show when={metricIndex() === 0}>
             <div class="words-metrics">
               <WordMetricsResume words={metricsResume.words} />
-              <Prompt paragraphs={props.metrics.content.paragraphs} />
+              <Prompt paragraphs={props.metrics.paragraphs} />
             </div>
           </Show>
           <Show when={metricIndex() === 1}>
