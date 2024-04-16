@@ -64,7 +64,6 @@ export type TypingEngineProps = {
   onKeyDown: (key: string) => void;
   onKeyUp: (key: string) => void;
   setCurrentPromptKey: Setter<string>;
-  status: TypingStatus;
   setStatus: Setter<TypingStatus>;
   setPause: (pause: () => void) => void;
   setFocus: (focus: () => void) => void;
@@ -347,16 +346,13 @@ const TypingEngine = (props: TypingEngineProps) => {
 
   /* *** */
 
-  createEffect(() => { 
-    currentFocus();
-    props.setCurrentPromptKey(getCurrent.key().key);
-  })
-
   onMount(() => {
     /* NOTE: input event to handle android/chrome */
     input.addEventListener("input", handleInputEvent);
     input.addEventListener("keydown", handleKeyDown);
     input.addEventListener("keyup", handleKeyUp);
+    currentFocus();
+    props.setCurrentPromptKey(getCurrent.key().key);
     props.setFocus(() => input.focus());
     props.setReset(reset);
     props.setPause(pause);

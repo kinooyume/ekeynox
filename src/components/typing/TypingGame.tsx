@@ -96,6 +96,7 @@ const TypingGame = (props: TypingGameProps) => {
       updateContent();
     }
     setParaStore(Content.deepClone(contentHandler().data.paragraphs));
+    reset()
   };
 
   const over = () => {
@@ -122,7 +123,6 @@ const TypingGame = (props: TypingGameProps) => {
       WordsGenerationCategory.words1k ||
       props.gameOptions.generation.infinite)
   ) {
-    console.log("yo");
     updateContent();
     onPromptEnd = updateContent;
   }
@@ -249,7 +249,6 @@ const TypingGame = (props: TypingGameProps) => {
       <TypingEngine
         paragraphs={paraStore}
         setParagraphs={setParaStore}
-        status={status()}
         setStatus={setStatus}
         setFocus={(f) => (focus = f)}
         setReset={(r) => (resetInput = r)}
