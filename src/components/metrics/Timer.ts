@@ -13,14 +13,20 @@ type TimerPause = { resume: () => TimerPending };
 type CreateTimerPending = (timeLeft: number) => TimerPending;
 
 type CreateTimerPause = (props: {
-  start: number;
+  timeLeft: number;
   timer: NodeJS.Timeout;
   interval: NodeJS.Timeout;
 }) => TimerPause;
 
-const create = ({ duration, onOver, updateCounter, setCleanup }: CreateProps) => {
+const create = ({
+  duration,
+  onOver,
+  updateCounter,
+  setCleanup,
+}: CreateProps) => {
   const resume: CreateTimerPending = (timeLeft) => {
     const start = performance.now();
+    let remainingTime = 0;
     const timer = setTimeout(() => {
       clearInterval(interval);
       onOver();
@@ -28,21 +34,20 @@ const create = ({ duration, onOver, updateCounter, setCleanup }: CreateProps) =>
     const interval = setInterval(() => {
       const now = performance.now();
       const elapsed = now - start;
-      updateCounter(timeLeft - elapsed);
-    }, 1000);
+      remainingTime = timeLeft - elapsed;
+      updateCounter(remainingTime);
+    }, 10);
     setCleanup(() => {
       clearTimeout(timer);
       clearInterval(interval);
     });
-    return { pause: () => pause({ start, timer, interval }) };
+    return { pause: () => pause({ timeLeft: remainingTime, timer, interval }) };
   };
 
-  const pause: CreateTimerPause = ({ start, timer, interval }) => {
+  const pause: CreateTimerPause = ({ timeLeft, timer, interval }) => {
     clearTimeout(timer);
     clearInterval(interval);
-    const stop = performance.now();
-    const elapsed = stop - start;
-    return { resume: () => resume(elapsed) };
+    return { resume: () => resume(timeLeft) };
   };
 
   updateCounter(duration);
