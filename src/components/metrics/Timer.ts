@@ -28,7 +28,7 @@ const create = ({ duration, onOver, updateCounter, setCleanup }: CreateProps) =>
     const interval = setInterval(() => {
       const now = performance.now();
       const elapsed = now - start;
-      updateCounter(Math.ceil((timeLeft - elapsed) / 1000));
+      updateCounter(timeLeft - elapsed);
     }, 1000);
     setCleanup(() => {
       clearTimeout(timer);
@@ -45,7 +45,7 @@ const create = ({ duration, onOver, updateCounter, setCleanup }: CreateProps) =>
     return { resume: () => resume(elapsed) };
   };
 
-  updateCounter(Math.ceil(duration / 1000));
+  updateCounter(duration);
   return {
     resume: () => resume(duration),
   };

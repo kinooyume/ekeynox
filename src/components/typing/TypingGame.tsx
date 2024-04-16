@@ -213,9 +213,7 @@ const TypingGame = (props: TypingGameProps) => {
 
   // NOTE: should not exist without timer
   const [timeCounter, setTimeCounter] = createSignal<number | undefined>(
-    props.content.kind === GameModeKind.timer
-      ? props.content.time
-      : undefined,
+    props.content.kind === GameModeKind.timer ? props.content.time : undefined,
   );
 
   let cleanupTimer = () => {};
@@ -239,12 +237,11 @@ const TypingGame = (props: TypingGameProps) => {
   const [currentProgress, setCurrentProgress] = createSignal(0);
   const [progress, setProgress] = createSignal(0);
 
-
   if (props.content.kind === GameModeKind.timer) {
     setTotalProgress(props.content.time);
     createComputed(() => {
-      setCurrentProgress(timeCounter() || 0)
-    })
+      setCurrentProgress(timeCounter()  || 0);
+    });
   } else {
     createComputed(() => {
       setTotalProgress(totalWordsCount());
@@ -311,7 +308,7 @@ const TypingGame = (props: TypingGameProps) => {
         onExit={props.onExit}
       >
         <Show when={props.content.kind === GameModeKind.timer}>
-          <p>{timeCounter()}</p>
+          <p>{Math.ceil(( timeCounter() || 0 ) / 1000)}</p>
         </Show>
       </TypingNav>
     </div>
