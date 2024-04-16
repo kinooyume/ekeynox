@@ -15,6 +15,7 @@ import Text from "../svgs/text";
 import Customizer from "../svgs/customizer";
 import Stopwatch from "../svgs/stopwatch";
 import type { GameParams } from "./GameParams";
+import Infinite from "../svgs/infinite";
 
 const TimerParamsCompact = (props: GameParams) => {
   css`
@@ -93,6 +94,29 @@ const TimerParamsCompact = (props: GameParams) => {
           {props.children}
         </Match>
       </Switch>
+        <Show
+          when={
+            props.gameOptions.contentType.kind !== ContentTypeKind.generation ||
+            props.gameOptions.contentType.category ===
+              WordsGenerationCategory.quotes
+          }
+        >
+          <div class="option">
+            <RadioGroup
+              name="repeat-content"
+              values={[
+                { label: props.t("once"), value: false },
+                { label: props.t("infinity"), value: true },
+              ]}
+              compare={(v) => v === props.gameOptions.generation.infinite}
+              setChecked={(l) =>
+                props.setGameOptions("generation", "infinite", l)
+              }
+            >
+              <Infinite />
+            </RadioGroup>
+          </div>
+        </Show>
       <RadioGroup
         name="time"
         values={[
