@@ -229,7 +229,7 @@ const App = () => {
                   t={t}
                   gameOptions={gameOptions}
                   content={(gameStatus() as any).content}
-                  paragraphs={(gameStatus() as any).metrics.paragraphs}
+                  metrics={(gameStatus() as any).metrics}
                   setContentGeneration={setContentGeneration}
                   start={start}
                   redo={redo}

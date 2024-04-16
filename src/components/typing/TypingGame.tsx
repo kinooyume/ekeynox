@@ -61,6 +61,12 @@ const TypingGame = (props: TypingGameProps) => {
     props.content.getContent(),
   );
 
+  const [totalWordsCount, setTotalWordsCount] = createSignal<number>(0);
+
+  createEffect(() => {
+    setTotalWordsCount(contentHandler().data.wordsCount);
+  });
+
   const [paraStore, setParaStore] = createStore<Paragraphs>(
     Content.deepClone(contentHandler().data.paragraphs),
   );
@@ -79,8 +85,7 @@ const TypingGame = (props: TypingGameProps) => {
     // NOTE: create two keysets for the same content
     setContentHandler(newContent(data));
     setParaStore(
-      newContent({ paragraphs: paraStore, keySet: data.keySet }).data
-        .paragraphs,
+      newContent({ ...data, paragraphs: paraStore }).data.paragraphs,
     );
   };
 
@@ -96,7 +101,7 @@ const TypingGame = (props: TypingGameProps) => {
       updateContent();
     }
     setParaStore(Content.deepClone(contentHandler().data.paragraphs));
-    reset()
+    reset();
   };
 
   const over = () => {
@@ -105,6 +110,7 @@ const TypingGame = (props: TypingGameProps) => {
     props.onOver(
       {
         paragraphs: cleanParagraphs(paraStore, position),
+        wordsCount: totalWordsCount(),
         gameOptions: props.gameOptions,
         typing: typingMetrics(),
         keys: keyMetrics(),
@@ -206,10 +212,10 @@ const TypingGame = (props: TypingGameProps) => {
   /* Timer */
 
   // NOTE: should not exist without timer
-  const [timeCounter, setTimeCounter] = createSignal(
+  const [timeCounter, setTimeCounter] = createSignal<number | undefined>(
     props.content.kind === GameModeKind.timer
-      ? props.content.time.toFixed(0)
-      : "",
+      ? props.content.time
+      : undefined,
   );
 
   let cleanupTimer = () => {};
@@ -227,6 +233,29 @@ const TypingGame = (props: TypingGameProps) => {
     }, timerEffect);
   }
 
+  /* Progress */
+
+  const [totalProgress, setTotalProgress] = createSignal(0);
+  const [currentProgress, setCurrentProgress] = createSignal(0);
+  const [progress, setProgress] = createSignal(0);
+
+
+  if (props.content.kind === GameModeKind.timer) {
+    setTotalProgress(props.content.time);
+    createComputed(() => {
+      setCurrentProgress(timeCounter() || 0)
+    })
+  } else {
+    createComputed(() => {
+      setTotalProgress(totalWordsCount());
+    });
+  }
+
+  createComputed(() => {
+    setProgress((currentProgress() / totalProgress()) * 100);
+  });
+
+  /* *** */
   onCleanup(() => {
     cleanupTimer();
     cleanupMetrics();
@@ -277,6 +306,7 @@ const TypingGame = (props: TypingGameProps) => {
         keyboard={(k) => (navHandler = k)}
         onPause={() => pause()}
         onReset={reset}
+        progress={progress()}
         onShuffle={newContent}
         onExit={props.onExit}
       >

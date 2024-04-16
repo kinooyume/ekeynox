@@ -18,7 +18,7 @@ type SourceProps = {
 type GetSourceProps = {
   opts: GameOptions;
   sources: SourceProps;
-  wordNumber: number;
+  wordsCount: number;
 };
 
 type NestedSourceProps = {
@@ -29,7 +29,7 @@ type NestedSourceProps = {
 const getSource = ({
   opts,
   sources,
-  wordNumber,
+  wordsCount: wordNumber,
 }: GetSourceProps): NestedSourceProps => {
   if (opts.contentType.kind === ContentTypeKind.custom) {
     return { src: () => Content.parse(sources.custom), following: false };
@@ -75,8 +75,9 @@ const mergeSource = (
     prevLast.push(Content.makeEnter());
     paragraphs = prevParagraphs.concat([prevLast, ...nextParagraphs]);
   }
+  const wordsCount = prev.wordsCount + next.wordsCount;
   const keySet = new Set([...prev.keySet, ...next.keySet]);
-  return { paragraphs, keySet };
+  return { paragraphs, keySet, wordsCount };
 };
 
 const next = (nextContent: GetContent, following: boolean) => () => {
@@ -139,7 +140,7 @@ const makeGetContent = (
         getContent: makeSourceNested({
           opts,
           sources,
-          wordNumber: opts.random.value,
+          wordsCount: opts.random.value,
         }),
       };
     case GameModeKind.timer:
@@ -148,7 +149,7 @@ const makeGetContent = (
         getContent: makeSourceNested({
           opts,
           sources,
-          wordNumber: 40,
+          wordsCount: 40,
         }),
         time: opts.timer.value * 1000,
       };

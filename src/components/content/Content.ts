@@ -50,7 +50,11 @@ const makeSpace = () => ({
   ],
 });
 
-export type ContentData = { paragraphs: Paragraphs; keySet: Set<string> };
+export type ContentData = {
+  paragraphs: Paragraphs;
+  keySet: Set<string>;
+  wordsCount: number;
+};
 
 const parseWord =
   (keySet: Set<string>) =>
@@ -74,12 +78,16 @@ export type Parser = (source: string) => ContentData;
 export const parse: Parser = (source) => {
   const keySet = new Set<string>();
   const wordParser = parseWord(keySet);
+  let wordsCount = 0;
   const paragraphs = source
     .split("\n")
     .map((line) => {
       return line
         .split(/(\s+)/)
-        .map((word) => wordParser({ word }))
+        .map((word) => {
+          wordsCount++;
+          return wordParser({ word });
+        })
         .filter((word) => word.keys.length > 0);
     })
     .filter((paragraph) => paragraph.length > 0);
@@ -89,18 +97,22 @@ export const parse: Parser = (source) => {
       paragraphs[i].push(makeEnter());
     }
   }
-  return { paragraphs, keySet };
+  return { paragraphs, keySet, wordsCount };
 };
 
 const parseWords = (source: Array<string>): ContentData => {
   const keySet = new Set<string>();
   const wordParser = parseWord(keySet);
-  const words = source.flatMap((word, index) =>
-    index < source.length - 1
-      ? [wordParser({ word }), makeSpace()]
-      : wordParser({ word }),
-  );
-  return { paragraphs: [words], keySet };
+  let wordsCount = 0;
+  const words = source.flatMap((word, index) => {
+    wordsCount++;
+    if (index < source.length - 1) {
+      return [wordParser({ word }), makeSpace()];
+    } else {
+      return wordParser({ word });
+    }
+  });
+  return { paragraphs: [words], keySet, wordsCount };
 };
 
 const deepClone = (paragraphs: Paragraphs) =>
@@ -135,9 +147,13 @@ const makeKeySet = (paragraphs: Paragraphs) => {
   return keySet;
 };
 
-const contentDataFromParagraphs = (paragraphs: Paragraphs): ContentData => ({
+const contentDataFromParagraphs = (
+  paragraphs: Paragraphs,
+  wordsCount: number,
+): ContentData => ({
   paragraphs,
   keySet: makeKeySet(paragraphs),
+  wordsCount,
 });
 
 export default {

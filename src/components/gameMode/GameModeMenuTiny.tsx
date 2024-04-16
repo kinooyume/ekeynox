@@ -12,14 +12,14 @@ import {
   type GameModeContent,
 } from "../content/TypingGameSource";
 import { GameModeKind } from "./GameMode";
-import type { Paragraphs } from "../content/Content";
 import Content from "../content/Content";
+import type { Metrics } from "../metrics/Metrics";
 
 type GameModeSelectionProps = {
   t: Translator;
   gameOptions: GameOptions;
   content: GameModeContent;
-  paragraphs: Paragraphs;
+  metrics: Metrics;
   setContentGeneration: (type: ContentGeneration) => void;
   start: (opts: GameOptions, customSource: string) => void;
   redo: (content: GameModeContent) => void;
@@ -34,7 +34,10 @@ const GameModeSelectionTiny = (props: GameModeSelectionProps) => {
     const redoContent = {
       ...props.content,
       getContent: makeRedoContent(
-        Content.contentDataFromParagraphs(Content.deepCloneReset(props.paragraphs)),
+        Content.contentDataFromParagraphs(
+          Content.deepCloneReset(props.metrics.paragraphs),
+          props.metrics.wordsCount
+        ),
         props.content.getContent,
       ),
     };
