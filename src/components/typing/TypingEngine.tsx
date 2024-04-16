@@ -206,7 +206,7 @@ const TypingEngine = (props: TypingEngineProps) => {
   };
 
   const prevWord = () => {
-    setCurrent.wordStatus(WordStatus.unstart, false);
+    setCurrent.wordStatus(WordStatus.unfocus, false);
     setCurrent.keyFocus(KeyFocus.back);
     setCurrentWord(currentWord() - 1);
     setCurrentKey(getCurrent.nbrKeys());
@@ -215,7 +215,7 @@ const TypingEngine = (props: TypingEngineProps) => {
   };
 
   const prevParagraph = () => {
-    setCurrent.wordStatus(WordStatus.unstart, false);
+    setCurrent.wordStatus(WordStatus.unfocus, false);
     setCurrent.keyFocus(KeyFocus.back);
     setCurrentParagraph(currentParagraph() - 1);
     setCurrentWord(getCurrent.nbrWords());
