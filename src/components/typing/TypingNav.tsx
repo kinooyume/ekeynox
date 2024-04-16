@@ -19,6 +19,7 @@ import Cross from "../svgs/cross.tsx";
 import Shuffle from "../svgs/shuffle.tsx";
 import type { Translator } from "../App.tsx";
 import anime from "animejs";
+import ProgressBar from "../svgs/progressBar.tsx";
 
 /* Doublon */
 export type KeyboardHandler = {
@@ -33,6 +34,7 @@ type TypingNavProps = {
   isPaused: boolean;
   stat: StatProjection;
   children?: JSXElement;
+  progress: number;
   keyboard?: (kbHandler: KeyboardHandler) => void;
   onPause: () => void;
   onReset: () => void;
@@ -171,12 +173,20 @@ const TypingNav = (props: TypingNavProps) => {
       font-weight: 800;
     }
 
-    nav {
-      height: 63.593px;
+    .typing-nav {
       position: fixed;
       left: 0;
       right: 0;
       bottom: 0;
+    }
+
+    .progress-bar {
+      height: 8px;
+      display: flex;
+    }
+
+    nav {
+      height: 63.593px;
       display: flex;
       justify-content: center;
     }
@@ -184,7 +194,8 @@ const TypingNav = (props: TypingNavProps) => {
       position: absolute;
       left: 0;
       right: 0;
-      top: 0;
+      top: 1px;
+      height: 63.593px;
       z-index: -1;
     }
     .content {
@@ -195,6 +206,7 @@ const TypingNav = (props: TypingNavProps) => {
       justify-content: space-between;
       gap: 16px;
     }
+
     .clickable {
       cursor: pointer;
     }
@@ -218,61 +230,80 @@ const TypingNav = (props: TypingNavProps) => {
   // https://codepen.io/AlikinVV/pen/OrmJxj
 
   return (
-    <nav>
-      <div class="svg-wrapper">
-        <Nav width={navWidth()} borderWidth={navBorder()} />
-      </div>
-      <div class="content">
-        <div class="remote">
-          <div class="" onClick={props.onPause}>
-            <Play paused={props.isPaused} />
-          </div>
-          <div class="clickable" onclick={props.onReset}>
-            <Reset />
-          </div>
-          <Show when={props.isGenerated}>
-            <div class="clickable" onClick={props.onShuffle}>
-              <Shuffle />
+    <div class="typing-nav">
+      <nav>
+        <div class="svg-wrapper">
+          <Nav width={navWidth()} borderWidth={navBorder()} />
+        </div>
+        <div class="content">
+          <div class="remote">
+            <div class="" onClick={props.onPause}>
+              <Play paused={props.isPaused} />
             </div>
-          </Show>
-          <Show when={props.children}>
-            <div class="child">{props.children}</div>
-          </Show>
-        </div>
-        <div class="help">
-          <Switch>
-            <Match when={props.isPaused}>
-              <span>{props.t("typingGame.typeToPlay")}</span>
-            </Match>
-            <Match when={!props.isPaused}>
-              <div>
-                <span class="key">Ctrl</span> +<span class="key">Shift</span> +
-                <span class="key">{props.t("space")}</span>
-                <span> {props.t("typingGame.toPause")}</span>
+            <div class="clickable" onclick={props.onReset}>
+              <Reset />
+            </div>
+            <Show when={props.isGenerated}>
+              <div class="clickable" onClick={props.onShuffle}>
+                <Shuffle />
               </div>
-            </Match>
-          </Switch>
+            </Show>
+            <Show when={props.children}>
+              <div class="child">{props.children}</div>
+            </Show>
+          </div>
+          <div class="help">
+            <Switch>
+              <Match when={props.isPaused}>
+                <span>{props.t("typingGame.typeToPlay")}</span>
+              </Match>
+              <Match when={!props.isPaused}>
+                <div>
+                  <span class="key">Ctrl</span> +<span class="key">Shift</span>{" "}
+                  +<span class="key">{props.t("space")}</span>
+                  <span> {props.t("typingGame.toPause")}</span>
+                </div>
+              </Match>
+            </Switch>
+          </div>
+          <div class="stats">
+            <div class="stat wpm">
+              <span ref={wpmElem!}>0</span>
+              <Gauge speed={props.stat.speed.byWord[0]} />
+            </div>
+            <div class="stat accuracy">
+              <p class="pourcent">
+                <span ref={accuracyElem!}>0</span>%
+              </p>
+              <Accuracy correct={props.stat.accuracies[1] === 100} />
+            </div>
+            <div class="cross clickable" onClick={props.onExit}>
+              <Cross />
+            </div>
+          </div>
         </div>
-        <div class="stats">
-          <div class="stat wpm">
-            <span ref={wpmElem!}>0</span>
-            <Gauge speed={props.stat.speed.byWord[0]} />
-          </div>
-          <div class="stat accuracy">
-            <p class="pourcent">
-              <span ref={accuracyElem!}>0</span>%
-            </p>
-            <Accuracy correct={props.stat.accuracies[1] === 100} />
-          </div>
-          <div class="cross clickable" onClick={props.onExit}>
-            <Cross />
-          </div>
-        </div>
+      </nav>
+      <div class="progress-bar">
+        <ProgressBar progress={props.progress} />
       </div>
-    </nav>
+    </div>
   );
 };
 
 export default TypingNav;
 
 // <span class="wpm">WPM: {Math.trunc(wpm())}</span>
+//
+// UI Stuff
+// preview on hover
+// https://uiverse.io/PriyanshuGupta28/massive-ape-73
+//
+// splash
+// https://uiverse.io/Shoh2008/big-deer-80
+//
+// cool todo bar, with spash
+// https://uiverse.io/JkHuger/warm-panther-74
+//
+// THE play button
+//https://uiverse.io/catraco/wet-rabbit-81
+//
