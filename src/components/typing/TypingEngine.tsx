@@ -1,4 +1,11 @@
-import { createSignal, onCleanup, onMount, type Setter } from "solid-js";
+import {
+  createEffect,
+  createSignal,
+  on,
+  onCleanup,
+  onMount,
+  type Setter,
+} from "solid-js";
 import { WordStatus } from "../prompt/PromptWord.tsx";
 import { type Paragraphs } from "../content/Content.ts";
 import type { SetStoreFunction } from "solid-js/store";
@@ -340,17 +347,20 @@ const TypingEngine = (props: TypingEngineProps) => {
 
   /* *** */
 
+  createEffect(() => { 
+    currentFocus();
+    props.setCurrentPromptKey(getCurrent.key().key);
+  })
+
   onMount(() => {
     /* NOTE: input event to handle android/chrome */
     input.addEventListener("input", handleInputEvent);
     input.addEventListener("keydown", handleKeyDown);
     input.addEventListener("keyup", handleKeyUp);
-    currentFocus();
     props.setFocus(() => input.focus());
     props.setReset(reset);
     props.setPause(pause);
     props.setGetPosition(getPositions);
-    props.setCurrentPromptKey(getCurrent.key().key);
     input.focus();
   });
 
