@@ -26,7 +26,10 @@ import fr_dict from "../i18n/fr.json";
 import Header from "./Header";
 import HeaderAction from "./HeaderAction";
 import { createFetchWords } from "./content/fetchContent";
-import { makeGetContent, type GameModeContent } from "./content/TypingGameSource";
+import {
+  makeGetContent,
+  type GameModeContent,
+} from "./content/TypingGameSource";
 import GameModeMenu from "./gameMode/GameModeMenu";
 import TypingGame from "./typing/TypingGame";
 import {
@@ -124,7 +127,7 @@ const App = () => {
     initialValue: [],
   });
 
-  const launch = (content: GameModeContent) =>
+  const redo = (content: GameModeContent) =>
     setGameStatus({ kind: GameStatusKind.pending, content });
 
   const start = (opts: GameOptions, customSource: string) => {
@@ -134,7 +137,7 @@ const App = () => {
       random: randomSource(),
       custom: customSource,
     });
-    launch(content);
+    redo(content);
   };
 
   const over = (metrics: Metrics, content: GameModeContent) =>
@@ -226,9 +229,10 @@ const App = () => {
                   t={t}
                   gameOptions={gameOptions}
                   content={(gameStatus() as any).content}
+                  paragraphs={(gameStatus() as any).metrics.paragraphs}
                   setContentGeneration={setContentGeneration}
                   start={start}
-                  launch={launch}
+                  redo={redo}
                 />
               </TypingMetricsResume>
             </Match>

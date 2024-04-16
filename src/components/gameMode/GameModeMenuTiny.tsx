@@ -1,30 +1,28 @@
-import {
-  onCleanup,
-  Switch,
-  Match,
-  createEffect,
-} from "solid-js";
+import { onCleanup, Switch, Match, createEffect } from "solid-js";
 import { css } from "solid-styled";
 import { type Translator } from "../App";
 import { createStore } from "solid-js/store";
 import RandomParamsCompact from "./RandomParamsCompact";
 import TimerParamsCompact from "./TimerParamsCompact";
 import CustomInput, { type CustomInputRef } from "../ui/CustomInput";
-import {
-  type ContentGeneration,
-  type GameOptions,
-} from "./GameOptions";
+import { type ContentGeneration, type GameOptions } from "./GameOptions";
 import GameModeDropdown from "./GameModeDropdown";
-import type { GameModeContent } from "../content/TypingGameSource";
+import {
+  makeRedoContent,
+  type GameModeContent,
+} from "../content/TypingGameSource";
 import { GameModeKind } from "./GameMode";
+import type { Paragraphs } from "../content/Content";
+import Content from "../content/Content";
 
 type GameModeSelectionProps = {
   t: Translator;
   gameOptions: GameOptions;
   content: GameModeContent;
+  paragraphs: Paragraphs;
   setContentGeneration: (type: ContentGeneration) => void;
   start: (opts: GameOptions, customSource: string) => void;
-  launch: (content: GameModeContent) => void;
+  redo: (content: GameModeContent) => void;
 };
 
 const GameModeSelectionTiny = (props: GameModeSelectionProps) => {
@@ -32,6 +30,16 @@ const GameModeSelectionTiny = (props: GameModeSelectionProps) => {
     props.gameOptions,
   );
 
+  const restart = () => {
+    const redoContent = {
+      ...props.content,
+      getContent: makeRedoContent(
+        Content.contentDataFromParagraphs(Content.deepCloneReset(props.paragraphs)),
+        props.content.getContent,
+      ),
+    };
+    props.redo(redoContent);
+  };
   createEffect(() => {
     props.setContentGeneration({
       language: gameOptions.generation.language,
@@ -106,7 +114,7 @@ const GameModeSelectionTiny = (props: GameModeSelectionProps) => {
         </Switch>
       </div>
       <div class="actions">
-        <button class="secondary" onClick={() => props.launch(props.content)}>
+        <button class="secondary" onClick={restart}>
           {props.t("playAgain")}
         </button>
         <button class="primary" onClick={start}>
