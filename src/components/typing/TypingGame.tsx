@@ -88,10 +88,10 @@ const TypingGame = (props: TypingGameProps) => {
     setContentHandler(props.content.getContent());
     // duplicate dettect if multiple content or not
     if (
-      (props.gameOptions.mode === GameModeKind.timer &&
-        props.gameOptions.generation.category ===
-          WordsGenerationCategory.words1k) ||
-      props.gameOptions.generation.infinite
+      props.gameOptions.mode === GameModeKind.timer &&
+      (props.gameOptions.generation.category ===
+        WordsGenerationCategory.words1k ||
+        props.gameOptions.generation.infinite)
     ) {
       updateContent();
     }
@@ -117,11 +117,12 @@ const TypingGame = (props: TypingGameProps) => {
   /* timer stuff */
   // NOTE: probably too much condition
   if (
-    (props.gameOptions.mode === GameModeKind.timer &&
-      props.gameOptions.generation.category ===
-        WordsGenerationCategory.words1k) ||
-    props.gameOptions.generation.infinite
+    props.gameOptions.mode === GameModeKind.timer &&
+    (props.gameOptions.generation.category ===
+      WordsGenerationCategory.words1k ||
+      props.gameOptions.generation.infinite)
   ) {
+    console.log("yo");
     updateContent();
     onPromptEnd = updateContent;
   }
