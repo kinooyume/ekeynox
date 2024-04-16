@@ -48,9 +48,11 @@ const getSource = ({
   }
 };
 
+type NextContent = () => (prev: ContentData) => ContentHandler;
+
 export type ContentHandler = {
   data: ContentData;
-  next: () => (prev: ContentData) => ContentHandler;
+  next: NextContent;
 };
 
 export type GetContent = () => ContentHandler;
@@ -97,6 +99,24 @@ const makeSourceNested = (props: GetSourceProps): GetContent => {
   return nestedSource(getSource(props));
 };
 
+// const emptyContentHandler =
+//   (nextGetContent: GetContent): NextContent =>
+//   () =>
+//   (prevData: ContentData) => ({
+//     data: prevData,
+//     next: nextGetContent().next,
+//   });
+
+const makeRedoContent = (
+  content: ContentData,
+  nextGetContent: GetContent,
+): GetContent => {
+  return () => ({
+    data: content,
+    next: nextGetContent().next,
+  });
+};
+
 export type GameModeContent =
   | {
       kind: GameModeKind.random;
@@ -135,4 +155,4 @@ const makeGetContent = (
   }
 };
 
-export { makeGetContent };
+export { makeGetContent, makeRedoContent };
