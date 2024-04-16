@@ -11,6 +11,7 @@ import {
 
 export type Metrics = {
   paragraphs: Paragraphs;
+  wordsCount: number;
   gameOptions: GameOptions;
   typing: TypingMetrics;
   keys: KeysProjection;

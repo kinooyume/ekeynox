@@ -4,7 +4,7 @@ type CreateProps = {
   duration: number;
   onOver: () => void;
   setCleanup: (cleanup: () => void) => void;
-  updateCounter: (timeLeft: string) => void;
+  updateCounter: (timeLeft: number) => void;
 };
 
 type TimerPending = { pause: () => TimerPause };
@@ -28,7 +28,7 @@ const create = ({ duration, onOver, updateCounter, setCleanup }: CreateProps) =>
     const interval = setInterval(() => {
       const now = performance.now();
       const elapsed = now - start;
-      updateCounter(((timeLeft - elapsed) / 1000).toFixed(0));
+      updateCounter(Math.ceil((timeLeft - elapsed) / 1000));
     }, 1000);
     setCleanup(() => {
       clearTimeout(timer);
@@ -45,7 +45,7 @@ const create = ({ duration, onOver, updateCounter, setCleanup }: CreateProps) =>
     return { resume: () => resume(elapsed) };
   };
 
-  updateCounter((duration / 1000).toFixed(0));
+  updateCounter(Math.ceil(duration / 1000));
   return {
     resume: () => resume(duration),
   };
