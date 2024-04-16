@@ -157,7 +157,7 @@ const KeyboardKey = (props: KeyboardKeyProps) => {
         inset -2px -2px 7px var(--key-focus-color-alt);
     }
     .key:not(.used) {
-      opacity: 0.6;
+      opacity: 0.5;
     }
   `;
 
@@ -174,7 +174,8 @@ const KeyboardKey = (props: KeyboardKeyProps) => {
     const result = diffKeyStatusProjections(info);
 
     const incorrect = result.unmatch + result.missed + result.extra;
-    const wasIncorrect = info.added.unmatch + info.added.missed + info.added.extra;
+    const wasIncorrect =
+      info.added.unmatch + info.added.missed + info.added.extra;
     if (incorrect > 0) return "incorrect";
     if (result.match > 0) return wasIncorrect > 0 ? "corrected" : "correct";
   };
