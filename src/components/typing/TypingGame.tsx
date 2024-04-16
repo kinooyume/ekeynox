@@ -62,6 +62,7 @@ const TypingGame = (props: TypingGameProps) => {
   );
 
   const [totalWordsCount, setTotalWordsCount] = createSignal<number>(0);
+  const [wordsCount, setWordsCount] = createSignal<number>(0);
 
   createEffect(() => {
     setTotalWordsCount(contentHandler().data.wordsCount);
@@ -233,24 +234,18 @@ const TypingGame = (props: TypingGameProps) => {
 
   /* Progress */
 
-  const [totalProgress, setTotalProgress] = createSignal(0);
-  const [currentProgress, setCurrentProgress] = createSignal(0);
   const [progress, setProgress] = createSignal(0);
 
   if (props.content.kind === GameModeKind.timer) {
-    setTotalProgress(props.content.time);
+    const totalProgress = props.content.time;
     createComputed(() => {
-      setCurrentProgress(timeCounter()  || 0);
+      setProgress((timeCounter() || 0 / totalProgress) * 100);
     });
   } else {
     createComputed(() => {
-      setTotalProgress(totalWordsCount());
+      setProgress(100 - (wordsCount() / totalWordsCount()) * 100);
     });
   }
-
-  createComputed(() => {
-    setProgress((currentProgress() / totalProgress()) * 100);
-  });
 
   /* *** */
   onCleanup(() => {
@@ -282,6 +277,7 @@ const TypingGame = (props: TypingGameProps) => {
         setGetPosition={(p) => (getPosition = p)}
         extraEnd={extraEnd()}
         setCurrentPromptKey={setCurrentPromptKey}
+        setWordsCount={setWordsCount}
         onKeyDown={onKeyDown}
         onKeyUp={onKeyUp}
         onOver={onPromptEnd}
@@ -308,7 +304,7 @@ const TypingGame = (props: TypingGameProps) => {
         onExit={props.onExit}
       >
         <Show when={props.content.kind === GameModeKind.timer}>
-          <p>{Math.ceil(( timeCounter() || 0 ) / 1000)}</p>
+          <p>{Math.ceil((timeCounter() || 0) / 10)}</p>
         </Show>
       </TypingNav>
     </div>

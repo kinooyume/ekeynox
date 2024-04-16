@@ -69,12 +69,15 @@ export type TypingEngineProps = {
   setFocus: (focus: () => void) => void;
   setReset: (reset: () => void) => void;
   setGetPosition: (getPositions: () => Position) => void;
+  setWordsCount: (wordsCount: number) => void;
   extraEnd?: [number, number];
   onOver: () => void;
 };
 
 const TypingEngine = (props: TypingEngineProps) => {
   let input: HTMLInputElement;
+
+  const [wordsCount, setWordsCount] = createSignal(0);
 
   /* Navigation */
   const [currentParagraph, setCurrentParagraph] = createSignal(0);
@@ -164,6 +167,13 @@ const TypingEngine = (props: TypingEngineProps) => {
     setCurrent.keyFocus(KeyFocus.unfocus);
     setCurrentWord(currentWord() + 1);
     setCurrentKey(0);
+    if (
+      getCurrent.word().status !== WordStatus.unfocus &&
+      !getCurrent.word().isSeparator
+    ) {
+      setWordsCount(wordsCount() + 1);
+    props.setWordsCount(wordsCount());
+    }
     setCurrent.wordStatus(WordStatus.pending, true);
     setCurrent.keyFocus(KeyFocus.focus);
     return typingWord;
@@ -202,6 +212,8 @@ const TypingEngine = (props: TypingEngineProps) => {
     setCurrentKey(0);
     currentFocus();
 
+    setWordsCount(0);
+    props.setWordsCount(0);
     props.setCurrentPromptKey(getCurrent.key().key);
   };
 
