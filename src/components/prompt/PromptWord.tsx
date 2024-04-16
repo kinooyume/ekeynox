@@ -10,6 +10,7 @@ import {
 
 export enum WordStatus {
   unstart = "unstart",
+  unfocus = "unfocus",
   pending = "pending",
   pause = "pause",
   over = "over",
@@ -36,7 +37,7 @@ const Word = (props: WordProps) => {
     if (props.status === WordStatus.pending && !isObserved()) {
       props.observer?.observe(ref);
       setIsObserved(true);
-    } else if (props.status === WordStatus.over ||  props.status === WordStatus.unstart) {
+    } else if (props.status === WordStatus.over ||  props.status === WordStatus.unstart || props.status === WordStatus.unfocus) {
       props.observer?.unobserve(ref);
       setIsObserved(false);
     }
