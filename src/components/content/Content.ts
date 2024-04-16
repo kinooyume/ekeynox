@@ -20,7 +20,7 @@ export type MetaWord = {
 export type Paragraph = Array<MetaWord>;
 export type Paragraphs = Array<Paragraph>;
 
-const makeEnter = () => ({
+const makeEnter = (): MetaWord => ({
   focus: false,
   status: WordStatus.unstart,
   isSeparator: true,
@@ -35,7 +35,7 @@ const makeEnter = () => ({
   ],
 });
 
-const makeSpace = () => ({
+const makeSpace = (): MetaWord => ({
   focus: false,
   status: WordStatus.unstart,
   isSeparator: true,
@@ -85,7 +85,9 @@ export const parse: Parser = (source) => {
       return line
         .split(/(\s+)/)
         .map((word) => {
-          wordsCount++;
+          if (word.trim() !== "") {
+            wordsCount++;
+          }
           return wordParser({ word });
         })
         .filter((word) => word.keys.length > 0);
