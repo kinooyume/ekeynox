@@ -51,6 +51,7 @@ type TypingGameProps = {
   t: Translator;
   content: GameModeContent;
   gameOptions: GameOptions;
+  prevMetrics?: Metrics;
   kbLayout: HigherKeyboard;
   onOver: (metrics: Metrics, content: GameModeContent) => void;
   onExit: () => void;
@@ -239,7 +240,7 @@ const TypingGame = (props: TypingGameProps) => {
   if (props.content.kind === GameModeKind.timer) {
     const totalProgress = props.content.time;
     createComputed(() => {
-      setProgress((timeCounter() || 0 / totalProgress) * 100);
+      setProgress((timeCounter() || 0) / totalProgress * 100);
     });
   } else {
     createComputed(() => {
