@@ -50,7 +50,7 @@ const makeSpace = () => ({
   ],
 });
 
-export type ContentData = { paragraphs: Paragraphs, keySet: Set<string> };
+export type ContentData = { paragraphs: Paragraphs; keySet: Set<string> };
 
 const parseWord =
   (keySet: Set<string>) =>
@@ -111,10 +111,41 @@ const deepClone = (paragraphs: Paragraphs) =>
     })),
   );
 
+const deepCloneReset = (paragraphs: Paragraphs) => {
+  return paragraphs.map((paragraph) =>
+    paragraph.map((word) => {
+      const newWord = { ...word, wpm: 0, wasCorrect: false };
+      newWord.keys = word.keys.map((key) => ({
+        ...key,
+        status: KeyStatus.unset,
+        focus: KeyFocus.unset,
+      }));
+      return newWord;
+    }),
+  );
+};
+
+const makeKeySet = (paragraphs: Paragraphs) => {
+  const keySet = new Set<string>();
+  paragraphs.forEach((paragraph) =>
+    paragraph.forEach((word) =>
+      word.keys.forEach((key) => keySet.add(key.key)),
+    ),
+  );
+  return keySet;
+};
+
+const contentDataFromParagraphs = (paragraphs: Paragraphs): ContentData => ({
+  paragraphs,
+  keySet: makeKeySet(paragraphs),
+});
+
 export default {
   parse,
   parseWords,
   deepClone,
+  deepCloneReset,
   makeEnter,
-  makeSpace
+  makeSpace,
+  contentDataFromParagraphs,
 };
