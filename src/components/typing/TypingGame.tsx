@@ -277,7 +277,7 @@ const TypingGame = (props: TypingGameProps) => {
         setPause={(p) => (pause = p)}
         setGetPosition={(p) => (getPosition = p)}
         extraEnd={extraEnd()}
-        setCurrentPromptKey={setCurrentPromptKey}
+        setPromptKey={setCurrentPromptKey}
         setWordsCount={setWordsCount}
         onKeyDown={onKeyDown}
         onKeyUp={onKeyUp}
