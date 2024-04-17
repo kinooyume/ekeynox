@@ -38,7 +38,8 @@ import {
   WordsGenerationCategory,
   type GameOptions,
 } from "../gameMode/GameOptions.ts";
-import { createTimerEffect, type TimerEffect } from "../metrics/Timer.ts";
+import TimerOver from "../timer/TimerOver.ts";
+import Timer, { type TimerEffectStatus } from "../timer/Timer.ts";
 import type { Translator } from "../App.tsx";
 import type { Metrics } from "../metrics/Metrics.ts";
 import {
@@ -222,13 +223,15 @@ const TypingGame = (props: TypingGameProps) => {
 
   // NOTE: no reactivity on duration
   if (props.content.kind === GameModeKind.timer) {
-    const timerEffect = createTimerEffect({
+    const timerOver = TimerOver.create({
       duration: props.content.time,
       onOver: over,
       setCleanup: (cleanup) => (cleanupTimer = cleanup),
       updateCounter: setTimeCounter,
     });
-    createEffect((timer: TimerEffect) => {
+    const timerEffect = Timer.createEffect(timerOver);
+
+    createEffect((timer: TimerEffectStatus) => {
       return timer({ status: status() });
     }, timerEffect);
   }
