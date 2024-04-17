@@ -3,6 +3,7 @@ import type { MetaWord, Paragraph, Paragraphs } from "../content/Content";
 import { KeyFocus, KeyStatus } from "../metrics/KeyMetrics";
 import type { SetStoreFunction } from "solid-js/store";
 import type { WordStatus } from "../prompt/PromptWord";
+import { TypingWordKind, type TypingWord } from "../typing/TypingEngine";
 
 type CursorProps = {
   setParagraphs: SetStoreFunction<Paragraphs>;
@@ -19,21 +20,23 @@ export type Position = {
   key: number;
 };
 
-// NOTE: 
+// NOTE:
 export type Cursor = {
   focus: () => void;
   // NOTE: Signal or store
   get: {
     paragraph: () => Paragraph; // MetaWord[], [Ref]
     nbrParagraphs: () => number; // paragraphs.length
-    
+
     word: () => MetaWord; // current word  [Ref]
+    typingWord: () => TypingWord | null; // TypingWord | null
     nbrWords: () => number; // words.length
     wordValid: () => boolean; // MetaWord - wasCorrect  *
     isSeparator: () => boolean; // MetaWord *
     wordIsValid: () => boolean; // valid keys === word valid #fn#
 
-    key: () => { // Current meta key [Ref]
+    key: () => {
+      // Current meta key [Ref]
       key: string;
       status: KeyStatus;
       focus: KeyFocus;
@@ -50,7 +53,8 @@ export type Cursor = {
     keyFocus: (focus: KeyFocus) => void;
   };
   // NOTE: can be a store
-  positions: { // Index  []
+  positions: {
+    // Index  []
     paragraph: () => number;
     word: () => number;
     key: () => number;
@@ -65,7 +69,7 @@ export type Cursor = {
 
 const makeCursor = (props: CursorProps) => {
   /* NOTE: could be replace by nested linked list */
-  /* Keep paragraph/word/key index */
+  /* Keep paragraph/word/key-letter index */
   const [paragraph, setCurrentParagraph] = createSignal(0);
   const [word, setCurrentWord] = createSignal(0);
   const [key, setCurrentKey] = createSignal(0);
@@ -101,6 +105,17 @@ const makeCursor = (props: CursorProps) => {
       paragraph: () => props.paragraphs[positions.paragraph()],
       nbrParagraphs: () => props.paragraphs.length - 1,
       nbrWords: () => props.paragraphs[positions.paragraph()].length - 1,
+      typingWord: () => {
+        if (!cursor.get.wordValid() && cursor.get.wordIsValid()) {
+          cursor.set.wordValid(true);
+          return {
+            kind: TypingWordKind.correct,
+            length: cursor.get.word().keys.length,
+          };
+        } else {
+          return null;
+        }
+      },
       word: () => props.paragraphs[positions.paragraph()][positions.word()],
       wordIsValid: () => {
         const word = props.paragraphs[positions.paragraph()][positions.word()];

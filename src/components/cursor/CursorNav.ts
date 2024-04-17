@@ -8,35 +8,25 @@ type CursorNavProps = {
 };
 
 type CursorNav = {
-  getTypingWord: () => TypingWord | null;
   next: (nextWordHook: (cursor: Cursor) => void) => [boolean, TypingWord | null];
-
   prev: () => boolean;
 };
 
 let makeCursorNav = ({ cursor }: CursorNavProps): CursorNav => {
-  const getTypingWord = () => {
-    if (!cursor.get.wordValid() && cursor.get.wordIsValid()) {
-      cursor.set.wordValid(true);
-      return {
-        kind: TypingWordKind.correct,
-        length: cursor.get.word().keys.length,
-      };
-    } else {
-      return null;
-    }
-  };
 
   /* Next */
   const nextWord = () => {
+    /* Prev */
     let typingWord = null;
     if (!cursor.get.wordValid() && cursor.get.wordIsValid()) {
-      typingWord = getTypingWord();
+      typingWord = cursor.get.typingWord();
     }
     cursor.set.wordStatus(WordStatus.over, false);
     cursor.set.keyFocus(KeyFocus.unfocus);
+    /* Switch */
     cursor.positions.set.word(cursor.positions.word() + 1);
     cursor.positions.set.key(0);
+    /* Next */
     cursor.set.wordStatus(WordStatus.pending, true);
     cursor.set.keyFocus(KeyFocus.focus);
     return typingWord;
@@ -70,18 +60,19 @@ let makeCursorNav = ({ cursor }: CursorNavProps): CursorNav => {
   };
 
   const prevParagraph = () => {
+    /* Prev */
     cursor.set.wordStatus(WordStatus.unfocus, false);
     cursor.set.keyFocus(KeyFocus.back);
+    /* Switch */
     cursor.positions.set.paragraph(cursor.positions.paragraph() - 1);
     cursor.positions.set.word(cursor.get.nbrWords());
     cursor.positions.set.key(cursor.get.nbrKeys());
+    /* Next */
     cursor.set.wordStatus(WordStatus.pending, true);
     cursor.set.keyFocus(KeyFocus.focus);
   };
 
   return {
-    getTypingWord,
-
     next: (nextWordHook) => {
       let typingWord = null;
       if (cursor.positions.key() < cursor.get.nbrKeys()) {
@@ -93,7 +84,7 @@ let makeCursorNav = ({ cursor }: CursorNavProps): CursorNav => {
         nextWordHook(cursor);
       } else if (cursor.positions.paragraph() < cursor.get.nbrParagraphs()) {
         nextParagraph();
-      } else return [false, getTypingWord()];
+      } else return [false, cursor.get.typingWord()];
       return [true, typingWord];
     },
 
