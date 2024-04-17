@@ -19,7 +19,7 @@ import {
   getKeyDownMetrics,
 } from "../metrics/KeyMetrics.ts";
 import CursorNav from "../cursor/CursorNav.ts";
-import makeCursor from "../cursor/Cursor.ts";
+import makeCursor, { type Cursor } from "../cursor/Cursor.ts";
 
 export enum TypingWordKind {
   ignore,
@@ -151,6 +151,13 @@ const TypingEngine = (props: TypingEngineProps) => {
     });
   };
 
+  const incrementWordsCount = (c: Cursor) => {
+    if (c.get.word().status !== WordStatus.unfocus && !c.get.isSeparator()) {
+      setWordsCount((wordsCount) => wordsCount + 1);
+      props.setWordsCount(wordsCount());
+    }
+  };
+
   const handleKeypress = (typed: string, timestamp: number) => {
     const keyMetrics = makeKeyMetrics(typed);
     if (keyMetrics[1].kind === KeyEventKind.ignore) {
@@ -162,14 +169,7 @@ const TypingEngine = (props: TypingEngineProps) => {
       if (keyMetrics[1].kind === KeyEventKind.added) {
         cursor.set.keyStatus(keyMetrics[1].status.kind);
       }
-      let [hasNext, typingWord] = CursorNav({ cursor }).next();
-
-      if (
-        cursor.get.word().status !== WordStatus.unfocus &&
-        !cursor.get.isSeparator()
-      ) {
-        setWordsCount((wordsCount) => wordsCount + 1);
-      }
+      let [hasNext, typingWord] = CursorNav({ cursor }).next(incrementWordsCount);
 
       setStatus({
         key: {

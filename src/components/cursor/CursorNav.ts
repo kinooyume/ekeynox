@@ -9,7 +9,7 @@ type CursorNavProps = {
 
 type CursorNav = {
   getTypingWord: () => TypingWord | null;
-  next: () => [boolean, TypingWord | null];
+  next: (nextWordHook: (cursor: Cursor) => void) => [boolean, TypingWord | null];
 
   prev: () => boolean;
 };
@@ -82,7 +82,7 @@ let makeCursorNav = ({ cursor }: CursorNavProps): CursorNav => {
   return {
     getTypingWord,
 
-    next: () => {
+    next: (nextWordHook) => {
       let typingWord = null;
       if (cursor.positions.key() < cursor.get.nbrKeys()) {
         cursor.set.keyFocus(KeyFocus.unfocus);
@@ -90,6 +90,7 @@ let makeCursorNav = ({ cursor }: CursorNavProps): CursorNav => {
         cursor.set.keyFocus(KeyFocus.focus);
       } else if (cursor.positions.word() < cursor.get.nbrWords()) {
         typingWord = nextWord();
+        nextWordHook(cursor);
       } else if (cursor.positions.paragraph() < cursor.get.nbrParagraphs()) {
         nextParagraph();
       } else return [false, getTypingWord()];
