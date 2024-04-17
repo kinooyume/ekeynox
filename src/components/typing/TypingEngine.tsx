@@ -18,6 +18,8 @@ import {
   KeyFocus,
   getKeyDownMetrics,
 } from "../metrics/KeyMetrics.ts";
+import CursorNav from "../cursor/CursorNav.ts";
+import makeCursor from "../cursor/Cursor.ts";
 
 export enum TypingWordKind {
   ignore,
@@ -63,7 +65,7 @@ export type TypingEngineProps = {
   setParagraphs: SetStoreFunction<Paragraphs>;
   onKeyDown: (key: string) => void;
   onKeyUp: (key: string) => void;
-  setCurrentPromptKey: Setter<string>;
+  setPromptKey: Setter<string>;
   setStatus: Setter<TypingStatus>;
   setPause: (pause: () => void) => void;
   setFocus: (focus: () => void) => void;
@@ -79,190 +81,40 @@ const TypingEngine = (props: TypingEngineProps) => {
 
   const [wordsCount, setWordsCount] = createSignal(0);
 
-  /* Navigation */
-  const [currentParagraph, setCurrentParagraph] = createSignal(0);
-  const [currentWord, setCurrentWord] = createSignal(0);
-  const [currentKey, setCurrentKey] = createSignal(0);
-
   /* Store Management */
-  const currentFocus = () => {
-    props.setParagraphs(currentParagraph(), currentWord(), "focus", true);
-    setCurrent.keyFocus(KeyFocus.focus);
-  };
-
-  const getCurrent = {
-    paragraph: () => props.paragraphs[currentParagraph()],
-    nbrParagraphs: () => props.paragraphs.length - 1,
-    nbrWords: () => props.paragraphs[currentParagraph()].length - 1,
-    word: () => props.paragraphs[currentParagraph()][currentWord()],
-    wordIsValid: () => {
-      const word = props.paragraphs[currentParagraph()][currentWord()];
-      return word.keys.every((key) => key.status === KeyStatus.match);
-    },
-    wordValid: () =>
-      props.paragraphs[currentParagraph()][currentWord()].wasCorrect,
-    nbrKeys: () =>
-      props.paragraphs[currentParagraph()][currentWord()].keys.length - 1,
-    key: () =>
-      props.paragraphs[currentParagraph()][currentWord()].keys[currentKey()],
-    isSeparator: () =>
-      props.paragraphs[currentParagraph()][currentWord()].isSeparator,
-  };
-
-  const setCurrent = {
-    keyStatus: (status: KeyStatus) => {
-      props.setParagraphs(
-        currentParagraph(),
-        currentWord(),
-        "keys",
-        currentKey(),
-        "status",
-        status,
-      );
-    },
-    keyFocus: (focus: KeyFocus) => {
-      props.setParagraphs(
-        currentParagraph(),
-        currentWord(),
-        "keys",
-        currentKey(),
-        "focus",
-        focus,
-      );
-    },
-    wordStatus: (status: WordStatus, focus: boolean) => {
-      props.setParagraphs(currentParagraph(), currentWord(), "status", status);
-      props.setParagraphs(currentParagraph(), currentWord(), "focus", focus);
-    },
-    wordValid: (valid: boolean) => {
-      props.setParagraphs(
-        currentParagraph(),
-        currentWord(),
-        "wasCorrect",
-        valid,
-      );
-    },
-  };
-
   /* *** */
 
-  const getTypingWord = () => {
-    if (!getCurrent.wordValid() && getCurrent.wordIsValid()) {
-      setCurrent.wordValid(true);
-      return {
-        kind: TypingWordKind.correct,
-        length: getCurrent.word().keys.length,
-      };
-    } else {
-      return null;
-    }
-  };
+  const cursor = makeCursor({
+    setParagraphs: props.setParagraphs,
+    paragraphs: props.paragraphs,
+  });
 
-  const nextWord = () => {
-    let typingWord = null;
-    if (!getCurrent.wordValid() && getCurrent.wordIsValid()) {
-      typingWord = getTypingWord();
-    }
-    setCurrent.wordStatus(WordStatus.over, false);
-    setCurrent.keyFocus(KeyFocus.unfocus);
-    setCurrentWord(currentWord() + 1);
-    setCurrentKey(0);
-    if (
-      getCurrent.word().status !== WordStatus.unfocus &&
-      !getCurrent.word().isSeparator
-    ) {
-      setWordsCount(wordsCount() + 1);
-    props.setWordsCount(wordsCount());
-    }
-    setCurrent.wordStatus(WordStatus.pending, true);
-    setCurrent.keyFocus(KeyFocus.focus);
-    return typingWord;
-  };
-
-  const nextParagraph = () => {
-    setCurrent.wordStatus(WordStatus.over, false);
-    setCurrent.keyFocus(KeyFocus.unfocus);
-    setCurrentParagraph(currentParagraph() + 1);
-    setCurrentWord(0);
-    setCurrentKey(0);
-    setCurrent.wordStatus(WordStatus.pending, true);
-    setCurrent.keyFocus(KeyFocus.focus);
-  };
-
-  const next = (): [boolean, TypingWord | null] => {
-    let typingWord = null;
-    if (currentKey() < getCurrent.nbrKeys()) {
-      setCurrent.keyFocus(KeyFocus.unfocus);
-      setCurrentKey(currentKey() + 1);
-      setCurrent.keyFocus(KeyFocus.focus);
-    } else if (currentWord() < getCurrent.nbrWords()) {
-      typingWord = nextWord();
-    } else if (currentParagraph() < getCurrent.nbrParagraphs()) {
-      nextParagraph();
-    } else return [false, getTypingWord()];
-    return [true, typingWord];
-  };
-
-  /* Prev */
+  /* *** */
   const reset = () => {
     input.value = "";
 
-    setCurrentParagraph(0);
-    setCurrentWord(0);
-    setCurrentKey(0);
-    currentFocus();
+    cursor.positions.set.paragraph(0);
+    cursor.positions.set.word(0);
+    cursor.positions.set.key(0);
+    cursor.focus();
 
+    // NOTE: here
     setWordsCount(0);
     props.setWordsCount(0);
-    props.setCurrentPromptKey(getCurrent.key().key);
+    props.setPromptKey(cursor.get.key().key);
   };
-
-  const prevWord = () => {
-    setCurrent.wordStatus(WordStatus.unfocus, false);
-    setCurrent.keyFocus(KeyFocus.back);
-    setCurrentWord(currentWord() - 1);
-    setCurrentKey(getCurrent.nbrKeys());
-    setCurrent.wordStatus(WordStatus.pending, true);
-    setCurrent.keyFocus(KeyFocus.focus);
-  };
-
-  const prevParagraph = () => {
-    setCurrent.wordStatus(WordStatus.unfocus, false);
-    setCurrent.keyFocus(KeyFocus.back);
-    setCurrentParagraph(currentParagraph() - 1);
-    setCurrentWord(getCurrent.nbrWords());
-    setCurrentKey(getCurrent.nbrKeys());
-    setCurrent.wordStatus(WordStatus.pending, true);
-    setCurrent.keyFocus(KeyFocus.focus);
-  };
-
-  const prev = (): boolean => {
-    if (currentKey() > 0) {
-      setCurrent.keyFocus(KeyFocus.back);
-      setCurrentKey(currentKey() - 1);
-      setCurrent.keyFocus(KeyFocus.focus);
-    } else if (currentWord() > 0) {
-      prevWord();
-    } else if (currentParagraph() > 0) {
-      prevParagraph();
-    } else {
-      return false;
-    }
-    return true;
-  };
-  /* *** */
 
   const pause = () => {
-    setCurrent.wordStatus(WordStatus.pause, false);
+    cursor.set.wordStatus(WordStatus.pause, false);
     props.setStatus({ kind: TypingStatusKind.pause });
   };
 
   /* Key Handlers */
 
-  const currentKeyMetrics = (typed: string) =>
+  const makeKeyMetrics = (typed: string) =>
     getKeyMetrics({
       typed,
-      expected: getCurrent.key().key,
+      expected: cursor.get.key().key,
     });
 
   type SetStatusProps = {
@@ -285,55 +137,63 @@ const TypingEngine = (props: TypingEngineProps) => {
   };
 
   const handleBackPress = (timestamp: number) => {
-    if (!prev()) return;
+    if (!CursorNav({ cursor }).prev()) return;
     const deletedKeyMetrics = makeDeletedKeyMetrics({
-      expected: getCurrent.key().key,
-      status: getCurrent.key().status,
+      expected: cursor.get.key().key,
+      status: cursor.get.key().status,
     });
     setStatus({
       key: {
         keyMetrics: deletedKeyMetrics,
         timestamp,
-        focusIsSeparator: getCurrent.isSeparator(),
+        focusIsSeparator: cursor.get.isSeparator(),
       },
     });
   };
 
   const handleKeypress = (typed: string, timestamp: number) => {
-    const keyMetrics = currentKeyMetrics(typed);
+    const keyMetrics = makeKeyMetrics(typed);
     if (keyMetrics[1].kind === KeyEventKind.ignore) {
       return;
     } else {
-      if (getCurrent.word().status !== WordStatus.pending) {
-        setCurrent.wordStatus(WordStatus.pending, true);
+      if (cursor.get.word().status !== WordStatus.pending) {
+        cursor.set.wordStatus(WordStatus.pending, true);
       }
       if (keyMetrics[1].kind === KeyEventKind.added) {
-        setCurrent.keyStatus(keyMetrics[1].status.kind);
+        cursor.set.keyStatus(keyMetrics[1].status.kind);
       }
-      let [hasNext, typingWord] = next();
+      let [hasNext, typingWord] = CursorNav({ cursor }).next();
+
+      if (
+        cursor.get.word().status !== WordStatus.unfocus &&
+        !cursor.get.isSeparator()
+      ) {
+        setWordsCount((wordsCount) => wordsCount + 1);
+      }
+
       setStatus({
         key: {
           keyMetrics,
           timestamp,
-          focusIsSeparator: getCurrent.isSeparator(),
+          focusIsSeparator: cursor.get.isSeparator(),
         },
         word: typingWord || { kind: TypingWordKind.ignore },
       });
       // NOTE: hum.. extra ifs..
       if (
         props.extraEnd &&
-        props.extraEnd[0] === currentParagraph() &&
-        props.extraEnd[1] === currentWord()
+        props.extraEnd[0] === cursor.positions.paragraph() &&
+        props.extraEnd[1] === cursor.positions.word()
       ) {
         props.onOver();
       }
       if (!hasNext) {
-        setCurrent.wordStatus(WordStatus.over, false);
-        setCurrent.keyFocus(KeyFocus.unfocus);
+        cursor.set.wordStatus(WordStatus.over, false);
+        cursor.set.keyFocus(KeyFocus.unfocus);
         props.onOver();
       }
     }
-    props.setCurrentPromptKey(getCurrent.key().key);
+    props.setPromptKey(cursor.get.key().key);
   };
 
   const handleKeyUp = (event: KeyboardEvent) => {
@@ -351,9 +211,9 @@ const TypingEngine = (props: TypingEngineProps) => {
   };
 
   const getPositions = (): Position => [
-    currentParagraph(),
-    currentWord(),
-    currentKey(),
+    cursor.positions.paragraph(),
+    cursor.positions.word(),
+    cursor.positions.key(),
   ];
 
   /* *** */
@@ -363,8 +223,8 @@ const TypingEngine = (props: TypingEngineProps) => {
     input.addEventListener("input", handleInputEvent);
     input.addEventListener("keydown", handleKeyDown);
     input.addEventListener("keyup", handleKeyUp);
-    currentFocus();
-    props.setCurrentPromptKey(getCurrent.key().key);
+    cursor.focus();
+    props.setPromptKey(cursor.get.key().key);
     props.setFocus(() => input.focus());
     props.setReset(reset);
     props.setPause(pause);
@@ -373,8 +233,8 @@ const TypingEngine = (props: TypingEngineProps) => {
   });
 
   onCleanup(() => {
-    setCurrent.keyFocus(KeyFocus.unfocus);
-    setCurrent.wordStatus(WordStatus.unstart, false);
+    cursor.set.keyFocus(KeyFocus.unfocus);
+    cursor.set.wordStatus(WordStatus.unstart, false);
     if (!input) return;
     input.removeEventListener("input", handleInputEvent);
     input.removeEventListener("keydown", handleKeyDown);
