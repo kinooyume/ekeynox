@@ -51,6 +51,7 @@ export type Cursor = {
     /* Key */
     keyStatus: (status: KeyStatus) => void;
     keyFocus: (focus: KeyFocus) => void;
+    ghostFocus: (focus: KeyFocus) => void;
   };
   // NOTE: can be a store
   positions: {
@@ -137,6 +138,7 @@ const makeCursor = (props: CursorProps) => {
     /* NOTE: Paragraphs Data Setter */
 
     set: {
+      /* key */
       keyStatus: (status: KeyStatus) => {
         props.setParagraphs(
           positions.paragraph(),
@@ -157,6 +159,17 @@ const makeCursor = (props: CursorProps) => {
           focus,
         );
       },
+      ghostFocus: (focus: KeyFocus) => {
+        props.setParagraphs(
+          positions.paragraph(),
+          positions.word(),
+          "keys",
+          positions.key(),
+          "ghostFocus",
+          focus,
+        );
+      },
+      /* Word */
       wordStatus: (status: WordStatus, focus: boolean) => {
         props.setParagraphs(
           positions.paragraph(),
