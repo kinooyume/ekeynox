@@ -1,0 +1,44 @@
+import { KeyFocus } from "../metrics/KeyMetrics";
+import type { CursorNavHooks } from "./CursorNavHooks";
+
+const TimerNavHooks: CursorNavHooks = {
+  paragraph: {
+    next: {
+      enter: (cursor) => {},
+      leave: (cursor) => {},
+    },
+    prev: {
+      enter: (cursor) => {},
+      leave: (cursor) => {},
+    },
+  },
+  word: {
+    next: {
+      enter: (cursor) => {},
+      leave: (cursor) => {},
+    },
+    prev: {
+      enter: (cursor) => {},
+      leave: (cursor) => {},
+    },
+  },
+  key: {
+    next: {
+      enter: (cursor) => {
+        cursor.set.ghostFocus(KeyFocus.focus);
+      },
+      leave: (cursor) => {
+        cursor.set.ghostFocus(KeyFocus.unfocus);
+      },
+    },
+    prev: {
+      enter: (cursor) => {
+        cursor.set.ghostFocus(KeyFocus.focus);
+      },
+      leave: (cursor) => {
+        cursor.set.ghostFocus(KeyFocus.unfocus);
+      },
+    },
+  },
+};
+export default TimerNavHooks;
