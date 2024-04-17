@@ -22,7 +22,7 @@ type GameModeSelectionProps = {
   metrics: Metrics;
   setContentGeneration: (type: ContentGeneration) => void;
   start: (opts: GameOptions, customSource: string) => void;
-  redo: (content: GameModeContent) => void;
+  redo: (content: GameModeContent, metrics: Metrics) => void;
 };
 
 const GameModeSelectionTiny = (props: GameModeSelectionProps) => {
@@ -41,7 +41,7 @@ const GameModeSelectionTiny = (props: GameModeSelectionProps) => {
         props.content.getContent,
       ),
     };
-    props.redo(redoContent);
+    props.redo(redoContent, props.metrics);
   };
   createEffect(() => {
     props.setContentGeneration({
