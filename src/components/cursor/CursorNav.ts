@@ -2,83 +2,64 @@ import { KeyFocus } from "../metrics/KeyMetrics";
 import { WordStatus } from "../prompt/PromptWord";
 import { TypingWordKind, type TypingWord } from "../typing/TypingEngine";
 import type { Cursor } from "./Cursor";
+import type { CursorNavHooks } from "./CursorNavHooks";
 
 type CursorNavProps = {
+  hooks: CursorNavHooks;
   cursor: Cursor;
 };
 
 type CursorNav = {
-  next: (nextWordHook: (cursor: Cursor) => void) => [boolean, TypingWord | null];
+  next: (
+    nextWordHook: (cursor: Cursor) => void,
+  ) => [boolean, TypingWord | null];
   prev: () => boolean;
 };
 
-let makeCursorNav = ({ cursor }: CursorNavProps): CursorNav => {
+let makeCursorNav = ({ cursor, hooks }: CursorNavProps): CursorNav => {
 
-  /* Next */
   const nextWord = () => {
-    /* Prev */
     let typingWord = null;
     if (!cursor.get.wordValid() && cursor.get.wordIsValid()) {
       typingWord = cursor.get.typingWord();
     }
-    cursor.set.wordStatus(WordStatus.over, false);
-    cursor.set.keyFocus(KeyFocus.unfocus);
-    /* Switch */
+    hooks.word.next.leave(cursor);
     cursor.positions.set.word(cursor.positions.word() + 1);
     cursor.positions.set.key(0);
-    /* Next */
-    cursor.set.wordStatus(WordStatus.pending, true);
-    cursor.set.keyFocus(KeyFocus.focus);
+    hooks.word.next.enter(cursor);
     return typingWord;
   };
 
   const nextParagraph = () => {
-    /* Prev */
-    cursor.set.wordStatus(WordStatus.over, false);
-    cursor.set.keyFocus(KeyFocus.unfocus);
-    /* Switch */
-    cursor.positions.set.paragraph(cursor.positions.paragraph() + 1);
-    /* Next */
+    hooks.paragraph.next.leave(cursor);
     cursor.positions.set.word(0);
     cursor.positions.set.key(0);
-    cursor.set.wordStatus(WordStatus.pending, true);
-    cursor.set.keyFocus(KeyFocus.focus);
+    cursor.positions.set.paragraph(cursor.positions.paragraph() + 1);
+    hooks.paragraph.next.enter(cursor);
   };
 
-  /* Prev */
-
   const prevWord = () => {
-    /* Prev */
-    cursor.set.wordStatus(WordStatus.unfocus, false);
-    cursor.set.keyFocus(KeyFocus.back);
-    /* Switch */
+    hooks.word.prev.leave(cursor);
     cursor.positions.set.word(cursor.positions.word() - 1);
     cursor.positions.set.key(cursor.get.nbrKeys());
-    /* NeXT */
-    cursor.set.wordStatus(WordStatus.pending, true);
-    cursor.set.keyFocus(KeyFocus.focus);
+    hooks.word.prev.enter(cursor);
   };
 
   const prevParagraph = () => {
-    /* Prev */
-    cursor.set.wordStatus(WordStatus.unfocus, false);
-    cursor.set.keyFocus(KeyFocus.back);
-    /* Switch */
+    hooks.paragraph.prev.leave(cursor);
     cursor.positions.set.paragraph(cursor.positions.paragraph() - 1);
     cursor.positions.set.word(cursor.get.nbrWords());
     cursor.positions.set.key(cursor.get.nbrKeys());
-    /* Next */
-    cursor.set.wordStatus(WordStatus.pending, true);
-    cursor.set.keyFocus(KeyFocus.focus);
+    hooks.paragraph.prev.enter(cursor);
   };
 
   return {
     next: (nextWordHook) => {
       let typingWord = null;
       if (cursor.positions.key() < cursor.get.nbrKeys()) {
-        cursor.set.keyFocus(KeyFocus.unfocus);
+        hooks.key.next.leave(cursor);
         cursor.positions.set.key(cursor.positions.key() + 1);
-        cursor.set.keyFocus(KeyFocus.focus);
+        hooks.key.next.enter(cursor);
       } else if (cursor.positions.word() < cursor.get.nbrWords()) {
         typingWord = nextWord();
         nextWordHook(cursor);
@@ -92,9 +73,9 @@ let makeCursorNav = ({ cursor }: CursorNavProps): CursorNav => {
 
     prev: (): boolean => {
       if (cursor.positions.key() > 0) {
-        cursor.set.keyFocus(KeyFocus.back);
+        hooks.key.prev.leave(cursor);
         cursor.positions.set.key(cursor.positions.key() - 1);
-        cursor.set.keyFocus(KeyFocus.focus);
+        hooks.key.prev.enter(cursor);
       } else if (cursor.positions.word() > 0) {
         prevWord();
       } else if (cursor.positions.paragraph() > 0) {

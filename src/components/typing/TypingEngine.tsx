@@ -20,6 +20,7 @@ import {
 } from "../metrics/KeyMetrics.ts";
 import CursorNav from "../cursor/CursorNav.ts";
 import makeCursor, { type Cursor } from "../cursor/Cursor.ts";
+import UserNavHooks from "../cursor/UserNavHooks.ts";
 
 export enum TypingWordKind {
   ignore,
@@ -84,10 +85,14 @@ const TypingEngine = (props: TypingEngineProps) => {
   /* Store Management */
   /* *** */
 
+  // NOTE: should it be a computed ?
+  //
   const cursor = makeCursor({
     setParagraphs: props.setParagraphs,
     paragraphs: props.paragraphs,
   });
+
+  const cursorNav = CursorNav({ cursor, hooks: UserNavHooks });
 
   /* *** */
   const reset = () => {
@@ -98,7 +103,6 @@ const TypingEngine = (props: TypingEngineProps) => {
     cursor.positions.set.key(0);
     cursor.focus();
 
-    // NOTE: here
     setWordsCount(0);
     props.setWordsCount(0);
     props.setPromptKey(cursor.get.key().key);
@@ -111,21 +115,11 @@ const TypingEngine = (props: TypingEngineProps) => {
 
   /* Key Handlers */
 
+  /* User only */
   const makeKeyMetrics = (typed: string) =>
     getKeyMetrics({
       typed,
       expected: cursor.get.key().key,
-    });
-
-  type SetStatusProps = {
-    key: TypingKey;
-    word?: TypingWord;
-  };
-  const setStatus = (statusProps: SetStatusProps) =>
-    props.setStatus({
-      kind: TypingStatusKind.pending,
-      word: { kind: TypingWordKind.ignore },
-      ...statusProps,
     });
 
   const handleInputEvent = (event: Event) => {
@@ -135,9 +129,22 @@ const TypingEngine = (props: TypingEngineProps) => {
     input.value = "";
     return handleKeypress(value, timestamp);
   };
+  /* *** */
+
+  type SetStatusProps = {
+    key: TypingKey;
+    word?: TypingWord;
+  };
+
+  const setStatus = (statusProps: SetStatusProps) =>
+    props.setStatus({
+      kind: TypingStatusKind.pending,
+      word: { kind: TypingWordKind.ignore },
+      ...statusProps,
+    });
 
   const handleBackPress = (timestamp: number) => {
-    if (!CursorNav({ cursor }).prev()) return;
+    if (!cursorNav.prev()) return;
     const deletedKeyMetrics = makeDeletedKeyMetrics({
       expected: cursor.get.key().key,
       status: cursor.get.key().status,
@@ -169,7 +176,7 @@ const TypingEngine = (props: TypingEngineProps) => {
       if (keyMetrics[1].kind === KeyEventKind.added) {
         cursor.set.keyStatus(keyMetrics[1].status.kind);
       }
-      let [hasNext, typingWord] = CursorNav({ cursor }).next(incrementWordsCount);
+      let [hasNext, typingWord] = cursorNav.next(incrementWordsCount);
 
       setStatus({
         key: {
