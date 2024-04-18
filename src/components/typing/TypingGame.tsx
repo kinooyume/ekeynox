@@ -48,7 +48,7 @@ import {
 } from "../content/TypingGameSource.ts";
 import { GameModeKind } from "../gameMode/GameMode.ts";
 import TimerInput from "../seqInput/TimerInput.ts";
-import makeCursor from "../cursor/Cursor.ts";
+import makeCursor, { type Cursor } from "../cursor/Cursor.ts";
 
 type TypingGameProps = {
   t: Translator;
@@ -105,9 +105,10 @@ const TypingGame = (props: TypingGameProps) => {
   // ==> Disable at shuffle
   // ==> reset at reset
 
+  let ghostCursor: Cursor | undefined;
   let cleanupGhost = () => {};
   if (props.prevMetrics) {
-    const ghostCursor = makeCursor({
+    ghostCursor = makeCursor({
       paragraphs: paraStore,
       setParagraphs: setParaStore,
     });
@@ -219,7 +220,6 @@ const TypingGame = (props: TypingGameProps) => {
 
   /* *** */
 
-
   let cleanupTimer = () => {};
 
   // NOTE: no reactivity on duration
@@ -272,10 +272,18 @@ const TypingGame = (props: TypingGameProps) => {
   /* *** */
 
   /* *** */
+  const resetGhost = () => {
+    if (!ghostCursor) return;
+    ghostCursor.positions.set.paragraph(0);
+    ghostCursor.positions.set.word(0);
+    ghostCursor.positions.set.key(0);
+  };
+
   const reset = () => {
     setParaStore(Content.deepClone(contentHandler().data.paragraphs));
     setStatus({ kind: TypingStatusKind.unstart });
     resetInput();
+    resetGhost();
     focus!();
   };
 
