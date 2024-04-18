@@ -105,9 +105,8 @@ const TypingGame = (props: TypingGameProps) => {
   // ==> Disable at shuffle
   // ==> reset at reset
 
+  let cleanupGhost = () => {};
   if (props.prevMetrics) {
-    let cleanupGhost = () => {};
-
     const ghostCursor = makeCursor({
       paragraphs: paraStore,
       setParagraphs: setParaStore,
@@ -298,6 +297,7 @@ const TypingGame = (props: TypingGameProps) => {
   /* ***  */
 
   onCleanup(() => {
+    cleanupGhost();
     cleanupTimer();
     cleanupMetrics();
     setStatus({ kind: TypingStatusKind.unstart });
