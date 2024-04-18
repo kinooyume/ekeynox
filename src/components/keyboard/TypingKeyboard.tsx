@@ -39,6 +39,7 @@ const Keyboard = (props: KeyboardProps) => {
   };
 
   onMount(() => {
+    // NOTE: peut etre pas une ref du coup..
     props.ref?.({ keyUp: removeKey, keyDown: addKey });
   });
   css`

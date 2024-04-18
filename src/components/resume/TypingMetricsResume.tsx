@@ -4,7 +4,11 @@ import SpeedChart from "./charts/SpeedChart";
 import DataMetricsResume from "./DataMetricsResume";
 import Prompt from "./PromptResume";
 import type { Translator } from "../App";
-import { createMetricsResume, type Metrics } from "../metrics/Metrics";
+import {
+  createMetricsResume,
+  type Metrics,
+  type MetricsResume,
+} from "../metrics/Metrics";
 import { createComputed, createSignal, Show, type JSXElement } from "solid-js";
 import TypingKeyboardResume from "./TypingKeyboardResume";
 import WordMetricsResume from "./charts/WordsChart";
@@ -15,7 +19,7 @@ type TypingMetricsProps = {
   t: Translator;
   kbLayout: HigherKeyboard;
   metrics: Metrics;
-  children: JSXElement;
+  children: (n: MetricsResume) => JSXElement;
 };
 
 const TypingMetricsResume = (props: TypingMetricsProps) => {
@@ -146,7 +150,7 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
                 {props.t("newGame.one")} {props.t("newGame.two")}
               </p>
             </div>
-            <div class="actions">{props.children}</div>
+            <div class="actions">{props.children(metricsResume)}</div>
           </div>
         </div>
       </div>

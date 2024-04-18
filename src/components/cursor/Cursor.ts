@@ -3,11 +3,11 @@ import type { MetaWord, Paragraph, Paragraphs } from "../content/Content";
 import { KeyFocus, KeyStatus } from "../metrics/KeyMetrics";
 import type { SetStoreFunction } from "solid-js/store";
 import type { WordStatus } from "../prompt/PromptWord";
-import { TypingWordKind, type TypingWord } from "../typing/TypingEngine";
+import { TypingWordKind, type TypingWord } from "../seqInput/UserInput";
 
 type CursorProps = {
-  setParagraphs: SetStoreFunction<Paragraphs>;
   paragraphs: Paragraphs;
+  setParagraphs: SetStoreFunction<Paragraphs>;
 };
 
 // Pourquoi c'est pas des variables direct ? est-ce souhaitable ?

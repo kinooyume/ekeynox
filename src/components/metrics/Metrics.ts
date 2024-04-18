@@ -1,6 +1,7 @@
 import type { LinkedList } from "../List";
 import type { MetaWord, Paragraphs } from "../content/Content";
 import type { GameOptions } from "../gameMode/GameOptions";
+import { KeyEventKind } from "./KeyMetrics";
 import type { KeypressMetricsProjection } from "./KeypressMetrics";
 import type { KeysProjection } from "./KeysProjection";
 import type { TypingMetrics } from "./TypingMetrics";
@@ -29,12 +30,18 @@ export type WordSpeed = {
   wpm: number[];
 };
 
+export type TimedKey = {
+  back: boolean;
+  duration: number;
+};
+
 export type KeyResume = { [k: string]: KeyStatusProjection };
 
 export type MetricsResume = {
   chart: ChartMetrics;
   words: Array<WordSpeed>;
   keys: [KeyResume, Map<string, number>];
+  getSequence: () => Array<TimedKey>;
 };
 
 const blankCharacters = [" ", "Enter"];
@@ -114,11 +121,39 @@ const averageWordWpm = (words: Array<MetaWord>): Array<WordSpeed> => {
   return result;
 };
 
+const getSequence = (
+  events: LinkedList<KeypressMetricsProjection>,
+): Array<TimedKey> => {
+  let event = events;
+  const keysSequences: Array<Array<TimedKey>> = [];
+  let prevTimestamp = events!.value.meta.logs!.value.timestamp;
+  while (event) {
+    // par sequence
+    let logs = event.value.meta.logs;
+
+    let localSequence = [];
+    while (logs) {
+      const key = logs.value.keyMetrics;
+      const duration = logs.value.timestamp - prevTimestamp;
+      localSequence.push({
+        back: key[1].kind === KeyEventKind.deleted,
+        duration,
+      });
+      prevTimestamp = logs!.value.timestamp;
+      logs = logs.next;
+    }
+    keysSequences.unshift(localSequence);
+    event = event.next;
+  }
+  return keysSequences.flat();
+};
+
 const createMetricsResume = (metrics: Metrics): MetricsResume => ({
   chart: logsToChartMetrics(metrics.typing.logs),
   words: averageWordWpm(metrics.paragraphs.flat()).sort(
     (a, b) => b.averageWpm - a.averageWpm,
   ),
+  getSequence: () => getSequence(metrics.typing.logs),
   keys: makeKeysResume(sortKeys(metrics.keys)),
 });
 

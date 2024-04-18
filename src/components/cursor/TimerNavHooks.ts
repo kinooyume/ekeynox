@@ -4,22 +4,38 @@ import type { CursorNavHooks } from "./CursorNavHooks";
 const TimerNavHooks: CursorNavHooks = {
   paragraph: {
     next: {
-      enter: (cursor) => {},
-      leave: (cursor) => {},
+      enter: (cursor) => {
+        cursor.set.ghostFocus(KeyFocus.focus);
+      },
+      leave: (cursor) => {
+        cursor.set.ghostFocus(KeyFocus.unfocus);
+      },
     },
     prev: {
-      enter: (cursor) => {},
-      leave: (cursor) => {},
+      enter: (cursor) => {
+        cursor.set.ghostFocus(KeyFocus.focus);
+      },
+      leave: (cursor) => {
+        cursor.set.ghostFocus(KeyFocus.unfocus);
+      },
     },
   },
   word: {
     next: {
-      enter: (cursor) => {},
-      leave: (cursor) => {},
+      enter: (cursor) => {
+        cursor.set.ghostFocus(KeyFocus.focus);
+      },
+      leave: (cursor) => {
+        cursor.set.ghostFocus(KeyFocus.unfocus);
+      },
     },
     prev: {
-      enter: (cursor) => {},
-      leave: (cursor) => {},
+      enter: (cursor) => {
+        cursor.set.ghostFocus(KeyFocus.focus);
+      },
+      leave: (cursor) => {
+        cursor.set.ghostFocus(KeyFocus.unfocus);
+      },
     },
   },
   key: {

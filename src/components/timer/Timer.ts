@@ -1,4 +1,4 @@
-import { TypingStatusKind, type TypingStatus } from "../typing/TypingEngine";
+import { TypingStatusKind, type TypingStatus } from "../seqInput/UserInput";
 
 export type TimerPause = { resume: () => TimerPending };
 export type TimerPending = { pause: () => TimerPause };
@@ -46,3 +46,6 @@ const createEffect: CreateTimerEffect<CreateEffectProps> = (
 };
 
 export default { createEffect };
+
+// Correct proto stopwatch !
+// https://codingtorque.com/simple-stopwatch-using-javascript/

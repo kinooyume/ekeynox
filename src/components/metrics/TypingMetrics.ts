@@ -1,5 +1,5 @@
 import type { Setter } from "solid-js";
-import { TypingStatusKind, type TypingStatus } from "../typing/TypingEngine";
+import { TypingStatusKind, type TypingStatus } from "../seqInput/UserInput.tsx";
 import KeypressMetrics, {
   type KeypressMetricsProjection,
   type StatProjection,

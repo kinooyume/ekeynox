@@ -12,11 +12,11 @@ import { createStore } from "solid-js/store";
 import Content, { type Paragraphs } from "../content/Content.ts";
 import { type HigherKeyboard } from "../keyboard/KeyboardLayout.ts";
 
-import TypingEngine, {
+import UserInput, {
   type TypingStatus,
   TypingStatusKind,
   type Position,
-} from "./TypingEngine";
+} from "../seqInput/UserInput";
 import Prompt from "../prompt/Prompt.tsx";
 import TypingNav from "./TypingNav.tsx";
 import Keyboard, {
@@ -41,18 +41,20 @@ import {
 import TimerOver from "../timer/TimerOver.ts";
 import Timer, { type TimerEffectStatus } from "../timer/Timer.ts";
 import type { Translator } from "../App.tsx";
-import type { Metrics } from "../metrics/Metrics.ts";
+import type { Metrics, MetricsResume } from "../metrics/Metrics.ts";
 import {
   type GameModeContent,
   type ContentHandler,
 } from "../content/TypingGameSource.ts";
 import { GameModeKind } from "../gameMode/GameMode.ts";
+import TimerInput from "../seqInput/TimerInput.ts";
+import makeCursor from "../cursor/Cursor.ts";
 
 type TypingGameProps = {
   t: Translator;
   content: GameModeContent;
   gameOptions: GameOptions;
-  prevMetrics?: Metrics;
+  prevMetrics?: MetricsResume;
   kbLayout: HigherKeyboard;
   onOver: (metrics: Metrics, content: GameModeContent) => void;
   onExit: () => void;
@@ -63,20 +65,10 @@ const TypingGame = (props: TypingGameProps) => {
     props.content.getContent(),
   );
 
-  const [totalWordsCount, setTotalWordsCount] = createSignal<number>(0);
-  const [wordsCount, setWordsCount] = createSignal<number>(0);
-
-  createEffect(() => {
-    setTotalWordsCount(contentHandler().data.wordsCount);
-  });
+  /* Paragraphs Store */
 
   const [paraStore, setParaStore] = createStore<Paragraphs>(
     Content.deepClone(contentHandler().data.paragraphs),
-  );
-
-  // NOTE: shitty way to handle that
-  const [extraEnd, setExtraEnd] = createSignal<[number, number] | undefined>(
-    undefined,
   );
 
   const updateContent = () => {
@@ -107,6 +99,71 @@ const TypingGame = (props: TypingGameProps) => {
     reset();
   };
 
+  /* *** */
+
+  /* Ghost Mode */
+  // ==> Disable at shuffle
+  // ==> reset at reset
+
+  if (props.prevMetrics) {
+    let cleanupGhost = () => {};
+
+    const ghostCursor = makeCursor({
+      paragraphs: paraStore,
+      setParagraphs: setParaStore,
+    });
+
+    const ghostInput = TimerInput({
+      cursor: ghostCursor,
+      sequence: props.prevMetrics.getSequence(),
+      setCleanup: (cleanup) => (cleanupGhost = cleanup),
+    });
+
+    createEffect((timer: TimerEffectStatus) => {
+      return timer({ status: status() });
+    }, ghostInput);
+  }
+  /* *** */
+
+  /* Words count, Speed only */
+
+  const [totalWordsCount, setTotalWordsCount] = createSignal<number>(0);
+  const [wordsCount, setWordsCount] = createSignal<number>(0);
+
+  createEffect(() => {
+    setTotalWordsCount(contentHandler().data.wordsCount);
+  });
+
+  /* Progress */
+
+  const [progress, setProgress] = createSignal(0);
+
+  if (props.content.kind === GameModeKind.timer) {
+    const totalProgress = props.content.time;
+    createComputed(() => {
+      setProgress(((timeCounter() || 0) / totalProgress) * 100);
+    });
+  } else {
+    createComputed(() => {
+      setProgress(100 - (wordsCount() / totalWordsCount()) * 100);
+    });
+  }
+
+  /* Keyboard */
+
+  const [kbLayout, setKbLayout] = createSignal(
+    props.kbLayout(contentHandler().data.keySet),
+  );
+
+  createComputed(() => {
+    const layout = props.kbLayout(contentHandler().data.keySet);
+    setKbLayout(layout);
+  });
+
+  /* Over */
+
+  let getPosition: () => Position;
+
   const over = () => {
     const position = getPosition();
     setStatus({ kind: TypingStatusKind.over });
@@ -122,10 +179,18 @@ const TypingGame = (props: TypingGameProps) => {
     );
   };
 
+  /* Extra End: timer infinite, time to call the over fn */
+  // NOTE: shitty way to handle that
+  const [extraEnd, setExtraEnd] = createSignal<[number, number] | undefined>(
+    undefined,
+  );
+
+  /* *** */
+  // NOTE:
+  // ==> Timer Only
   let onPromptEnd = over;
 
-  /* timer stuff */
-  // NOTE: probably too much condition
+  // Infinite or Finite Paragraphs
   if (
     props.gameOptions.mode === GameModeKind.timer &&
     (props.gameOptions.generation.category ===
@@ -135,23 +200,8 @@ const TypingGame = (props: TypingGameProps) => {
     updateContent();
     onPromptEnd = updateContent;
   }
-  /* *** */
 
-  const [currentPromptKey, setCurrentPromptKey] = createSignal("");
-  const [status, setStatus] = createSignal<TypingStatus>({
-    kind: TypingStatusKind.unstart,
-  });
-
-  const [kbLayout, setKbLayout] = createSignal(
-    props.kbLayout(contentHandler().data.keySet),
-  );
-
-  createComputed(() => {
-    const layout = props.kbLayout(contentHandler().data.keySet);
-    setKbLayout(layout);
-  });
-
-  /* timer stuff */
+  // NOTE: ==> Timer Only
   const cleanParagraphs = (
     paragraphs: Paragraphs,
     [pIndex, wIndex]: [number, number, number],
@@ -161,7 +211,38 @@ const TypingGame = (props: TypingGameProps) => {
     return cleanParagraphs;
   };
 
-  let getPosition: () => Position;
+  /* *** */
+
+  /* Timer Only Stuff */
+
+  // NOTE: should not exist without timer
+  const [timeCounter, setTimeCounter] = createSignal<number | undefined>(
+    props.content.kind === GameModeKind.timer ? props.content.time : undefined,
+  );
+
+  let cleanupTimer = () => {};
+
+  // NOTE: no reactivity on duration
+  if (props.content.kind === GameModeKind.timer) {
+    const timerOver = TimerOver.create({
+      duration: props.content.time,
+      onOver: over,
+      setCleanup: (cleanup) => (cleanupTimer = cleanup),
+      updateCounter: setTimeCounter,
+    });
+    const timerEffect = Timer.createEffect(timerOver);
+
+    createEffect((timer: TimerEffectStatus) => {
+      return timer({ status: status() });
+    }, timerEffect);
+  }
+
+  /* *** */
+
+  const [currentPromptKey, setCurrentPromptKey] = createSignal("");
+  const [status, setStatus] = createSignal<TypingStatus>({
+    kind: TypingStatusKind.unstart,
+  });
 
   /* Metrics */
 
@@ -188,6 +269,9 @@ const TypingGame = (props: TypingGameProps) => {
     {},
   );
 
+  /* *** */
+
+  /* *** */
   const reset = () => {
     setParaStore(Content.deepClone(contentHandler().data.paragraphs));
     setStatus({ kind: TypingStatusKind.unstart });
@@ -197,6 +281,7 @@ const TypingGame = (props: TypingGameProps) => {
 
   let resetInput: () => void;
   let focus: () => void;
+
   let pause: () => void;
   let keyboard: TypingKeyboardRef;
   let navHandler: TypingKeyboardRef;
@@ -212,46 +297,6 @@ const TypingGame = (props: TypingGameProps) => {
   };
   /* ***  */
 
-  /* Timer */
-
-  // NOTE: should not exist without timer
-  const [timeCounter, setTimeCounter] = createSignal<number | undefined>(
-    props.content.kind === GameModeKind.timer ? props.content.time : undefined,
-  );
-
-  let cleanupTimer = () => {};
-
-  // NOTE: no reactivity on duration
-  if (props.content.kind === GameModeKind.timer) {
-    const timerOver = TimerOver.create({
-      duration: props.content.time,
-      onOver: over,
-      setCleanup: (cleanup) => (cleanupTimer = cleanup),
-      updateCounter: setTimeCounter,
-    });
-    const timerEffect = Timer.createEffect(timerOver);
-
-    createEffect((timer: TimerEffectStatus) => {
-      return timer({ status: status() });
-    }, timerEffect);
-  }
-
-  /* Progress */
-
-  const [progress, setProgress] = createSignal(0);
-
-  if (props.content.kind === GameModeKind.timer) {
-    const totalProgress = props.content.time;
-    createComputed(() => {
-      setProgress((timeCounter() || 0) / totalProgress * 100);
-    });
-  } else {
-    createComputed(() => {
-      setProgress(100 - (wordsCount() / totalWordsCount()) * 100);
-    });
-  }
-
-  /* *** */
   onCleanup(() => {
     cleanupTimer();
     cleanupMetrics();
@@ -271,7 +316,7 @@ const TypingGame = (props: TypingGameProps) => {
   `;
   return (
     <div class="mega" onClick={() => focus()}>
-      <TypingEngine
+      <UserInput
         paragraphs={paraStore}
         setParagraphs={setParaStore}
         setStatus={setStatus}

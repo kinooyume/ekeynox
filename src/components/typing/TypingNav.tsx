@@ -218,11 +218,22 @@ const TypingNav = (props: TypingNavProps) => {
       color: var(--text-secondary-color);
     }
 
+    .help {
+      font-size: 17px;
+      font-weight: 200;
+    }
+    .help-content {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
     .help .key {
+      border-radius: 6px;
       background-color: var(--text-secondary-color);
       color: var(--color-surface-alt);
       font-size: 12px;
-      padding: 4px;
+      padding: 6px 6px;
+      font-weight: 600;
     }
   `;
 
@@ -255,12 +266,17 @@ const TypingNav = (props: TypingNavProps) => {
           <div class="help">
             <Switch>
               <Match when={props.isPaused}>
-                <span>{props.t("typingGame.typeToPlay")}</span>
+                <div class="help-content">
+                  <span>{props.t("typingGame.typeToPlay")}</span>
+                </div>
               </Match>
               <Match when={!props.isPaused}>
-                <div>
-                  <span class="key">Ctrl</span> +<span class="key">Shift</span>{" "}
-                  +<span class="key">{props.t("space")}</span>
+                <div class="help-content">
+                  <span class="key">Ctrl</span>
+                  <span>+</span>
+                  <span class="key">Shift</span>
+                  <span>+</span>
+                  <span class="key">{props.t("space")}</span>
                   <span> {props.t("typingGame.toPause")}</span>
                 </div>
               </Match>
@@ -307,3 +323,6 @@ export default TypingNav;
 // THE play button
 //https://uiverse.io/catraco/wet-rabbit-81
 //
+//
+// StopWatch animejs
+// https://codepen.io/MrSung/pen/xaRdjN

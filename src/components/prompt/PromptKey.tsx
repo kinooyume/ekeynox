@@ -1,6 +1,6 @@
 import { css } from "solid-styled";
 import { createSignal, createEffect } from "solid-js";
-import { KeyStatus } from "../metrics/KeyMetrics";
+import { KeyFocus, KeyStatus } from "../metrics/KeyMetrics";
 import { type Metakey } from "../content/Content.ts";
 
 const transformDict = [
@@ -45,11 +45,26 @@ const Key = (props: Metakey) => {
       color: var(--corrected-color);
       background-color: var(--corrected-bg-color);
     }
+    span.ghost-focus {
+      background-color: grey;
+      position: relative;
+    }
+    span.ghost-focus::before {
+      content: " ";
+      position: absolute;
+      top: -4px;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-bottom: 2px solid grey;
+      animation: blink 1s infinite;
+    }
     span.focus {
       position: relative;
       color: var(--focus-color);
       background-color: var(--focus-bg-color);
     }
+
     span.focus::before {
       content: " ";
       position: absolute;
@@ -82,7 +97,11 @@ const Key = (props: Metakey) => {
   `;
   return (
     <span
-      class={`prompt-key ${props.focus} ${props.status} ${wasInvalid() ? "wasInvalid" : ""} ${special}`}
+      class={`prompt-key ${props.focus} ${props.status}`}
+      classList={{
+        wasInvalid: wasInvalid(),
+        ["ghost-focus"]: props.ghostFocus === KeyFocus.focus,
+      }}
     >
       {transform(props.key)}
     </span>

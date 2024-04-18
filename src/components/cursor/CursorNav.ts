@@ -1,6 +1,4 @@
-import { KeyFocus } from "../metrics/KeyMetrics";
-import { WordStatus } from "../prompt/PromptWord";
-import { TypingWordKind, type TypingWord } from "../typing/TypingEngine";
+import { type TypingWord } from "../seqInput/UserInput";
 import type { Cursor } from "./Cursor";
 import type { CursorNavHooks } from "./CursorNavHooks";
 
@@ -9,15 +7,14 @@ type CursorNavProps = {
   cursor: Cursor;
 };
 
-type CursorNav = {
+export type CursorNav = {
   next: (
-    nextWordHook: (cursor: Cursor) => void,
+    nextWordHook?: (cursor: Cursor) => void,
   ) => [boolean, TypingWord | null];
   prev: () => boolean;
 };
 
 let makeCursorNav = ({ cursor, hooks }: CursorNavProps): CursorNav => {
-
   const nextWord = () => {
     let typingWord = null;
     if (!cursor.get.wordValid() && cursor.get.wordIsValid()) {
@@ -62,7 +59,7 @@ let makeCursorNav = ({ cursor, hooks }: CursorNavProps): CursorNav => {
         hooks.key.next.enter(cursor);
       } else if (cursor.positions.word() < cursor.get.nbrWords()) {
         typingWord = nextWord();
-        nextWordHook(cursor);
+        nextWordHook && nextWordHook(cursor);
       } else if (cursor.positions.paragraph() < cursor.get.nbrParagraphs()) {
         nextParagraph();
       } else return [false, cursor.get.typingWord()];
