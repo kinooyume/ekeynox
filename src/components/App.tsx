@@ -37,7 +37,7 @@ import {
   getDefaultGameOptions,
   type ContentGeneration,
 } from "./gameMode/GameOptions";
-import type { Metrics } from "./metrics/Metrics";
+import type { Metrics, MetricsResume } from "./metrics/Metrics";
 import TypingMetricsResume from "./resume/TypingMetricsResume";
 import KeyboardLayout, { type HigherKeyboard } from "./keyboard/KeyboardLayout";
 import GameModeMenuTiny from "./gameMode/GameModeMenuTiny";
@@ -86,7 +86,11 @@ export enum GameStatusKind {
 
 export type GameStatus =
   | { kind: GameStatusKind.menu }
-  | { kind: GameStatusKind.pending; content: GameModeContent }
+  | {
+      kind: GameStatusKind.pending;
+      content: GameModeContent;
+      prev?: MetricsResume;
+    }
   | { kind: GameStatusKind.resume; metrics: Metrics; content: GameModeContent };
 
 const App = () => {
@@ -127,8 +131,8 @@ const App = () => {
     initialValue: [],
   });
 
-  const redo = (content: GameModeContent) =>
-    setGameStatus({ kind: GameStatusKind.pending, content });
+  const redo = (content: GameModeContent, metrics: MetricsResume) =>
+    setGameStatus({ kind: GameStatusKind.pending, content, metrics });
 
   const start = (opts: GameOptions, customSource: string) => {
     setGameOptions(opts);
@@ -137,7 +141,7 @@ const App = () => {
       random: randomSource(),
       custom: customSource,
     });
-    redo(content);
+    setGameStatus({ kind: GameStatusKind.pending, content });
   };
 
   const over = (metrics: Metrics, content: GameModeContent) =>
@@ -212,6 +216,7 @@ const App = () => {
                     t={t}
                     content={(gameStatus() as any).content}
                     gameOptions={Object.assign({}, gameOptions)}
+                    prevMetrics={(gameStatus() as any).metrics}
                     kbLayout={kbLayout()}
                     onExit={goHome}
                     onOver={over}
@@ -225,15 +230,18 @@ const App = () => {
                 kbLayout={kbLayout()}
                 metrics={(gameStatus() as any).metrics}
               >
-                <GameModeMenuTiny
-                  t={t}
-                  gameOptions={gameOptions}
-                  content={(gameStatus() as any).content}
-                  metrics={(gameStatus() as any).metrics}
-                  setContentGeneration={setContentGeneration}
-                  start={start}
-                  redo={redo}
-                />
+                {(metricsResume) => (
+                  <GameModeMenuTiny
+                    t={t}
+                    gameOptions={gameOptions}
+                    content={(gameStatus() as any).content}
+                    metrics={(gameStatus() as any).metrics}
+                    metricsResume={metricsResume}
+                    setContentGeneration={setContentGeneration}
+                    start={start}
+                    redo={redo}
+                  />
+                )}
               </TypingMetricsResume>
             </Match>
           </Switch>

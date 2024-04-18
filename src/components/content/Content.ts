@@ -1,20 +1,25 @@
 import { WordStatus } from "../prompt/PromptWord.tsx";
 import { KeyFocus, KeyStatus } from "../metrics/KeyMetrics.ts";
 
+// NOTE: On peut faire un type variant 
+// - [ ] regular
+// - [ ] ghost, + metrics
+//  
 export type Metakey = {
   status: KeyStatus;
   focus: KeyFocus;
+  ghostFocus: KeyFocus;
   // wasInvalid: boolean;
   key: string;
 };
 
 export type MetaWord = {
+  keys: Array<Metakey>;
   isSeparator: boolean;
   status: WordStatus;
   focus: boolean;
   wasCorrect: boolean;
   wpm: number;
-  keys: Array<Metakey>;
 };
 
 export type Paragraph = Array<MetaWord>;
@@ -30,6 +35,7 @@ const makeEnter = (): MetaWord => ({
     {
       key: "Enter",
       status: KeyStatus.unset,
+      ghostFocus: KeyFocus.unset,
       focus: KeyFocus.unset,
     },
   ],
@@ -45,6 +51,7 @@ const makeSpace = (): MetaWord => ({
     {
       key: " ",
       status: KeyStatus.unset,
+      ghostFocus: KeyFocus.unset,
       focus: KeyFocus.unset,
     },
   ],
@@ -70,6 +77,7 @@ const parseWord =
         key,
         status: KeyStatus.unset,
         focus: KeyFocus.unset,
+        ghostFocus: KeyFocus.unset,
       };
     }),
   });
@@ -133,6 +141,7 @@ const deepCloneReset = (paragraphs: Paragraphs) => {
         ...key,
         status: KeyStatus.unset,
         focus: KeyFocus.unset,
+        ghostFocus: KeyFocus.unset,
       }));
       return newWord;
     }),

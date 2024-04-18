@@ -1,5 +1,5 @@
 import type { LinkedList } from "../List";
-import type { TypingKey } from "../typing/TypingEngine";
+import type { TimedKey } from "../metrics/Metrics";
 import type { CreateNewTimer, TimerPause, TimerPending } from "./Timer";
 
 // NOTE: on a le pattern de:
@@ -12,58 +12,59 @@ import type { CreateNewTimer, TimerPause, TimerPending } from "./Timer";
 export type SetCleanup = (cleanup: () => void) => void;
 
 type TimerKeypressProps<T> = {
-  start: number;
-  list: LinkedList<T>;
+  sequence: Array<T>;
   setCleanup: SetCleanup;
   apply: (key: T) => void;
 };
 
 type PendingProps<T> = {
-  lastPress: number;
-  node: LinkedList<T>;
+  timeLeft: number;
+  sequence: Array<T>;
 };
 
 type PauseProps<T> = {
-  lastPress: number;
-  node: LinkedList<T>;
+  sequence: Array<T>;
   timeout: NodeJS.Timeout | null;
 };
 
-const create: CreateNewTimer<TimerKeypressProps<TypingKey>> =
-  ({ start, list, apply, setCleanup }) =>
+// TODO: remettre mecansime de timefleft
+const create: CreateNewTimer<TimerKeypressProps<TimedKey>> =
+  ({ sequence, apply, setCleanup }) =>
   () => {
-    const resume = (props: PendingProps<TypingKey>): TimerPending => {
-      let pauseProps: PauseProps<TypingKey> = {
+    let index = 0;
+    let lastPress = 0;
+    const resume = (props: PendingProps<TimedKey>): TimerPending => {
+      let pauseProps: PauseProps<TimedKey> = {
         ...props,
         timeout: null,
       };
-
-      const nodeTimeout = (lastPress: number, node: LinkedList<TypingKey>) => {
-        if (!node) return;
-        const timestamp = node.value.timestamp;
-        const timing = timestamp - lastPress;
+      const nodeTimeout = () => {
+        lastPress = performance.now();
         pauseProps.timeout = setTimeout(() => {
-          apply(node.value);
-          nodeTimeout(timestamp, node.next);
-        }, timing);
+          apply(props.sequence[index]);
+          index++;
+          if (index < props.sequence.length) nodeTimeout();
+        }, props.sequence[index].duration);
       };
 
       setCleanup(() => pauseProps.timeout && clearTimeout(pauseProps.timeout));
 
       // side effect
-      nodeTimeout(start, list);
+      nodeTimeout();
 
       return {
         pause: () => pause(pauseProps),
       };
     };
-    const pause = (props: PauseProps<TypingKey>): TimerPause => {
+    const pause = (props: PauseProps<TimedKey>): TimerPause => {
+      const pause = performance.now();
+      const timeLeft = props.sequence[index].duration - (pause - lastPress);
       props.timeout && clearTimeout(props.timeout);
-      return { resume: () => resume(props) };
+      return { resume: () => resume({ ...props, timeLeft }) };
     };
 
     return {
-      resume: () => resume({ lastPress: start, node: list }),
+      resume: () => resume({ sequence, timeLeft: 0 }),
     };
   };
 

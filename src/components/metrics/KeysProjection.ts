@@ -1,4 +1,4 @@
-import { TypingStatusKind, type TypingStatus } from "../typing/TypingEngine";
+import { TypingStatusKind, type TypingStatus } from "../seqInput/UserInput.tsx";
 import {
   createTypingProjection,
   updateTypingProjection,

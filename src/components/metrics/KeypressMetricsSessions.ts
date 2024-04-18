@@ -2,7 +2,7 @@ import KeypressMetrics, {
   type KeypressMetricsProjection,
   type KeypressMetricsProps,
 } from "./KeypressMetrics";
-import type { TypingEvent } from "../typing/TypingEngine";
+import type { TypingEvent } from "../seqInput/UserInput";
 
 export type PendingKeypressMetrics = {
   event: (event: TypingEvent) => void;
