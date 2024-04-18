@@ -133,6 +133,13 @@ const TypingGame = (props: TypingGameProps) => {
     setTotalWordsCount(contentHandler().data.wordsCount);
   });
 
+  /* Timer Only Stuff */
+
+  // NOTE: should not exist without timer
+  const [timeCounter, setTimeCounter] = createSignal<number | undefined>(
+    props.content.kind === GameModeKind.timer ? props.content.time : undefined,
+  );
+
   /* Progress */
 
   const [progress, setProgress] = createSignal(0);
@@ -212,12 +219,6 @@ const TypingGame = (props: TypingGameProps) => {
 
   /* *** */
 
-  /* Timer Only Stuff */
-
-  // NOTE: should not exist without timer
-  const [timeCounter, setTimeCounter] = createSignal<number | undefined>(
-    props.content.kind === GameModeKind.timer ? props.content.time : undefined,
-  );
 
   let cleanupTimer = () => {};
 
