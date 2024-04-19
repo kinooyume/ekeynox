@@ -102,8 +102,8 @@ const TimerParamsMedium = (props: GameParams) => {
           <RadioGroup
             name="languages-timer"
             values={[
-              { label: props.t("english"), value: "en" as Languages },
-              { label: props.t("french"), value: "fr" as Languages },
+              { label: props.t("en"), value: "en" as Languages },
+              { label: props.t("fr"), value: "fr" as Languages },
             ]}
             compare={(v) => v === props.gameOptions.generation.language}
             setChecked={(l) =>
