@@ -56,6 +56,7 @@ type TypingGameProps = {
   gameOptions: GameOptions;
   prevMetrics?: MetricsResume;
   kbLayout: HigherKeyboard;
+  showKb: boolean;
   onOver: (metrics: Metrics, content: GameModeContent) => void;
   onExit: () => void;
 };
@@ -65,6 +66,7 @@ const TypingGame = (props: TypingGameProps) => {
     props.content.getContent(),
   );
 
+  const [showGhost, setShowGhost] = createSignal(false);
   /* Paragraphs Store */
 
   const [paraStore, setParaStore] = createStore<Paragraphs>(
@@ -84,8 +86,11 @@ const TypingGame = (props: TypingGameProps) => {
     );
   };
 
-  const newContent = () => {
-    setContentHandler(props.content.getContent());
+  const onShuffle = () => {
+    setShowGhost(false);
+    // setContentHandler(props.content.getContent());
+    setContentHandler(contentHandler().new());
+
     // duplicate dettect if multiple content or not
     if (
       props.gameOptions.mode === GameModeKind.timer &&
@@ -108,6 +113,7 @@ const TypingGame = (props: TypingGameProps) => {
   let ghostCursor: Cursor | undefined;
   let cleanupGhost = () => {};
   if (props.prevMetrics) {
+    setShowGhost(true);
     ghostCursor = makeCursor({
       paragraphs: paraStore,
       setParagraphs: setParaStore,
@@ -120,6 +126,7 @@ const TypingGame = (props: TypingGameProps) => {
     });
 
     createEffect((timer: TimerEffectStatus) => {
+      if (!showGhost()) return timer;
       return timer({ status: status() });
     }, ghostInput);
   }
@@ -341,12 +348,14 @@ const TypingGame = (props: TypingGameProps) => {
         onOver={onPromptEnd}
       />
       <Prompt paragraphs={paraStore} setParagraphs={setParaStore} />
-      <Keyboard
-        metrics={keyMetrics()}
-        currentKey={currentPromptKey()}
-        layout={kbLayout()}
-        ref={(k) => (keyboard = k)}
-      />
+      <Show when={props.showKb}>
+        <Keyboard
+          metrics={keyMetrics()}
+          currentKey={currentPromptKey()}
+          layout={kbLayout()}
+          ref={(k) => (keyboard = k)}
+        />
+      </Show>
       <TypingNav
         t={props.t}
         isGenerated={
@@ -358,7 +367,7 @@ const TypingGame = (props: TypingGameProps) => {
         onPause={() => pause()}
         onReset={reset}
         progress={progress()}
-        onShuffle={newContent}
+        onShuffle={onShuffle}
         onExit={props.onExit}
       >
         <Show when={props.content.kind === GameModeKind.timer}>
