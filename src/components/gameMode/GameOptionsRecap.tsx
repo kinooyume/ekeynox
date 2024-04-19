@@ -8,7 +8,7 @@ import {
 } from "./GameOptions";
 import { GameModeKind } from "./GameMode";
 
-// NOTE: make a data to link title + icons + params full/compact 
+// NOTE: make a data to link title + icons + params full/compact
 //
 type GameOptionsRecapProps = {
   t: Translator;
@@ -19,23 +19,29 @@ const GameOptionsRecap = (props: GameOptionsRecapProps) => {
   css`
     .options-recap {
       display: flex;
+      justify-content: center;
+      align-items: center;
+
       gap: 10px;
     }
 
+    .tag:hover {
+      filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.25));
+    }
     .tag {
-      background-color: grey;
       background-color: var(--color-primary-400);
+      filter: grayscale(60%);
       border-radius: 4px;
       display: flex;
       gap: 5px;
       padding: 4px 8px;
+      height: 16px;
     }
 
     span {
       font-size: 12px;
       color: black;
     }
-  
   `;
   return (
     <div class="options-recap">

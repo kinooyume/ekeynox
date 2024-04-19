@@ -1,7 +1,5 @@
-import { Match, Show, Switch, type JSXElement } from "solid-js";
+import { Match, Show, Switch } from "solid-js";
 import { css } from "solid-styled";
-import Lang from "../svgs/lang";
-import Word from "../svgs/word";
 import {
   NumberSelectionType,
   ContentTypeKind,
@@ -10,42 +8,50 @@ import {
   type Languages,
 } from "./GameOptions";
 import RadioGroup from "../ui/RadioGroup";
+
+import Lang from "../svgs/lang";
 import Quote from "../svgs/quote";
 import Text from "../svgs/text";
 import Customizer from "../svgs/customizer";
+import Stopwatch from "../svgs/stopwatch";
+import Infinite from "../svgs/infinite";
 import type { GameParams } from "./GameParams";
 
-const RandomParams = (props: GameParams) => {
+const TimerParamsMedium = (props: GameParams) => {
   css`
-    .random-params {
+    .time-params {
       display: flex;
       flex-direction: column;
-      gap: 1rem;
       align-items: flex-start;
     }
     h3 {
       margin: 0;
+      font-size: 14px;
       font-weight: 400;
       color: var(--text-secondary-color);
-      font-size: 16px;
-      cursor: default;
       text-transform: uppercase;
+      cursor: default;
     }
     .option {
       display: flex;
+      border-radius: 12px;
       justify-content: space-between;
       align-items: center;
       width: 100%;
-      transition: all 0.15s ease-in-out;
+      padding: 8px;
+      transition: all 0.2s ease-in-out;
+    }
+    .option:hover {
+      background-color: var(--background-color);
     }
   `;
 
   return (
-    <div class="random-params">
+    <div class="time-params">
       <div class="option">
         <h3>{props.t("content")}</h3>
         <RadioGroup
-          name="wordsCategory"
+          name="wordsCategory-timer"
           values={[
             {
               label: props.t("words"),
@@ -94,7 +100,7 @@ const RandomParams = (props: GameParams) => {
         <div class="option">
           <h3> {props.t("language")} </h3>
           <RadioGroup
-            name="languages"
+            name="languages-timer"
             values={[
               { label: props.t("english"), value: "en" as Languages },
               { label: props.t("french"), value: "fr" as Languages },
@@ -114,38 +120,55 @@ const RandomParams = (props: GameParams) => {
         >
           {props.children}
         </Match>
-        <Match
-          when={
-            props.gameOptions.contentType.kind === ContentTypeKind.generation &&
-            props.gameOptions.contentType.category ===
-              WordsGenerationCategory.words1k
+      </Switch>
+
+      <Show
+        when={
+          props.gameOptions.contentType.kind !== ContentTypeKind.generation ||
+          props.gameOptions.contentType.category ===
+            WordsGenerationCategory.quotes
+        }
+      >
+        <div class="option">
+          <h3> {props.t("repeatContent")} </h3>
+          <RadioGroup
+            name="repeat-content"
+            values={[
+              { label: props.t("once"), value: false },
+              { label: props.t("infinity"), value: true },
+            ]}
+            compare={(v) => v === props.gameOptions.generation.infinite}
+            setChecked={(l) =>
+              props.setGameOptions("generation", "infinite", l)
+            }
+          >
+            <Infinite />
+          </RadioGroup>
+        </div>
+      </Show>
+      <div class="option">
+        <h3>{props.t("timeLimit")}</h3>
+        <RadioGroup
+          name="time"
+          values={[
+            { label: "10s", value: 10 },
+            { label: "30s", value: 30 },
+            { label: "1m", value: 60 },
+            { label: "2m", value: 120 },
+          ]}
+          compare={(v) => v === props.gameOptions.timer.value}
+          setChecked={(time) =>
+            props.setGameOptions("timer", {
+              type: NumberSelectionType.selected,
+              value: time,
+            })
           }
         >
-          <div class="option">
-            <h3>{props.t("wordCount")}</h3>
-            <RadioGroup
-              name="nbrWords"
-              values={[
-                { label: "10", value: 10 },
-                { label: "25", value: 25 },
-                { label: "50", value: 50 },
-                { label: "100", value: 100 },
-              ]}
-              compare={(v) => v === props.gameOptions.random.value}
-              setChecked={(v) =>
-                props.setGameOptions("random", {
-                  type: NumberSelectionType.selected,
-                  value: v,
-                })
-              }
-            >
-              <Word />
-            </RadioGroup>
-          </div>
-        </Match>
-      </Switch>
+          <Stopwatch />
+        </RadioGroup>
+      </div>
     </div>
   );
 };
 
-export default RandomParams;
+export default TimerParamsMedium;

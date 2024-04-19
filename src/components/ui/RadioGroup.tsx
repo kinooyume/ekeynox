@@ -40,7 +40,7 @@ function RadioGroup<Value>(props: RadioGroupProps<Value>) {
       background-color: var(--color-surface-200);
       position: relative;
       display: flex;
-      border: 1px solid var(--color-surface-200);
+      border: 1px solid var(--background-color);
       transition: all 100ms linear;
     }
 

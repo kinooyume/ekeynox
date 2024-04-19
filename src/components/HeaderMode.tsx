@@ -1,4 +1,12 @@
-import { createSignal, Show, For, createEffect, on } from "solid-js";
+import {
+  createSignal,
+  Show,
+  For,
+  createEffect,
+  on,
+  Switch,
+  Match,
+} from "solid-js";
 import type { Translator } from "./App";
 import type { ContentGeneration, GameOptions } from "./gameMode/GameOptions";
 import { css } from "solid-styled";
@@ -6,7 +14,10 @@ import { createStore, type SetStoreFunction } from "solid-js/store";
 import type { CustomInputRef } from "./ui/CustomInput";
 import GameOptionsRecap from "./gameMode/GameOptionsRecap";
 import type { GameModeContent } from "./content/TypingGameSource";
-import { gameModesArray } from "./gameMode/GameMode";
+import { GameModeKind, gameModesArray } from "./gameMode/GameMode";
+import RandomParamsMedium from "./gameMode/RandomParamsMedium";
+import TimerParamsMedium from "./gameMode/TimerParamsMedium";
+import CustomInput from "./ui/CustomInput";
 
 type HeaderModeProps = {
   t: Translator;
@@ -19,23 +30,36 @@ type HeaderModeProps = {
 const HeaderMode = (props: HeaderModeProps) => {
   css`
     .cursor {
-      font-size: 1.5rem;
       opacity: 0;
       corsor: pointer;
+
       position: absolute;
       right: 16px;
-      top: 16px;
+      top: 14px;
       pointer-events: none;
       color: var(--background-color);
+      color: var(--text-secondary-color);
+      transition: all 0.2s ease-in-out;
       z-index: 206;
+    }
+    .header-mode {
+      height: 48px;
+      display: flex;
+      gap: 26px;
+      border-left: 2px solid var(--border-color);
+    }
+
+    .options-recap {
+      display: flex;
     }
 
     .dropdown-wrapper {
       position: relative;
-      z-index: 200;
-      height: 72px;
-      filter: grayscale(60%);
-      opacity: 0.4;
+      margin-left: 12px;
+      z-index: 205;
+      height: 60px;
+
+      opacity: 0.8;
       transition: all 0.2s ease-in-out;
     }
     .dropdown-wrapper:hover {
@@ -50,8 +74,31 @@ const HeaderMode = (props: HeaderModeProps) => {
     .dropdown-wrapper.open {
     }
 
+    .dropdown {
+      max-height: 50px;
+      width: 200px;
+      max-width: 200px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: space-between;
+      border: 1px solid transparent;
+      background-color: var(--color-surface-100);
+    }
+
+    .dropdown:hover {
+      border-radius: 12px;
+      border: 1px solid var(--background-color);
+    }
+
     .dropdown-wrapper.open .dropdown {
-      max-height: 200px;
+      max-height: 600px;
+      padding: 40px;
+      padding-top: 20px;
+      width: 800px;
+      max-width: 1200px;
+      transition: max-width 0.2s ease-in-out;
 
       border: 1px solid var(--background-color);
       transition: all 0.2s ease-in-out;
@@ -71,49 +118,54 @@ const HeaderMode = (props: HeaderModeProps) => {
       background-color: var(--background-color);
     }
 
-    .dropdown {
-      max-height: 68px;
+    .modes {
+      list-style-type: none;
+      width: 180px;
+      padding: 0;
+      padding-left: 12px;
+      margin: 8px 0;
+      margin-right: 12px;
+    }
 
-      overflow: hidden;
+    .modes li {
       display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: space-between;
-      border: 1px solid transparent;
-
-      border-radius: 12px;
+      padding: 0;
+      margin: 0;
     }
 
-    .dropdown:hover {
-      border: 1px solid var(--background-color);
-    }
+    .modes .selected label:before {
+      max-width: 20px;
 
+      opacity: 1;
+    }
     .select {
       display: none;
     }
 
-    .radio {
-      order: 1;
-    }
-
-    .radio.selected {
-      order: 0;
-    }
-
     label {
-      width: 300px;
+      width: 100%;
+      height: 24px;
+      border-radius: 12px;
+      padding: 8px;
       display: flex;
       align-items: center;
-      gap: 1rem;
+      justify-content: flex-start;
+      gap: 6px;
       user-select: none;
+      transition: all 0.2s ease-in-out;
 
       cursor: pointer;
     }
 
+    .selected label .title {
+      font-weight: 800;
+    }
+
     .title {
-      font-size: 20px;
-      font-weight: 200;
-      margin: 0 0 4px;
+      font-size: 14px;
+      font-weight: 400;
+      margin: 0;
+      color: var(--text-color);
     }
 
     .description {
@@ -126,10 +178,116 @@ const HeaderMode = (props: HeaderModeProps) => {
       display: flex;
       border-radius: 50%;
       height: 60px;
-      width: 60px;
-      padding: 8px;
+      padding: 4px;
+      width: 70px;
+      margin: 8px;
       cursor: pointer;
       transition: all 100ms linear;
+    }
+
+    .menu-title-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 60px;
+    }
+    .menu-title {
+      display: flex;
+      overflow: hidden;
+      position: relative;
+      width: 100%;
+      height: 30px;
+      max-height: 40px;
+      padding: 8px;
+      padding-left: 20px;
+      align-items: center;
+      cursor: pointer;
+      content: attr(data-passive);
+      transition: all 0.2s ease-in-out;
+    }
+    .dropdown-wrapper.open .menu-title {
+      height: 80px;
+      border: 0;
+      font-weight: 300;
+      font-size: 20px;
+      max-height: 80px;
+      margin-bottom: 12px;
+    }
+
+    .menu-title:before {
+      position: absolute;
+      color: var(--text-color);
+
+      color: var(--text-secondary-color);
+      content: attr(data-passive);
+      top: 50%;
+      transform: translateY(-50%);
+      transition: all 0.2s ease;
+    }
+    .menu-title:after {
+      position: absolute;
+      color: var(--text-color);
+      color: var(--text-secondary-color);
+      top: 150px;
+      content: attr(data-active);
+      transition: all 0.2s ease;
+    }
+
+    .dropdown-wrapper.open .menu-title:before,
+    .dropdown-wrapper:hover .menu-title:before {
+      top: -50%;
+      transform: rotate(5deg);
+    }
+    .dropdown-wrapper.open .menu-title:after,
+    .dropdown-wrapper:hover .menu-title:after {
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .bullet-wrapper {
+      position: relative;
+      overflow: hidden;
+      width: 16px;
+      height: 16px;
+    }
+    .bullet-wrapper:after {
+      content: "";
+      display: flex;
+      justify-self: center;
+      border-radius: 50%;
+    }
+
+    .bullet-wrapper::after {
+      position: relative;
+      background-color: var(--text-color);
+      width: calc(100% / 2);
+      height: calc(100% / 2);
+      top: var(--y, 120%);
+
+      transition: top 0.5s cubic-bezier(0.48, 1.97, 0.5, 0.63);
+    }
+
+    .selected .bullet-wrapper:after {
+      --y: 20%;
+      animation: stretch-animate 0.3s ease-out 0.17s;
+    }
+
+    .selected + li .bullet-wrapper:after {
+      --y: -120%;
+    }
+    .menu-game {
+      display: flex;
+    }
+    .options-wrapper {
+      display: flex;
+flex-direction: column;
+      justify-content: space-between;
+      border-left: 1px solid var(--border-color);
+      padding: 0 26px 26px;
+      margin-bottom: 26px;
+      width: 500px;
+      height: 300px;
     }
   `;
 
@@ -180,42 +338,98 @@ const HeaderMode = (props: HeaderModeProps) => {
   /* *** */
 
   return (
-    <div class={`dropdown-wrapper ${downState()}`}>
-      <div
-        class="dropdown"
-        ref={(el) => {
-          el.addEventListener("mouseleave", () =>
-            setDownState(DropdownState.none),
-          );
-        }}
-      >
-        <Show when={downState() !== DropdownState.open}>
-          <span class="cursor">▼</span>
-        </Show>
-        <For each={gameModesArray}>
-          {([modeKind, mode]) => (
+    <div class="header-mode">
+      <div class={`dropdown-wrapper ${downState()}`}>
+        <div
+          class="dropdown"
+          ref={(el) => {
+            el.addEventListener("mouseleave", () =>
+              setDownState(DropdownState.none),
+            );
+          }}
+        >
+          <div class="menu-title-wrapper">
             <div
-              class={`radio ${modeKind}`}
-              classList={{ selected: props.gameOptions.mode === modeKind }}
+              class="menu-title"
+              onClick={clickHandler}
+              data-passive={`${props.t("gameMode")[gameOptions.mode].subtitle}`}
+              data-active={`${props.t("newGame.one")} ${props.t("newGame.two")}`}
             >
-              <input
-                type="radio"
-                name="mode"
-                class="select"
-                id={modeKind}
-                checked={props.gameOptions.mode === modeKind}
-                onChange={() => props.setGameOptions("mode", modeKind)}
-              />
-              <label for={modeKind} onClick={clickHandler}>
-                <div class="icon"> {mode.head()}</div>
-                <div class="description">
-                  <p class="title">{props.t("gameMode")[modeKind].subtitle}</p>
-                  <GameOptionsRecap gameOptions={gameOptions} t={props.t} />
-                </div>
-              </label>
+              <Show when={downState() !== DropdownState.open}>
+                <span class="cursor">▼</span>
+              </Show>
             </div>
-          )}
-        </For>
+          </div>
+          <div class="menu-game">
+            <ul class="modes">
+              <For each={gameModesArray}>
+                {([modeKind, mode]) => (
+                  <li
+                    class={`radio ${modeKind}`}
+                    classList={{
+                      selected: props.gameOptions.mode === modeKind,
+                    }}
+                  >
+                    <input
+                      type="radio"
+                      name="mode"
+                      class="select"
+                      id={modeKind}
+                      checked={props.gameOptions.mode === modeKind}
+                      onChange={() => props.setGameOptions("mode", modeKind)}
+                    />
+                    <label for={modeKind}>
+                      {/* <div class="icon"> {mode.head()}</div> */}
+                      {/* <div class="description"> */}
+
+                      <div class="bullet-wrapper"></div>
+                      <p class="title">
+                        {props.t("gameMode")[modeKind].subtitle}
+                      </p>
+                      {/* </div> */}
+                    </label>
+                  </li>
+                )}
+              </For>
+            </ul>
+            <div class="options-wrapper">
+              <div class="options">
+                <Switch>
+                  <Match when={gameOptions.mode === GameModeKind.random}>
+                    <RandomParamsMedium
+                      t={props.t}
+                      gameOptions={gameOptions}
+                      setGameOptions={setGameOptions}
+                    >
+                      <CustomInput
+                        value={customRef.ref ? customRef?.ref.value : ""}
+                        customInput={customRef}
+                      />
+                    </RandomParamsMedium>
+                  </Match>
+                  <Match when={gameOptions.mode === GameModeKind.timer}>
+                    <TimerParamsMedium
+                      t={props.t}
+                      gameOptions={gameOptions}
+                      setGameOptions={setGameOptions}
+                    >
+                      <CustomInput
+                        value={customRef.ref ? customRef?.ref.value : ""}
+                        customInput={customRef}
+                      />
+                    </TimerParamsMedium>
+                  </Match>
+                </Switch>
+              </div>
+              <div class="actions">
+                <button class="primary">{props.t("letsGo")}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="options-recap">
+        <GameOptionsRecap gameOptions={props.gameOptions} t={props.t} />
       </div>
     </div>
   );

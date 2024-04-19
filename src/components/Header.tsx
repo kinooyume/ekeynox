@@ -5,10 +5,7 @@ import HeaderMode from "./HeaderMode.tsx";
 import { Show, type JSXElement } from "solid-js";
 
 import Logo from "./svgs/logo.tsx";
-import type {
-  ContentGeneration,
-  GameOptions,
-} from "./gameMode/GameOptions.ts";
+import type { ContentGeneration, GameOptions } from "./gameMode/GameOptions.ts";
 import type { SetStoreFunction } from "solid-js/store";
 
 type HeaderProps = {
@@ -30,6 +27,7 @@ const Header = (props: HeaderProps) => {
       right: 0;
       left: 0;
       z-index: 100;
+      height: 104px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -67,3 +65,6 @@ const Header = (props: HeaderProps) => {
 };
 
 export default Header;
+
+// cool magnet menu selection, + custom cursor
+// https://codepen.io/dev_loop/pen/KKdEgdz
