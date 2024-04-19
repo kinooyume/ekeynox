@@ -103,10 +103,9 @@ const HeaderMode = (props: HeaderModeProps) => {
       padding-top: 20px;
       width: 800px;
       max-width: 1200px;
-      transition: max-width 0.2s ease-in-out;
+      transition: all 0.3s ease-in-out;
 
       border: 1px solid var(--background-color);
-      transition: all 0.2s ease-in-out;
       box-shadow:
         0.6px 1.8px 2.2px rgba(0, 0, 0, 0.02),
         1.5px 4.3px 5.3px rgba(0, 0, 0, 0.028),
@@ -170,6 +169,7 @@ const HeaderMode = (props: HeaderModeProps) => {
       font-size: 14px;
       font-weight: 400;
       margin: 0;
+      margin-left: 16px;
       color: var(--text-color);
     }
 
@@ -219,6 +219,8 @@ const HeaderMode = (props: HeaderModeProps) => {
       margin-bottom: 12px;
     }
 
+    .menu-title:hover:after {
+    }
     .menu-title:before {
       position: absolute;
       color: var(--text-color);
@@ -235,7 +237,7 @@ const HeaderMode = (props: HeaderModeProps) => {
       color: var(--text-secondary-color);
       top: 150px;
       content: attr(data-active);
-      transition: all 0.2s ease;
+      transition: all 0.3s ease;
     }
 
     .dropdown-wrapper.open .menu-title:before,
@@ -250,35 +252,34 @@ const HeaderMode = (props: HeaderModeProps) => {
     }
 
     .bullet-wrapper {
-      position: relative;
+      position: absolute;
       overflow: hidden;
-      width: 16px;
-      height: 16px;
+      width: 14px;
+      height: 14px;
     }
-    .bullet-wrapper:after {
+
+    .bullet-wrapper::after {
       content: "";
       display: flex;
       justify-self: center;
       border-radius: 50%;
-    }
-
-    .bullet-wrapper::after {
       position: relative;
       background-color: var(--text-color);
       width: calc(100% / 2);
       height: calc(100% / 2);
-      top: var(--y, 120%);
+      top: var(--y, 100%);
 
-      transition: top 0.5s cubic-bezier(0.48, 1.97, 0.5, 0.63);
+      transition: top 0.3s cubic-bezier(0.48, 1.97, 0.5, 0.63);
     }
 
     .selected .bullet-wrapper:after {
-      --y: 20%;
+      --y: 18%;
+      opacity: 1;
       animation: stretch-animate 0.3s ease-out 0.17s;
     }
 
     .selected + li .bullet-wrapper:after {
-      --y: -120%;
+      --y: -100%;
     }
     .menu-game {
       display: flex;
