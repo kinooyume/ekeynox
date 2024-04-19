@@ -3,8 +3,8 @@ import { Match, Switch, createEffect } from "solid-js";
 import { createStore } from "solid-js/store";
 
 import RandomParams from "./RandomParams";
-import { type GameOptions, type ContentGeneration } from "./GameOptions";
 import TimerParams from "./TimerParams";
+import { type GameOptions, type ContentGeneration } from "./GameOptions";
 import Bunny from "../svgs/bunny";
 import Monkey from "../svgs/monkey";
 import CustomInput, { type CustomInputRef } from "../ui/CustomInput";

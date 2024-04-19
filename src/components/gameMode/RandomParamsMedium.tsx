@@ -15,28 +15,32 @@ import Text from "../svgs/text";
 import Customizer from "../svgs/customizer";
 import type { GameParams } from "./GameParams";
 
-const RandomParams = (props: GameParams) => {
+const RandomParamsMedium = (props: GameParams) => {
   css`
-    .random-params {
+    .time-params {
       display: flex;
       flex-direction: column;
-      gap: 1rem;
       align-items: flex-start;
     }
     h3 {
       margin: 0;
+      font-size: 14px;
       font-weight: 400;
       color: var(--text-secondary-color);
-      font-size: 16px;
-      cursor: default;
       text-transform: uppercase;
+      cursor: default;
     }
     .option {
       display: flex;
+      border-radius: 12px;
       justify-content: space-between;
       align-items: center;
       width: 100%;
-      transition: all 0.15s ease-in-out;
+      padding: 8px;
+      transition: all 0.2s ease-in-out;
+    }
+    .option:hover {
+      background-color: var(--background-color);
     }
   `;
 
@@ -148,4 +152,4 @@ const RandomParams = (props: GameParams) => {
   );
 };
 
-export default RandomParams;
+export default RandomParamsMedium;
