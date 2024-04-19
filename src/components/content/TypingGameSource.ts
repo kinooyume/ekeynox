@@ -50,12 +50,13 @@ const getSource = ({
 
 type NextContent = () => (prev: ContentData) => ContentHandler;
 
+export type GetContent = () => ContentHandler;
+
 export type ContentHandler = {
   data: ContentData;
+  new: GetContent;
   next: NextContent;
 };
-
-export type GetContent = () => ContentHandler;
 
 const mergeSource = (
   prev: ContentData,
@@ -82,9 +83,10 @@ const mergeSource = (
 
 const next = (nextContent: GetContent, following: boolean) => () => {
   const next = nextContent();
-  return (prev: ContentData) => {
+  return (prev: ContentData) : ContentHandler  => {
     return {
       data: mergeSource(prev, next.data, following),
+      new: next.new,
       next: next.next,
     };
   };
@@ -95,6 +97,7 @@ const makeSourceNested = (props: GetSourceProps): GetContent => {
     (props: NestedSourceProps): GetContent =>
     () => ({
       data: props.src(),
+      new: nestedSource(props),
       next: next(nestedSource(props), props.following),
     });
   return nestedSource(getSource(props));
@@ -114,6 +117,7 @@ const makeRedoContent = (
 ): GetContent => {
   return () => ({
     data: content,
+    new: makeRedoContent(content, nextGetContent),
     next: nextGetContent().next,
   });
 };
