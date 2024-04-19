@@ -42,6 +42,7 @@ const HeaderMode = (props: HeaderModeProps) => {
       transition: all 0.2s ease-in-out;
       z-index: 206;
     }
+
     .header-mode {
       height: 48px;
       display: flex;
@@ -56,12 +57,14 @@ const HeaderMode = (props: HeaderModeProps) => {
     .dropdown-wrapper {
       position: relative;
       margin-left: 12px;
+      width: 200px;
       z-index: 205;
       height: 60px;
 
       opacity: 0.8;
       transition: all 0.2s ease-in-out;
     }
+
     .dropdown-wrapper:hover {
       opacity: 1;
       filter: none;
@@ -79,12 +82,14 @@ const HeaderMode = (props: HeaderModeProps) => {
       width: 200px;
       max-width: 200px;
       overflow: hidden;
+      position: absolute;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
       justify-content: space-between;
       border: 1px solid transparent;
       background-color: var(--color-surface-100);
+      transition: all 0.2s ease-in-out;
     }
 
     .dropdown:hover {
@@ -207,7 +212,6 @@ const HeaderMode = (props: HeaderModeProps) => {
       transition: all 0.2s ease-in-out;
     }
     .dropdown-wrapper.open .menu-title {
-      height: 80px;
       border: 0;
       font-weight: 300;
       font-size: 20px;
@@ -281,7 +285,7 @@ const HeaderMode = (props: HeaderModeProps) => {
     }
     .options-wrapper {
       display: flex;
-flex-direction: column;
+      flex-direction: column;
       justify-content: space-between;
       border-left: 1px solid var(--border-color);
       padding: 0 26px 26px;

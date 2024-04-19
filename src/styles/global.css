@@ -17,6 +17,7 @@
   --ui-primary-color: #654f3e;
   --ui-secondary-color: grey;
 
+  --border-color: #dfdfdb;
   --shadow-color: #a28840;
   --button-text-color: #2d2e3b;
 
@@ -94,6 +95,8 @@
   --color-surface-600: #8f8f97;
 
   --color-surface-alt: #1f2233;
+
+  --border-color: #1f2233;
 
   --color-surface-mixed-100: #654f3e;
   --color-surface-mixed-200: #756151;
@@ -206,7 +209,7 @@ textarea {
   width: 100%;
   padding: 12px;
   border-radius: 10px;
-  border: 0;
+  border: 2px solid var(--background-color);
 
   font-size: 13px;
   transition: all 0.06s ease;
@@ -217,7 +220,7 @@ textarea {
 
 textarea:focus {
   outline: none !important;
-  border: 2px solid var(--focus-bg-color);
+  border: 2px solid var(--background-color);
 }
 
 h1,
@@ -227,4 +230,22 @@ a,
 p,
 span {
   color: var(--text-color);
+}
+
+@keyframes stretch-animate {
+  0% {
+    transform: scale(1, 1);
+  }
+
+  28% {
+    transform: scale(1.15, 0.85);
+  }
+
+  50% {
+    transform: scale(0.9, 1.1);
+  }
+
+  100% {
+    transform: scale(1, 1);
+  }
 }
