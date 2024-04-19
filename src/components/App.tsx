@@ -66,6 +66,7 @@ export type Config = {
   dark: boolean;
   locale: Locale;
   kb: Kb;
+  showKb: boolean;
 };
 
 export type ConfigLists = {
@@ -77,6 +78,22 @@ const configLists: ConfigLists = {
   locale: ["en", "fr"],
   kb: ["qwerty", "azerty"],
 };
+
+export enum GamePendingKind {
+  new,
+  redo,
+}
+
+export type GamePending =
+  | {
+      kind: GamePendingKind.new;
+      content: GameModeContent;
+    }
+  | {
+      kind: GamePendingKind.redo;
+      content: GameModeContent;
+      prev: MetricsResume;
+    };
 
 export enum GameStatusKind {
   menu,
@@ -99,6 +116,7 @@ const App = () => {
       dark: window.matchMedia("(prefers-color-scheme: dark)").matches,
       locale: "en",
       kb: "qwerty",
+      showKb: true,
     }),
     { name: "config" },
   );
@@ -217,6 +235,7 @@ const App = () => {
                     content={(gameStatus() as any).content}
                     gameOptions={Object.assign({}, gameOptions)}
                     prevMetrics={(gameStatus() as any).metrics}
+                    showKb={config.showKb}
                     kbLayout={kbLayout()}
                     onExit={goHome}
                     onOver={over}
