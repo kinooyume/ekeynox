@@ -8,7 +8,7 @@ import {
   Match,
 } from "solid-js";
 import type { Translator } from "../App";
-import type { ContentGeneration, GameOptions } from "../gameMode/GameOptions";
+import { deepCopy, type ContentGeneration, type GameOptions } from "../gameMode/GameOptions";
 import { css } from "solid-styled";
 import { createStore, type SetStoreFunction } from "solid-js/store";
 import type { CustomInputRef } from "../ui/CustomInput";
@@ -319,7 +319,7 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
   /* doublon, manage temporal gameOptions */
 
   const [gameOptions, setGameOptions] = createStore<GameOptions>(
-    props.gameOptions,
+    deepCopy(props.gameOptions),
   );
 
   createEffect(

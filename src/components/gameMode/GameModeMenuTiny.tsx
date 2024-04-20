@@ -5,7 +5,7 @@ import { createStore } from "solid-js/store";
 import RandomParamsCompact from "./RandomParamsCompact";
 import TimerParamsCompact from "./TimerParamsCompact";
 import CustomInput, { type CustomInputRef } from "../ui/CustomInput";
-import { type ContentGeneration, type GameOptions } from "./GameOptions";
+import { deepCopy, type ContentGeneration, type GameOptions } from "./GameOptions";
 import GameModeDropdown from "./GameModeDropdown";
 import {
   makeRedoContent,
@@ -28,7 +28,7 @@ type GameModeSelectionProps = {
 
 const GameModeSelectionTiny = (props: GameModeSelectionProps) => {
   const [gameOptions, setGameOptions] = createStore<GameOptions>(
-    props.gameOptions,
+    deepCopy(props.gameOptions),
   );
 
   const restart = () => {
