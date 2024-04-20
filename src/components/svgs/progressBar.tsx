@@ -46,3 +46,6 @@ export default ProgressBar;
 //
 // interesting guy
 // http://lbebber.github.io/public/
+//
+// potential wave stuff
+// https://codepen.io/tirsolecointere/pen/BajZbJq

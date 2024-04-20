@@ -41,6 +41,7 @@ import type { Metrics, MetricsResume } from "./metrics/Metrics";
 import TypingMetricsResume from "./resume/TypingMetricsResume";
 import KeyboardLayout, { type HigherKeyboard } from "./keyboard/KeyboardLayout";
 import GameModeMenuTiny from "./gameMode/GameModeMenuTiny";
+import TypingHeaderNav from "./typing/TypingHeaderNav";
 
 const dictionaries = {
   en: en_dict,
@@ -192,16 +193,23 @@ const App = () => {
       <Header
         t={i18nContext.t}
         toHome={() => setGameStatus({ kind: GameStatusKind.menu })}
-        gameStatus={gameStatus()}
-        gameOptions={gameOptions}
-        setGameOptions={setGameOptions}
-        setContentGeneration={setContentGeneration}
+        actions={
+          <HeaderAction
+            config={config}
+            setConfig={setConfig}
+            configLists={configLists}
+          />
+        }
       >
-        <HeaderAction
-          config={config}
-          setConfig={setConfig}
-          configLists={configLists}
-        />
+        <Show when={gameStatus().kind === GameStatusKind.pending}>
+          <TypingHeaderNav
+            t={i18nContext.t}
+            gameOptions={gameOptions}
+            content={(gameStatus() as any).content}
+            setGameOptions={setGameOptions}
+            setContentGeneration={setContentGeneration}
+          />
+        </Show>
       </Header>
       <main>
         <Transition

@@ -49,6 +49,8 @@ import {
 import { GameModeKind } from "../gameMode/GameMode.ts";
 import TimerInput from "../seqInput/TimerInput.ts";
 import makeCursor, { type Cursor } from "../cursor/Cursor.ts";
+import { Portal } from "solid-js/web";
+import HeaderNavActions from "./TypingHeaderActions.tsx";
 
 type TypingGameProps = {
   t: Translator;
@@ -361,9 +363,9 @@ const TypingGame = (props: TypingGameProps) => {
         isGenerated={
           props.gameOptions.contentType.kind === ContentTypeKind.generation
         }
-        isPaused={status().kind !== TypingStatusKind.pending}
         stat={stat()}
         keyboard={(k) => (navHandler = k)}
+        isPaused={status().kind !== TypingStatusKind.pending}
         onPause={() => pause()}
         onReset={reset}
         progress={progress()}
@@ -374,6 +376,19 @@ const TypingGame = (props: TypingGameProps) => {
           <p>{Math.ceil((timeCounter() || 0) / 10)}</p>
         </Show>
       </TypingNav>
+      <Portal mount={document.getElementById("header-nav-actions-portal")!}>
+        <HeaderNavActions
+          t={props.t}
+          isPaused={status().kind !== TypingStatusKind.pending}
+          isGenerated={
+            props.gameOptions.contentType.kind === ContentTypeKind.generation
+          }
+          onPause={() => pause()}
+          onReset={reset}
+          onShuffle={onShuffle}
+          onExit={props.onExit}
+        />
+      </Portal>
     </div>
   );
 };

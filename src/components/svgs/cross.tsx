@@ -1,22 +1,27 @@
-const Cross = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" id="cross" width="20" height="20">
-    <path
-      fill="none"
-      stroke="var(--text-secondary-color)"
-      stroke-dasharray="7"
-      stroke-dashoffset="4"
-      stroke-linecap="round"
-      stroke-width="2"
-      d="M12 12L19 19M12 12L5 5M12 12L5 19M12 12L19 5"
+import { css } from "solid-styled";
+
+const Cross = () => {
+  css`
+svg {
+margin-bottom: 4px;
+margin-right: 4px;
+}
+`;
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      id="cross"
+      width="1.3em"
+      height="1.3em"
     >
-      <animate
-        fill="freeze"
-        attributeName="stroke-dashoffset"
-        dur="0.4s"
-        values="4;0"
-      />
-    </path>
-  </svg>
-);
+      <path
+        fill="var(--text-secondary-color)"
+        stroke-linecap="round"
+        stroke-width="2"
+        d="m13.41 12l4.3-4.29a1 1 0 1 0-1.42-1.42L12 10.59l-4.29-4.3a1 1 0 0 0-1.42 1.42l4.3 4.29l-4.3 4.29a1 1 0 0 0 0 1.42a1 1 0 0 0 1.42 0l4.29-4.3l4.29 4.3a1 1 0 0 0 1.42 0a1 1 0 0 0 0-1.42Z"
+      ></path>
+    </svg>
+  );
+};
 
 export default Cross;

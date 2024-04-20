@@ -1,6 +1,4 @@
 import { css } from "solid-styled";
-import Play from "../svgs/play.tsx";
-import Reset from "../svgs/reset.tsx";
 import type { StatProjection } from "../metrics/KeypressMetrics.ts";
 import {
   Show,
@@ -15,11 +13,10 @@ import {
 import Nav from "../svgs/nav-abs.tsx";
 import Gauge from "../svgs/gauge.tsx";
 import Accuracy from "../svgs/accuracy.tsx";
-import Cross from "../svgs/cross.tsx";
-import Shuffle from "../svgs/shuffle.tsx";
 import type { Translator } from "../App.tsx";
 import anime from "animejs";
 import ProgressBar from "../svgs/progressBar.tsx";
+import BunnyHead from "../svgs/bunnyHead.tsx";
 
 /* Doublon */
 export type KeyboardHandler = {
@@ -138,7 +135,6 @@ const TypingNav = (props: TypingNavProps) => {
   });
 
   css`
-    .remote,
     .stats {
       display: flex;
       align-items: center;
@@ -154,7 +150,7 @@ const TypingNav = (props: TypingNavProps) => {
     .pourcent {
       padding-top: 6px;
       text-align: right;
-      font-size: 18px;
+      font-size: 19px;
       font-weight: 400;
       color: var(--text-secondary-color);
       min-width: 23px;
@@ -200,8 +196,8 @@ const TypingNav = (props: TypingNavProps) => {
     }
     .content {
       display: flex;
-      max-width: 900px;
-      width: calc(100vw - 232px);
+      max-width: 830px;
+      width: calc(100vw - 262px);
       align-items: center;
       justify-content: space-between;
       gap: 16px;
@@ -210,17 +206,15 @@ const TypingNav = (props: TypingNavProps) => {
     .clickable {
       cursor: pointer;
     }
-    .cross {
-      padding-top: 2px;
-    }
 
     span {
       color: var(--text-secondary-color);
     }
 
     .help {
+      display: flex;
+      gap: 16px;
       font-size: 17px;
-      font-weight: 200;
     }
     .help-content {
       display: flex;
@@ -235,6 +229,18 @@ const TypingNav = (props: TypingNavProps) => {
       padding: 6px 6px;
       font-weight: 600;
     }
+
+    .type-to-play {
+      animation: blink-slow 2s infinite;
+    }
+    .character {
+      display: none;
+      width: 80px;
+      border-radius: 10px;
+      background-color: white;
+      padding: 20px 30px;
+      padding-bottom: 40px;
+    }
   `;
 
   // pitetre interessant: https://codepen.io/juliangarnier/pen/XvjWvx
@@ -247,26 +253,13 @@ const TypingNav = (props: TypingNavProps) => {
           <Nav width={navWidth()} borderWidth={navBorder()} />
         </div>
         <div class="content">
-          <div class="remote">
-            <div class="" onClick={props.onPause}>
-              <Play paused={props.isPaused} />
-            </div>
-            <div class="clickable" onclick={props.onReset}>
-              <Reset />
-            </div>
-            <Show when={props.isGenerated}>
-              <div class="clickable" onClick={props.onShuffle}>
-                <Shuffle />
-              </div>
-            </Show>
-            <Show when={props.children}>
-              <div class="child">{props.children}</div>
-            </Show>
-          </div>
           <div class="help">
+            <div class="character">
+              <BunnyHead />
+            </div>
             <Switch>
               <Match when={props.isPaused}>
-                <div class="help-content">
+                <div class="help-content type-to-play">
                   <span>{props.t("typingGame.typeToPlay")}</span>
                 </div>
               </Match>
@@ -283,6 +276,9 @@ const TypingNav = (props: TypingNavProps) => {
             </Switch>
           </div>
           <div class="stats">
+            <Show when={props.children}>
+              <div class="child">{props.children}</div>
+            </Show>
             <div class="stat wpm">
               <span ref={wpmElem!}>0</span>
               <Gauge speed={props.stat.speed.byWord[0]} />
@@ -292,9 +288,6 @@ const TypingNav = (props: TypingNavProps) => {
                 <span ref={accuracyElem!}>0</span>%
               </p>
               <Accuracy correct={props.stat.accuracies[1] === 100} />
-            </div>
-            <div class="cross clickable" onClick={props.onExit}>
-              <Cross />
             </div>
           </div>
         </div>

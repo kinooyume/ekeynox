@@ -7,19 +7,19 @@ import {
   Switch,
   Match,
 } from "solid-js";
-import type { Translator } from "./App";
-import type { ContentGeneration, GameOptions } from "./gameMode/GameOptions";
+import type { Translator } from "../App";
+import type { ContentGeneration, GameOptions } from "../gameMode/GameOptions";
 import { css } from "solid-styled";
 import { createStore, type SetStoreFunction } from "solid-js/store";
-import type { CustomInputRef } from "./ui/CustomInput";
-import GameOptionsRecap from "./gameMode/GameOptionsRecap";
-import type { GameModeContent } from "./content/TypingGameSource";
-import { GameModeKind, gameModesArray } from "./gameMode/GameMode";
-import RandomParamsMedium from "./gameMode/RandomParamsMedium";
-import TimerParamsMedium from "./gameMode/TimerParamsMedium";
-import CustomInput from "./ui/CustomInput";
+import type { CustomInputRef } from "../ui/CustomInput";
+import GameOptionsRecap from "../gameMode/GameOptionsRecap";
+import type { GameModeContent } from "../content/TypingGameSource";
+import { GameModeKind, gameModesArray } from "../gameMode/GameMode";
+import RandomParamsMedium from "../gameMode/RandomParamsMedium";
+import TimerParamsMedium from "../gameMode/TimerParamsMedium";
+import CustomInput from "../ui/CustomInput";
 
-type HeaderModeProps = {
+type HeaderNavLeftProps = {
   t: Translator;
   gameOptions: GameOptions;
   setGameOptions: SetStoreFunction<GameOptions>;
@@ -27,7 +27,9 @@ type HeaderModeProps = {
   content: GameModeContent;
 };
 
-const HeaderMode = (props: HeaderModeProps) => {
+// Dropdown like animation with anime.js
+// https://codepen.io/NielsVoogt/pen/dyGpNOx
+const HeaderNavLeft = (props: HeaderNavLeftProps) => {
   css`
     .cursor {
       opacity: 0;
@@ -46,8 +48,7 @@ const HeaderMode = (props: HeaderModeProps) => {
     .header-mode {
       height: 48px;
       display: flex;
-      gap: 26px;
-      border-left: 2px solid var(--border-color);
+      gap: 18px;
     }
 
     .options-recap {
@@ -62,7 +63,6 @@ const HeaderMode = (props: HeaderModeProps) => {
       height: 60px;
 
       opacity: 0.8;
-      transition: all 0.2s ease-in-out;
     }
 
     .dropdown-wrapper:hover {
@@ -78,9 +78,8 @@ const HeaderMode = (props: HeaderModeProps) => {
     }
 
     .dropdown {
-      max-height: 50px;
+      height: 50px;
       width: 200px;
-      max-width: 200px;
       overflow: hidden;
       position: absolute;
       display: flex;
@@ -89,7 +88,9 @@ const HeaderMode = (props: HeaderModeProps) => {
       justify-content: space-between;
       border: 1px solid transparent;
       background-color: var(--color-surface-100);
-      transition: all 0.2s ease-in-out;
+      transition-duration: 0.5s;
+      transition-timing-function: cubic-bezier(0.48, 1.08, 0.5, 0.63);
+      transition-property: opacity, transform;
     }
 
     .dropdown:hover {
@@ -98,14 +99,15 @@ const HeaderMode = (props: HeaderModeProps) => {
     }
 
     .dropdown-wrapper.open .dropdown {
-      max-height: 600px;
+      height: 400px;
       padding: 40px;
       padding-top: 20px;
       width: 800px;
       max-width: 1200px;
-      transition: all 0.3s ease-in-out;
+      top: -20px;
 
       border: 1px solid var(--background-color);
+      transform: scale(1.01);
       box-shadow:
         0.6px 1.8px 2.2px rgba(0, 0, 0, 0.02),
         1.5px 4.3px 5.3px rgba(0, 0, 0, 0.028),
@@ -199,6 +201,7 @@ const HeaderMode = (props: HeaderModeProps) => {
     }
     .menu-title {
       display: flex;
+      font-size: 18px;
       overflow: hidden;
       position: relative;
       width: 100%;
@@ -209,7 +212,6 @@ const HeaderMode = (props: HeaderModeProps) => {
       align-items: center;
       cursor: pointer;
       content: attr(data-passive);
-      transition: all 0.2s ease-in-out;
     }
     .dropdown-wrapper.open .menu-title {
       border: 0;
@@ -219,8 +221,6 @@ const HeaderMode = (props: HeaderModeProps) => {
       margin-bottom: 12px;
     }
 
-    .menu-title:hover:after {
-    }
     .menu-title:before {
       position: absolute;
       color: var(--text-color);
@@ -440,4 +440,4 @@ const HeaderMode = (props: HeaderModeProps) => {
   );
 };
 
-export default HeaderMode;
+export default HeaderNavLeft;
