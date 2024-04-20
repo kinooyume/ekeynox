@@ -4,7 +4,11 @@ import { createStore } from "solid-js/store";
 
 import RandomParams from "./RandomParams";
 import TimerParams from "./TimerParams";
-import { type GameOptions, type ContentGeneration } from "./GameOptions";
+import {
+  type GameOptions,
+  type ContentGeneration,
+  deepCopy,
+} from "./GameOptions";
 import Bunny from "../svgs/bunny";
 import Monkey from "../svgs/monkey";
 import CustomInput, { type CustomInputRef } from "../ui/CustomInput";
@@ -44,7 +48,7 @@ const customRef: CustomInputRef = {
 
 const GameModeKindMenu = (props: GameModeKindMenuProps) => {
   const [gameOptions, setGameOptions] = createStore<GameOptions>(
-    Object.assign({}, props.gameOptions),
+    deepCopy(props.gameOptions),
   );
 
   createEffect(() => {

@@ -75,4 +75,6 @@ const getDefaultGameOptions = (): GameOptions => ({
   timer: { type: NumberSelectionType.selected, value: 10 },
 });
 
-export { getDefaultGameOptions };
+const deepCopy = <T>(obj: T): T => JSON.parse(JSON.stringify(obj));
+
+export { getDefaultGameOptions, deepCopy };
