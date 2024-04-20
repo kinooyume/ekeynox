@@ -34,13 +34,13 @@ const GameOptionsRecap = (props: GameOptionsRecapProps) => {
       border-radius: 4px;
       display: flex;
       gap: 5px;
-      padding: 4px 8px;
-      height: 16px;
+      padding: 5px 10px;
+      height: 18px;
     }
 
     span {
-      font-size: 12px;
-      color: black;
+      font-size: 14px;
+      color: var(--text-secondary-color);
     }
   `;
   return (
