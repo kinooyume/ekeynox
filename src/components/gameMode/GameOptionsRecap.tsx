@@ -2,7 +2,7 @@ import { css } from "solid-styled";
 import { Switch, type JSXElement, Show, Match } from "solid-js";
 import type { Translator } from "../App";
 import {
-  ContentTypeKind,
+  CategoryKind,
   WordsGenerationCategory,
   type GameOptions,
 } from "./GameOptions";
@@ -19,7 +19,6 @@ const GameOptionsRecap = (props: GameOptionsRecapProps) => {
   css`
     .options-recap {
       display: flex;
-      justify-content: center;
       align-items: center;
 
       gap: 10px;
@@ -45,9 +44,9 @@ const GameOptionsRecap = (props: GameOptionsRecapProps) => {
   `;
   return (
     <div class="options-recap">
-      <Show when={props.gameOptions.mode === GameModeKind.timer}>
+      <Show when={props.gameOptions.modeSelected === GameModeKind.timer}>
         <div class="tag">
-          <span>{props.gameOptions.timer.value}"</span>
+          <span>{props.gameOptions.timer}"</span>
         </div>
       </Show>
       <Switch
@@ -59,13 +58,13 @@ const GameOptionsRecap = (props: GameOptionsRecapProps) => {
       >
         <Match
           when={
-            props.gameOptions.contentType.kind === ContentTypeKind.generation
+            props.gameOptions.categorySelected.kind === CategoryKind.generation
           }
         >
           <Switch>
             <Match
               when={
-                (props.gameOptions.contentType as any).category ===
+                (props.gameOptions.categorySelected as any).category ===
                 WordsGenerationCategory.quotes
               }
             >
@@ -75,13 +74,13 @@ const GameOptionsRecap = (props: GameOptionsRecapProps) => {
             </Match>
             <Match
               when={
-                (props.gameOptions.contentType as any).category ===
+                (props.gameOptions.categorySelected as any).category ===
                 WordsGenerationCategory.words1k
               }
             >
               <div class="tag">
                 <span>
-                  {`${props.gameOptions.random.value} ${props.t("words")}`}
+                  {`${props.gameOptions.random} ${props.t("words")}`}
                 </span>
               </div>
             </Match>

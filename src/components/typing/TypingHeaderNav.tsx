@@ -7,6 +7,7 @@ import { css } from "solid-styled";
 
 type TypingHeaderNavProps = {
   t: Translator;
+  start: (opts: GameOptions, customSource: string) => void;
   gameOptions: GameOptions;
   setGameOptions: SetStoreFunction<GameOptions>;
   setContentGeneration: (type: ContentGeneration) => void;

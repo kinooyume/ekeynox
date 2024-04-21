@@ -1,5 +1,5 @@
 import { css } from "solid-styled";
-import { Match, Switch, createEffect } from "solid-js";
+import { Match, Switch, createComputed, createEffect } from "solid-js";
 import { createStore } from "solid-js/store";
 
 import RandomParams from "./RandomParams";
@@ -51,11 +51,12 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
     deepCopy(props.gameOptions),
   );
 
-  createEffect(() => {
+  // was createEffect
+  createComputed(() => {
     props.setContentGeneration({
       language: gameOptions.generation.language,
       category: gameOptions.generation.category,
-      infinite: gameOptions.generation.infinite,
+      // infinite: gameOptions.infinite,
     });
   });
 
@@ -211,8 +212,8 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
           <div class="selection">
             <GameModeSelection
               t={props.t}
-              selected={gameOptions.mode}
-              setSelected={(mode: GameModeKind) => setGameOptions("mode", mode)}
+              selected={gameOptions.modeSelected}
+              setSelected={(mode: GameModeKind) => setGameOptions("modeSelected", mode)}
             />
           </div>
         </div>
@@ -220,10 +221,10 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
           <div class="illustration">
             <div class="illustration-container">
               <Switch>
-                <Match when={gameOptions.mode === GameModeKind.random}>
+                <Match when={gameOptions.modeSelected === GameModeKind.random}>
                   <Monkey />
                 </Match>
-                <Match when={gameOptions.mode === GameModeKind.timer}>
+                <Match when={gameOptions.modeSelected === GameModeKind.timer}>
                   <Bunny />
                 </Match>
               </Switch>
@@ -231,7 +232,7 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
           </div>
           <div class="game-description">
             <Switch>
-              <Match when={gameOptions.mode === GameModeKind.random}>
+              <Match when={gameOptions.modeSelected === GameModeKind.random}>
                 <div class="text">
                   <h2 class="title-mode">{props.t("gameMode.random.title")}</h2>
                   <h3>{props.t("gameMode.random.subtitle")}</h3>
@@ -254,7 +255,7 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
                   </RandomParams>
                 </div>
               </Match>
-              <Match when={gameOptions.mode === GameModeKind.timer}>
+              <Match when={gameOptions.modeSelected === GameModeKind.timer}>
                 <div class="text">
                   <h2 class="title-mode">{props.t("gameMode.timer.title")}</h2>
                   <h3>{props.t("gameMode.timer.subtitle")}</h3>

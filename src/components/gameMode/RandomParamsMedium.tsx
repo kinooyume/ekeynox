@@ -3,10 +3,9 @@ import { css } from "solid-styled";
 import Lang from "../svgs/lang";
 import Word from "../svgs/word";
 import {
-  NumberSelectionType,
-  ContentTypeKind,
+  CategoryKind,
   WordsGenerationCategory,
-  type ContentType,
+  type Category,
   type Languages,
 } from "./GameOptions";
 import RadioGroup from "../ui/RadioGroup";
@@ -54,46 +53,46 @@ const RandomParamsMedium = (props: GameParams) => {
             {
               label: props.t("words"),
               value: {
-                kind: ContentTypeKind.generation,
+                kind: CategoryKind.generation,
                 category: WordsGenerationCategory.words1k,
-              } as ContentType,
+              } as Category,
               icon: <Text />,
             },
             {
               label: props.t("quotes"),
               value: {
-                kind: ContentTypeKind.generation,
+                kind: CategoryKind.generation,
                 category: WordsGenerationCategory.quotes,
-              } as ContentType,
+              } as Category,
               icon: <Quote />,
             },
             {
               label: props.t("custom"),
-              value: { kind: ContentTypeKind.custom } as ContentType,
+              value: { kind: CategoryKind.custom } as Category,
               icon: <Customizer />,
             },
           ]}
           compare={(v) => {
-            switch (props.gameOptions.contentType.kind) {
-              case ContentTypeKind.custom:
-                return v.kind === ContentTypeKind.custom;
-              case ContentTypeKind.generation:
+            switch (props.gameOptions.categorySelected.kind) {
+              case CategoryKind.custom:
+                return v.kind === CategoryKind.custom;
+              case CategoryKind.generation:
                 return (
-                  v.kind === ContentTypeKind.generation &&
-                  v.category === props.gameOptions.contentType.category
+                  v.kind === CategoryKind.generation &&
+                  v.category === props.gameOptions.categorySelected.category
                 );
             }
           }}
           setChecked={(value) => {
-            if (value.kind === ContentTypeKind.generation) {
+            if (value.kind === CategoryKind.generation) {
               props.setGameOptions("generation", "category", value.category);
             }
-            props.setGameOptions("contentType", value);
+            props.setGameOptions("categorySelected", value);
           }}
         />
       </div>
       <Show
-        when={props.gameOptions.contentType.kind !== ContentTypeKind.custom}
+        when={props.gameOptions.categorySelected.kind !== CategoryKind.custom}
       >
         <div class="option">
           <h3> {props.t("language")} </h3>
@@ -114,14 +113,14 @@ const RandomParamsMedium = (props: GameParams) => {
       </Show>
       <Switch>
         <Match
-          when={props.gameOptions.contentType.kind === ContentTypeKind.custom}
+          when={props.gameOptions.categorySelected.kind === CategoryKind.custom}
         >
           {props.children}
         </Match>
         <Match
           when={
-            props.gameOptions.contentType.kind === ContentTypeKind.generation &&
-            props.gameOptions.contentType.category ===
+            props.gameOptions.categorySelected.kind === CategoryKind.generation &&
+            props.gameOptions.categorySelected.category ===
               WordsGenerationCategory.words1k
           }
         >
@@ -135,12 +134,9 @@ const RandomParamsMedium = (props: GameParams) => {
                 { label: "50", value: 50 },
                 { label: "100", value: 100 },
               ]}
-              compare={(v) => v === props.gameOptions.random.value}
+              compare={(v) => v === props.gameOptions.random}
               setChecked={(v) =>
-                props.setGameOptions("random", {
-                  type: NumberSelectionType.selected,
-                  value: v,
-                })
+                props.setGameOptions("random", v)
               }
             >
               <Word />

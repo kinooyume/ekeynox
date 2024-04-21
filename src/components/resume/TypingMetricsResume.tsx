@@ -14,6 +14,7 @@ import TypingKeyboardResume from "./TypingKeyboardResume";
 import WordMetricsResume from "./charts/WordsChart";
 import TabContainer from "../ui/TabContainer";
 import CharacterChart from "./charts/CharacterChart";
+import GameOptionsTitle from "../gameMode/GameOptionsTitle";
 
 type TypingMetricsProps = {
   t: Translator;
@@ -107,6 +108,7 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
     <div class="metrics full-bleed">
       <div class="content-wrapper">
         <div class="content">
+          <GameOptionsTitle t={props.t} gameOptions={props.metrics.gameOptions} />
           <div class="chart">
             <SpeedChart metrics={metricsResume.chart} />
           </div>

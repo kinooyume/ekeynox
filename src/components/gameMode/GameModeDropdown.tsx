@@ -155,15 +155,15 @@ const GameModeDropdown = (props: GameModeÐropdownProps) => {
           {([modeKind, mode]) => (
             <div
               class={`radio ${modeKind}`}
-              classList={{ selected: props.gameOptions.mode === modeKind }}
+              classList={{ selected: props.gameOptions.modeSelected === modeKind }}
             >
               <input
                 type="radio"
                 name="mode"
                 class="select"
                 id={modeKind}
-                checked={props.gameOptions.mode === modeKind}
-                onChange={() => props.setGameOptions("mode", modeKind)}
+                checked={props.gameOptions.modeSelected === modeKind}
+                onChange={() => props.setGameOptions("modeSelected", modeKind)}
               />
               <label for={modeKind} onClick={clickHandler}>
                 <div class="icon"> {mode.head()}</div>

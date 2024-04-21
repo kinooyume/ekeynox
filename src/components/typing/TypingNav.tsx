@@ -27,16 +27,12 @@ export type KeyboardHandler = {
 
 type TypingNavProps = {
   t: Translator;
-  isGenerated: boolean;
   isPaused: boolean;
   stat: StatProjection;
   children?: JSXElement;
   progress: number;
   keyboard?: (kbHandler: KeyboardHandler) => void;
   onPause: () => void;
-  onReset: () => void;
-  onShuffle: () => void;
-  onExit: () => void;
 };
 
 const TypingNav = (props: TypingNavProps) => {

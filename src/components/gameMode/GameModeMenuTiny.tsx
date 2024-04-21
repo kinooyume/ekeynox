@@ -1,4 +1,4 @@
-import { onCleanup, Switch, Match, createEffect } from "solid-js";
+import { onCleanup, Switch, Match, createEffect, createComputed } from "solid-js";
 import { css } from "solid-styled";
 import { type Translator } from "../App";
 import { createStore } from "solid-js/store";
@@ -44,11 +44,12 @@ const GameModeSelectionTiny = (props: GameModeSelectionProps) => {
     };
     props.redo(redoContent, props.metricsResume);
   };
-  createEffect(() => {
+  // was createEffect
+  createComputed(() => {
     props.setContentGeneration({
       language: gameOptions.generation.language,
       category: gameOptions.generation.category,
-      infinite: gameOptions.generation.infinite,
+      //infinite: gameOptions.generation.infinite,
     });
   });
   css`
@@ -91,7 +92,7 @@ const GameModeSelectionTiny = (props: GameModeSelectionProps) => {
       />
       <div class="info">
         <Switch>
-          <Match when={gameOptions.mode === GameModeKind.random}>
+          <Match when={gameOptions.modeSelected === GameModeKind.random}>
             <RandomParamsCompact
               t={props.t}
               gameOptions={gameOptions}
@@ -103,7 +104,7 @@ const GameModeSelectionTiny = (props: GameModeSelectionProps) => {
               />
             </RandomParamsCompact>
           </Match>
-          <Match when={gameOptions.mode === GameModeKind.timer}>
+          <Match when={gameOptions.modeSelected === GameModeKind.timer}>
             <TimerParamsCompact
               t={props.t}
               gameOptions={gameOptions}

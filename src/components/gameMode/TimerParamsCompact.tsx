@@ -1,10 +1,9 @@
 import { Match, Show, Switch } from "solid-js";
 import { css } from "solid-styled";
 import {
-  NumberSelectionType,
-  ContentTypeKind,
+  CategoryKind,
   WordsGenerationCategory,
-  type ContentType,
+  type Category,
   type Languages,
 } from "./GameOptions";
 import RadioGroup from "../ui/RadioGroup";
@@ -35,45 +34,45 @@ const TimerParamsCompact = (props: GameParams) => {
           {
             label: props.t("words"),
             value: {
-              kind: ContentTypeKind.generation,
+              kind: CategoryKind.generation,
               category: WordsGenerationCategory.words1k,
-            } as ContentType,
+            } as Category,
             icon: <Text />,
           },
           {
             label: props.t("quotes"),
             value: {
-              kind: ContentTypeKind.generation,
+              kind: CategoryKind.generation,
               category: WordsGenerationCategory.quotes,
-            } as ContentType,
+            } as Category,
             icon: <Quote />,
           },
           {
             label: props.t("custom"),
-            value: { kind: ContentTypeKind.custom } as ContentType,
+            value: { kind: CategoryKind.custom } as Category,
             icon: <Customizer />,
           },
         ]}
         compare={(v) => {
-          switch (props.gameOptions.contentType.kind) {
-            case ContentTypeKind.custom:
-              return v.kind === ContentTypeKind.custom;
-            case ContentTypeKind.generation:
+          switch (props.gameOptions.categorySelected.kind) {
+            case CategoryKind.custom:
+              return v.kind === CategoryKind.custom;
+            case CategoryKind.generation:
               return (
-                v.kind === ContentTypeKind.generation &&
-                v.category === props.gameOptions.contentType.category
+                v.kind === CategoryKind.generation &&
+                v.category === props.gameOptions.categorySelected.category
               );
           }
         }}
         setChecked={(value) => {
-          if (value.kind === ContentTypeKind.generation) {
+          if (value.kind === CategoryKind.generation) {
             props.setGameOptions("generation", "category", value.category);
           }
-          props.setGameOptions("contentType", value);
+          props.setGameOptions("categorySelected", value);
         }}
       />
       <Show
-        when={props.gameOptions.contentType.kind !== ContentTypeKind.custom}
+        when={props.gameOptions.categorySelected.kind !== CategoryKind.custom}
       >
         <RadioGroup
           name="languages-timer"
@@ -89,15 +88,15 @@ const TimerParamsCompact = (props: GameParams) => {
       </Show>
       <Switch>
         <Match
-          when={props.gameOptions.contentType.kind === ContentTypeKind.custom}
+          when={props.gameOptions.categorySelected.kind === CategoryKind.custom}
         >
           {props.children}
         </Match>
       </Switch>
         <Show
           when={
-            props.gameOptions.contentType.kind !== ContentTypeKind.generation ||
-            props.gameOptions.contentType.category ===
+            props.gameOptions.categorySelected.kind !== CategoryKind.generation ||
+            props.gameOptions.categorySelected.category ===
               WordsGenerationCategory.quotes
           }
         >
@@ -108,9 +107,9 @@ const TimerParamsCompact = (props: GameParams) => {
                 { label: props.t("once"), value: false },
                 { label: props.t("infinity"), value: true },
               ]}
-              compare={(v) => v === props.gameOptions.generation.infinite}
+              compare={(v) => v === props.gameOptions.infinite}
               setChecked={(l) =>
-                props.setGameOptions("generation", "infinite", l)
+                props.setGameOptions("infinite", l)
               }
             >
               <Infinite />
@@ -125,12 +124,9 @@ const TimerParamsCompact = (props: GameParams) => {
           { label: "1m", value: 60 },
           { label: "2m", value: 120 },
         ]}
-        compare={(v) => v === props.gameOptions.timer.value}
+        compare={(v) => v === props.gameOptions.timer}
         setChecked={(time) =>
-          props.setGameOptions("timer", {
-            type: NumberSelectionType.selected,
-            value: time,
-          })
+          props.setGameOptions("timer", time)
         }
       >
         <Stopwatch />
