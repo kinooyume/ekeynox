@@ -2,15 +2,14 @@ import { GameModeKind } from "../gameMode/GameMode";
 import {
   type GameOptions,
   WordsGenerationCategory,
-  ContentTypeKind,
+  CategoryKind,
 } from "../gameMode/GameOptions";
 import type { ContentData, Paragraph } from "./Content";
 import Content from "./Content";
-import type { Paragraphs } from "./ContentList";
 import { randomQuote, randomWords } from "./randomContent";
 
 // NOTE: Static or Dynamic handler here
-type SourceProps = {
+export type SourceProps = {
   random: Array<string>;
   custom: string;
 };
@@ -31,7 +30,7 @@ const getSource = ({
   sources,
   wordsCount: wordNumber,
 }: GetSourceProps): NestedSourceProps => {
-  if (opts.contentType.kind === ContentTypeKind.custom) {
+  if (opts.categorySelected.kind === CategoryKind.custom) {
     return { src: () => Content.parse(sources.custom), following: false };
   }
   switch (opts.generation.category) {
@@ -83,7 +82,7 @@ const mergeSource = (
 
 const next = (nextContent: GetContent, following: boolean) => () => {
   const next = nextContent();
-  return (prev: ContentData) : ContentHandler  => {
+  return (prev: ContentData): ContentHandler => {
     return {
       data: mergeSource(prev, next.data, following),
       new: next.new,
@@ -137,14 +136,14 @@ const makeGetContent = (
   opts: GameOptions,
   sources: SourceProps,
 ): GameModeContent => {
-  switch (opts.mode) {
+  switch (opts.modeSelected) {
     case GameModeKind.random:
       return {
         kind: GameModeKind.random,
         getContent: makeSourceNested({
           opts,
           sources,
-          wordsCount: opts.random.value,
+          wordsCount: opts.random,
         }),
       };
     case GameModeKind.timer:
@@ -155,7 +154,7 @@ const makeGetContent = (
           sources,
           wordsCount: 40,
         }),
-        time: opts.timer.value * 1000,
+        time: opts.timer * 1000,
       };
   }
 };

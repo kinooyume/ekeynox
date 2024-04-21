@@ -6,9 +6,14 @@ import {
   on,
   Switch,
   Match,
+  createComputed,
 } from "solid-js";
 import type { Translator } from "../App";
-import { deepCopy, type ContentGeneration, type GameOptions } from "../gameMode/GameOptions";
+import {
+  deepCopy,
+  type ContentGeneration,
+  type GameOptions,
+} from "../gameMode/GameOptions";
 import { css } from "solid-styled";
 import { createStore, type SetStoreFunction } from "solid-js/store";
 import type { CustomInputRef } from "../ui/CustomInput";
@@ -22,7 +27,7 @@ import CustomInput from "../ui/CustomInput";
 type HeaderNavLeftProps = {
   t: Translator;
   gameOptions: GameOptions;
-  setGameOptions: SetStoreFunction<GameOptions>;
+  start: (opts: GameOptions, customSource: string) => void;
   setContentGeneration: (type: ContentGeneration) => void;
   content: GameModeContent;
 };
@@ -308,6 +313,8 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
     DropdownState.none,
   );
 
+  const [edited, setEdited] = createSignal(false);
+
   const clickHandler = () => {
     if (downState() === DropdownState.open) {
       setDownState(DropdownState.selected);
@@ -322,14 +329,20 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
     deepCopy(props.gameOptions),
   );
 
-  createEffect(
+  const resetOptions = () => {
+    setGameOptions(deepCopy(props.gameOptions));
+    setEdited(false);
+  };
+
+  // was createEffetc
+  createComputed(
     on(
       () => gameOptions,
       () => {
         props.setContentGeneration({
           language: gameOptions.generation.language,
           category: gameOptions.generation.category,
-          infinite: gameOptions.generation.infinite,
+          // infinite: gameOptions.generation.infinite,
         });
       },
       { defer: true },
@@ -341,6 +354,13 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
   };
 
   /* *** */
+
+  const start = () => {
+    props.start(
+      gameOptions,
+      customRef.ref ? customRef.ref.value : "",
+    );
+  };
 
   return (
     <div class="header-mode">
@@ -357,7 +377,7 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
             <div
               class="menu-title"
               onClick={clickHandler}
-              data-passive={`${props.t("gameMode")[gameOptions.mode].subtitle}`}
+              data-passive={`${props.t("gameMode")[gameOptions.modeSelected].subtitle}`}
               data-active={`${props.t("newGame.one")} ${props.t("newGame.two")}`}
             >
               <Show when={downState() !== DropdownState.open}>
@@ -372,7 +392,7 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
                   <li
                     class={`radio ${modeKind}`}
                     classList={{
-                      selected: props.gameOptions.mode === modeKind,
+                      selected: gameOptions.modeSelected === modeKind,
                     }}
                   >
                     <input
@@ -380,8 +400,8 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
                       name="mode"
                       class="select"
                       id={modeKind}
-                      checked={props.gameOptions.mode === modeKind}
-                      onChange={() => props.setGameOptions("mode", modeKind)}
+                      checked={gameOptions.modeSelected === modeKind}
+                      onChange={() => setGameOptions("modeSelected", modeKind)}
                     />
                     <label for={modeKind}>
                       {/* <div class="icon"> {mode.head()}</div> */}
@@ -400,7 +420,7 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
             <div class="options-wrapper">
               <div class="options">
                 <Switch>
-                  <Match when={gameOptions.mode === GameModeKind.random}>
+                  <Match when={gameOptions.modeSelected === GameModeKind.random}>
                     <RandomParamsMedium
                       t={props.t}
                       gameOptions={gameOptions}
@@ -412,7 +432,7 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
                       />
                     </RandomParamsMedium>
                   </Match>
-                  <Match when={gameOptions.mode === GameModeKind.timer}>
+                  <Match when={gameOptions.modeSelected === GameModeKind.timer}>
                     <TimerParamsMedium
                       t={props.t}
                       gameOptions={gameOptions}
@@ -427,7 +447,9 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
                 </Switch>
               </div>
               <div class="actions">
-                <button class="primary">{props.t("letsGo")}</button>
+                <button onClick={start} class="primary">
+                  {props.t("letsGo")}
+                </button>
               </div>
             </div>
           </div>

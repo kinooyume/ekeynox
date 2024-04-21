@@ -34,7 +34,7 @@ import {
 } from "../metrics/KeysProjection.ts";
 import KeypressMetrics from "../metrics/KeypressMetrics.ts";
 import {
-  ContentTypeKind,
+  CategoryKind,
   WordsGenerationCategory,
   type GameOptions,
 } from "../gameMode/GameOptions.ts";
@@ -95,10 +95,10 @@ const TypingGame = (props: TypingGameProps) => {
 
     // duplicate dettect if multiple content or not
     if (
-      props.gameOptions.mode === GameModeKind.timer &&
+      props.gameOptions.modeSelected === GameModeKind.timer &&
       (props.gameOptions.generation.category ===
         WordsGenerationCategory.words1k ||
-        props.gameOptions.generation.infinite)
+        props.gameOptions.infinite)
     ) {
       updateContent();
     }
@@ -208,10 +208,10 @@ const TypingGame = (props: TypingGameProps) => {
 
   // Infinite or Finite Paragraphs
   if (
-    props.gameOptions.mode === GameModeKind.timer &&
+    props.gameOptions.modeSelected === GameModeKind.timer &&
     (props.gameOptions.generation.category ===
       WordsGenerationCategory.words1k ||
-      props.gameOptions.generation.infinite)
+      props.gameOptions.infinite)
   ) {
     updateContent();
     onPromptEnd = updateContent;
@@ -360,17 +360,11 @@ const TypingGame = (props: TypingGameProps) => {
       </Show>
       <TypingNav
         t={props.t}
-        isGenerated={
-          props.gameOptions.contentType.kind === ContentTypeKind.generation
-        }
         stat={stat()}
         keyboard={(k) => (navHandler = k)}
         isPaused={status().kind !== TypingStatusKind.pending}
         onPause={() => pause()}
-        onReset={reset}
         progress={progress()}
-        onShuffle={onShuffle}
-        onExit={props.onExit}
       >
         <Show when={props.content.kind === GameModeKind.timer}>
           <p>{Math.ceil((timeCounter() || 0) / 10)}</p>
@@ -381,7 +375,7 @@ const TypingGame = (props: TypingGameProps) => {
           t={props.t}
           isPaused={status().kind !== TypingStatusKind.pending}
           isGenerated={
-            props.gameOptions.contentType.kind === ContentTypeKind.generation
+            props.gameOptions.categorySelected.kind === CategoryKind.generation
           }
           onPause={() => pause()}
           onReset={reset}

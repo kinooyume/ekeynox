@@ -1,3 +1,11 @@
+// https://stackoverflow.com/questions/7069250/are-javascript-arrays-actually-linked-lists
+// Javascript arrays are typically implemented as hashmaps (just like Javascript objects) with one added feature: there is an attribute length, which is one higher than the highest positive integer that has been used as a key. Nothing stops you from also using strings, floating-point numbers, even negative numbers as keys. Nothing except good sense.
+
+// So, we want to have: 
+// - [ ] a nested linked list, update paragraph, words if needed, always have the key at the end
+//  - [ ] implement hooks when prev/next one "floor"
+//  - [ ] add some extra information, manage through hooks (event that happen when node change)
+
 export type LinkedList<T> = {
   value: T;
   next: LinkedList<T> | null;
@@ -13,6 +21,16 @@ export type DLinkedList<T> = {
   prev: DLinkedList<T> | null;
   next: DLinkedList<T> | null;
 };
+
+// mapList, similar to mapArray, but for linked lists
+
+const mapList = <T, U>( 
+list: LinkedList<T>, 
+transform: (v: T) => U, 
+): LinkedList<U> => {
+if (list === null) return null;
+return make(mapList(list.next, transform), transform(list.value));
+}
 
 export type DLinkedListBound<T> = [head: DLinkedList<T>, tail: DLinkedList<T>];
 
@@ -59,7 +77,7 @@ const makeDLinkedListFromArrayWithExtra = <T, U>(
   [first, rest]: NonEmptyArray<T>,
   transform: (v: T) => U,
   extra: ExtraValue<T, U>,
-): DLinkedListBound<U>  => {
+): DLinkedListBound<U> => {
   const head = makeDLinkedList(transform(first), null, null);
   const tail = rest.reduce((acc, value, index) => {
     const list = expandDLinkedList(acc, transform(value));

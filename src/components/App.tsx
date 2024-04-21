@@ -4,6 +4,7 @@ import {
   Show,
   Suspense,
   Switch,
+  createComputed,
   createEffect,
   createMemo,
   createResource,
@@ -12,16 +13,6 @@ import {
 import { createStore } from "solid-js/store";
 import { makePersisted } from "@solid-primitives/storage";
 import { Transition } from "solid-transition-group";
-
-/* i18n */
-import * as i18n from "@solid-primitives/i18n";
-
-import type * as en from "../i18n/en.json";
-import en_dict from "../i18n/en.json";
-import fr_dict from "../i18n/fr.json";
-
-/* *** */
-// inspiration: https://learnhub.top/
 
 import Header from "./Header";
 import HeaderAction from "./HeaderAction";
@@ -43,16 +34,51 @@ import KeyboardLayout, { type HigherKeyboard } from "./keyboard/KeyboardLayout";
 import GameModeMenuTiny from "./gameMode/GameModeMenuTiny";
 import TypingHeaderNav from "./typing/TypingHeaderNav";
 
-const dictionaries = {
-  en: en_dict,
-  fr: fr_dict,
-};
+/* NOTE:  Refacto: fileReader in one given folder
+ * PERF: i18n Dictionaries, KeyboardLayout
+ * 
+ *
+export type Kb = "qwerty" | "azerty"; // NOTE: also in folder,
+export type Locale = "en" | "fr"; // NOTE: also in folder,
 
+* ==> Comment qu'on fait ?
+
+* Parce que du coup on pourrait avoir un
+
+const locales = Record<string, RawDictionary>  #i18n
+const dictionaries = Record<string, Dictionary>
+
+typeof dictionaries ?
+typeof keyof dictionaries ?
+ 
+ */
+
+/* i18n */
 // NOTE: i18n should be a context, but I can't make it work
 // probably due to astro, so it will stay like this for now
 
-export type Locale = "en" | "fr";
-export type RawDictionary = typeof en;
+import * as i18n from "@solid-primitives/i18n";
+
+import type * as DictionaryType from "../i18n/en.json";
+
+export type RawDictionary = typeof DictionaryType;
+
+import en_dict from "../i18n/en.json";
+import fr_dict from "../i18n/fr.json";
+import {
+  AppStateKind,
+  type AppState,
+  type PendingStatus,
+  PendingKind,
+} from "./AppState";
+
+type Dictionaries = Record<string, RawDictionary>;
+
+// TODO: simple read file in folder
+const dictionaries: Dictionaries = {
+  en: en_dict,
+  fr: fr_dict,
+};
 
 export type Dictionary = i18n.Flatten<RawDictionary>;
 export type Translator = i18n.Translator<Dictionary>;
@@ -61,7 +87,18 @@ export type I18nContext = {
   t: Translator;
 };
 
+/* *** */
+
+/* Config: Keybord & Locale */
+
 export type Kb = "qwerty" | "azerty";
+export type Locale = "en" | "fr"; // NOTE: also in folder,
+
+/* typeof
+  typeof keyof dictionaries 
+  typeof keyof dictionaries 
+
+*/
 
 export type Config = {
   dark: boolean;
@@ -75,41 +112,18 @@ export type ConfigLists = {
   kb: Kb[];
 };
 
+/*
+ 
+ export type ConfigLists = {
+
+ }
+
+  */
+
 const configLists: ConfigLists = {
   locale: ["en", "fr"],
   kb: ["qwerty", "azerty"],
 };
-
-export enum GamePendingKind {
-  new,
-  redo,
-}
-
-export type GamePending =
-  | {
-      kind: GamePendingKind.new;
-      content: GameModeContent;
-    }
-  | {
-      kind: GamePendingKind.redo;
-      content: GameModeContent;
-      prev: MetricsResume;
-    };
-
-export enum GameStatusKind {
-  menu,
-  pending,
-  resume,
-}
-
-export type GameStatus =
-  | { kind: GameStatusKind.menu }
-  | {
-      kind: GameStatusKind.pending;
-      content: GameModeContent;
-      prev?: MetricsResume;
-    }
-  | { kind: GameStatusKind.resume; metrics: Metrics; content: GameModeContent };
 
 const App = () => {
   const [config, setConfig] = makePersisted(
@@ -127,49 +141,88 @@ const App = () => {
   const i18nContext: I18nContext = { t };
   /* *** */
 
-  const [gameOptions, setGameOptions] = makePersisted(
-    createStore<GameOptions>(getDefaultGameOptions(), { name: "gameOptions" }),
-  );
-
   /* Keyboard */
   const [kbLayout, setKbLayout] = createSignal<HigherKeyboard>(
     KeyboardLayout.create(config.kb),
   );
 
-  createEffect(() => {
+  // prev createEffect
+  createComputed(() => {
     setKbLayout(() => KeyboardLayout.create(config.kb));
   });
 
   /* *** */
 
+  /* Keep the rest inside, here */
+
+  /* Content Generation & GameOptions */
+
+  /* Ca, c'est la save (makePersisted)
+   * Qu'on veut mettre a jours uniquement quand une nouvelle partie est lancé
+   * => Depuis Menu
+   * => Depuis headerMode la
+   * => et tiny game menu
+   */
+
+  const [persistedOptions, setPersistedOptions] = makePersisted(
+    createStore<GameOptions>(getDefaultGameOptions(), { name: "gameOptions" }),
+  );
+
+  /* Contente Generation */
+  // On veut etendre ce fonctionnement au clavier, et pitetre locales
+  //
+  const [generation, setGeneration] = createSignal<ContentGeneration>(
+    persistedOptions.generation,
+  );
+
   const [contentGeneration, setContentGeneration] =
-    createSignal<ContentGeneration>(gameOptions.generation);
+    createSignal<ContentGeneration>(generation());
 
   const fetchWords = createFetchWords();
-  const [randomSource] = createResource(contentGeneration, fetchWords, {
-    initialValue: [],
-  });
-
-  const redo = (content: GameModeContent, metrics: MetricsResume) =>
-    setGameStatus({ kind: GameStatusKind.pending, content, metrics });
-
-  const start = (opts: GameOptions, customSource: string) => {
-    setGameOptions(opts);
-    setGameOptions("custom", customSource);
-    const content = makeGetContent(opts, {
-      random: randomSource(),
-      custom: customSource,
+  const [generationSource, { refetch: refetchGenerationSource }] =
+    createResource<string[], ContentGeneration>(contentGeneration, fetchWords, {
+      initialValue: [],
     });
-    setGameStatus({ kind: GameStatusKind.pending, content });
-  };
+
+  /* *** */
+
+  /* Game Status */
+
+  const [AppState, setAppState] = createSignal<AppState>({
+    kind: AppStateKind.menu,
+  });
 
   const over = (metrics: Metrics, content: GameModeContent) =>
-    setGameStatus({ kind: GameStatusKind.resume, metrics, content });
+    setAppState({ kind: AppStateKind.resume, metrics, content });
 
-  const goHome = () => setGameStatus({ kind: GameStatusKind.menu });
-  const [gameStatus, setGameStatus] = createSignal<GameStatus>({
-    kind: GameStatusKind.menu,
-  });
+  const goHome = () => setAppState({ kind: AppStateKind.menu });
+
+  /* Pending */
+
+  const redo = (content: GameModeContent, metrics: MetricsResume) =>
+    setAppState({
+      kind: AppStateKind.pending,
+      data: { kind: PendingKind.redo, content, prev: metrics },
+    });
+
+  const start = async (opts: GameOptions, customSource: string) => {
+    setGeneration(opts.generation);
+    const randomSource  = await refetchGenerationSource();
+
+    const content = makeGetContent(opts, {
+      random: randomSource!,
+      custom: customSource,
+    });
+    setPersistedOptions(opts);
+    setPersistedOptions("custom", customSource);
+
+    setAppState({
+      kind: AppStateKind.pending,
+      data: { kind: PendingKind.new, content },
+    });
+  };
+
+  /* *** */
 
   css`
     .app {
@@ -192,7 +245,7 @@ const App = () => {
     <div class="app" classList={{ dark: config.dark }}>
       <Header
         t={i18nContext.t}
-        toHome={() => setGameStatus({ kind: GameStatusKind.menu })}
+        toHome={() => setAppState({ kind: AppStateKind.menu })}
         actions={
           <HeaderAction
             config={config}
@@ -201,12 +254,13 @@ const App = () => {
           />
         }
       >
-        <Show when={gameStatus().kind === GameStatusKind.pending}>
+        <Show when={AppState().kind === AppStateKind.pending}>
           <TypingHeaderNav
             t={i18nContext.t}
-            gameOptions={gameOptions}
-            content={(gameStatus() as any).content}
-            setGameOptions={setGameOptions}
+            start={start}
+            gameOptions={persistedOptions}
+            content={(AppState() as any).data.content}
+            setGameOptions={setPersistedOptions}
             setContentGeneration={setContentGeneration}
           />
         </Show>
@@ -227,22 +281,22 @@ const App = () => {
           }}
         >
           <Switch>
-            <Match when={gameStatus().kind === GameStatusKind.menu}>
+            <Match when={AppState().kind === AppStateKind.menu}>
               <GameModeMenu
                 t={t}
-                gameOptions={gameOptions}
+                gameOptions={persistedOptions}
                 setContentGeneration={setContentGeneration}
                 start={start}
               />
             </Match>
-            <Match when={gameStatus().kind === GameStatusKind.pending}>
+            <Match when={AppState().kind === AppStateKind.pending}>
               <Suspense>
-                <Show when={randomSource()}>
+                <Show when={generationSource()}>
                   <TypingGame
                     t={t}
-                    content={(gameStatus() as any).content}
-                    gameOptions={Object.assign({}, gameOptions)}
-                    prevMetrics={(gameStatus() as any).metrics}
+                    content={(AppState() as any).data.content}
+                    gameOptions={Object.assign({}, persistedOptions)}
+                    prevMetrics={(AppState() as any).data.metrics}
                     showKb={config.showKb}
                     kbLayout={kbLayout()}
                     onExit={goHome}
@@ -251,18 +305,18 @@ const App = () => {
                 </Show>
               </Suspense>
             </Match>
-            <Match when={gameStatus().kind === GameStatusKind.resume}>
+            <Match when={AppState().kind === AppStateKind.resume}>
               <TypingMetricsResume
                 t={t}
                 kbLayout={kbLayout()}
-                metrics={(gameStatus() as any).metrics}
+                metrics={(AppState() as any).metrics}
               >
                 {(metricsResume) => (
                   <GameModeMenuTiny
                     t={t}
-                    gameOptions={gameOptions}
-                    content={(gameStatus() as any).content}
-                    metrics={(gameStatus() as any).metrics}
+                    gameOptions={persistedOptions}
+                    content={(AppState() as any).content}
+                    metrics={(AppState() as any).metrics}
                     metricsResume={metricsResume}
                     setContentGeneration={setContentGeneration}
                     start={start}
@@ -279,3 +333,6 @@ const App = () => {
 };
 
 export default App;
+
+/* *** */
+// inspiration: https://learnhub.top/

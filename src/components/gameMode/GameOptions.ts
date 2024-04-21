@@ -1,6 +1,7 @@
 import { GameModeKind } from "./GameMode";
 
 // TODO: should we build it from folder/files ?
+// keyof Locales
 export type Languages = "en" | "fr";
 
 export enum WordsGenerationCategory {
@@ -11,26 +12,16 @@ export enum WordsGenerationCategory {
 export type ContentGeneration = {
   category: WordsGenerationCategory;
   language: Languages;
-  infinite: boolean;
 };
 
-export enum ContentTypeKind {
+export enum CategoryKind {
   generation,
   custom,
 }
 
-export type ContentType =
-  | { kind: ContentTypeKind.custom }
-  | { kind: ContentTypeKind.generation; category: WordsGenerationCategory };
-
-export enum NumberSelectionType {
-  selected,
-  custom,
-}
-
-export type NumberSelection =
-  | { type: NumberSelectionType.selected; value: number }
-  | { type: NumberSelectionType.custom; value: number };
+export type Category =
+  | { kind: CategoryKind.custom }
+  | { kind: CategoryKind.generation; category: WordsGenerationCategory };
 
 export enum WordsCategoryKind {
   words1k = "words1k",
@@ -51,30 +42,49 @@ export type WordsCategory =
 /* __ */
 
 export type GameOptions = {
-  mode: GameModeKind;
-  contentType: ContentType;
+  modeSelected: GameModeKind;
+  categorySelected: Category;
   generation: ContentGeneration;
   custom: string;
-  random: NumberSelection;
-  timer: NumberSelection;
+  random: number;
+  timer: number;
+  infinite: boolean;
 };
 
+/*
+ * NOTE: shoulwe merge contentType/generation ?
+ * ==> We want to keep last generation config
+ *
+ */
+
+type Selected = {
+  mode: GameModeKind;
+  category: CategoryKind;
+}
+
+// En fait, je pense que l'embrouille vient du fait 
+// que la generation.. hum.. 
 const getDefaultGameOptions = (): GameOptions => ({
-  mode: GameModeKind.random,
-  contentType: {
-    kind: ContentTypeKind.generation,
+  modeSelected: GameModeKind.random,
+  // NOTE: on doit pouvoir avoir que le kind ?
+  categorySelected: {
+    kind: CategoryKind.generation,
     category: WordsGenerationCategory.words1k,
   },
   generation: {
     category: WordsGenerationCategory.words1k,
     language: "en",
-    infinite: true,
   },
   custom: "",
-  random: { type: NumberSelectionType.selected, value: 10 },
-  timer: { type: NumberSelectionType.selected, value: 10 },
+  random: 10,
+  timer: 10,
+  infinite: true,
 });
 
-const deepCopy = <T>(obj: T): T => JSON.parse(JSON.stringify(obj));
+const deepCopy = (source: GameOptions): GameOptions => ({
+  ...source,
+  categorySelected: { ...source.categorySelected },
+  generation: { ...source.generation },
+});
 
 export { getDefaultGameOptions, deepCopy };

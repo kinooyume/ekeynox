@@ -1,4 +1,3 @@
-import type { LinkedList } from "../List";
 import type { TimedKey } from "../metrics/Metrics";
 import type { CreateNewTimer, TimerPause, TimerPending } from "./Timer";
 
