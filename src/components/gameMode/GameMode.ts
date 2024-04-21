@@ -4,13 +4,13 @@ import Monkey from "../svgs/monkey";
 import BunnyHead from "../svgs/bunnyHead";
 import MonkeyHead from "../svgs/monkeyHead";
 import type { GameParams } from "./GameParams";
-import RandomParams from "./RandomParams";
-import RandomParamsCompact from "./RandomParamsCompact";
+import SpeedParams from "./SpeedParams";
+import SpeedParamsCompact from "./SpeedParamsCompact";
 import TimerParams from "./TimerParams";
 import TimerParamsCompact from "./TimerParamsCompact";
 
 export enum GameModeKind {
-  random = "random",
+  speed = "speed",
   timer = "timer",
 }
 
@@ -24,11 +24,11 @@ export type GameModeData = {
 export type GameMode = Record<GameModeKind, GameModeData>;
 
 const gameModes: GameMode = {
-  [GameModeKind.random]: {
+  [GameModeKind.speed]: {
     picto: Monkey,
     head: MonkeyHead,
-    params: RandomParams,
-    compact: RandomParamsCompact,
+    params: SpeedParams,
+    compact: SpeedParamsCompact,
   },
   [GameModeKind.timer]: {
     picto: Bunny,

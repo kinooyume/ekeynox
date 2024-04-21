@@ -36,7 +36,7 @@
   "space": "Space",
   "statistics": "statistics",
   "gameMode": {
-    "random": {
+    "speed": {
       "title": "monkey",
       "subtitle": "Words sprint",
       "description": "Type random words as quick as possible, try to not make mistake !",

@@ -1,11 +1,20 @@
-import { onCleanup, Switch, Match, createEffect, createComputed } from "solid-js";
+import {
+  onCleanup,
+  Switch,
+  Match,
+  createComputed,
+} from "solid-js";
 import { css } from "solid-styled";
 import { type Translator } from "../App";
 import { createStore } from "solid-js/store";
-import RandomParamsCompact from "./RandomParamsCompact";
+import SpeedParamsCompact from "./SpeedParamsCompact";
 import TimerParamsCompact from "./TimerParamsCompact";
 import CustomInput, { type CustomInputRef } from "../ui/CustomInput";
-import { deepCopy, type ContentGeneration, type GameOptions } from "./GameOptions";
+import {
+  deepCopy,
+  type ContentGeneration,
+  type GameOptions,
+} from "./GameOptions";
 import GameModeDropdown from "./GameModeDropdown";
 import {
   makeRedoContent,
@@ -92,8 +101,8 @@ const GameModeSelectionTiny = (props: GameModeSelectionProps) => {
       />
       <div class="info">
         <Switch>
-          <Match when={gameOptions.modeSelected === GameModeKind.random}>
-            <RandomParamsCompact
+          <Match when={gameOptions.modeSelected === GameModeKind.speed}>
+            <SpeedParamsCompact
               t={props.t}
               gameOptions={gameOptions}
               setGameOptions={setGameOptions}
@@ -102,7 +111,7 @@ const GameModeSelectionTiny = (props: GameModeSelectionProps) => {
                 value={customRef.ref ? customRef?.ref.value : ""}
                 customInput={customRef}
               />
-            </RandomParamsCompact>
+            </SpeedParamsCompact>
           </Match>
           <Match when={gameOptions.modeSelected === GameModeKind.timer}>
             <TimerParamsCompact

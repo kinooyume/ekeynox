@@ -36,7 +36,7 @@
   "space": "Espace",
   "statistics": "statistiques",
   "gameMode": {
-    "random": {
+    "speed": {
       "title": "singe",
       "subtitle": "Course de mots",
       "description": "Ecrivez des mots au hasard aussi vite que possible, essayez de ne pas faire d'erreur !",

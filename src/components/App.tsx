@@ -294,9 +294,8 @@ const App = () => {
                 <Show when={generationSource()}>
                   <TypingGame
                     t={t}
-                    content={(AppState() as any).data.content}
-                    gameOptions={Object.assign({}, persistedOptions)}
-                    prevMetrics={(AppState() as any).data.metrics}
+                    status={(AppState() as any).data}
+                    gameOptions={persistedOptions}
                     showKb={config.showKb}
                     kbLayout={kbLayout()}
                     onExit={goHome}

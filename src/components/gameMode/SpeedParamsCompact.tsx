@@ -14,7 +14,7 @@ import Text from "../svgs/text";
 import Customizer from "../svgs/customizer";
 import type { GameParams } from "./GameParams";
 
-const RandomParamsCompact = (props: GameParams) => {
+const SpeedParamsCompact = (props: GameParams) => {
   css`
     .random-params {
       display: flex;
@@ -117,4 +117,4 @@ const RandomParamsCompact = (props: GameParams) => {
   );
 };
 
-export default RandomParamsCompact;
+export default SpeedParamsCompact;

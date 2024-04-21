@@ -65,7 +65,7 @@ type Selected = {
 // En fait, je pense que l'embrouille vient du fait 
 // que la generation.. hum.. 
 const getDefaultGameOptions = (): GameOptions => ({
-  modeSelected: GameModeKind.random,
+  modeSelected: GameModeKind.speed,
   // NOTE: on doit pouvoir avoir que le kind ?
   categorySelected: {
     kind: CategoryKind.generation,

@@ -2,7 +2,6 @@ import {
   createSignal,
   Show,
   For,
-  createEffect,
   on,
   Switch,
   Match,
@@ -15,12 +14,12 @@ import {
   type GameOptions,
 } from "../gameMode/GameOptions";
 import { css } from "solid-styled";
-import { createStore, type SetStoreFunction } from "solid-js/store";
+import { createStore } from "solid-js/store";
 import type { CustomInputRef } from "../ui/CustomInput";
 import GameOptionsRecap from "../gameMode/GameOptionsRecap";
 import type { GameModeContent } from "../content/TypingGameSource";
 import { GameModeKind, gameModesArray } from "../gameMode/GameMode";
-import RandomParamsMedium from "../gameMode/RandomParamsMedium";
+import SpeedParamsMedium from "../gameMode/SpeedParamsMedium";
 import TimerParamsMedium from "../gameMode/TimerParamsMedium";
 import CustomInput from "../ui/CustomInput";
 
@@ -420,8 +419,8 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
             <div class="options-wrapper">
               <div class="options">
                 <Switch>
-                  <Match when={gameOptions.modeSelected === GameModeKind.random}>
-                    <RandomParamsMedium
+                  <Match when={gameOptions.modeSelected === GameModeKind.speed}>
+                    <SpeedParamsMedium
                       t={props.t}
                       gameOptions={gameOptions}
                       setGameOptions={setGameOptions}
@@ -430,7 +429,7 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
                         value={customRef.ref ? customRef?.ref.value : ""}
                         customInput={customRef}
                       />
-                    </RandomParamsMedium>
+                    </SpeedParamsMedium>
                   </Match>
                   <Match when={gameOptions.modeSelected === GameModeKind.timer}>
                     <TimerParamsMedium
