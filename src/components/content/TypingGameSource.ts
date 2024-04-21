@@ -123,7 +123,7 @@ const makeRedoContent = (
 
 export type GameModeContent =
   | {
-      kind: GameModeKind.random;
+      kind: GameModeKind.speed;
       getContent: GetContent;
     }
   | {
@@ -137,9 +137,9 @@ const makeGetContent = (
   sources: SourceProps,
 ): GameModeContent => {
   switch (opts.modeSelected) {
-    case GameModeKind.random:
+    case GameModeKind.speed:
       return {
-        kind: GameModeKind.random,
+        kind: GameModeKind.speed,
         getContent: makeSourceNested({
           opts,
           sources,

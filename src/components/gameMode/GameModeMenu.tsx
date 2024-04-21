@@ -2,7 +2,7 @@ import { css } from "solid-styled";
 import { Match, Switch, createComputed, createEffect } from "solid-js";
 import { createStore } from "solid-js/store";
 
-import RandomParams from "./RandomParams";
+import SpeedParams from "./SpeedParams";
 import TimerParams from "./TimerParams";
 import {
   type GameOptions,
@@ -221,7 +221,7 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
           <div class="illustration">
             <div class="illustration-container">
               <Switch>
-                <Match when={gameOptions.modeSelected === GameModeKind.random}>
+                <Match when={gameOptions.modeSelected === GameModeKind.speed}>
                   <Monkey />
                 </Match>
                 <Match when={gameOptions.modeSelected === GameModeKind.timer}>
@@ -232,18 +232,18 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
           </div>
           <div class="game-description">
             <Switch>
-              <Match when={gameOptions.modeSelected === GameModeKind.random}>
+              <Match when={gameOptions.modeSelected === GameModeKind.speed}>
                 <div class="text">
-                  <h2 class="title-mode">{props.t("gameMode.random.title")}</h2>
-                  <h3>{props.t("gameMode.random.subtitle")}</h3>
+                  <h2 class="title-mode">{props.t("gameMode.speed.title")}</h2>
+                  <h3>{props.t("gameMode.speed.subtitle")}</h3>
                   <p class="description">
-                    {props.t("gameMode.random.hugeDescription")}
+                    {props.t("gameMode.speed.hugeDescription")}
                   </p>
                 </div>
 
                 <div class="options">
                   {/* <h2 class="options-title">{props.t("options")}</h2> */}
-                  <RandomParams
+                  <SpeedParams
                     t={props.t}
                     gameOptions={gameOptions}
                     setGameOptions={setGameOptions}
@@ -252,7 +252,7 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
                       value={customRef.ref ? customRef?.ref.value : ""}
                       customInput={customRef}
                     />
-                  </RandomParams>
+                  </SpeedParams>
                 </div>
               </Match>
               <Match when={gameOptions.modeSelected === GameModeKind.timer}>

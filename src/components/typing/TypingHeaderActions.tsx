@@ -14,6 +14,7 @@ type HeaderNavActionsProps = {
   onReset: () => void;
   onShuffle: () => void;
   onExit: () => void;
+  children?: JSX.Element;
 };
 
 // TODO: could be clean to have an array of actions
@@ -65,6 +66,7 @@ const HeaderNavActions = (props: HeaderNavActionsProps) => {
   `;
   return (
     <div class="nav-actions">
+      <Show when={props.children}>{props.children}</Show>
       <HeaderNavAction
         svg={<Resume paused={props.isPaused} />}
         clickable={!props.isPaused}

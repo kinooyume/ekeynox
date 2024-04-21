@@ -51,12 +51,12 @@ import TimerInput from "../seqInput/TimerInput.ts";
 import makeCursor, { type Cursor } from "../cursor/Cursor.ts";
 import { Portal } from "solid-js/web";
 import HeaderNavActions from "./TypingHeaderActions.tsx";
+import type { PendingStatus } from "../AppState.ts";
 
 type TypingGameProps = {
   t: Translator;
-  content: GameModeContent;
   gameOptions: GameOptions;
-  prevMetrics?: MetricsResume;
+  status: PendingStatus;
   kbLayout: HigherKeyboard;
   showKb: boolean;
   onOver: (metrics: Metrics, content: GameModeContent) => void;
@@ -65,7 +65,7 @@ type TypingGameProps = {
 
 const TypingGame = (props: TypingGameProps) => {
   const [contentHandler, setContentHandler] = createSignal<ContentHandler>(
-    props.content.getContent(),
+    props.status.content.getContent(),
   );
 
   const [showGhost, setShowGhost] = createSignal(false);
@@ -114,7 +114,7 @@ const TypingGame = (props: TypingGameProps) => {
 
   let ghostCursor: Cursor | undefined;
   let cleanupGhost = () => {};
-  if (props.prevMetrics) {
+  if (props.status.prev) {
     setShowGhost(true);
     ghostCursor = makeCursor({
       paragraphs: paraStore,
@@ -123,7 +123,7 @@ const TypingGame = (props: TypingGameProps) => {
 
     const ghostInput = TimerInput({
       cursor: ghostCursor,
-      sequence: props.prevMetrics.getSequence(),
+      sequence: props.status.prev.getSequence(),
       setCleanup: (cleanup) => (cleanupGhost = cleanup),
     });
 
@@ -147,15 +147,15 @@ const TypingGame = (props: TypingGameProps) => {
 
   // NOTE: should not exist without timer
   const [timeCounter, setTimeCounter] = createSignal<number | undefined>(
-    props.content.kind === GameModeKind.timer ? props.content.time : undefined,
+    props.status.content.kind === GameModeKind.timer ? props.status.content.time : undefined,
   );
 
   /* Progress */
 
   const [progress, setProgress] = createSignal(0);
 
-  if (props.content.kind === GameModeKind.timer) {
-    const totalProgress = props.content.time;
+  if (props.status.content.kind === GameModeKind.timer) {
+    const totalProgress = props.status.content.time;
     createComputed(() => {
       setProgress(((timeCounter() || 0) / totalProgress) * 100);
     });
@@ -191,7 +191,7 @@ const TypingGame = (props: TypingGameProps) => {
         typing: typingMetrics(),
         keys: keyMetrics(),
       },
-      props.content,
+      props.status.content,
     );
   };
 
@@ -232,9 +232,9 @@ const TypingGame = (props: TypingGameProps) => {
   let cleanupTimer = () => {};
 
   // NOTE: no reactivity on duration
-  if (props.content.kind === GameModeKind.timer) {
+  if (props.status.content.kind === GameModeKind.timer) {
     const timerOver = TimerOver.create({
-      duration: props.content.time,
+      duration: props.status.content.time,
       onOver: over,
       setCleanup: (cleanup) => (cleanupTimer = cleanup),
       updateCounter: setTimeCounter,
@@ -366,7 +366,7 @@ const TypingGame = (props: TypingGameProps) => {
         onPause={() => pause()}
         progress={progress()}
       >
-        <Show when={props.content.kind === GameModeKind.timer}>
+        <Show when={props.status.content.kind === GameModeKind.timer}>
           <p>{Math.ceil((timeCounter() || 0) / 10)}</p>
         </Show>
       </TypingNav>

@@ -14,32 +14,28 @@ import Text from "../svgs/text";
 import Customizer from "../svgs/customizer";
 import type { GameParams } from "./GameParams";
 
-const RandomParamsMedium = (props: GameParams) => {
+const SpeedParams = (props: GameParams) => {
   css`
-    .time-params {
+    .random-params {
       display: flex;
       flex-direction: column;
+      gap: 1rem;
       align-items: flex-start;
     }
     h3 {
       margin: 0;
-      font-size: 14px;
       font-weight: 400;
       color: var(--text-secondary-color);
-      text-transform: uppercase;
+      font-size: 16px;
       cursor: default;
+      text-transform: uppercase;
     }
     .option {
       display: flex;
-      border-radius: 12px;
       justify-content: space-between;
       align-items: center;
       width: 100%;
-      padding: 8px;
-      transition: all 0.2s ease-in-out;
-    }
-    .option:hover {
-      background-color: var(--background-color);
+      transition: all 0.15s ease-in-out;
     }
   `;
 
@@ -119,7 +115,8 @@ const RandomParamsMedium = (props: GameParams) => {
         </Match>
         <Match
           when={
-            props.gameOptions.categorySelected.kind === CategoryKind.generation &&
+            props.gameOptions.categorySelected.kind ===
+              CategoryKind.generation &&
             props.gameOptions.categorySelected.category ===
               WordsGenerationCategory.words1k
           }
@@ -135,9 +132,7 @@ const RandomParamsMedium = (props: GameParams) => {
                 { label: "100", value: 100 },
               ]}
               compare={(v) => v === props.gameOptions.random}
-              setChecked={(v) =>
-                props.setGameOptions("random", v)
-              }
+              setChecked={(v) => props.setGameOptions("random", v)}
             >
               <Word />
             </RadioGroup>
@@ -148,4 +143,4 @@ const RandomParamsMedium = (props: GameParams) => {
   );
 };
 
-export default RandomParamsMedium;
+export default SpeedParams;
