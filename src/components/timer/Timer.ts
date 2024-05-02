@@ -1,4 +1,4 @@
-import { TypingStatusKind, type TypingStatus } from "../seqInput/UserInput";
+import { TypingEventKind, type TypingEventType } from "../typing/TypingEvent";
 
 export type TimerPause = { resume: () => TimerPending };
 export type TimerPending = { pause: () => TimerPause };
@@ -11,7 +11,7 @@ export type TimerEffect<U> = (u: U) => TimerEffect<U>;
 
 // TODO: rename
 type CreateEffectProps = {
-  status: TypingStatus;
+  status: TypingEventType;
 };
 
 export type TimerEffectStatus = TimerEffect<CreateEffectProps>
@@ -23,9 +23,9 @@ const createEffect: CreateTimerEffect<CreateEffectProps> = (
     (timer: TimerPause): TimerEffect<CreateEffectProps> =>
     ({ status }: CreateEffectProps) => {
       switch (status.kind) {
-        case TypingStatusKind.pending:
+        case TypingEventKind.pending:
           return pending(timer.resume());
-        case TypingStatusKind.unstart:
+        case TypingEventKind.unstart:
           return paused(newTimer());
       }
       return paused(timer);
@@ -34,9 +34,9 @@ const createEffect: CreateTimerEffect<CreateEffectProps> = (
     (timer: TimerPending): TimerEffect<CreateEffectProps> =>
     ({ status }: CreateEffectProps) => {
       switch (status.kind) {
-        case TypingStatusKind.pause:
+        case TypingEventKind.pause:
           return paused(timer.pause());
-        case TypingStatusKind.unstart:
+        case TypingEventKind.unstart:
           timer.pause();
           return paused(newTimer());
       }

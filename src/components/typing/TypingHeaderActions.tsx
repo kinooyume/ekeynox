@@ -1,61 +1,24 @@
 import { css } from "solid-styled";
-import type { Translator } from "../App";
-import { createSignal, Show, type JSX } from "solid-js";
+import HeaderNavAction from "./HeaderNavAction";
 import Resume from "../svgs/Resume";
+import Reset from "../svgs/reset";
 import Cross from "../svgs/cross";
 import Shuffle from "../svgs/shuffle";
-import Reset from "../svgs/reset";
+import { Show } from "solid-js";
+import Ghost from "../svgs/ghost";
 
-type HeaderNavActionsProps = {
-  t: Translator;
-  isPaused: boolean;
+type TypingHeaderActionsProps = {
+  paused: boolean;
+  isRedo: boolean;
+  isLoop: boolean;
   isGenerated: boolean;
+  onShuffle: (loop: boolean) => () => void;
   onPause: () => void;
   onReset: () => void;
-  onShuffle: () => void;
   onExit: () => void;
-  children?: JSX.Element;
 };
 
-// TODO: could be clean to have an array of actions
-//
-type HeaderNavActionProps = {
-  svg: JSX.Element;
-  clickable?: boolean;
-  action: () => void;
-};
-
-const HeaderNavAction = (props: HeaderNavActionProps) => {
-  css`
-    .nav-action {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 50px;
-      height: 50px;
-      border-radius: 12px;
-      border: 1px solid transparent;
-    }
-    .nav-action.clickable {
-      cursor: pointer;
-    }
-    .nav-action.clickable:hover {
-      border: 1px solid var(--background-color);
-    }
-  `;
-
-  return (
-    <div
-      class="nav-action"
-      classList={{ clickable: props.clickable }}
-      onClick={props.action}
-    >
-      {props.svg}
-    </div>
-  );
-};
-
-const HeaderNavActions = (props: HeaderNavActionsProps) => {
+const TypingHeaderActions = (props: TypingHeaderActionsProps) => {
   css`
     .nav-actions {
       display: flex;
@@ -66,10 +29,16 @@ const HeaderNavActions = (props: HeaderNavActionsProps) => {
   `;
   return (
     <div class="nav-actions">
-      <Show when={props.children}>{props.children}</Show>
+      <Show when={props.isRedo}>
+        <HeaderNavAction
+          svg={<Ghost />}
+          clickable={false}
+          action={() => {}}
+        />
+      </Show>
       <HeaderNavAction
-        svg={<Resume paused={props.isPaused} />}
-        clickable={!props.isPaused}
+        svg={<Resume paused={props.paused} />}
+        clickable={!props.paused}
         action={props.onPause}
       />
       <HeaderNavAction
@@ -81,7 +50,7 @@ const HeaderNavActions = (props: HeaderNavActionsProps) => {
         <HeaderNavAction
           svg={<Shuffle />}
           clickable={true}
-          action={props.onShuffle}
+          action={props.onShuffle(props.isLoop)}
         />
       </Show>
       <HeaderNavAction svg={<Cross />} clickable={true} action={props.onExit} />
@@ -89,4 +58,4 @@ const HeaderNavActions = (props: HeaderNavActionsProps) => {
   );
 };
 
-export default HeaderNavActions;
+export default TypingHeaderActions;

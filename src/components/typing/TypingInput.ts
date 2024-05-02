@@ -1,0 +1,30 @@
+// not used
+import type { SetStoreFunction } from "solid-js/store";
+import type { Paragraphs } from "../content/Content";
+import type { Accessor, JSX } from "solid-js";
+import type { PendingMode } from "../AppState";
+import type { TypingEventType } from "./TypingEvent";
+
+export type TypingPluginProps<T> = {
+  paragraphs: Paragraphs;
+  setParagraphs: SetStoreFunction<Paragraphs>;
+  event: Accessor<TypingEventType>;
+  keys: Array<T>;
+  onNew: (content: PendingMode) => void;
+};
+
+export type TypingInputEndpoint = {
+  // TODO: could be an array
+  input: {
+    //    set: () => void;
+    element: JSX.Element;
+  };
+  actions: {
+    onShuffle: () => void;
+    onReset: () => void;
+  };
+};
+
+export type TypingInput<T> = (
+  props: TypingPluginProps<T>,
+) => TypingInputEndpoint;

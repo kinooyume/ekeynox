@@ -17,25 +17,17 @@ import type { Translator } from "../App.tsx";
 import anime from "animejs";
 import ProgressBar from "../svgs/progressBar.tsx";
 import BunnyHead from "../svgs/bunnyHead.tsx";
-
-/* Doublon */
-export type KeyboardHandler = {
-  keyUp: (key: string) => void;
-  keyDown: (key: string) => void;
-};
-/* *** */
+import type { KeyboardHandler } from "../keyboard/TypingKeyboard.tsx";
+import TypingHelp from "./TypingHelp.tsx";
 
 type TypingNavProps = {
-  t: Translator;
-  isPaused: boolean;
   stat: StatProjection;
-  children?: JSXElement;
   progress: number;
-  keyboard?: (kbHandler: KeyboardHandler) => void;
-  onPause: () => void;
+  typingHelp: JSXElement;
+  children?: JSXElement;
 };
 
-const TypingNav = (props: TypingNavProps) => {
+const TypingInfo = (props: TypingNavProps) => {
   const getVw = () =>
     Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
 
@@ -91,39 +83,8 @@ const TypingNav = (props: TypingNavProps) => {
     });
   });
 
-  type PauseKeys = {
-    ctrl: boolean;
-    shift: boolean;
-    space: boolean;
-  };
-
-  let [pauseKeys, setPauseKeys] = createSignal<PauseKeys>({
-    ctrl: false,
-    shift: false,
-    space: false,
-  });
-
-  const keyDown = (key: string) => {
-    if (key === "Control") setPauseKeys({ ...pauseKeys(), ctrl: true });
-    else if (key === "Shift") setPauseKeys({ ...pauseKeys(), shift: true });
-    else if (key === " ") setPauseKeys({ ...pauseKeys(), space: true });
-  };
-
-  const keyUp = (key: string) => {
-    if (key === "Control") setPauseKeys({ ...pauseKeys(), ctrl: false });
-    else if (key === "Shift") setPauseKeys({ ...pauseKeys(), shift: false });
-    else if (key === " ") setPauseKeys({ ...pauseKeys(), space: false });
-  };
-
-  createEffect(() => {
-    if (pauseKeys().ctrl && pauseKeys().shift && pauseKeys().space) {
-      props.onPause();
-    }
-  });
-
   onMount(() => {
     window.addEventListener("resize", resize);
-    props.keyboard?.({ keyUp, keyDown });
   });
 
   onCleanup(() => {
@@ -206,37 +167,6 @@ const TypingNav = (props: TypingNavProps) => {
     span {
       color: var(--text-secondary-color);
     }
-
-    .help {
-      display: flex;
-      gap: 16px;
-      font-size: 17px;
-    }
-    .help-content {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .help .key {
-      border-radius: 6px;
-      background-color: var(--text-secondary-color);
-      color: var(--color-surface-alt);
-      font-size: 12px;
-      padding: 6px 6px;
-      font-weight: 600;
-    }
-
-    .type-to-play {
-      animation: blink-slow 2s infinite;
-    }
-    .character {
-      display: none;
-      width: 80px;
-      border-radius: 10px;
-      background-color: white;
-      padding: 20px 30px;
-      padding-bottom: 40px;
-    }
   `;
 
   // pitetre interessant: https://codepen.io/juliangarnier/pen/XvjWvx
@@ -249,28 +179,7 @@ const TypingNav = (props: TypingNavProps) => {
           <Nav width={navWidth()} borderWidth={navBorder()} />
         </div>
         <div class="content">
-          <div class="help">
-            <div class="character">
-              <BunnyHead />
-            </div>
-            <Switch>
-              <Match when={props.isPaused}>
-                <div class="help-content type-to-play">
-                  <span>{props.t("typingGame.typeToPlay")}</span>
-                </div>
-              </Match>
-              <Match when={!props.isPaused}>
-                <div class="help-content">
-                  <span class="key">Ctrl</span>
-                  <span>+</span>
-                  <span class="key">Shift</span>
-                  <span>+</span>
-                  <span class="key">{props.t("space")}</span>
-                  <span> {props.t("typingGame.toPause")}</span>
-                </div>
-              </Match>
-            </Switch>
-          </div>
+          {props.typingHelp}
           <div class="stats">
             <Show when={props.children}>
               <div class="child">{props.children}</div>
@@ -295,7 +204,7 @@ const TypingNav = (props: TypingNavProps) => {
   );
 };
 
-export default TypingNav;
+export default TypingInfo;
 
 // <span class="wpm">WPM: {Math.trunc(wpm())}</span>
 //

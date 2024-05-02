@@ -1,4 +1,4 @@
-import { type TypingWord } from "../seqInput/UserInput";
+import type { TypingWord } from "../typing/TypingEvent";
 import type { Cursor } from "./Cursor";
 import type { CursorNavHooks } from "./CursorNavHooks";
 
@@ -7,14 +7,14 @@ type CursorNavProps = {
   cursor: Cursor;
 };
 
-export type CursorNav = {
+export type CursorNavType = {
   next: (
     nextWordHook?: (cursor: Cursor) => void,
   ) => [boolean, TypingWord | null];
-  prev: () => boolean;
+  prev: (prevWordHook?: (cursor: Cursor) => void) => boolean;
 };
 
-let makeCursorNav = ({ cursor, hooks }: CursorNavProps): CursorNav => {
+let makeCursorNav = ({ cursor, hooks }: CursorNavProps): CursorNavType => {
   const nextWord = () => {
     let typingWord = null;
     if (!cursor.get.wordValid() && cursor.get.wordIsValid()) {
@@ -59,7 +59,7 @@ let makeCursorNav = ({ cursor, hooks }: CursorNavProps): CursorNav => {
         hooks.key.next.enter(cursor);
       } else if (cursor.positions.word() < cursor.get.nbrWords()) {
         typingWord = nextWord();
-        nextWordHook && nextWordHook(cursor);
+        !cursor.get.word().isSeparator && nextWordHook && nextWordHook(cursor);
       } else if (cursor.positions.paragraph() < cursor.get.nbrParagraphs()) {
         nextParagraph();
       } else return [false, cursor.get.typingWord()];
@@ -68,13 +68,14 @@ let makeCursorNav = ({ cursor, hooks }: CursorNavProps): CursorNav => {
 
     /* Prev */
 
-    prev: (): boolean => {
+    prev: (prevWordHook): boolean => {
       if (cursor.positions.key() > 0) {
         hooks.key.prev.leave(cursor);
         cursor.positions.set.key(cursor.positions.key() - 1);
         hooks.key.prev.enter(cursor);
       } else if (cursor.positions.word() > 0) {
         prevWord();
+        prevWordHook && prevWordHook(cursor);
       } else if (cursor.positions.paragraph() > 0) {
         prevParagraph();
       } else {

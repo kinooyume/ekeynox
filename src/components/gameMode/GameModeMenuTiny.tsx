@@ -18,21 +18,21 @@ import {
 import GameModeDropdown from "./GameModeDropdown";
 import {
   makeRedoContent,
-  type GameModeContent,
 } from "../content/TypingGameSource";
 import { GameModeKind } from "./GameMode";
 import Content from "../content/Content";
 import type { Metrics, MetricsResume } from "../metrics/Metrics";
+import type { PendingMode } from "../AppState";
 
 type GameModeSelectionProps = {
   t: Translator;
   gameOptions: GameOptions;
-  content: GameModeContent;
+  content: PendingMode;
   metrics: Metrics;
   metricsResume: MetricsResume;
   setContentGeneration: (type: ContentGeneration) => void;
   start: (opts: GameOptions, customSource: string) => void;
-  redo: (content: GameModeContent, metrics: MetricsResume) => void;
+  redo: (content: PendingMode, metrics: MetricsResume) => void;
 };
 
 const GameModeSelectionTiny = (props: GameModeSelectionProps) => {

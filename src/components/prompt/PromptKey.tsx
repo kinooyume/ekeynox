@@ -1,5 +1,5 @@
 import { css } from "solid-styled";
-import { createSignal, createEffect } from "solid-js";
+import { createSignal, createEffect, on, createComputed } from "solid-js";
 import { KeyFocus, KeyStatus } from "../metrics/KeyMetrics";
 import { type Metakey } from "../content/Content.ts";
 
@@ -11,15 +11,22 @@ const transformDict = [
 const Key = (props: Metakey) => {
   const [wasInvalid, setWasInvalid] = createSignal(false);
 
-  const special = props.key === "Enter" ? "special" : "";
+  // const special = props.key === "Enter" ? "special" : "";
 
   const transform = (char: string) =>
     transformDict.find(([key]) => key === char)?.[1] || char;
 
-  createEffect(() => {
-    if (props.status !== KeyStatus.match && props.status !== KeyStatus.unset)
-      setWasInvalid(true);
-  });
+  createComputed(
+    () => {
+      if (
+        props.status !== KeyStatus.match &&
+        props.status !== KeyStatus.unset
+      ) {
+        setWasInvalid(true);
+      }
+    },
+    { defer: true },
+  );
 
   css`
     .prompt-key {
@@ -82,13 +89,11 @@ const Key = (props: Metakey) => {
       opacity: 0.6;
       width: 100%;
     }
-
   `;
   return (
     <span
-      class={`prompt-key ${props.focus} ${props.status}`}
+      class={`prompt-key ${props.focus} ${wasInvalid() ? "wasInvalid" : ""} ${props.status}`}
       classList={{
-        wasInvalid: wasInvalid(),
         ["ghost-focus"]: props.ghostFocus === KeyFocus.focus,
       }}
     >
