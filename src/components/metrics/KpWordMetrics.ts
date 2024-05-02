@@ -1,6 +1,6 @@
 import type { LinkedList } from "../List";
 import List from "../List";
-import { TypingWordKind, type TypingWord } from "../seqInput/UserInput";
+import { TypingWordKind, type TypingWord } from "../typing/TypingEvent";
 
 export type WordProjection = {
   correct: number;

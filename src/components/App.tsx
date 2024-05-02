@@ -5,7 +5,6 @@ import {
   Suspense,
   Switch,
   createComputed,
-  createEffect,
   createMemo,
   createResource,
   createSignal,
@@ -17,12 +16,7 @@ import { Transition } from "solid-transition-group";
 import Header from "./Header";
 import HeaderAction from "./HeaderAction";
 import { createFetchWords } from "./content/fetchContent";
-import {
-  makeGetContent,
-  type GameModeContent,
-} from "./content/TypingGameSource";
 import GameModeMenu from "./gameMode/GameModeMenu";
-import TypingGame from "./typing/TypingGame";
 import {
   type GameOptions,
   getDefaultGameOptions,
@@ -68,9 +62,11 @@ import fr_dict from "../i18n/fr.json";
 import {
   AppStateKind,
   type AppState,
-  type PendingStatus,
   PendingKind,
+  type PendingMode,
+  makePendingMode,
 } from "./AppState";
+import TypingGameHandler from "./typing/TypingGameHandler";
 
 type Dictionaries = Record<string, RawDictionary>;
 
@@ -192,33 +188,36 @@ const App = () => {
     kind: AppStateKind.menu,
   });
 
-  const over = (metrics: Metrics, content: GameModeContent) =>
+  const over = (metrics: Metrics, content: PendingMode) => {
+    // console.log(metrics);
     setAppState({ kind: AppStateKind.resume, metrics, content });
+  };
 
   const goHome = () => setAppState({ kind: AppStateKind.menu });
 
   /* Pending */
 
-  const redo = (content: GameModeContent, metrics: MetricsResume) =>
+  const redo = (mode: PendingMode, metrics: MetricsResume) =>
     setAppState({
       kind: AppStateKind.pending,
-      data: { kind: PendingKind.redo, content, prev: metrics },
+      data: { kind: PendingKind.redo, mode, prev: metrics },
     });
 
   const start = async (opts: GameOptions, customSource: string) => {
     setGeneration(opts.generation);
-    const randomSource  = await refetchGenerationSource();
+    const randomSource = await refetchGenerationSource();
 
-    const content = makeGetContent(opts, {
+    const mode = makePendingMode(opts, {
       random: randomSource!,
       custom: customSource,
     });
+
     setPersistedOptions(opts);
     setPersistedOptions("custom", customSource);
 
     setAppState({
       kind: AppStateKind.pending,
-      data: { kind: PendingKind.new, content },
+      data: { kind: PendingKind.new, mode },
     });
   };
 
@@ -292,9 +291,10 @@ const App = () => {
             <Match when={AppState().kind === AppStateKind.pending}>
               <Suspense>
                 <Show when={generationSource()}>
-                  <TypingGame
+                  <TypingGameHandler
                     t={t}
                     status={(AppState() as any).data}
+                    setPending={setAppState}
                     gameOptions={persistedOptions}
                     showKb={config.showKb}
                     kbLayout={kbLayout()}

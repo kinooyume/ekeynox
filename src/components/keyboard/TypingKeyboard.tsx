@@ -4,13 +4,13 @@ import type { KeysProjection } from "../metrics/KeysProjection";
 import KeyboardKey from "./KeyboardKey";
 import type { KeyboardLayout } from "./KeyboardLayout";
 
-export type TypingKeyboardRef = {
+export type KeyboardHandler = {
   keyUp: (key: string) => void;
   keyDown: (key: string) => void;
 };
 
 type KeyboardProps = {
-  ref?: (ref: TypingKeyboardRef) => void;
+  ref?: (ref: KeyboardHandler) => void;
   metrics: KeysProjection;
   layout: KeyboardLayout;
   // children: (props: KeyboardKeyProps) => JSX.Element;
@@ -39,9 +39,9 @@ const Keyboard = (props: KeyboardProps) => {
   };
 
   onMount(() => {
-    // NOTE: peut etre pas une ref du coup..
     props.ref?.({ keyUp: removeKey, keyDown: addKey });
   });
+
   css`
     .kb {
       display: flex;
@@ -69,9 +69,7 @@ const Keyboard = (props: KeyboardProps) => {
   // OUAI ! Ou alors juste, on recupere les used separement
   // et on crée un signal pour key
   // qui lui envois le nouveau truc du coup
-
-  // TODO: Keypress metrics, better handle separator
-  const blankCharacters = [" ", "Enter"];
+  
   return (
     <div class="kb">
       <For each={props.layout.layout}>
@@ -83,11 +81,7 @@ const Keyboard = (props: KeyboardProps) => {
                   key={lKey.all}
                   used={lKey.used}
                   current={lKey.all.includes(props.currentKey)}
-                  data={
-                    blankCharacters.includes(lKey.primary)
-                      ? []
-                      : lKey.all.map((c) => props.metrics[c]).filter((c) => c)
-                  }
+                  data={lKey.all.map((c) => props.metrics[c]).filter((c) => c)}
                   size={lKey.size}
                   pressed={pressedKeys().includes(lKey.primary)}
                 />
@@ -103,7 +97,7 @@ const Keyboard = (props: KeyboardProps) => {
               key={lKey.all}
               used={lKey.used}
               current={lKey.all.includes(props.currentKey)}
-              data={lKey.all.map((c) => props.metrics[c]).filter((c) => c)}
+                  data={lKey.all.map((c) => props.metrics[c]).filter((c) => c)}
               size={lKey.size}
               pressed={pressedKeys().includes(lKey.primary)}
             />

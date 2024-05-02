@@ -17,7 +17,7 @@ import { css } from "solid-styled";
 import { createStore } from "solid-js/store";
 import type { CustomInputRef } from "../ui/CustomInput";
 import GameOptionsRecap from "../gameMode/GameOptionsRecap";
-import type { GameModeContent } from "../content/TypingGameSource";
+import type { PendingMode } from "../content/TypingGameSource";
 import { GameModeKind, gameModesArray } from "../gameMode/GameMode";
 import SpeedParamsMedium from "../gameMode/SpeedParamsMedium";
 import TimerParamsMedium from "../gameMode/TimerParamsMedium";
@@ -28,7 +28,7 @@ type HeaderNavLeftProps = {
   gameOptions: GameOptions;
   start: (opts: GameOptions, customSource: string) => void;
   setContentGeneration: (type: ContentGeneration) => void;
-  content: GameModeContent;
+  content: PendingMode;
 };
 
 // Dropdown like animation with anime.js

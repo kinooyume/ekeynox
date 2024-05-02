@@ -1,7 +1,7 @@
 import type { SetStoreFunction } from "solid-js/store";
 import type { Translator } from "../App";
 import type { ContentGeneration, GameOptions } from "../gameMode/GameOptions";
-import type { GameModeContent } from "../content/TypingGameSource";
+import type { PendingMode } from "../content/TypingGameSource";
 import HeaderNavLeft from "./TypingHeaderNavLeft";
 import { css } from "solid-styled";
 
@@ -11,7 +11,7 @@ type TypingHeaderNavProps = {
   gameOptions: GameOptions;
   setGameOptions: SetStoreFunction<GameOptions>;
   setContentGeneration: (type: ContentGeneration) => void;
-  content: GameModeContent;
+  content: PendingMode;
 };
 
 const TypingHeaderNav = (props: TypingHeaderNavProps) => {

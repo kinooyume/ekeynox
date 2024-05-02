@@ -6,8 +6,6 @@ import type { CreateNewTimer, TimerPause, TimerPending } from "./Timer";
 // - pauseProps: timeout(s) + resumeProps
 //
 
-/// NOTE: SequentialTimer
-
 export type SetCleanup = (cleanup: () => void) => void;
 
 type TimerKeypressProps<T> = {

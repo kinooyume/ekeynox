@@ -8,6 +8,8 @@ import type { ContentData, Paragraph } from "./Content";
 import Content from "./Content";
 import { randomQuote, randomWords } from "./randomContent";
 
+// TODO: On a dit, Fixed or Loop
+
 // NOTE: Static or Dynamic handler here
 export type SourceProps = {
   random: Array<string>;
@@ -91,7 +93,7 @@ const next = (nextContent: GetContent, following: boolean) => () => {
   };
 };
 
-const makeSourceNested = (props: GetSourceProps): GetContent => {
+const makeSourceNested = (firstProps: GetSourceProps): GetContent => {
   const nestedSource =
     (props: NestedSourceProps): GetContent =>
     () => ({
@@ -99,7 +101,7 @@ const makeSourceNested = (props: GetSourceProps): GetContent => {
       new: nestedSource(props),
       next: next(nestedSource(props), props.following),
     });
-  return nestedSource(getSource(props));
+  return nestedSource(getSource(firstProps));
 };
 
 // const emptyContentHandler =
@@ -121,42 +123,5 @@ const makeRedoContent = (
   });
 };
 
-export type GameModeContent =
-  | {
-      kind: GameModeKind.speed;
-      getContent: GetContent;
-    }
-  | {
-      kind: GameModeKind.timer;
-      time: number;
-      getContent: GetContent;
-    };
 
-const makeGetContent = (
-  opts: GameOptions,
-  sources: SourceProps,
-): GameModeContent => {
-  switch (opts.modeSelected) {
-    case GameModeKind.speed:
-      return {
-        kind: GameModeKind.speed,
-        getContent: makeSourceNested({
-          opts,
-          sources,
-          wordsCount: opts.random,
-        }),
-      };
-    case GameModeKind.timer:
-      return {
-        kind: GameModeKind.timer,
-        getContent: makeSourceNested({
-          opts,
-          sources,
-          wordsCount: 40,
-        }),
-        time: opts.timer * 1000,
-      };
-  }
-};
-
-export { makeGetContent, makeRedoContent };
+export { makeRedoContent, makeSourceNested };

@@ -9,6 +9,7 @@ import SpeedParamsCompact from "./SpeedParamsCompact";
 import TimerParams from "./TimerParams";
 import TimerParamsCompact from "./TimerParamsCompact";
 
+// Concernant que les données des modes
 export enum GameModeKind {
   speed = "speed",
   timer = "timer",

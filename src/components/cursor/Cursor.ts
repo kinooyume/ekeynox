@@ -3,7 +3,7 @@ import type { MetaWord, Paragraph, Paragraphs } from "../content/Content";
 import { KeyFocus, KeyStatus } from "../metrics/KeyMetrics";
 import type { SetStoreFunction } from "solid-js/store";
 import type { WordStatus } from "../prompt/PromptWord";
-import { TypingWordKind, type TypingWord } from "../seqInput/UserInput";
+import { TypingWordKind, type TypingWord } from "../typing/TypingEvent";
 
 type CursorProps = {
   paragraphs: Paragraphs;
@@ -60,6 +60,7 @@ export type Cursor = {
     word: () => number;
     key: () => number;
     get: () => Position;
+    reset: () => void;
     set: {
       paragraph: (n: number) => void;
       word: (n: number) => void;
@@ -80,6 +81,12 @@ const makeCursor = (props: CursorProps) => {
     word,
     key,
     get: () => ({ paragraph: paragraph(), word: word(), key: key() }),
+    reset: () => {
+      cursor.positions.set.paragraph(0);
+      cursor.positions.set.word(0);
+      cursor.positions.set.key(0);
+      cursor.focus();
+    },
     set: {
       paragraph: setCurrentParagraph,
       word: setCurrentWord,

@@ -13,7 +13,7 @@ import {
 } from "./KpWordMetrics";
 import type { LinkedList } from "../List";
 import List from "../List";
-import type { TypingEvent, TypingKey, TypingWord } from "../seqInput/UserInput";
+import type { TypingEvent, TypingKey, TypingWord } from "../typing/TypingEvent";
 
 export type CoreProjection = {
   projection: TypingProjection;

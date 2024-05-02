@@ -1,10 +1,10 @@
 import { WordStatus } from "../prompt/PromptWord.tsx";
 import { KeyFocus, KeyStatus } from "../metrics/KeyMetrics.ts";
 
-// NOTE: On peut faire un type variant 
+// NOTE: On peut faire un type variant
 // - [ ] regular
 // - [ ] ghost, + metrics
-//  
+//
 export type Metakey = {
   status: KeyStatus;
   focus: KeyFocus;
@@ -62,6 +62,12 @@ export type ContentData = {
   keySet: Set<string>;
   wordsCount: number;
 };
+
+const emptyContentData: () => ContentData = () => ({
+  paragraphs: [],
+  keySet: new Set<string>(),
+  wordsCount: 0,
+});
 
 const parseWord =
   (keySet: Set<string>) =>
@@ -175,4 +181,5 @@ export default {
   makeEnter,
   makeSpace,
   contentDataFromParagraphs,
+  emptyContentData
 };
