@@ -1,15 +1,8 @@
 import { type JSX, createComputed, createSignal } from "solid-js";
 import type { TypingEventType } from "./TypingEvent";
 import { type Cursor } from "../cursor/Cursor";
-import { WordStatus } from "../prompt/PromptWord";
 import type { StatProjection } from "../metrics/KeypressMetrics";
 import TypingInfo from "./TypingInfo";
-
-// [x] progress
-// ==> Pas besoins que ca soit ici
-
-// [ ] changer le comportement au extraEnd
-// [ ] changer le comportement getContent
 
 type TypingModeSpeedProps = {
   typingEvent: TypingEventType;

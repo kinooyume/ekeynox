@@ -1,20 +1,14 @@
-import { type JSX, createEffect, createSignal, onCleanup, onMount } from "solid-js";
+import {
+  type JSX,
+  createEffect,
+  createSignal,
+  onCleanup,
+} from "solid-js";
 import TimerOver from "../timer/TimerStopwatch.ts";
 import Timer, { type TimerEffectStatus } from "../timer/Timer.ts";
-import { TypingEventKind, type TypingEventType } from "./TypingEvent.ts";
-import ProgressBar from "../svgs/progressBar.tsx";
+import { type TypingEventType } from "./TypingEvent.ts";
 import type { StatProjection } from "../metrics/KeypressMetrics.ts";
 import TypingInfo from "./TypingInfo.tsx";
-
-// [x] ajout timer
-// [x] progress
-
-/* Loop */
-
-// Pitetre ? [ ] changer le comportement au extraEnd
-// Plus tard: [ ] changer le comportement getContent
-
-/* *** */
 
 type TypingModeTimerProps = {
   typingEvent: TypingEventType;

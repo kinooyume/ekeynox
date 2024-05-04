@@ -66,7 +66,7 @@ import {
   type PendingMode,
   makePendingMode,
 } from "./AppState";
-import TypingGameHandler from "./typing/TypingGameHandler";
+import TypingGameManager from "./typing/TypingGameManager";
 
 type Dictionaries = Record<string, RawDictionary>;
 
@@ -291,7 +291,7 @@ const App = () => {
             <Match when={AppState().kind === AppStateKind.pending}>
               <Suspense>
                 <Show when={generationSource()}>
-                  <TypingGameHandler
+                  <TypingGameManager
                     t={t}
                     status={(AppState() as any).data}
                     setPending={setAppState}
