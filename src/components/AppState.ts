@@ -9,11 +9,6 @@ import type { Metrics, MetricsResume } from "./metrics/Metrics";
 
 /* Pending Mode */
 
-export enum ContentBehavior {
-  fixed,
-  loop,
-}
-
 export type PendingMode =
   | {
       kind: GameModeKind.speed;
@@ -24,7 +19,6 @@ export type PendingMode =
       kind: GameModeKind.timer;
       isGenerated: boolean;
       time: number;
-      behavior: ContentBehavior;
       getContent: GetContent;
     };
 
@@ -48,7 +42,6 @@ const makePendingMode = (
         kind: GameModeKind.timer,
         isGenerated: opts.categorySelected.kind === CategoryKind.generation,
         time: opts.timer * 1000,
-        behavior: opts.infinite ? ContentBehavior.loop : ContentBehavior.fixed,
         getContent: makeSourceNested({
           opts,
           sources,

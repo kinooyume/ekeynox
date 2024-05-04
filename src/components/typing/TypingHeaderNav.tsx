@@ -1,9 +1,9 @@
 import type { SetStoreFunction } from "solid-js/store";
 import type { Translator } from "../App";
 import type { ContentGeneration, GameOptions } from "../gameMode/GameOptions";
-import type { PendingMode } from "../content/TypingGameSource";
 import HeaderNavLeft from "./TypingHeaderNavLeft";
 import { css } from "solid-styled";
+import type { PendingMode } from "../AppState";
 
 type TypingHeaderNavProps = {
   t: Translator;

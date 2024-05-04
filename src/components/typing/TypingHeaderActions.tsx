@@ -10,9 +10,8 @@ import Ghost from "../svgs/ghost";
 type TypingHeaderActionsProps = {
   paused: boolean;
   isRedo: boolean;
-  isLoop: boolean;
   isGenerated: boolean;
-  onShuffle: (loop: boolean) => () => void;
+  onShuffle: () => void;
   onPause: () => void;
   onReset: () => void;
   onExit: () => void;
@@ -46,11 +45,11 @@ const TypingHeaderActions = (props: TypingHeaderActionsProps) => {
         clickable={true}
         action={props.onReset}
       />
-      <Show when={props.isGenerated}>
+      <Show when={props.isGenerated && !props.isRedo}>
         <HeaderNavAction
           svg={<Shuffle />}
           clickable={true}
-          action={props.onShuffle(props.isLoop)}
+          action={props.onShuffle}
         />
       </Show>
       <HeaderNavAction svg={<Cross />} clickable={true} action={props.onExit} />

@@ -38,7 +38,6 @@ const makeKeypressHandler = (
       status: cursor.get.key().status,
     });
 
-    // props.setStatus(
     return TypingEvent.make({
       key: {
         keyMetrics: deletedKeyMetrics,
@@ -47,7 +46,6 @@ const makeKeypressHandler = (
       },
       next: true,
     });
-    //);
   };
 
   /* *** */
@@ -66,10 +64,6 @@ const makeKeypressHandler = (
       if (keyMetrics[1].kind === KeyEventKind.added) {
         cursor.set.keyStatus(keyMetrics[1].status.kind);
       }
-      /* Tout ca on sait pas trop, surement pas ici */
-
-      /* ca pourrait reagir a TypingStatus */
-      // Donc en fait, si on reagis au typingStatus plutot pour faire next
       let [hasNext, typingWord] = cursorNav.next(incrementWordsCount);
 
       /* Typing Status */
@@ -84,33 +78,7 @@ const makeKeypressHandler = (
       };
 
       return TypingEvent.make(event);
-
-      /* *** */
-
-      // TIMER LOOP ONLY: extraEnd
-
-      // ==> peut reagir a TypingEvent
-      // if (
-      //   props.extraEnd &&
-      //   props.extraEnd[0] === cursor.positions.paragraph() &&
-      //   props.extraEnd[1] === cursor.positions.word()
-      // ) {
-      //   props.onOver();
-      // }
-      //
-      
-      // GameHandler ici ca pourrais etre de l'autre coté aussi */
-
-      // // Peu reagir aussi si acces au hasNext
-      // if (!hasNext) {
-      //   cursor.set.wordStatus(WordStatus.over, false);
-      //   cursor.set.keyFocus(KeyFocus.unfocus);
-      //   props.onOver();
-      // }
     }
-
-    // C'est la next key
-    // props.setPromptKey(cursor.get.key().key);
   };
 
   const keyDown = (key: string) => {
