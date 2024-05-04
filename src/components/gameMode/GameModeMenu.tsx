@@ -51,12 +51,10 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
     deepCopy(props.gameOptions),
   );
 
-  // was createEffect
   createComputed(() => {
     props.setContentGeneration({
       language: gameOptions.generation.language,
       category: gameOptions.generation.category,
-      // infinite: gameOptions.infinite,
     });
   });
 

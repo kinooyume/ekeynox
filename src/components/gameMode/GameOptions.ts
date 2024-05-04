@@ -48,7 +48,6 @@ export type GameOptions = {
   custom: string;
   random: number;
   timer: number;
-  infinite: boolean;
 };
 
 /*
@@ -62,8 +61,6 @@ type Selected = {
   category: CategoryKind;
 }
 
-// En fait, je pense que l'embrouille vient du fait 
-// que la generation.. hum.. 
 const getDefaultGameOptions = (): GameOptions => ({
   modeSelected: GameModeKind.speed,
   // NOTE: on doit pouvoir avoir que le kind ?
@@ -78,7 +75,6 @@ const getDefaultGameOptions = (): GameOptions => ({
   custom: "",
   random: 10,
   timer: 10,
-  infinite: true,
 });
 
 const deepCopy = (source: GameOptions): GameOptions => ({
