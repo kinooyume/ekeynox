@@ -91,9 +91,7 @@ const CharacterChart = (props: CharacterCharProps) => {
       tooltip: {
         callbacks: {
           // label: (context: ChartTooltipItem) => {
-          //   console.log(context);
             // let ds = data.datasets[tooltipItem.datasetIndex];
-            // console.log(ds);
             // return (
             //   ds.label + ": " + Math.abs(ds.data[tooltipItem.index] as number)
             // );

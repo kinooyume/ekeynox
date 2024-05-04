@@ -82,7 +82,6 @@ const createTypingMetricsState = (
             props.keypressMetrics.pause(true);
           // side effect
           updateStat(finalProjection, props.metrics);
-          console.log(props.metrics)
           setTypingMetrics(props.metrics);
           props.metrics.projection = finalProjection;
           return paused({
