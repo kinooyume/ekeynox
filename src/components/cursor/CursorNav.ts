@@ -58,8 +58,8 @@ let makeCursorNav = ({ cursor, hooks }: CursorNavProps): CursorNavType => {
         cursor.positions.set.key(cursor.positions.key() + 1);
         hooks.key.next.enter(cursor);
       } else if (cursor.positions.word() < cursor.get.nbrWords()) {
+        nextWordHook && !cursor.get.word().isSeparator &&  nextWordHook(cursor);
         typingWord = nextWord();
-        !cursor.get.word().isSeparator && nextWordHook && nextWordHook(cursor);
       } else if (cursor.positions.paragraph() < cursor.get.nbrParagraphs()) {
         nextParagraph();
       } else return [false, cursor.get.typingWord()];
@@ -74,8 +74,8 @@ let makeCursorNav = ({ cursor, hooks }: CursorNavProps): CursorNavType => {
         cursor.positions.set.key(cursor.positions.key() - 1);
         hooks.key.prev.enter(cursor);
       } else if (cursor.positions.word() > 0) {
+        prevWordHook && !cursor.get.word().isSeparator && prevWordHook(cursor);
         prevWord();
-        prevWordHook && prevWordHook(cursor);
       } else if (cursor.positions.paragraph() > 0) {
         prevParagraph();
       } else {
