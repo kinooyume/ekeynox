@@ -326,12 +326,11 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
     deepCopy(props.gameOptions),
   );
 
-  const resetOptions = () => {
-    setGameOptions(deepCopy(props.gameOptions));
-    setEdited(false);
-  };
+  // const resetOptions = () => {
+  //   setGameOptions(deepCopy(props.gameOptions));
+  //   setEdited(false);
+  // };
 
-  // was createEffetc
   createComputed(
     on(
       () => gameOptions,
@@ -339,7 +338,6 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
         props.setContentGeneration({
           language: gameOptions.generation.language,
           category: gameOptions.generation.category,
-          // infinite: gameOptions.generation.infinite,
         });
       },
       { defer: true },
