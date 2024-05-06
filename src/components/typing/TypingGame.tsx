@@ -10,7 +10,6 @@ import Keyboard, { type KeyboardHandler } from "../keyboard/TypingKeyboard.tsx";
 import { type KeysProjection } from "../metrics/KeysProjection.ts";
 import type { Translator } from "../App.tsx";
 import { type TypingEventType } from "./TypingEvent.ts";
-import type { SetStoreFunction } from "solid-js/store";
 import type { HigherKeyboard } from "../keyboard/KeyboardLayout.ts";
 import type { JSX } from "solid-js";
 
@@ -23,8 +22,6 @@ type TypingGameProps = {
   showKb: boolean;
 
   paragraphs: Paragraphs;
-  // Uniquement prompt
-  setParagraphs: SetStoreFunction<Paragraphs>;
 
   keyMetrics: KeysProjection;
 
@@ -86,7 +83,6 @@ const TypingGame = (props: TypingGameProps) => {
 
       <Prompt
         paragraphs={props.paragraphs}
-        setParagraphs={props.setParagraphs}
       />
       <Show when={props.showKb}>
         <Keyboard

@@ -49,7 +49,6 @@ import {
   createWordMetricsState,
   type WordMetrics,
 } from "../metrics/PromptWordMetrics";
-import type { PromptWpm } from "../metrics/PromptKeypressMetrics";
 
 type TypingGameManagerProps = {
   t: Translator;
@@ -475,7 +474,6 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
       onAddKey={onAddKey}
       promptKey={promptKey()}
       paragraphs={paraStore}
-      setParagraphs={setParaStore}
       keyMetrics={keyMetrics()}
       onExit={props.onExit}
     >

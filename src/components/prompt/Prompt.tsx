@@ -1,14 +1,12 @@
-import { For, Index, createSignal, onCleanup, onMount } from "solid-js";
+import { For, createSignal, onCleanup, onMount } from "solid-js";
 import Word from "./PromptWord.tsx";
 import { css } from "solid-styled";
 import anime from "animejs/lib/anime.es.js";
 
 import { type Paragraphs } from "../content/Content.ts";
-import type { SetStoreFunction } from "solid-js/store";
 
 export type PromptProps = {
   paragraphs: Paragraphs;
-  setParagraphs: SetStoreFunction<Paragraphs>;
 };
 
 const prompt = (props: PromptProps) => {
@@ -76,16 +74,13 @@ const prompt = (props: PromptProps) => {
     <div class="prompt" ref={createIntersectionObserver}>
       <div class="board">
         <For each={props.paragraphs}>
-          {(paragraphs, pIncdex) => (
+          {(paragraphs) => (
             <div class="paragraph">
               <For each={paragraphs}>
-                {(word, wIndex) => (
+                {(word) => (
                   <Word
                     {...word}
                     observer={observer()}
-                    setWpm={(wpm) => {
-                      props.setParagraphs(pIncdex(), wIndex(), "wpm", wpm);
-                    }}
                   />
                 )}
               </For>
