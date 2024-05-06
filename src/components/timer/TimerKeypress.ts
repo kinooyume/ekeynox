@@ -24,7 +24,6 @@ type PauseProps<T> = {
   timeout: NodeJS.Timeout | null;
 };
 
-// TODO: remettre mecansime de timefleft
 const create: CreateNewTimer<TimerKeypressProps<TimedKey>> =
   ({ sequence, apply, setCleanup }) =>
   () => {
@@ -55,7 +54,9 @@ const create: CreateNewTimer<TimerKeypressProps<TimedKey>> =
     };
     const pause = (props: PauseProps<TimedKey>): TimerPause => {
       const pause = performance.now();
-      const timeLeft = props.sequence[index].duration - (pause - lastPress);
+      const timeLeft = props.sequence[index]
+        ? props.sequence[index].duration - (pause - lastPress)
+        : 0;
       props.timeout && clearTimeout(props.timeout);
       return { resume: () => resume({ ...props, timeLeft }) };
     };

@@ -7,6 +7,7 @@ import {
   createSignal,
   on,
   onCleanup,
+  untrack,
 } from "solid-js";
 import type { Translator } from "../App";
 import { PendingKind, type PendingMode, type PendingStatus } from "../AppState";
@@ -16,12 +17,12 @@ import type { HigherKeyboard } from "../keyboard/KeyboardLayout";
 import type { Metrics } from "../metrics/Metrics";
 import TypingGame from "./TypingGame";
 import type { ContentHandler } from "../content/TypingGameSource";
-import { createStore } from "solid-js/store";
+import { createStore, reconcile } from "solid-js/store";
 import Content, { type Paragraphs } from "../content/Content";
 import makeCursor, { type Cursor, type Position } from "../cursor/Cursor";
 import { TypingEventKind, type TypingEventType } from "./TypingEvent";
 import UserNavHooks from "../cursor/UserNavHooks";
-import type { CursorNavType } from "../cursor/CursorNav";
+import type { CursorNavType, ExtraWordHooks } from "../cursor/CursorNav";
 import CursorNav from "../cursor/CursorNav";
 import { WordStatus } from "../prompt/PromptWord";
 import { Portal } from "solid-js/web";
@@ -44,6 +45,11 @@ import TypingModeSpeed from "./TypingModeSpeed";
 import TypingHeaderActions from "./TypingHeaderActions";
 import TimerInput from "../seqInput/TimerInput";
 import type { TimerEffectStatus } from "../timer/Timer";
+import {
+  createWordMetricsState,
+  type WordMetrics,
+} from "../metrics/PromptWordMetrics";
+import type { PromptWpm } from "../metrics/PromptKeypressMetrics";
 
 type TypingGameManagerProps = {
   t: Translator;
@@ -74,30 +80,6 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
     }),
   );
 
-  createComputed(
-    () =>
-      setCursor(
-        makeCursor({
-          setParagraphs: setParaStore,
-          paragraphs: paraStore,
-        }),
-      ),
-    { defer: true },
-  );
-
-  const [cursorNav, setCursorNav] = createSignal<CursorNavType>(
-    CursorNav({ cursor: cursor(), hooks: UserNavHooks }),
-  );
-
-  createComputed(
-    () => setCursorNav(CursorNav({ cursor: cursor(), hooks: UserNavHooks })),
-    { defer: true },
-  );
-
-  /* Typing */
-  const [typingEvent, setTypingEvent] = createSignal<TypingEventType>({
-    kind: TypingEventKind.unstart,
-  });
   /* *** */
 
   // NOTE: wordsCount should be in Metrics ?
@@ -111,9 +93,66 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
     contentHandler().data.wordsCount,
   );
 
-  const incrementWordsCount = () => setWordsCount(wordsCount() + 1);
-  const decrementWordsCount = () => setWordsCount(wordsCount() - 1);
+  const incrementWordsCount = () => setWordsCount(wordsCount() + 1); // next
+  const decrementWordsCount = () => setWordsCount(wordsCount() - 1); // prev
 
+  let setWpm = ({ wpm, duration }: { wpm: number; duration: number }) => {
+    const { paragraph, word, key } = cursor().positions.get();
+    setParaStore(paragraph, word, "wpm", wpm);
+    setParaStore(paragraph, word, "spentTime", duration);
+  };
+
+  // By Word WPM
+  let wordWpmTimer: undefined | WordMetrics = undefined;
+
+  const newWordWpmTimer = () => {
+    wordWpmTimer = createWordMetricsState({
+      word: cursor().get.word(),
+      setWpm,
+    })({
+      status: WordStatus.pending,
+    });
+  };
+
+  // NOTE: On peut surement faire mieux, réagir au mot actuel
+  const nextWordHooks: ExtraWordHooks = {
+    enter: (word) => {
+      if (!wordWpmTimer) return;
+      wordWpmTimer = createWordMetricsState({ word, setWpm })({
+        status: WordStatus.pending,
+      });
+    },
+    leave: () => {
+      if (!wordWpmTimer) return;
+      wordWpmTimer = wordWpmTimer({ status: WordStatus.over });
+
+      // setWordsCount(wordsCount() + 1);
+    },
+  };
+
+  const prevWordHooks: ExtraWordHooks = {
+    enter: (word) => {
+      if (!wordWpmTimer) return;
+      wordWpmTimer = createWordMetricsState({ word, setWpm })({
+        status: WordStatus.pending,
+      });
+    },
+    leave: () => {
+      if (!wordWpmTimer) return;
+      wordWpmTimer = wordWpmTimer({ status: WordStatus.over });
+      //setWordsCount(wordsCount() - 1);
+    },
+  };
+  const [cursorNav, setCursorNav] = createSignal<CursorNavType>(
+    CursorNav({
+      cursor: cursor(),
+      hooks: UserNavHooks,
+      nextWordHooks,
+      prevWordHooks,
+    }),
+  );
+
+  // pour le counter, on veut just enter/leave
   const [keypressHandler, setKeypressHandler] = createSignal(
     TypingKeypress(
       cursor(),
@@ -123,19 +162,39 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
     ),
   );
 
-  // Double call because of cursor/cursorNav ?
   createComputed(
-    () =>
+    () => {
+      setCursor(
+        makeCursor({
+          setParagraphs: setParaStore,
+          paragraphs: paraStore,
+        }),
+      );
+      setCursorNav(
+        CursorNav({
+          cursor: untrack(cursor),
+          hooks: UserNavHooks,
+          nextWordHooks,
+          prevWordHooks,
+        }),
+      );
+
       setKeypressHandler(
         TypingKeypress(
-          cursor(),
-          cursorNav(),
+          untrack(cursor),
+          untrack(cursorNav),
           incrementWordsCount,
           decrementWordsCount,
         ),
-      ),
+      );
+    },
     { defer: true },
   );
+
+  /* Typing */
+  const [typingEvent, setTypingEvent] = createSignal<TypingEventType>({
+    kind: TypingEventKind.unstart,
+  });
 
   // Can be Signal
   let onKeyboard: KeyboardHandler = {
@@ -168,6 +227,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
 
   const pause = () => {
     cursor().set.wordStatus(WordStatus.pause, false);
+    if (wordWpmTimer) wordWpmTimer = wordWpmTimer({ status: WordStatus.pause });
     setTypingEvent({ kind: TypingEventKind.pause });
   };
 
@@ -184,7 +244,9 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
   const typingOver = () => setTypingEvent({ kind: TypingEventKind.over });
 
   const over = () => {
+    // NOTE: peut etre le faire en mode "leave"
     cursor().set.wordStatus(WordStatus.over, false);
+    if (wordWpmTimer) wordWpmTimer({ status: WordStatus.over });
     cursor().set.keyFocus(KeyFocus.unfocus);
     const position = cursor().positions.get();
     props.onOver(
@@ -203,10 +265,19 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
     on(typingEvent, (event) => {
       switch (event.kind) {
         case TypingEventKind.unstart:
+          if (wordWpmTimer) wordWpmTimer({ status: WordStatus.unstart });
           cursor().positions.reset();
           setPromptKey(cursor().get.key().key);
           break;
         case TypingEventKind.pending:
+          // TODO: better handle, link to actual word
+          // wordWpmTimer({ status: WordStatus.pending });
+
+          if (!wordWpmTimer) {
+            newWordWpmTimer();
+          } else {
+            wordWpmTimer = wordWpmTimer({ status: WordStatus.pending });
+          }
           if (!event.next) {
             setTypingEvent({ kind: TypingEventKind.over });
           }
@@ -228,7 +299,11 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
   };
 
   const reset = () => {
+    wordWpmTimer && wordWpmTimer({ status: WordStatus.over });
+    wordWpmTimer = undefined;
     resetGhost();
+
+    setWordsCount(0);
     setParaStore(Content.deepClone(contentHandler().data.paragraphs));
     setTypingEvent({ kind: TypingEventKind.unstart });
   };
@@ -247,9 +322,8 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
     },
   );
 
-  // NOTE: mixed metrics & over on typingEvent, to be sure of the order
-  // ==> maybe we should merge all computed around typingEvent
   createComputed((typingMetricsState: TypingMetricsState) => {
+    /* metrics first */
     const metrics = typingMetricsState({ event: typingEvent() });
     /* intern */
     if (typingEvent().kind === TypingEventKind.over) {
@@ -268,12 +342,25 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
 
   // Side effect
 
+  // PERF: we could just add new content instead of setting the entire store
   const appendContent = () => {
     const { data, next } = contentHandler();
+    // TODO: add following option back
     const newContent = next();
     setTotalWordsCount(contentHandler().data.wordsCount);
 
-    setContentHandler(newContent(data));
+    const newContentHandler = newContent(data);
+    setContentHandler(newContentHandler);
+
+    // if (newContentHandler.following) {
+    //   console.log(newContentHandler.following);
+    //   const lastParagraph  = paraStore[paraStore.length - 1];
+    //   setParaStore(paraStore.length - 1, lastParagraph.length, newContentHandler.following);
+    // }
+    //    if (!newContentHandler.parts) return;
+    // newContentHandler.parts.forEach((paragraph) =>
+    //   setParaStore(paraStore.length, paragraph),
+    // );
     setParaStore(
       newContent({ ...data, paragraphs: paraStore }).data.paragraphs,
     );
@@ -291,7 +378,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
   );
 
   // should only be there at timer
-  createEffect(
+  createComputed(
     on(wordsCount, () => {
       if (
         props.status.mode.kind === GameModeKind.timer &&
@@ -369,6 +456,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
   onCleanup(() => {
     cursor().set.keyFocus(KeyFocus.unfocus);
     cursor().set.wordStatus(WordStatus.unstart, false);
+    wordWpmTimer && wordWpmTimer({ status: WordStatus.unstart });
     cleanupMetrics();
     cleanupGhost();
 
@@ -396,7 +484,6 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
           <TypingModeSpeed
             typingEvent={typingEvent()}
             stat={stat()}
-            cursor={cursor()}
             wordsCount={wordsCount()}
             totalWords={totalWordsCount()}
           >

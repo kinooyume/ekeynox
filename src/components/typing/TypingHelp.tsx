@@ -37,7 +37,12 @@ const TypingHelp = (props: TypingHelpProps) => {
   };
 
   createEffect(() => {
-    if (pauseKeys().ctrl && pauseKeys().shift && pauseKeys().space) {
+    if (
+      !props.isPaused &&
+      pauseKeys().ctrl &&
+      pauseKeys().shift &&
+      pauseKeys().space
+    ) {
       props.onPause();
     }
   });

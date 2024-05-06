@@ -3,10 +3,6 @@ import { For, Show, createEffect, createSignal } from "solid-js";
 
 import Key from "./PromptKey.tsx";
 import type { MetaWord } from "../content/Content.ts";
-import {
-  createWordMetricsState,
-  type WordMetrics,
-} from "../metrics/PromptWordMetrics.ts";
 
 export enum WordStatus {
   unstart = "unstart",
@@ -17,21 +13,24 @@ export enum WordStatus {
 }
 
 type WordProps = {
-  setWpm: (wpm: number) => void;
   observer: IntersectionObserver | null;
 } & MetaWord;
 
 const Word = (props: WordProps) => {
   const [isObserved, setIsObserved] = createSignal(false);
-  const wordMetricsState = createWordMetricsState({
-    setWpm: props.setWpm,
-    keys: props.keys,
-  });
 
-  createEffect(
-    (metrics: WordMetrics) => metrics({ status: props.status }),
-    wordMetricsState,
-  );
+  // const wordMetricsState = createWordMetricsState({
+  //   setWpm: props.setWpm,
+  //   // /!\ hehe.. non bha en fait c'est ok
+  //   // il faut accéder au words.. maybe through cursor/cursorNav
+  //   // but in the hooks, juste before switch
+  //   keys: props.keys,
+  // });
+
+  // createEffect(
+  //   (metrics: WordMetrics) => metrics({ status: props.status }),
+  //   wordMetricsState,
+  // );
 
  const createObserver = (ref: Element) => createEffect(() => {
     if (props.status === WordStatus.pending && !isObserved()) {

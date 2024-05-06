@@ -55,9 +55,14 @@ export type GetContent = () => ContentHandler;
 
 export type ContentHandler = {
   data: ContentData;
+  following?: Paragraph;
+  parts?: Array<Paragraph>;
   new: GetContent;
   next: NextContent;
 };
+
+// PERF: du coup, plutot que d'avoir ca
+// on pourrait juste le faire directement dans le store
 
 const mergeSource = (
   prev: ContentData,
@@ -74,7 +79,7 @@ const mergeSource = (
     const newParagraph = prevLast.concat(Content.makeSpace(), first);
     paragraphs = prevParagraphs.concat([newParagraph, ...rest]);
   } else {
-    prevLast.push(Content.makeEnter());
+    //  prevLast.push(Content.makeEnter());
     paragraphs = prevParagraphs.concat([prevLast, ...nextParagraphs]);
   }
   const wordsCount = prev.wordsCount + next.wordsCount;
@@ -85,8 +90,12 @@ const mergeSource = (
 const next = (nextContent: GetContent, following: boolean) => () => {
   const next = nextContent();
   return (prev: ContentData): ContentHandler => {
+    // add enter at the begin data.paragraphs
+    // if (!following) next.data.paragraphs.unshift([Content.makeEnter()]);
     return {
       data: mergeSource(prev, next.data, following),
+      following: following ? next.data.paragraphs[0] : undefined,
+      parts: !following ? next.data.paragraphs : undefined,
       new: next.new,
       next: next.next,
     };
@@ -122,6 +131,5 @@ const makeRedoContent = (
     next: nextGetContent().next,
   });
 };
-
 
 export { makeRedoContent, makeSourceNested };

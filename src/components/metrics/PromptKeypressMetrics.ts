@@ -14,22 +14,24 @@ export type PausedPromptKeypressMetrics = {
 export enum PromptWpmKind {
   done,
   pending,
+  pause
 }
 
-type PromptWpm =
-  | { kind: PromptWpmKind.done; wpm: number }
+export type PromptWpm =
+  | { kind: PromptWpmKind.pause }
+  | { kind: PromptWpmKind.done; wpm: number, duration: number }
   | { kind: PromptWpmKind.pending };
 
-const promptKeypressHandler = (): PausedPromptKeypressMetrics => {
+const promptKeypressHandler = (elapsed: number): PausedPromptKeypressMetrics => {
   const pending = (lastDuration: number) => {
     const start = performance.now();
     const getWpm = (keys: Array<Metakey>): PromptWpm => {
       const stop = performance.now();
       if (!keys.every((key) => key.status === KeyStatus.match))
-        return { kind: PromptWpmKind.pending };
-      const duration = stop - start + lastDuration;
+        return { kind: PromptWpmKind.pause };
+      const duration = stop - start + lastDuration + elapsed;
       const wpm = ((keys.length / duration) * 60000) / 5;
-      return { kind: PromptWpmKind.done, wpm };
+      return { kind: PromptWpmKind.done, wpm, duration };
     };
     const pause = () => {
       const stop = performance.now();
