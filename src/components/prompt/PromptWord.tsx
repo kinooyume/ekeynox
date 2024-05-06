@@ -19,19 +19,6 @@ type WordProps = {
 const Word = (props: WordProps) => {
   const [isObserved, setIsObserved] = createSignal(false);
 
-  // const wordMetricsState = createWordMetricsState({
-  //   setWpm: props.setWpm,
-  //   // /!\ hehe.. non bha en fait c'est ok
-  //   // il faut accéder au words.. maybe through cursor/cursorNav
-  //   // but in the hooks, juste before switch
-  //   keys: props.keys,
-  // });
-
-  // createEffect(
-  //   (metrics: WordMetrics) => metrics({ status: props.status }),
-  //   wordMetricsState,
-  // );
-
  const createObserver = (ref: Element) => createEffect(() => {
     if (props.status === WordStatus.pending && !isObserved()) {
       props.observer?.observe(ref);
