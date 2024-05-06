@@ -167,12 +167,12 @@ const App = () => {
   /* Contente Generation */
   // On veut etendre ce fonctionnement au clavier, et pitetre locales
   //
-  const [generation, setGeneration] = createSignal<ContentGeneration>(
-    persistedOptions.generation,
-  );
+  // const [generation, setGeneration] = createSignal<ContentGeneration>(
+  //   persistedOptions.generation,
+  // );
 
   const [contentGeneration, setContentGeneration] =
-    createSignal<ContentGeneration>(generation());
+    createSignal<ContentGeneration>(persistedOptions.generation);
 
   const fetchWords = createFetchWords();
   const [generationSource, { refetch: refetchGenerationSource }] =
@@ -189,7 +189,6 @@ const App = () => {
   });
 
   const over = (metrics: Metrics, content: PendingMode) => {
-    // console.log(metrics);
     setAppState({ kind: AppStateKind.resume, metrics, content });
   };
 
@@ -204,11 +203,8 @@ const App = () => {
     });
 
   const start = async (opts: GameOptions, customSource: string) => {
-    setGeneration(opts.generation);
-    const randomSource = await refetchGenerationSource();
-
     const mode = makePendingMode(opts, {
-      random: randomSource!,
+      random: generationSource(),
       custom: customSource,
     });
 
@@ -253,7 +249,7 @@ const App = () => {
           />
         }
       >
-        <Show when={AppState().kind === AppStateKind.pending}>
+        <Show when={AppState().kind === AppStateKind.pending} keyed>
           <TypingHeaderNav
             t={i18nContext.t}
             start={start}
@@ -288,20 +284,21 @@ const App = () => {
                 start={start}
               />
             </Match>
-            <Match when={AppState().kind === AppStateKind.pending}>
+            <Match
+              when={AppState().kind === AppStateKind.pending && AppState()}
+              keyed
+            >
               <Suspense>
-                <Show when={generationSource()}>
-                  <TypingGameManager
-                    t={t}
-                    status={(AppState() as any).data}
-                    setPending={setAppState}
-                    gameOptions={persistedOptions}
-                    showKb={config.showKb}
-                    kbLayout={kbLayout()}
-                    onExit={goHome}
-                    onOver={over}
-                  />
-                </Show>
+                <TypingGameManager
+                  t={t}
+                  status={(AppState() as any).data}
+                  setPending={setAppState}
+                  gameOptions={persistedOptions}
+                  showKb={config.showKb}
+                  kbLayout={kbLayout()}
+                  onExit={goHome}
+                  onOver={over}
+                />
               </Suspense>
             </Match>
             <Match when={AppState().kind === AppStateKind.resume}>

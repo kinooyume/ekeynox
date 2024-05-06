@@ -332,16 +332,13 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
   // };
 
   createComputed(
-    on(
-      () => gameOptions,
-      () => {
-        props.setContentGeneration({
-          language: gameOptions.generation.language,
-          category: gameOptions.generation.category,
-        });
-      },
-      { defer: true },
-    ),
+    () => {
+      props.setContentGeneration({
+        language: gameOptions.generation.language,
+        category: gameOptions.generation.category,
+      });
+    },
+    { defer: true },
   );
 
   const customRef: CustomInputRef = {
@@ -351,10 +348,7 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
   /* *** */
 
   const start = () => {
-    props.start(
-      gameOptions,
-      customRef.ref ? customRef.ref.value : "",
-    );
+    props.start(gameOptions, customRef.ref ? customRef.ref.value : "");
   };
 
   return (
