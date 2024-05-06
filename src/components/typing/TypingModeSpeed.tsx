@@ -1,6 +1,5 @@
 import { type JSX, createComputed, createSignal } from "solid-js";
 import type { TypingEventType } from "./TypingEvent";
-import { type Cursor } from "../cursor/Cursor";
 import type { StatProjection } from "../metrics/KeypressMetrics";
 import TypingInfo from "./TypingInfo";
 
@@ -9,7 +8,6 @@ type TypingModeSpeedProps = {
   stat: StatProjection;
   children: JSX.Element;
 
-  cursor: Cursor;
   wordsCount: number;
   totalWords: number;
 };

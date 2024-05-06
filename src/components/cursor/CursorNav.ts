@@ -1,10 +1,18 @@
+import type { MetaWord } from "../content/Content";
 import type { TypingWord } from "../typing/TypingEvent";
 import type { Cursor } from "./Cursor";
 import type { CursorNavHooks } from "./CursorNavHooks";
 
+export type ExtraWordHooks = {
+  enter: (word: MetaWord) => void;
+  leave: (word: MetaWord) => void;
+};
+
 type CursorNavProps = {
   hooks: CursorNavHooks;
   cursor: Cursor;
+  nextWordHooks?: ExtraWordHooks;
+  prevWordHooks?: ExtraWordHooks;
 };
 
 export type CursorNavType = {
@@ -14,16 +22,23 @@ export type CursorNavType = {
   prev: (prevWordHook?: (cursor: Cursor) => void) => boolean;
 };
 
-let makeCursorNav = ({ cursor, hooks }: CursorNavProps): CursorNavType => {
+let makeCursorNav = ({
+  cursor,
+  hooks,
+  nextWordHooks,
+  prevWordHooks,
+}: CursorNavProps): CursorNavType => {
   const nextWord = () => {
     let typingWord = null;
     if (!cursor.get.wordValid() && cursor.get.wordIsValid()) {
       typingWord = cursor.get.typingWord();
     }
     hooks.word.next.leave(cursor);
+    nextWordHooks && nextWordHooks.leave(cursor.get.word());
     cursor.positions.set.word(cursor.positions.word() + 1);
     cursor.positions.set.key(0);
     hooks.word.next.enter(cursor);
+    nextWordHooks && nextWordHooks.enter(cursor.get.word());
     return typingWord;
   };
 
@@ -37,9 +52,11 @@ let makeCursorNav = ({ cursor, hooks }: CursorNavProps): CursorNavType => {
 
   const prevWord = () => {
     hooks.word.prev.leave(cursor);
+    prevWordHooks && prevWordHooks.leave(cursor.get.word());
     cursor.positions.set.word(cursor.positions.word() - 1);
     cursor.positions.set.key(cursor.get.nbrKeys());
     hooks.word.prev.enter(cursor);
+    prevWordHooks && prevWordHooks.enter(cursor.get.word());
   };
 
   const prevParagraph = () => {
@@ -58,7 +75,7 @@ let makeCursorNav = ({ cursor, hooks }: CursorNavProps): CursorNavType => {
         cursor.positions.set.key(cursor.positions.key() + 1);
         hooks.key.next.enter(cursor);
       } else if (cursor.positions.word() < cursor.get.nbrWords()) {
-        nextWordHook && !cursor.get.word().isSeparator &&  nextWordHook(cursor);
+        nextWordHook && !cursor.get.word().isSeparator && nextWordHook(cursor);
         typingWord = nextWord();
       } else if (cursor.positions.paragraph() < cursor.get.nbrParagraphs()) {
         nextParagraph();

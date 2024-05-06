@@ -1,10 +1,6 @@
 import { WordStatus } from "../prompt/PromptWord.tsx";
 import { KeyFocus, KeyStatus } from "../metrics/KeyMetrics.ts";
 
-// NOTE: On peut faire un type variant
-// - [ ] regular
-// - [ ] ghost, + metrics
-//
 export type Metakey = {
   status: KeyStatus;
   focus: KeyFocus;
@@ -19,6 +15,7 @@ export type MetaWord = {
   status: WordStatus;
   focus: boolean;
   wasCorrect: boolean;
+  spentTime: number;
   wpm: number;
 };
 
@@ -30,6 +27,7 @@ const makeEnter = (): MetaWord => ({
   status: WordStatus.unstart,
   isSeparator: true,
   wasCorrect: false,
+  spentTime: 0,
   wpm: 0,
   keys: [
     {
@@ -46,6 +44,7 @@ const makeSpace = (): MetaWord => ({
   status: WordStatus.unstart,
   isSeparator: true,
   wasCorrect: false,
+  spentTime: 0,
   wpm: 0,
   keys: [
     {
@@ -75,6 +74,7 @@ const parseWord =
     focus: false,
     status: WordStatus.unstart,
     wasCorrect: false,
+    spentTime: 0,
     wpm: 0,
     isSeparator: word.trim() === "",
     keys: word.split("").map((key) => {
@@ -142,7 +142,7 @@ const deepClone = (paragraphs: Paragraphs) =>
 const deepCloneReset = (paragraphs: Paragraphs) => {
   return paragraphs.map((paragraph) =>
     paragraph.map((word) => {
-      const newWord = { ...word, wpm: 0, wasCorrect: false };
+      const newWord = { ...word, timeSpent: 0, wpm: 0, wasCorrect: false };
       newWord.keys = word.keys.map((key) => ({
         ...key,
         status: KeyStatus.unset,
@@ -181,5 +181,5 @@ export default {
   makeEnter,
   makeSpace,
   contentDataFromParagraphs,
-  emptyContentData
+  emptyContentData,
 };
