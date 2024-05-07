@@ -45,7 +45,7 @@ const Reset = () => {
           fill-opacity="0"
           d="M3.25 10H3.89645C4.11917 10 4.23071 9.73071 4.07322 9.57322L3.42678 8.92678C3.26929 8.76929 3 8.88083 3 9.10355V9.75C3 9.88807 3.11193 10 3.25 10Z"
         >
-          {/* <set attributeName="fill-opacity" begin="0.6s" to="1" /> */}
+          <set attributeName="fill-opacity" begin="0.6s" to="1" />
           <animate
             fill="freeze"
             attributeName="d"
