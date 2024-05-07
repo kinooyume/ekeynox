@@ -348,6 +348,7 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
   /* *** */
 
   const start = () => {
+    setDownState(DropdownState.none);
     props.start(gameOptions, customRef.ref ? customRef.ref.value : "");
   };
 
