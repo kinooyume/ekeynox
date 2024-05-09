@@ -1,7 +1,7 @@
 import type { SetStoreFunction } from "solid-js/store";
 import type { Translator } from "../App";
 import type { ContentGeneration, GameOptions } from "../gameMode/GameOptions";
-import HeaderNavLeft from "./TypingHeaderNavLeft";
+import TypingHeaderMenu from "./TypingHeaderMenu";
 import { css } from "solid-styled";
 import type { PendingMode } from "../AppState";
 
@@ -29,7 +29,7 @@ const TypingHeaderNav = (props: TypingHeaderNavProps) => {
   return (
     <div class="header-nav">
       <div class="left">
-        <HeaderNavLeft {...props} />
+        <TypingHeaderMenu {...props} />
       </div>
       <div class="right">
         <div id="header-nav-actions-portal"></div>
