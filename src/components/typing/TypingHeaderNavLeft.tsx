@@ -1,14 +1,4 @@
-import {
-  createSignal,
-  Show,
-  For,
-  Switch,
-  Match,
-  createComputed,
-  createEffect,
-  on,
-  onMount,
-} from "solid-js";
+import { Show, For, Switch, Match, createComputed } from "solid-js";
 import type { Translator } from "../App";
 import {
   deepCopy,
@@ -23,7 +13,7 @@ import { GameModeKind, gameModesArray } from "../gameMode/GameMode";
 import SpeedParamsMedium from "../gameMode/SpeedParamsMedium";
 import TimerParamsMedium from "../gameMode/TimerParamsMedium";
 import CustomInput from "../ui/CustomInput";
-import anime from "animejs";
+import Dropdown from "../ui/Dropdown";
 
 type HeaderNavLeftProps = {
   t: Translator;
@@ -54,64 +44,6 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
 
     .options-recap {
       display: flex;
-    }
-
-    .dropdown-wrapper {
-      position: relative;
-      margin-left: 12px;
-      width: 200px;
-      display: block;
-      min-width: 200px;
-      z-index: 205;
-      height: 48px;
-    }
-
-    .dropdown-wrapper:hover .cursor {
-      opacity: 1;
-    }
-
-    .dropdown {
-      overflow: hidden;
-      position: absolute;
-      width: 200px;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: space-between;
-      border: 1px solid transparent;
-      background-color: var(--color-surface-100);
-      transition-duration: 0.5s;
-      transition-timing-function: cubic-bezier(0.48, 1.08, 0.5, 0.63);
-      transition-property: transform;
-    }
-
-    .dropdown:hover {
-      border-radius: 12px;
-      border: 1px solid var(--background-color);
-    }
-
-    .dropdown-wrapper.open .dropdown {
-      width: 800px;
-      border-radius: 12px;
-      height: unset;
-      padding: 8px 26px 26px;
-      top: -8px;
-      border: 1px solid var(--background-color);
-      box-shadow:
-        0.6px 1.8px 2.2px rgba(0, 0, 0, 0.02),
-        1.5px 4.3px 5.3px rgba(0, 0, 0, 0.028),
-        2.9px 8px 10px rgba(0, 0, 0, 0.035),
-        5.1px 14.3px 17.9px rgba(0, 0, 0, 0.042),
-        9.6px 26.7px 33.4px rgba(0, 0, 0, 0.05),
-        23px 64px 80px rgba(0, 0, 0, 0.07);
-    }
-
-    .dropdown-wrapper.open .dropdown label {
-      background-color: var(--color-surface-100);
-    }
-    .dropdown-wrapper.open .dropdown label:hover {
-      background-color: var(--background-color);
     }
 
     .modes {
@@ -182,14 +114,6 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
       transition: all 100ms linear;
     }
 
-    .dropdown-label {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-      height: 60px;
-    }
-
     .menu-title {
       display: flex;
       font-size: 18px;
@@ -232,20 +156,21 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
       opacity: 1;
     }
 
-    .dropdown-wrapper:hover .menu-title {
-      filter: none;
-      opacity: 1;
-    }
     .open menu-title:before {
       display: none;
     }
-    .dropdown-wrapper.open .menu-title:before,
-    .dropdown-wrapper:hover .menu-title:before {
+
+    .menu-title.hover {
+      filter: none;
+      opacity: 1;
+    }
+    .menu-title.hover:before,
+    .menu-title.open:before {
       top: -50%;
       transform: rotate(5deg);
     }
-    .dropdown-wrapper.open .menu-title:after,
-    .dropdown-wrapper:hover .menu-title:after {
+    .menu-title.hover:after,
+    .menu-title.open:after {
       top: 50%;
       transform: translateY(-50%);
     }
@@ -280,9 +205,6 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
     .selected + li .bullet-wrapper:after {
       --y: -100%;
     }
-    .dropdown-content {
-      display: flex;
-    }
     .options-wrapper {
       display: flex;
       flex-direction: column;
@@ -292,132 +214,10 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
       margin-bottom: 26px;
       width: 500px;
     }
-  `;
-
-  enum DropdownState {
-    none = "",
-    open = "open",
-    selected = "selected",
-  }
-
-  const [downState, setDownState] = createSignal<DropdownState>(
-    DropdownState.none,
-  );
-
-  const [pendingAnimation, setPendingAnimation] = createSignal(false);
-  const [mouseHover, setMouseHover] = createSignal(false);
-
-  const clickHandler = () => {
-    if (downState() === DropdownState.open) {
-      setDownState(DropdownState.none);
-    } else {
-      setDownState(DropdownState.open);
+    .content {
+      display: flex;
     }
-  };
-
-  /* Animation */
-  let dropdown: HTMLDivElement;
-  let dropContent: HTMLDivElement;
-  let optionsWrapper: HTMLDivElement;
-  let optionsElem: HTMLDivElement;
-  let menuTitle: HTMLDivElement;
-  let modesElem: HTMLUListElement;
-
-  let openAnimation: anime.AnimeInstance;
-  let closeAnimation: anime.AnimeInstance;
-  onMount(() => {
-    closeAnimation = anime
-      .timeline({
-        easing: "easeOutCubic",
-        autoplay: false,
-        reverse: true,
-      })
-      .add({
-        targets: dropdown,
-        padding: ["8px 26px 26px", "0"],
-        top: ["-8px", "0"],
-        width: ["800px", "200px"],
-        duration: 250,
-      })
-      .add(
-        {
-          targets: dropContent,
-          height: [280, 0],
-          duration: 250,
-        },
-        "-=150",
-      )
-      .add(
-        {
-          targets: [...modesElem.children, ...optionsWrapper.children],
-          translateY: [0, 20],
-          opacity: [1, 0],
-          duration: 160,
-          delay: (el, i, l) => i * 120,
-        },
-        "-=600",
-      );
-
-    openAnimation = anime
-      .timeline({
-        easing: "easeOutElastic(3, 0.8)",
-        autoplay: false,
-      })
-      .add({
-        targets: dropdown,
-        easing: "easeOutElastic(6, 0.7)",
-        padding: ["0", "8px 26px 26px"],
-        top: ["0", "-8px"],
-        width: ["200px", "800px"],
-        duration: 750,
-      })
-      .add(
-        {
-          targets: dropContent,
-          easing: "easeOutElastic(2, 0.7)",
-          height: [0, 280],
-          duration: 850,
-        },
-        "-=650",
-      )
-      .add(
-        {
-          targets: [...modesElem.children, ...optionsWrapper.children],
-          translateY: [20, 0],
-          opacity: [0, 1],
-          duration: 300,
-          delay: (el, i, l) => i * 120,
-        },
-        "-=725",
-      );
-  });
-
-  createEffect(
-    on(
-      downState,
-      (state) => {
-        switch (state) {
-          case DropdownState.open:
-            openAnimation.finished.then(() => {
-              setPendingAnimation(false);
-              if (!mouseHover()) setDownState(DropdownState.none);
-            });
-            setPendingAnimation(true);
-            openAnimation.play();
-            break;
-          case DropdownState.none:
-            closeAnimation.finished.then(() => {
-              setPendingAnimation(false);
-            });
-            setPendingAnimation(true);
-            closeAnimation.play();
-            break;
-        }
-      },
-      { defer: true },
-    ),
-  );
-
+  `;
   /*
    * HOVER
    */
@@ -443,49 +243,37 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
     ref: undefined,
   };
 
-  createEffect(
-    on(mouseHover, (hover) => {
-      if (pendingAnimation() || hover) return;
-      setDownState(DropdownState.none);
-    }),
-  );
-
   /* *** */
 
-  const start = () => {
-    setDownState(DropdownState.none);
+  const start = (setIsOpen: (o: boolean) => void) => {
+    setIsOpen(false);
     props.start(gameOptions, customRef.ref ? customRef.ref.value : "");
   };
 
   return (
     <div class="header-mode">
-      <div
-        ref={(el) => {
-          el.addEventListener("mouseleave", () => setMouseHover(false));
-          el.addEventListener("mouseenter", () => setMouseHover(true));
-        }}
-        class={`dropdown-wrapper ${downState()}`}
-      >
-        <div class="dropdown" ref={dropdown!}>
-          <div class="dropdown-label">
-            <div
-              class="menu-title"
-              ref={menuTitle!}
-              onClick={clickHandler}
-              data-passive={`${props.t("gameMode")[props.gameOptions.modeSelected].subtitle}`}
-              data-active={`${props.t("newGame.one")} ${props.t("newGame.two")}`}
-            >
-              <Show when={downState() !== DropdownState.open}>
-                <span class="cursor">▼</span>
-              </Show>
-            </div>
+      <Dropdown
+        id="header-game-selection"
+        label={(isOpen, hover) => (
+          <div
+            class="menu-title"
+            classList={{ hover: hover(), open: isOpen() }}
+            data-passive={`${props.t("gameMode")[props.gameOptions.modeSelected].subtitle}`}
+            data-active={`${props.t("newGame.one")} ${props.t("newGame.two")}`}
+          >
+            <Show when={!isOpen()}>
+              <span class="cursor">▼</span>
+            </Show>
           </div>
-          <div ref={dropContent!} class="dropdown-content">
-            <ul ref={modesElem!} class="modes">
+        )}
+      >
+        {(setIsOpen) => (
+          <div class="content">
+            <ul class="modes">
               <For each={gameModesArray}>
                 {([modeKind, mode]) => (
                   <li
-                    class={`radio ${modeKind}`}
+                    class={`elem radio ${modeKind}`}
                     classList={{
                       selected: gameOptions.modeSelected === modeKind,
                     }}
@@ -512,8 +300,8 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
                 )}
               </For>
             </ul>
-            <div ref={optionsWrapper!} class="options-wrapper">
-              <div ref={optionsElem!} class="options">
+            <div class="options-wrapper">
+              <div class="elem options">
                 <Switch>
                   <Match when={gameOptions.modeSelected === GameModeKind.speed}>
                     <SpeedParamsMedium
@@ -541,15 +329,15 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
                   </Match>
                 </Switch>
               </div>
-              <div class="actions">
-                <button onClick={start} class="primary">
+              <div class="elem actions">
+                <button onClick={() => start(setIsOpen)} class="primary">
                   {props.t("letsGo")}
                 </button>
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        )}
+      </Dropdown>
       <div class="options-recap">
         <GameOptionsRecap gameOptions={props.gameOptions} t={props.t} />
       </div>
