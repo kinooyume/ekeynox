@@ -150,13 +150,14 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
       transition: all 0.3s ease;
     }
 
-    .open .menu-title {
+    .menu-title.open {
       font-size: 19px;
       filter: none;
       opacity: 1;
     }
 
-    .open menu-title:before {
+    menu-title.open:before {
+      transition: none;
       display: none;
     }
 
