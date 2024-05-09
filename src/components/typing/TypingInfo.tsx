@@ -6,19 +6,13 @@ import {
   createSignal,
   onMount,
   onCleanup,
-  Switch,
-  Match,
   createEffect,
 } from "solid-js";
 import Nav from "../svgs/nav-abs.tsx";
 import Gauge from "../svgs/gauge.tsx";
 import Accuracy from "../svgs/accuracy.tsx";
-import type { Translator } from "../App.tsx";
 import anime from "animejs";
 import ProgressBar from "../svgs/progressBar.tsx";
-import BunnyHead from "../svgs/bunnyHead.tsx";
-import type { KeyboardHandler } from "../keyboard/TypingKeyboard.tsx";
-import TypingHelp from "./TypingHelp.tsx";
 
 type TypingNavProps = {
   stat: StatProjection;

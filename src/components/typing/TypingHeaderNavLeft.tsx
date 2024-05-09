@@ -2,10 +2,12 @@ import {
   createSignal,
   Show,
   For,
-  on,
   Switch,
   Match,
   createComputed,
+  createEffect,
+  on,
+  onMount,
 } from "solid-js";
 import type { Translator } from "../App";
 import {
@@ -21,6 +23,7 @@ import { GameModeKind, gameModesArray } from "../gameMode/GameMode";
 import SpeedParamsMedium from "../gameMode/SpeedParamsMedium";
 import TimerParamsMedium from "../gameMode/TimerParamsMedium";
 import CustomInput from "../ui/CustomInput";
+import anime from "animejs";
 
 type HeaderNavLeftProps = {
   t: Translator;
@@ -29,8 +32,6 @@ type HeaderNavLeftProps = {
   setContentGeneration: (type: ContentGeneration) => void;
 };
 
-// Dropdown like animation with anime.js
-// https://codepen.io/NielsVoogt/pen/dyGpNOx
 const HeaderNavLeft = (props: HeaderNavLeftProps) => {
   css`
     .cursor {
@@ -61,29 +62,21 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
       position: relative;
       margin-left: 12px;
       width: 200px;
+      display: block;
+      min-width: 200px;
       z-index: 205;
-      height: 60px;
-
-      opacity: 0.8;
-    }
-
-    .dropdown-wrapper:hover {
-      opacity: 1;
-      filter: none;
+      height: 48px;
     }
 
     .dropdown-wrapper:hover .cursor {
       opacity: 1;
     }
 
-    .dropdown-wrapper.open {
-    }
-
     .dropdown {
-      height: 50px;
-      width: 200px;
       overflow: hidden;
       position: absolute;
+      width: 200px;
+      height: 100%;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
@@ -99,17 +92,13 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
       border-radius: 12px;
       border: 1px solid var(--background-color);
     }
-
     .dropdown-wrapper.open .dropdown {
-      height: 400px;
-      padding: 40px;
-      padding-top: 20px;
       width: 800px;
-      max-width: 1200px;
-      top: -20px;
-
+      border-radius: 12px;
+      height: unset;
+      padding: 8px 26px 26px;
+      top: -8px;
       border: 1px solid var(--background-color);
-      transform: scale(1.01);
       box-shadow:
         0.6px 1.8px 2.2px rgba(0, 0, 0, 0.02),
         1.5px 4.3px 5.3px rgba(0, 0, 0, 0.028),
@@ -194,13 +183,14 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
       transition: all 100ms linear;
     }
 
-    .menu-title-wrapper {
+    .dropdown-label {
       display: flex;
       justify-content: center;
       align-items: center;
       width: 100%;
       height: 60px;
     }
+
     .menu-title {
       display: flex;
       font-size: 18px;
@@ -214,13 +204,6 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
       align-items: center;
       cursor: pointer;
       content: attr(data-passive);
-    }
-    .dropdown-wrapper.open .menu-title {
-      border: 0;
-      font-weight: 300;
-      font-size: 20px;
-      max-height: 80px;
-      margin-bottom: 12px;
     }
 
     .menu-title:before {
@@ -242,6 +225,12 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
       transition: all 0.3s ease;
     }
 
+    .open .menu-title {
+      font-size: 19px;
+    }
+    .open menu-title:before {
+      display: none;
+    }
     .dropdown-wrapper.open .menu-title:before,
     .dropdown-wrapper:hover .menu-title:before {
       top: -50%;
@@ -283,7 +272,7 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
     .selected + li .bullet-wrapper:after {
       --y: -100%;
     }
-    .menu-game {
+    .dropdown-content {
       display: flex;
     }
     .options-wrapper {
@@ -294,7 +283,6 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
       padding: 0 26px 26px;
       margin-bottom: 26px;
       width: 500px;
-      height: 300px;
     }
   `;
 
@@ -304,32 +292,134 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
     selected = "selected",
   }
 
-  // NOTE: convert it to type variant, and make an article about making it
-
   const [downState, setDownState] = createSignal<DropdownState>(
     DropdownState.none,
   );
 
-  const [edited, setEdited] = createSignal(false);
+  const [pendingAnimation, setPendingAnimation] = createSignal(false);
+  const [mouseHover, setMouseHover] = createSignal(false);
 
   const clickHandler = () => {
     if (downState() === DropdownState.open) {
-      setDownState(DropdownState.selected);
+      setDownState(DropdownState.none);
     } else {
       setDownState(DropdownState.open);
     }
   };
 
+  /* Animation */
+  let dropdown: HTMLDivElement;
+  let dropContent: HTMLDivElement;
+  let optionsWrapper: HTMLDivElement;
+  let optionsElem: HTMLDivElement;
+  let menuTitle: HTMLDivElement;
+  let modesElem: HTMLUListElement;
+
+  let openAnimation: anime.AnimeInstance;
+  let closeAnimation: anime.AnimeInstance;
+  onMount(() => {
+    closeAnimation = anime
+      .timeline({
+        easing: "easeOutCubic",
+        autoplay: false,
+        reverse: true,
+      })
+      .add({
+        targets: dropdown,
+        padding: ["8px 26px 26px", "0"],
+        top: ["-8px", "0"],
+        width: ["800px", "200px"],
+        duration: 250,
+      })
+      .add(
+        {
+          targets: dropContent,
+          height: [280, 0],
+          duration: 250,
+        },
+        "-=150",
+      )
+      .add(
+        {
+          targets: [...modesElem.children, ...optionsWrapper.children],
+          translateY: [0, 20],
+          opacity: [1, 0],
+          duration: 160,
+          delay: (el, i, l) => i * 120,
+        },
+        "-=600",
+      );
+
+    openAnimation = anime
+      .timeline({
+        easing: "easeOutElastic(3, 0.8)",
+        autoplay: false,
+      })
+      .add({
+        targets: dropdown,
+        easing: "easeOutElastic(6, 0.7)",
+        padding: ["0", "8px 26px 26px"],
+        top: ["0", "-8px"],
+        width: ["200px", "800px"],
+        duration: 750,
+      })
+      .add(
+        {
+          targets: dropContent,
+          easing: "easeOutElastic(2, 0.7)",
+          height: [0, 280],
+          duration: 850,
+        },
+        "-=650",
+      )
+      .add(
+        {
+          targets: [...modesElem.children, ...optionsWrapper.children],
+          translateY: [20, 0],
+          opacity: [0, 1],
+          duration: 300,
+          delay: (el, i, l) => i * 120,
+        },
+        "-=725",
+      );
+  });
+
+  createEffect(
+    on(
+      downState,
+      (state) => {
+        switch (state) {
+          case DropdownState.open:
+            openAnimation.finished.then(() => {
+              setPendingAnimation(false);
+              if (!mouseHover()) setDownState(DropdownState.none);
+            });
+            setPendingAnimation(true);
+            openAnimation.play();
+            break;
+          case DropdownState.none:
+            closeAnimation.finished.then(() => {
+              setPendingAnimation(false);
+            });
+            setPendingAnimation(true);
+            closeAnimation.play();
+            break;
+        }
+      },
+      { defer: true },
+    ),
+  );
+
+  /*
+   * HOVER
+   */
+
+  /* *** */
   /* doublon, manage temporal gameOptions */
 
   const [gameOptions, setGameOptions] = createStore<GameOptions>(
     deepCopy(props.gameOptions),
   );
-
-  // const resetOptions = () => {
-  //   setGameOptions(deepCopy(props.gameOptions));
-  //   setEdited(false);
-  // };
 
   createComputed(
     () => {
@@ -345,6 +435,13 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
     ref: undefined,
   };
 
+  createEffect(
+    on(mouseHover, (hover) => {
+      if (pendingAnimation() || hover) return;
+      setDownState(DropdownState.none);
+    }),
+  );
+
   /* *** */
 
   const start = () => {
@@ -354,18 +451,18 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
 
   return (
     <div class="header-mode">
-      <div class={`dropdown-wrapper ${downState()}`}>
-        <div
-          class="dropdown"
-          ref={(el) => {
-            el.addEventListener("mouseleave", () =>
-              setDownState(DropdownState.none),
-            );
-          }}
-        >
-          <div class="menu-title-wrapper">
+      <div
+        ref={(el) => {
+          el.addEventListener("mouseleave", () => setMouseHover(false));
+          el.addEventListener("mouseenter", () => setMouseHover(true));
+        }}
+        class={`dropdown-wrapper ${downState()}`}
+      >
+        <div class="dropdown" ref={dropdown!}>
+          <div class="dropdown-label">
             <div
               class="menu-title"
+              ref={menuTitle!}
               onClick={clickHandler}
               data-passive={`${props.t("gameMode")[gameOptions.modeSelected].subtitle}`}
               data-active={`${props.t("newGame.one")} ${props.t("newGame.two")}`}
@@ -375,8 +472,8 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
               </Show>
             </div>
           </div>
-          <div class="menu-game">
-            <ul class="modes">
+          <div ref={dropContent!} class="dropdown-content">
+            <ul ref={modesElem!} class="modes">
               <For each={gameModesArray}>
                 {([modeKind, mode]) => (
                   <li
@@ -407,8 +504,8 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
                 )}
               </For>
             </ul>
-            <div class="options-wrapper">
-              <div class="options">
+            <div ref={optionsWrapper!} class="options-wrapper">
+              <div ref={optionsElem!} class="options">
                 <Switch>
                   <Match when={gameOptions.modeSelected === GameModeKind.speed}>
                     <SpeedParamsMedium
