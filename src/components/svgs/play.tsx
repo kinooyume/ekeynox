@@ -46,7 +46,7 @@ const Play = (props: PlayProps) => {
         stroke-linecap="round"
         stroke-linejoin="round"
         fill="var(--text-secondary-color)"
-        stroke-width="2"
+        stroke-width="1"
       >
         <path class="left" d={paths()[0]} />
         <path class="right" d={paths()[1]} />
