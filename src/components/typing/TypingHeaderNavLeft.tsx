@@ -35,7 +35,6 @@ type HeaderNavLeftProps = {
 const HeaderNavLeft = (props: HeaderNavLeftProps) => {
   css`
     .cursor {
-      opacity: 0;
       corsor: pointer;
 
       position: absolute;
@@ -77,6 +76,8 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
       position: absolute;
       width: 200px;
       height: 100%;
+      filter: grayscale(40%);
+      opacity: 0.8;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
@@ -85,17 +86,22 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
       background-color: var(--color-surface-100);
       transition-duration: 0.5s;
       transition-timing-function: cubic-bezier(0.48, 1.08, 0.5, 0.63);
-      transition-property: opacity, transform;
+      transition-property: transform;
     }
 
     .dropdown:hover {
       border-radius: 12px;
       border: 1px solid var(--background-color);
+      filter: none;
+      opacity: 1;
     }
+
     .dropdown-wrapper.open .dropdown {
       width: 800px;
       border-radius: 12px;
       height: unset;
+      filter: none;
+      opacity: 1;
       padding: 8px 26px 26px;
       top: -8px;
       border: 1px solid var(--background-color);
