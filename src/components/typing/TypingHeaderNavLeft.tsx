@@ -36,7 +36,6 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
   css`
     .cursor {
       corsor: pointer;
-
       position: absolute;
       right: 16px;
       top: 14px;
@@ -76,8 +75,6 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
       position: absolute;
       width: 200px;
       height: 100%;
-      filter: grayscale(40%);
-      opacity: 0.8;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
@@ -92,16 +89,12 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
     .dropdown:hover {
       border-radius: 12px;
       border: 1px solid var(--background-color);
-      filter: none;
-      opacity: 1;
     }
 
     .dropdown-wrapper.open .dropdown {
       width: 800px;
       border-radius: 12px;
       height: unset;
-      filter: none;
-      opacity: 1;
       padding: 8px 26px 26px;
       top: -8px;
       border: 1px solid var(--background-color);
@@ -200,6 +193,8 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
     .menu-title {
       display: flex;
       font-size: 18px;
+      filter: grayscale(20%);
+      opacity: 0.8;
       overflow: hidden;
       position: relative;
       width: 100%;
@@ -233,6 +228,13 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
 
     .open .menu-title {
       font-size: 19px;
+      filter: none;
+      opacity: 1;
+    }
+
+    .dropdown-wrapper:hover .menu-title {
+      filter: none;
+      opacity: 1;
     }
     .open menu-title:before {
       display: none;
@@ -470,7 +472,7 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
               class="menu-title"
               ref={menuTitle!}
               onClick={clickHandler}
-              data-passive={`${props.t("gameMode")[gameOptions.modeSelected].subtitle}`}
+              data-passive={`${props.t("gameMode")[props.gameOptions.modeSelected].subtitle}`}
               data-active={`${props.t("newGame.one")} ${props.t("newGame.two")}`}
             >
               <Show when={downState() !== DropdownState.open}>
