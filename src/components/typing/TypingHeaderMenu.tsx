@@ -156,7 +156,9 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
       opacity: 1;
     }
 
-    menu-title.open:before {
+    men-title.open:before {
+      content: "";
+      opacity: 0;
       transition: none;
       display: none;
     }

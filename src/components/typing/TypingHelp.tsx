@@ -1,49 +1,50 @@
 import { Match, Switch, createEffect, createSignal, onMount } from "solid-js";
 import type { Translator } from "../App";
 import type { KeyboardHandler } from "../keyboard/TypingKeyboard";
-import BunnyHead from "../svgs/bunnyHead";
 import { css } from "solid-styled";
+import HeaderNavAction from "./HeaderNavAction";
+import Resume from "../svgs/Resume";
 
 type TypingHelpProps = {
   t: Translator;
   isPaused: boolean;
   keyboard?: (kbHandler: KeyboardHandler) => void;
-  onPause: () => void;
+  onReset: () => void;
 };
 
 const TypingHelp = (props: TypingHelpProps) => {
-  type PauseKeys = {
+  type resetKeys = {
     ctrl: boolean;
     shift: boolean;
     space: boolean;
   };
 
-  let [pauseKeys, setPauseKeys] = createSignal<PauseKeys>({
+  let [resetKeys, setresetKeys] = createSignal<resetKeys>({
     ctrl: false,
     shift: false,
     space: false,
   });
 
   const keyDown = (key: string) => {
-    if (key === "Control") setPauseKeys({ ...pauseKeys(), ctrl: true });
-    else if (key === "Shift") setPauseKeys({ ...pauseKeys(), shift: true });
-    else if (key === " ") setPauseKeys({ ...pauseKeys(), space: true });
+    if (key === "Control") setresetKeys({ ...resetKeys(), ctrl: true });
+    else if (key === "Shift") setresetKeys({ ...resetKeys(), shift: true });
+    else if (key === " ") setresetKeys({ ...resetKeys(), space: true });
   };
 
   const keyUp = (key: string) => {
-    if (key === "Control") setPauseKeys({ ...pauseKeys(), ctrl: false });
-    else if (key === "Shift") setPauseKeys({ ...pauseKeys(), shift: false });
-    else if (key === " ") setPauseKeys({ ...pauseKeys(), space: false });
+    if (key === "Control") setresetKeys({ ...resetKeys(), ctrl: false });
+    else if (key === "Shift") setresetKeys({ ...resetKeys(), shift: false });
+    else if (key === " ") setresetKeys({ ...resetKeys(), space: false });
   };
 
   createEffect(() => {
     if (
       !props.isPaused &&
-      pauseKeys().ctrl &&
-      pauseKeys().shift &&
-      pauseKeys().space
+      resetKeys().ctrl &&
+      resetKeys().shift &&
+      resetKeys().space
     ) {
-      props.onPause();
+      props.onReset();
     }
   });
 
@@ -57,6 +58,9 @@ const TypingHelp = (props: TypingHelpProps) => {
       gap: 16px;
       font-size: 17px;
     }
+    span {
+      color: var(--text-secondary-color);
+    }
     .help-content {
       display: flex;
       align-items: center;
@@ -67,27 +71,15 @@ const TypingHelp = (props: TypingHelpProps) => {
       background-color: var(--text-secondary-color);
       color: var(--color-surface-alt);
       font-size: 12px;
-      padding: 6px 6px;
-      font-weight: 600;
+      padding: 6px 8px;
     }
 
     .type-to-play {
       animation: blink-slow 2s infinite;
     }
-    .character {
-      display: none;
-      width: 80px;
-      border-radius: 10px;
-      background-color: white;
-      padding: 20px 30px;
-      padding-bottom: 40px;
-    }
   `;
   return (
     <div class="help">
-      <div class="character">
-        <BunnyHead />
-      </div>
       <Switch>
         <Match when={props.isPaused}>
           <div class="help-content type-to-play">
@@ -101,7 +93,8 @@ const TypingHelp = (props: TypingHelpProps) => {
             <span class="key">Shift</span>
             <span>+</span>
             <span class="key">{props.t("space")}</span>
-            <span> {props.t("typingGame.toPause")}</span>
+            <br/>
+            <span> {props.t("typingGame.toReset")}</span>
           </div>
         </Match>
       </Switch>

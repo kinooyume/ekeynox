@@ -37,7 +37,6 @@ type TypingGameProps = {
 };
 
 const TypingGame = (props: TypingGameProps) => {
-
   let focus: () => void;
   let keyboard: KeyboardHandler;
 
@@ -81,9 +80,7 @@ const TypingGame = (props: TypingGameProps) => {
       {/* TODO: Le prompt ne devrais pas setParaphs */}
       {/* actuellement utilisé pour les words wpm */}
 
-      <Prompt
-        paragraphs={props.paragraphs}
-      />
+      <Prompt paragraphs={props.paragraphs} />
       <Show when={props.showKb}>
         <Keyboard
           metrics={props.keyMetrics}
