@@ -23,7 +23,7 @@
   },
   "typingGame": {
     "typeToPlay": "Type to continue.",
-    "toPause": "to pause."
+    "toReset": "to reset"
   },
   "options": "options",
   "wordCount": "Word count",

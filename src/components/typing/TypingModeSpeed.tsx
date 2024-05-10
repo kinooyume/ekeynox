@@ -2,6 +2,9 @@ import { type JSX, createComputed, createSignal } from "solid-js";
 import type { TypingEventType } from "./TypingEvent";
 import type { StatProjection } from "../metrics/KeypressMetrics";
 import TypingInfo from "./TypingInfo";
+import MetricPreview from "../ui/MetricPreview";
+import Word from "../svgs/word";
+import { css } from "solid-styled";
 
 type TypingModeSpeedProps = {
   typingEvent: TypingEventType;
@@ -19,13 +22,25 @@ const TypingModeSpeed = (props: TypingModeSpeedProps) => {
     setProgress(100 - (props.wordsCount / props.totalWords) * 100);
   });
 
+  css`
+    span {
+      width: 20px;
+      color: var(--text-secondary-color);
+      font-size: 16px;
+      font-weight: 600;
+      padding-top: 0px;
+      text-align: right;
+    }
+  `;
   return (
     <TypingInfo
       typingHelp={props.children}
       stat={props.stat}
       progress={progress()}
     >
-      <p>WordsCount: {props.wordsCount}</p>
+      <MetricPreview picto={<Word color="var(--text-secondary-color)"/>}>
+        <span>{props.wordsCount}</span>
+      </MetricPreview>
     </TypingInfo>
   );
 };

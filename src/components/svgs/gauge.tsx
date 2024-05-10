@@ -6,10 +6,10 @@ const speedToRotate = (speed: number) => (speed > 180 ? 180 : speed);
 
 const Gauge = (props: GaugeProps) => {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" height="23" width="23">
+    <svg xmlns="http://www.w3.org/2000/svg">
       <g
         fill="none"
-        stroke="currentColor"
+        stroke="var(--text-secondary-color)"
         stroke-linecap="round"
         stroke-width="2"
       >
@@ -38,7 +38,7 @@ const Gauge = (props: GaugeProps) => {
           />
         </path>
       </g>
-      <g fill="currentColor">
+      <g fill="var(--text-secondary-color)">
         <path
           fill-opacity="0"
           d="M12 21C9.41 21 7.15 20.79 5.94 19L12 21L18.06 19C16.85 20.79 14.59 21 12 21Z"

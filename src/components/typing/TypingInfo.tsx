@@ -13,6 +13,7 @@ import Gauge from "../svgs/gauge.tsx";
 import Accuracy from "../svgs/accuracy.tsx";
 import anime from "animejs";
 import ProgressBar from "../svgs/progressBar.tsx";
+import MetricPreview from "../ui/MetricPreview.tsx";
 
 type TypingNavProps = {
   stat: StatProjection;
@@ -36,6 +37,7 @@ const TypingInfo = (props: TypingNavProps) => {
   };
   const [navBorder, setNavBorder] = createSignal(getNavBorder(getVw()));
 
+  // TODO: refacto wpm/accuracy and others in a proper component
   const resize = () => {
     const vw = getVw();
     setNavWidth(getNavWidth(vw));
@@ -91,33 +93,21 @@ const TypingInfo = (props: TypingNavProps) => {
       align-items: center;
       gap: 8px;
     }
+
     .stat {
-      display: flex;
-      align-items: center;
-      gap: 2px;
-      color: var(--text-secondary-color);
+      font-size: 16px;
+      font-weight: 600;
     }
-    .stat span,
-    .pourcent {
-      padding-top: 6px;
+
+    .wpm {
+      width: 20px;
+      padding-top: 0px;
       text-align: right;
-      font-size: 19px;
-      font-weight: 400;
-      color: var(--text-secondary-color);
-      min-width: 23px;
     }
-    .accuracy .pourcent {
-      min-width: 36px;
-    }
-
-    .wpm span,
-    .accuracy .pourcent {
-      margin-right: 2px;
-    }
-
     .pourcent {
-      font-size: 14px;
-      font-weight: 800;
+      width: 36px;
+      text-align: right;
+      color: var(--text-secondary-color);
     }
 
     .typing-nav {
@@ -178,16 +168,21 @@ const TypingInfo = (props: TypingNavProps) => {
             <Show when={props.children}>
               <div class="child">{props.children}</div>
             </Show>
-            <div class="stat wpm">
-              <span ref={wpmElem!}>0</span>
-              <Gauge speed={props.stat.speed.byWord[0]} />
-            </div>
-            <div class="stat accuracy">
+            <MetricPreview picto={<Gauge speed={props.stat.speed.byWord[0]} />}>
+              <span class="stat wpm" ref={wpmElem!}>
+                0
+              </span>
+            </MetricPreview>
+            <MetricPreview
+              picto={<Accuracy correct={props.stat.accuracies[1] === 100} />}
+            >
               <p class="pourcent">
-                <span ref={accuracyElem!}>0</span>%
+                <span class="stat" ref={accuracyElem!}>
+                  0
+                </span>
+                %
               </p>
-              <Accuracy correct={props.stat.accuracies[1] === 100} />
-            </div>
+            </MetricPreview>
           </div>
         </div>
       </nav>

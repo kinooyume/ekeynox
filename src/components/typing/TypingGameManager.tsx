@@ -489,7 +489,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
               t={props.t}
               keyboard={(k) => (onKeyboard = k)}
               isPaused={typingEvent().kind !== TypingEventKind.pending}
-              onPause={() => pause()}
+              onReset={reset}
             />
           </TypingModeSpeed>
         </Match>
@@ -504,7 +504,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
               t={props.t}
               keyboard={(k) => (onKeyboard = k)}
               isPaused={typingEvent().kind !== TypingEventKind.pending}
-              onPause={() => pause()}
+              onReset={reset}
             />
           </TypingModeTimer>
         </Match>
