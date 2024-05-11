@@ -142,7 +142,7 @@ const deepClone = (paragraphs: Paragraphs) =>
 const deepCloneReset = (paragraphs: Paragraphs) => {
   return paragraphs.map((paragraph) =>
     paragraph.map((word) => {
-      const newWord = { ...word, timeSpent: 0, wpm: 0, wasCorrect: false };
+      const newWord = { ...word, spentTime: 0, wpm: 0, wasCorrect: false };
       newWord.keys = word.keys.map((key) => ({
         ...key,
         status: KeyStatus.unset,
