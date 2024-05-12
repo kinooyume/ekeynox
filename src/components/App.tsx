@@ -90,12 +90,6 @@ export type I18nContext = {
 export type Kb = "qwerty" | "azerty";
 export type Locale = "en" | "fr"; // NOTE: also in folder,
 
-/* typeof
-  typeof keyof dictionaries 
-  typeof keyof dictionaries 
-
-*/
-
 export type Config = {
   dark: boolean;
   locale: Locale;
@@ -107,14 +101,6 @@ export type ConfigLists = {
   locale: Locale[];
   kb: Kb[];
 };
-
-/*
- 
- export type ConfigLists = {
-
- }
-
-  */
 
 const configLists: ConfigLists = {
   locale: ["en", "fr"],
@@ -196,11 +182,12 @@ const App = () => {
 
   /* Pending */
 
-  const redo = (mode: PendingMode, metrics: MetricsResume) =>
+  const redo = (mode: PendingMode, metrics: MetricsResume) => {
     setAppState({
       kind: AppStateKind.pending,
       data: { kind: PendingKind.redo, mode, prev: metrics },
     });
+  };
 
   const start = async (opts: GameOptions, customSource: string) => {
     const mode = makePendingMode(opts, {
@@ -332,3 +319,30 @@ export default App;
 
 /* *** */
 // inspiration: https://learnhub.top/
+//
+//
+
+// css grid animation
+//https://codepen.io/t_afif/pen/WNzxeOO
+
+// https://codepen.io/t_afif/pen/WNzxeOO
+//https://css-tricks.com/animating-css-grid-how-to-examples/
+//
+//Anime js
+//
+// https://devsnap.me/anime-js-examples
+//
+// https://github.com/alikinvv/stepper-iteration
+// Svg Morphing
+//
+// Coo animation
+// https://codepen.io/fitzsyke/pen/pKdYyE
+//
+// Card flip
+// https://codepen.io/hellomp/pen/ZvrmdN
+//
+// BOOM effect
+// https://codepen.io/alexzaworski/pen/mEZvrG
+//
+// Sliding rebound
+// https://codepen.io/ershad989/pen/LYVbvmj

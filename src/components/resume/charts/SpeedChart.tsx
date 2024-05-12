@@ -19,7 +19,6 @@ type MyChartProps = {
   metrics: ChartMetrics;
 };
 const MyChart = (props: MyChartProps) => {
-
   const data = {
     datasets: [
       {
@@ -63,7 +62,7 @@ const MyChart = (props: MyChartProps) => {
 
   css`
     .chart {
-      width: 1024px;
+      width: 100%;
       height: 300px;
     }
   `;
