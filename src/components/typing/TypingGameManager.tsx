@@ -240,8 +240,6 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
     return cleanParagraphs;
   };
 
-  const typingOver = () => setTypingEvent({ kind: TypingEventKind.over });
-
   const over = () => {
     // NOTE: peut etre le faire en mode "leave"
     cursor().set.wordStatus(WordStatus.over, false);
@@ -260,6 +258,11 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
     );
   };
 
+  const typingOver = () => {
+    setTypingEvent({ kind: TypingEventKind.over });
+    over();
+  };
+
   createComputed(
     on(typingEvent, (event) => {
       switch (event.kind) {
@@ -269,16 +272,14 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
           setPromptKey(cursor().get.key().key);
           break;
         case TypingEventKind.pending:
-          // TODO: better handle, link to actual word
-          // wordWpmTimer({ status: WordStatus.pending });
-
           if (!wordWpmTimer) {
             newWordWpmTimer();
           } else {
             wordWpmTimer = wordWpmTimer({ status: WordStatus.pending });
           }
           if (!event.next) {
-            setTypingEvent({ kind: TypingEventKind.over });
+            overMetrics();
+            return typingOver();
           }
           setPromptKey(cursor().get.key().key);
           cursor().focus();
@@ -313,21 +314,16 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
   const [typingMetrics, setTypingMetrics] = createSignal(createTypingMetrics());
 
   let cleanupMetrics = () => {};
+  let overMetrics = () => {};
   const updateMetrics = createTypingMetricsState(
     setStat,
     setTypingMetrics,
-    (cleanup) => {
-      cleanupMetrics = cleanup;
-    },
+    (cleanup) => (cleanupMetrics = cleanup),
+    (over) => (overMetrics = over),
   );
 
   createComputed((typingMetricsState: TypingMetricsState) => {
-    /* metrics first */
     const metrics = typingMetricsState({ event: typingEvent() });
-    /* intern */
-    if (typingEvent().kind === TypingEventKind.over) {
-      over();
-    }
     return metrics;
   }, updateMetrics);
 
@@ -339,9 +335,6 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
 
   /* NOTE: TIMER LOOP CONTENT */
 
-  // Side effect
-
-  // PERF: we could just add new content instead of setting the entire store
   const appendContent = () => {
     const { data, next } = contentHandler();
     // TODO: add following option back
@@ -351,15 +344,6 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
     const newContentHandler = newContent(data);
     setContentHandler(newContentHandler);
 
-    // if (newContentHandler.following) {
-    //   console.log(newContentHandler.following);
-    //   const lastParagraph  = paraStore[paraStore.length - 1];
-    //   setParaStore(paraStore.length - 1, lastParagraph.length, newContentHandler.following);
-    // }
-    //    if (!newContentHandler.parts) return;
-    // newContentHandler.parts.forEach((paragraph) =>
-    //   setParaStore(paraStore.length, paragraph),
-    // );
     setParaStore(
       newContent({ ...data, paragraphs: paraStore }).data.paragraphs,
     );

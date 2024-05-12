@@ -23,6 +23,9 @@ type TypingMetricsProps = {
   children: (n: MetricsResume) => JSXElement;
 };
 
+// Cool mobile version
+// https://x.com/slavakornilov/status/1787408908069515499
+//
 const TypingMetricsResume = (props: TypingMetricsProps) => {
   const keysSet = new Set(Object.keys(props.metrics.keys));
   const [kbLayout, setKbLayout] = createSignal(props.kbLayout(keysSet));
@@ -103,14 +106,33 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
       font-size: 2.4rem;
       font-weight: 200;
     }
+
+    .resume-header {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      background-color: var(--color-surface-alt);
+      border-radius: 46px;
+      padding: 32px;
+      padding-top: 58px;
+    }
+
+    .chart {
+      padding: 0 32px;
+    }
   `;
   return (
     <div class="metrics full-bleed">
       <div class="content-wrapper">
         <div class="content">
-          <GameOptionsTitle t={props.t} gameOptions={props.metrics.gameOptions} />
-          <div class="chart">
-            <SpeedChart metrics={metricsResume.chart} />
+          <div class="resume-header">
+            <div class="chart">
+              <SpeedChart metrics={metricsResume.chart} />
+            </div>
+            <GameOptionsTitle
+              t={props.t}
+              gameOptions={props.metrics.gameOptions}
+            />
           </div>
           <div>
             <h2 class="stat-title">{props.t("statistics")}</h2>
