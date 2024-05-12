@@ -126,10 +126,10 @@ const getSequence = (
 ): Array<TimedKey> => {
   let event = events;
   const keysSequences: Array<Array<TimedKey>> = [];
-  let prevTimestamp = events!.value.meta.logs!.value.timestamp;
   while (event) {
     // par sequence
     let logs = event.value.meta.logs;
+    let prevTimestamp = logs!.value.timestamp;
 
     let localSequence = [];
     while (logs) {
