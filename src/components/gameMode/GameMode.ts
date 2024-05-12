@@ -8,6 +8,8 @@ import SpeedParams from "./SpeedParams";
 import SpeedParamsCompact from "./SpeedParamsCompact";
 import TimerParams from "./TimerParams";
 import TimerParamsCompact from "./TimerParamsCompact";
+import MonkeySmile from "../svgs/monkeySmile";
+import BunnySmile from "../svgs/bunnySmile";
 
 // Concernant que les données des modes
 export enum GameModeKind {
@@ -18,6 +20,7 @@ export enum GameModeKind {
 export type GameModeData = {
   picto: () => JSXElement;
   head: () => JSXElement;
+  smile: () => JSXElement;
   params: (props: GameParams) => JSXElement;
   compact: (props: GameParams) => JSXElement;
 };
@@ -28,12 +31,14 @@ const gameModes: GameMode = {
   [GameModeKind.speed]: {
     picto: Monkey,
     head: MonkeyHead,
+    smile: MonkeySmile,
     params: SpeedParams,
     compact: SpeedParamsCompact,
   },
   [GameModeKind.timer]: {
     picto: Bunny,
     head: BunnyHead,
+    smile: BunnySmile,
     params: TimerParams,
     compact: TimerParamsCompact,
   },
