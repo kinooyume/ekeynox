@@ -41,6 +41,7 @@ const createTypingMetricsState = (
   setStat: Setter<StatProjection>,
   setTypingMetrics: Setter<TypingMetrics>,
   setCleanup: (cleanup: () => void) => void,
+  setOver: (over: () => void) => void,
 ): TypingMetricsState => {
   const updateStat = (
     projection: KeypressMetricsProjection,
@@ -56,9 +57,24 @@ const createTypingMetricsState = (
     metrics: TypingMetrics;
     interval: Interval;
   };
+
   const pending =
     (props: PendingMetricsProps) =>
     ({ event }: TypingMetricsProps): TypingMetricsState => {
+      const over = () => {
+        clearInterval(props.interval.timer);
+        const [overKeypressMetrics, finalProjection] =
+          props.keypressMetrics.pause(true);
+        // side effect
+        updateStat(finalProjection, props.metrics);
+        setTypingMetrics(props.metrics);
+        props.metrics.projection = finalProjection;
+        return paused({
+          keypressMetrics: overKeypressMetrics,
+          metrics: props.metrics,
+        });
+      };
+      setOver(over);
       switch (event.kind) {
         case TypingEventKind.unstart:
           clearInterval(props.interval.timer);
@@ -76,18 +92,7 @@ const createTypingMetricsState = (
             metrics: props.metrics,
           });
         case TypingEventKind.over:
-
-          clearInterval(props.interval.timer);
-          const [overKeypressMetrics, finalProjection] =
-            props.keypressMetrics.pause(true);
-          // side effect
-          updateStat(finalProjection, props.metrics);
-          setTypingMetrics(props.metrics);
-          props.metrics.projection = finalProjection;
-          return paused({
-            keypressMetrics: overKeypressMetrics,
-            metrics: props.metrics,
-          });
+          return over();
       }
     };
 
