@@ -6,6 +6,13 @@
 
 @font-face {
   font-family: Larsseit;
+  src: url("../fonts/Larsseit/Larsseit-ExtraBold.woff2");
+  font-weight: 800;
+  font-display: swap;
+  }
+
+@font-face {
+  font-family: Larsseit;
   src: url("../fonts/Larsseit/Larsseit-Bold.woff2");
   font-weight: bold;
   font-display: swap;

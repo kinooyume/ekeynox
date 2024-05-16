@@ -64,6 +64,10 @@ const makeKeypressHandler = (
       if (keyMetrics[1].kind === KeyEventKind.added) {
         cursor.set.keyStatus(keyMetrics[1].status.kind);
       }
+      /* Tout ca on sait pas trop, surement pas ici */
+
+      /* ca pourrait reagir a TypingStatus */
+      // Donc en fait, si on reagis au typingStatus plutot pour faire next
       let [hasNext, typingWord] = cursorNav.next(incrementWordsCount);
 
       /* Typing Status */

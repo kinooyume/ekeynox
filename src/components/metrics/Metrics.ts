@@ -100,7 +100,6 @@ const averageWordWpm = (words: Array<MetaWord>): Array<WordSpeed> => {
   let result = [] as WordSpeed[];
   words.forEach((word) => {
     if (word.wpm === 0 || blankCharacters.includes(word.keys[0].key)) return;
-    // NOTE: maybe in metaWord
     const keys = word.keys.map((k) => k.key).join("");
     if (keys.length < 5) return;
 
@@ -127,7 +126,6 @@ const getSequence = (
   let event = events;
   const keysSequences: Array<Array<TimedKey>> = [];
   while (event) {
-    // par sequence
     let logs = event.value.meta.logs;
     let prevTimestamp = logs!.value.timestamp;
 

@@ -9,12 +9,23 @@ import {
   type Metrics,
   type MetricsResume,
 } from "../metrics/Metrics";
-import { createComputed, createSignal, Show, type JSXElement } from "solid-js";
+import {
+  createComputed,
+  createSignal,
+  Show,
+  type JSXElement,
+  onMount,
+  onCleanup,
+  Match,
+  Switch,
+} from "solid-js";
 import TypingKeyboardResume from "./TypingKeyboardResume";
 import WordMetricsResume from "./charts/WordsChart";
 import TabContainer from "../ui/TabContainer";
 import CharacterChart from "./charts/CharacterChart";
 import GameOptionsTitle from "../gameMode/GameOptionsTitle";
+import anime from "animejs";
+import AccuracyDoughnut from "./charts/AccuracyDoughnut";
 
 type TypingMetricsProps = {
   t: Translator;
@@ -44,26 +55,21 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
       grid-template-columns: 1fr min(1200px, 100%) max(400px) 1fr;
       grid-template-rows: 1fr;
       grid-column-gap: 10px;
-      overflow: hidden;
-      max-height: 100%;
     }
 
-    .keyboard {
-      margin-top: 64px;
-    }
     .reset {
       margin: 64px;
     }
     .content-wrapper {
       position: relative;
       grid-column: 2;
-      overflow-y: scroll;
       padding: 32px;
       height: 100%;
     }
 
     .content {
     }
+
     .sidebar-wrapper {
       grid-column: 3;
       position: relative;
@@ -80,47 +86,160 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
       display: none;
     }
 
-    .action-title {
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: flex-start;
-      margin: 16px 0;
-    }
-
-    .action-title span {
-      color: var(--text-secondary-color);
-      margin: 0;
-      font-size: 1rem;
-    }
-
-    .action-title p {
-      color: var(--text-color);
-      margin: 0;
-      font-size: 1.4rem;
-      text-transform: capitalize;
-    }
-
-    .stat-title {
-      margin: 16px 0;
-      font-size: 2.4rem;
-      font-weight: 200;
-    }
-
     .resume-header {
       display: flex;
       flex-direction: column;
       gap: 32px;
       background-color: var(--color-surface-alt);
-      border-radius: 46px;
+      border-radius: 36px 36px 0 0;
       padding: 32px;
       padding-top: 58px;
     }
 
-    .chart {
-      padding: 0 32px;
+    .sticky {
+      position: sticky;
+      background-color: var(--color-surface-100);
+      top: 0;
+      z-index: 900;
     }
+
+    .resume-menu {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 32px;
+      height: 140px;
+      z-index: 900;
+      background-color: var(--color-surface-alt);
+      border-radius: 0 0 36px 36px;
+      border-bottom: 4px solid var(--color-surface-200);
+    }
+
+    .chart {
+      padding: 46px 32px;
+      border-radius: 16px;
+    }
+
+    .stat-header-content {
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .stat-title {
+      font-size: 20px;
+      text-transform: capitalize;
+      margin: 16px 8px;
+      margin-top: 8px;
+      font-weight: 400;
+    }
+
+    .cards-wrapper {
+      background-color: var(--color-surface-600);
+      border: 1px solid var(--color-surface-mixed-600);
+      padding: 12px;
+      margin: 32px 0;
+      border-radius: 18px;
+    }
+
+    .stat-card {
+      background-color: var(--color-surface-100);
+      background-color: white;
+
+      border: 1px solid var(--color-surface-500);
+      padding: 24px;
+      border-radius: 18px;
+    }
+
+    .stat-card + .stat-card {
+      margin-top: 32px;
+    }
+
+    .stat-card p {
+      margin: 22px 12px;
+      text-transform: capitalize;
+      margin-top: 4px;
+      font-size: 17px;
+      opacity: 0.9;
+    }
+
+    .report p.wpm-data {
+      font-size: 3em;
+      margin: 0;
+    }
+    .report .wpm-data span {
+      font-size: 1.3rem;
+      margin-left: 8px;
+      opacity: 0.6;
+    }
+    .report .raw-data {
+      opacity: 0.6;
+      margin: 0;
+    }
+    .report .raw-data span {
+      margin-left: 4px;
+    }
+
+
   `;
+
+  let resumeMenu: HTMLDivElement;
+
+  onMount(() => {
+    const initTop = resumeMenu.getBoundingClientRect().top;
+    const blockAnimation = anime({
+      targets: resumeMenu,
+      autoplay: false,
+      height: 54,
+      elasticity: 200,
+      borderBottomLeftRadius: 8,
+      borderBottomRightRadius: 8,
+      easing: "easeInCubic",
+      padding: 16,
+    });
+
+    const pictoAnimation = anime({
+      targets: ".game-title .picto",
+      width: 80,
+      autoplay: false,
+      elasticity: 200,
+      easing: "easeInCubic",
+    });
+
+    const titleAnimation = anime({
+      targets: ".game-title h1",
+      "font-size": 20,
+      autoplay: false,
+      elasticity: 200,
+      easing: "easeInCubic",
+    });
+
+    window.onscroll = () => {
+      const top = resumeMenu.getBoundingClientRect().top;
+      const pourcent = 1.0 - top / initTop;
+      // NOTE: on peut avoir le pourcent reactive
+      // et du coup gérer les animations dans chaque component
+      blockAnimation.seek(pourcent * blockAnimation.duration);
+      pictoAnimation.seek(pourcent * pictoAnimation.duration);
+      titleAnimation.seek(pourcent * titleAnimation.duration);
+    };
+  });
+
+  // window.onscroll = () => {
+  //   const bodyST = document.body.scrollTop;
+  //   const docST = document.documentElement.scrollTop;
+  //   const docSH = document.documentElement.scrollHeight;
+  //   const docCH = document.documentElement.clientHeight;
+  //   // console.log everything
+  //   // console.log("bodySt", bodyST);
+  //   console.log("docST", docST);
+  // };
+
+  onCleanup(() => {
+    window.onscroll = null;
+  });
+
   return (
     <div class="metrics full-bleed">
       <div class="content-wrapper">
@@ -129,52 +248,72 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
             <div class="chart">
               <SpeedChart metrics={metricsResume.chart} />
             </div>
-            <GameOptionsTitle
-              t={props.t}
-              gameOptions={props.metrics.gameOptions}
-            />
           </div>
-          <div>
-            <h2 class="stat-title">{props.t("statistics")}</h2>
-            <TabContainer
-              onTabChange={setMetricIndex}
-              isChecked={metricIndex()}
-              elems={[props.t("words"), props.t("characters")]}
-            />
+          <div class="sticky">
+            <div ref={resumeMenu!} class="resume-menu">
+              <GameOptionsTitle
+                t={props.t}
+                gameOptions={props.metrics.gameOptions}
+              />
+              <div class="actions">{props.children(metricsResume)}</div>
+            </div>
           </div>
-          <Show when={metricIndex() === 0}>
-            <div class="words-metrics">
-              <WordMetricsResume words={metricsResume.words} />
+          <div class="cards-wrapper">
+            <h2 class="stat-title">
+              {props.t("statistics.contentResumeTitle")}
+            </h2>
+            <div class="stat-card">
               <Prompt paragraphs={props.metrics.paragraphs} />
             </div>
-          </Show>
-          <Show when={metricIndex() === 1}>
-            <div class="characters-metrics">
-              <div class="keyboard">
+          </div>
+          <div class="cards-wrapper">
+            <div class="stat-header">
+              <div class="stat-header-content">
+                <h2 class="stat-title">{props.t("statistics.title")}</h2>
+              </div>
+            </div>
+            <div class="stat-content">
+              <div class="stat-card">
+                <p>{props.t("statistics.keysResumeTitle")}</p>
                 <TypingKeyboardResume
                   layout={kbLayout()}
                   metrics={props.metrics.keys}
                 />
+              </div>
+              <div class="stat-card">
+                <p>{props.t("statistics.charactersTyped")}</p>
                 <CharacterChart keys={metricsResume.keys} />
               </div>
+              <div class="stat-card">
+                <p>{props.t("statistics.wordsSpeedTitle")}</p>
+                <WordMetricsResume words={metricsResume.words} />
+              </div>
             </div>
-          </Show>
+          </div>
         </div>
       </div>
       <div class="sidebar-wrapper">
         <div class="sidebar">
-          <DataMetricsResume
-            t={props.t}
-            currentGameOptions={props.metrics.gameOptions}
-            projection={props.metrics.typing.logs!.value}
-          />
-          <div class="actions-wrapper">
-            <div class="action-title">
-              <p>
-                {props.t("newGame.one")} {props.t("newGame.two")}
-              </p>
+          <div class="cards-wrapper">
+            <h2 class="stat-title">
+              {props.t("statistics.gameReport")}
+            </h2>
+            <div class="stat-card report">
+              <AccuracyDoughnut stats={props.metrics.typing.logs!.value.stats}>
+                <p class="wpm-data">
+                  {Math.trunc(
+                    props.metrics.typing.logs!.value.stats.speed.byWord[0],
+                  )}
+                  <span>WPM</span>
+                </p>
+                <p class="raw-data">
+                  {props.metrics.typing.logs!.value.stats.speed.byKeypress[1].toFixed(
+                    2,
+                  )}
+                  <span>Raw</span>
+                </p>
+              </AccuracyDoughnut>
             </div>
-            <div class="actions">{props.children(metricsResume)}</div>
           </div>
         </div>
       </div>

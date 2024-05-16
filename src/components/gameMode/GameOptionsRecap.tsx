@@ -20,7 +20,6 @@ const GameOptionsRecap = (props: GameOptionsRecapProps) => {
     .options-recap {
       display: flex;
       align-items: center;
-
       gap: 10px;
     }
 

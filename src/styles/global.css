@@ -34,7 +34,7 @@
   /*
   --color-surface-alt: #e0bb7b;
 */
-  --color-surface-alt: #e0bb7bba;
+  --color-surface-alt: #e1c89b;
   --color-surface-mixed-100: #e9e8e5;
   --color-surface-mixed-200: #ebebe8;
   --color-surface-mixed-300: #eeedeb;
@@ -168,19 +168,19 @@ a {
 
 button {
   border: 0;
+  cursor: pointer;
   background: none;
-  font-size: 14px;
+  border-radius: 12px;
+  font-size: 16px;
+  padding: 0 32px;
   text-transform: capitalize;
 }
 
 button.primary {
-  padding: 12px 30px;
-  border-radius: 10px;
   background-color: var(--color-primary-200);
   transition: all 0.3s ease;
   box-shadow: var(--shadow-color) 0px 6px 0px 0px;
   color: var(--button-text-color);
-  cursor: pointer;
 }
 /* https://uiverse.io/cssbuttons-io/friendly-dragon-76 */
 /* https://uiverse.io/cssbuttons-io/evil-monkey-41 */
@@ -196,12 +196,13 @@ button.primary:active {
 }
 
 button.secondary {
-  color: var(--color-primary-200);
+  background-color: var(--color-surface-100);
+  color: var(--text-secondary-color);
 }
 
 button.secondary:hover {
-  text-decoration: underline;
-  background-color: transparent;
+  filter: none;
+  opacity: 1;
 }
 
 textarea {
@@ -262,12 +263,12 @@ span {
   }
 }
 
-
 @keyframes blink-slow {
   0% {
     opacity: 0;
   }
-  30%, 70% {
+  30%,
+  70% {
     opacity: 1;
   }
   100% {

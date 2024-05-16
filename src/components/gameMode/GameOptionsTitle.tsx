@@ -16,18 +16,18 @@ const GameOptionsTitle = (props: GameOptionsTitleProps) => {
     }
     .game-title {
       display: flex;
-      gap: 26px;
+      justify-content: center;
       align-items: center;
+      gap: 26px;
     }
     .title {
       display: flex;
       flex-direction: column;
       gap: 8px;
-      margin-bottom: 25px;
     }
     h1 {
       font-size: 42px;
-      font-weight: 100;
+      font-weight: 200;
       margin: 0;
     }
   `;

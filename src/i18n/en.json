@@ -31,7 +31,14 @@
   "content": "content",
   "timeLimit": "time limit",
   "space": "Space",
-  "statistics": "statistics",
+  "statistics": { 
+   "title": "statistics",
+    "wordsSpeedTitle": "Speed per word",
+    "contentResumeTitle": "Content typed",
+    "keysResumeTitle": "Accuracy pey Keys",
+    "charactersTyped": "Accuracy per character",
+    "gameReport": "Game report"
+  },
   "gameMode": {
     "speed": {
       "title": "monkey",
@@ -45,5 +52,6 @@
       "description": "Time is running out ! how many words can you write in the time allowed?",
       "hugeDescription": " Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ut erat sed nulla ornare accumsan a quis diam. Nullam ut pharetra dui."
     }
+
   }
 }

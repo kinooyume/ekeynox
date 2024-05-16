@@ -57,12 +57,14 @@ const KeyboardKeyResume = (props: KeyboardKeyResumeProps) => {
       color: var(--text-color);
       border-radius: 8px;
       background: var(--key-bg-color);
+background:white;
       box-shadow:
         2px 2px 7px var(--key-color),
         -2px -2px 7px var(--key-color-alt);
     }
     .pressed {
       background: var(--key-bg-color);
+background:white;
       box-shadow:
         inset 2px 2px 7px var(--key-color),
         inset -2px -2px 7px var(--key-color-alt);
