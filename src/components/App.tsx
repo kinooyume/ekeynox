@@ -25,7 +25,6 @@ import {
 import type { Metrics, MetricsResume } from "./metrics/Metrics";
 import TypingMetricsResume from "./resume/TypingMetricsResume";
 import KeyboardLayout, { type HigherKeyboard } from "./keyboard/KeyboardLayout";
-import GameModeMenuTiny from "./gameMode/GameModeMenuTiny";
 import TypingHeaderNav from "./typing/TypingHeaderNav";
 
 /* NOTE:  Refacto: fileReader in one given folder
@@ -67,6 +66,7 @@ import {
   makePendingMode,
 } from "./AppState";
 import TypingGameManager from "./typing/TypingGameManager";
+import ActionsResume from "./resume/ActionsResume";
 
 type Dictionaries = Record<string, RawDictionary>;
 
@@ -295,7 +295,7 @@ const App = () => {
                 metrics={(AppState() as any).metrics}
               >
                 {(metricsResume) => (
-                  <GameModeMenuTiny
+                  <ActionsResume
                     t={t}
                     gameOptions={persistedOptions}
                     content={(AppState() as any).content}

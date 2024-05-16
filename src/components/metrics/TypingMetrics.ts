@@ -58,6 +58,27 @@ const createTypingMetricsState = (
     interval: Interval;
   };
 
+  // TODO: make something so that the LinkedList can't be null
+  // TODO: just ne pas l'ajouter direct
+  //
+  // NOTE: Doesnt't work
+  // don't care for now
+  //
+  const cleanLogs = (logs: LinkedList<KeypressMetricsProjection>) => {
+    if (!logs) return null;
+    let log: LinkedList<KeypressMetricsProjection> = logs;
+    let prevLog = log;
+    while (log) {
+      if (!log.value.meta.logs) {
+        prevLog.next = log.next;
+      } else {
+        prevLog = log;
+      }
+      log = log.next;
+    }
+    return log;
+  };
+
   const pending =
     (props: PendingMetricsProps) =>
     ({ event }: TypingMetricsProps): TypingMetricsState => {
@@ -69,6 +90,7 @@ const createTypingMetricsState = (
         updateStat(finalProjection, props.metrics);
         setTypingMetrics(props.metrics);
         props.metrics.projection = finalProjection;
+        // props.metrics.logs = cleanLogs(props.metrics.logs);
         return paused({
           keypressMetrics: overKeypressMetrics,
           metrics: props.metrics,

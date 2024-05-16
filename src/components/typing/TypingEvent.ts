@@ -1,6 +1,5 @@
 import type { KeyTuple } from "../metrics/KeyMetrics";
 
-/* Typing Events: {key, word} */
 export enum TypingWordKind {
   ignore,
   correct,
@@ -26,8 +25,6 @@ export type TypingEventProps = {
   word?: TypingWord;
   next: boolean;
 };
-
-/* *** */
 
 export enum TypingEventKind {
   unstart,

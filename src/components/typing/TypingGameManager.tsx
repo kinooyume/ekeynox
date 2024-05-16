@@ -92,7 +92,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
     contentHandler().data.wordsCount,
   );
 
-  const incrementWordsCount = () => setWordsCount(wordsCount() + 1); // next
+; const incrementWordsCount = () => setWordsCount(wordsCount() + 1); // next
   const decrementWordsCount = () => setWordsCount(wordsCount() - 1); // prev
 
   let setWpm = ({ wpm, duration }: { wpm: number; duration: number }) => {

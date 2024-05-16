@@ -12,31 +12,6 @@ type HeaderActionProps = {
   configLists: ConfigLists;
 };
 
-// css grid animation
-//https://codepen.io/t_afif/pen/WNzxeOO
-
-// https://codepen.io/t_afif/pen/WNzxeOO
-//https://css-tricks.com/animating-css-grid-how-to-examples/
-//
-//Anime js
-//
-// https://devsnap.me/anime-js-examples
-//
-// https://github.com/alikinvv/stepper-iteration
-// Svg Morphing
-//
-// Coo animation
-// https://codepen.io/fitzsyke/pen/pKdYyE
-//
-// Card flip
-// https://codepen.io/hellomp/pen/ZvrmdN
-//
-// BOOM effect
-// https://codepen.io/alexzaworski/pen/mEZvrG
-//
-// Sliding rebound
-// https://codepen.io/ershad989/pen/LYVbvmj
-
 const HeaderAction = (props: HeaderActionProps) => {
   css`
     .actions {

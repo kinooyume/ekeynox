@@ -16,6 +16,7 @@ import { css } from "solid-styled";
 type DropdownProps = {
   id: string;
   label: (isOpen: Accessor<boolean>, hover: Accessor<boolean>) => JSX.Element;
+  reverse?: boolean;
   children: (setIsOpen: Setter<boolean>) => JSX.Element;
 };
 
@@ -151,6 +152,7 @@ const Dropdown = (props: DropdownProps) => {
     .dropdown {
       overflow: hidden;
       position: absolute;
+      border-radius: 12px;
       width: 200px;
       height: 100%;
       display: flex;
@@ -163,15 +165,17 @@ const Dropdown = (props: DropdownProps) => {
       transition-timing-function: cubic-bezier(0.48, 1.08, 0.5, 0.63);
       transition-property: transform;
     }
+    .dropdown-wrapper.reverse .dropdown {
+      right: 0;
+    }
 
     .dropdown:hover {
-      border-radius: 12px;
       border: 1px solid var(--background-color);
     }
 
     .dropdown-wrapper.open .dropdown {
       width: 800px;
-      border-radius: 12px;
+      background-color: var(--color-surface-100);
       height: unset;
       padding: 8px 26px 26px;
       top: -8px;
@@ -201,7 +205,7 @@ const Dropdown = (props: DropdownProps) => {
     <div
       id={props.id}
       class={`dropdown-wrapper`}
-      classList={{ open: isOpen() }}
+      classList={{ open: isOpen(), reverse: props.reverse }}
       ref={(el) => {
         el.addEventListener("mouseleave", () => setHover(false));
         el.addEventListener("mouseenter", () => setHover(true));

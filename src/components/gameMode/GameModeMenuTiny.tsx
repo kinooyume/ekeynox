@@ -15,7 +15,7 @@ import {
   type ContentGeneration,
   type GameOptions,
 } from "./GameOptions";
-import GameModeDropdown from "./GameModeDropdown";
+// import GameModeDropdown from "./GameModeDropdown";
 import {
   makeRedoContent,
 } from "../content/TypingGameSource";
@@ -93,11 +93,11 @@ const GameModeSelectionTiny = (props: GameModeSelectionProps) => {
   };
   return (
     <div class="mode-selection">
-      <GameModeDropdown
-        t={props.t}
-        gameOptions={gameOptions}
-        setGameOptions={setGameOptions}
-      />
+      {/* <GameModeDropdown */}
+      {/*   t={props.t} */}
+      {/*   gameOptions={gameOptions} */}
+      {/*   setGameOptions={setGameOptions} */}
+      {/* /> */}
       <div class="info">
         <Switch>
           <Match when={gameOptions.modeSelected === GameModeKind.speed}>
