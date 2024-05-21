@@ -184,6 +184,7 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
     }
 
     .primary {
+      height: 48px;
       margin-top: auto;
       margin-right: auto;
     }
@@ -211,7 +212,9 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
             <GameModeSelection
               t={props.t}
               selected={gameOptions.modeSelected}
-              setSelected={(mode: GameModeKind) => setGameOptions("modeSelected", mode)}
+              setSelected={(mode: GameModeKind) =>
+                setGameOptions("modeSelected", mode)
+              }
             />
           </div>
         </div>

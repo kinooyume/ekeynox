@@ -44,6 +44,15 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
   const [metricIndex, setMetricIndex] = createSignal(0);
   const metricsResume = createMetricsResume(props.metrics);
 
+  const getTime = (duration: number) => {
+    // from miliseconds to minutes and seconds
+    const minutes = Math.floor(duration / 60000);
+    const seconds = ((duration % 60000) / 1000).toFixed(0);
+    const secString = `${seconds}s`;
+    if (minutes === 0) return secString;
+    return `${minutes}m${secString}`;
+  };
+
   createComputed(() => {
     const layout = props.kbLayout(keysSet);
     setKbLayout(layout);
@@ -164,11 +173,20 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
       opacity: 0.9;
     }
 
-    .report p.wpm-data {
+    .stat-card p.main-data {
       font-size: 3em;
       margin: 0;
     }
-    .report .wpm-data span {
+    .stat-card p.main-data-tiny {
+      font-size: 2em;
+      margin: 0;
+    }
+
+    .stat-card .subtitle {
+      color: grey;
+      margin: 0;
+    }
+    .stat-card .main-data span {
       font-size: 1.3rem;
       margin-left: 8px;
       opacity: 0.6;
@@ -181,7 +199,14 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
       margin-left: 4px;
     }
 
+    .sub-data {
+      display: flex;
+      gap: 16px;
+    }
 
+    .sidebar-wrapper .cards-wrapper {
+      margin: 8px;
+    }
   `;
 
   let resumeMenu: HTMLDivElement;
@@ -295,12 +320,10 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
       <div class="sidebar-wrapper">
         <div class="sidebar">
           <div class="cards-wrapper">
-            <h2 class="stat-title">
-              {props.t("statistics.gameReport")}
-            </h2>
+            <h2 class="stat-title">{props.t("statistics.gameReport")}</h2>
             <div class="stat-card report">
               <AccuracyDoughnut stats={props.metrics.typing.logs!.value.stats}>
-                <p class="wpm-data">
+                <p class="wpm-data main-data">
                   {Math.trunc(
                     props.metrics.typing.logs!.value.stats.speed.byWord[0],
                   )}
@@ -313,6 +336,35 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
                   <span>Raw</span>
                 </p>
               </AccuracyDoughnut>
+            </div>
+          </div>
+          <div class="sub-data">
+            <div class="cards-wrapper">
+              <div class="stat-card">
+                <p class="main-data main-data-tiny">
+                  {getTime(props.metrics.typing.logs!.value.core.duration)}
+                </p>
+                <p class="subtitle">{props.t("elapsedTime")}</p>
+              </div>
+            </div>
+            <div class="cards-wrapper">
+              <div class="stat-card">
+                <p class="main-data main-data-tiny">
+                  {getTime(props.metrics.typing.logs!.value.core.duration)}
+                </p>
+                <p class="subtitle">{props.t("elapsedTime")}</p>
+              </div>
+            </div>
+          </div>
+          <div class="cards-wrapper">
+            <div class="stat-card">
+              <p class="main-data main-data-tiny">
+                {(
+                  props.metrics.typing.logs!.value.stats.consistency * 100
+                ).toFixed(0)}
+                <span>%</span>
+              </p>
+              <p class="subtitle">{props.t("consistency")}</p>
             </div>
           </div>
         </div>

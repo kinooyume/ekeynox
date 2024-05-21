@@ -28,23 +28,6 @@ const DataMetricsResume = (props: DataMetricsResumeProps) => {
       flex-direction: column;
       align-items: flex-start;
     }
-    .wpm-data {
-      font-size: 3em;
-      margin: 0;
-    }
-    .wpm-data span {
-      font-size: 1.3rem;
-      margin-left: 8px;
-      opacity: 0.6;
-    }
-    .raw-data {
-      opacity: 0.6;
-      margin: 0;
-    }
-    .raw-data span {
-      margin-left: 4px;
-    }
-
     .title {
       font-size: 1.8rem;
       margin: 0;
@@ -60,7 +43,9 @@ const DataMetricsResume = (props: DataMetricsResumeProps) => {
     // from miliseconds to minutes and seconds
     const minutes = Math.floor(duration / 60000);
     const seconds = ((duration % 60000) / 1000).toFixed(0);
-    return `${minutes}:${seconds}`;
+    const secString = `${seconds}s`
+    if (minutes === 0) return secString;
+    return `${minutes}m${secString}`;
   };
 
   css`
@@ -73,21 +58,12 @@ const DataMetricsResume = (props: DataMetricsResumeProps) => {
     <div class="data">
       <div class="speeds">
         <div class="speed-data">
-          <AccuracyDoughnut stats={props.projection.stats}>
-            <p class="wpm-data">
-              {Math.trunc(props.projection.stats.speed.byWord[0])}
-              <span>WPM</span>
-            </p>
-            <p class="raw-data">
-              {props.projection.stats.speed.byKeypress[1].toFixed(2)}
-              <span>Raw</span>
-            </p>
-          </AccuracyDoughnut>
+          
+        </div>
+      </div>
           <p>
             {props.t("elapsedTime")}: {getTime(props.projection.core.duration)}
           </p>
-        </div>
-      </div>
       <p>
         {(props.projection.stats.consistency * 100).toFixed(0)}% 
          {props.t("consistency")}

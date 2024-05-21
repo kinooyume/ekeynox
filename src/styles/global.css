@@ -177,6 +177,7 @@ button {
 }
 
 button.primary {
+  height: 48px;
   background-color: var(--color-primary-200);
   transition: all 0.3s ease;
   box-shadow: var(--shadow-color) 0px 6px 0px 0px;
