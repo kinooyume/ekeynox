@@ -1,7 +1,6 @@
 import { For, createSignal, onCleanup, onMount } from "solid-js";
 import { css } from "solid-styled";
 import Word from "./PromptWordResume.tsx";
-import anime from "animejs/lib/anime.es.js";
 
 import { type Paragraphs } from "../content/Content.ts";
 

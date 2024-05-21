@@ -110,7 +110,8 @@ const configLists: ConfigLists = {
 const App = () => {
   const [config, setConfig] = makePersisted(
     createStore<Config>({
-      dark: window.matchMedia("(prefers-color-scheme: dark)").matches,
+      // dark: window.matchMedia("(prefers-color-scheme: dark)").matches,
+      dark: false,
       locale: "en",
       kb: "qwerty",
       showKb: true,
