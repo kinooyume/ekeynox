@@ -1,4 +1,4 @@
-import { type ContentGeneration } from "../gameMode/GameOptions.ts";
+import { ContentGeneration } from "~/gameOptions/gameOptions";
 
 type cached = Record<string, Record<string, string[]>>;
 
@@ -21,6 +21,7 @@ const createFetchWords = () => {
       throw new Error("Invalid data");
     }
     cached[language][wordsCategory] = data.data;
+    console.log(data.data)
     return data.data;
   };
 };

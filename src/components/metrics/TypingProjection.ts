@@ -5,7 +5,7 @@ import {
   type KeyAdded,
 } from "./KeyMetrics";
 import List, { type LinkedList } from "../List";
-import type { TypingKey } from "../seqInput/UserInput";
+import { TypingKey } from "../typing/TypingEvent";
 
 export type KeyStatusProjection = {
   match: number;

@@ -1,0 +1,51 @@
+* Techniques
+** Refacto 
+*** Params
+    - ( ) Refacto params as data
+    - ( ) merge timer/random params
+    - ( ) merge full/compact params
+
+*** Content
+    - ( ) Content as Linked List instead of Array
+    - ( ) Separate hooks navigation & action
+    - ( ) create Content with predefini hooks
+
+** Game Mode
+   - (x) Refacto, pack game mode data and For loop everywhere
+         -> gameMode i18n, ca c'est ok
+         -> Illustration bunny/monkey
+         -> different Params, ca c'est relou.. 
+         -> donc, a voir un peu comment on réorganise ca..
+   
+   - (x) Revoir le truc de gameOptions au final
+         ==> et de la en faire des pack bunny/monkey, avec leur illustration ?
+         ==> le tout basé sur le gameMode
+** Keyboard 
+   - ( ) implement other keyboards
+   - ( ) Better handle of keyboard key ?
+   - ( ) Left/Right keyboard
+** Metrics
+** Keyboard Keys
+   - (x) Fix wrong number of corrects/incorrects
+   - ( ) Metrics speed between keys
+*** Fix
+
+    - (x) Fix wpm is wrong at the beginning
+    - ( ) Check for correct consistency
+
+** Words Metrics
+   - ( ) better metrics, knowing how many wrong, corrected.. potentially similar to keypress.
+
+** Handle blank et symbols
+   - ( ) words metrics without symbols
+   - ( ) Decided when we consider them as a word or a separator
+
+*** BONUS
+    - ( ) better handing of separators
+    - ( ) blank separator should be overridable by wrong keypress
+
+** Solid
+   - ( ) from MPA to SPA 
+   - ( ) implement i18n solid
+   - ( ) Add params for keyboard, language..
+* UI

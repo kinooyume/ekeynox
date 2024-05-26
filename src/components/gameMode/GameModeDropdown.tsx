@@ -1,21 +1,17 @@
 import { For, type JSX, Match, Switch, createComputed } from "solid-js";
 import { createStore } from "solid-js/store";
-import type { Translator } from "../App";
 import type { CustomInputRef } from "../ui/CustomInput";
 import CustomInput from "../ui/CustomInput";
 import Dropdown from "../ui/Dropdown";
-import { GameModeKind, gameModesArray } from "./GameMode";
-import {
-  deepCopy,
-  type ContentGeneration,
-  type GameOptions,
-} from "./GameOptions";
+import { gameModesArray } from "./GameMode";
 import SpeedParamsMedium from "./SpeedParamsMedium";
 import TimerParamsMedium from "./TimerParamsMedium";
 import { css } from "solid-styled";
+import { useI18n } from "~/settings/i18nProvider";
+import { ContentGeneration, GameOptions, deepCopy } from "~/gameOptions/gameOptions";
+import { GameModeKind } from "~/gameOptions/gameModeKind";
 
 type GameModeDropdownProps = {
-  t: Translator;
   reverse?: boolean;
   gameOptions: GameOptions;
   start: (opts: GameOptions, customSource: string) => void;
@@ -24,6 +20,7 @@ type GameModeDropdownProps = {
 };
 
 const GameModeDropdown = (props: GameModeDropdownProps) => {
+  const t = useI18n();
   css`
     .modes {
       list-style-type: none;
@@ -192,7 +189,7 @@ const GameModeDropdown = (props: GameModeDropdownProps) => {
 
                     <div class="bullet-wrapper"></div>
                     <p class="title">
-                      {props.t("gameMode")[modeKind].subtitle}
+                      {t("gameMode")[modeKind].subtitle}
                     </p>
                     {/* </div> */}
                   </label>
@@ -205,7 +202,7 @@ const GameModeDropdown = (props: GameModeDropdownProps) => {
               <Switch>
                 <Match when={gameOptions.modeSelected === GameModeKind.speed}>
                   <SpeedParamsMedium
-                    t={props.t}
+                    t={t}
                     gameOptions={gameOptions}
                     setGameOptions={setGameOptions}
                   >
@@ -217,7 +214,7 @@ const GameModeDropdown = (props: GameModeDropdownProps) => {
                 </Match>
                 <Match when={gameOptions.modeSelected === GameModeKind.timer}>
                   <TimerParamsMedium
-                    t={props.t}
+                    t={t}
                     gameOptions={gameOptions}
                     setGameOptions={setGameOptions}
                   >
@@ -231,7 +228,7 @@ const GameModeDropdown = (props: GameModeDropdownProps) => {
             </div>
             <div class="elem actions">
               <button onClick={() => start(setIsOpen)} class="primary">
-                {props.t("letsGo")}
+                {t("letsGo")}
               </button>
             </div>
           </div>

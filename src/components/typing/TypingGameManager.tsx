@@ -9,11 +9,6 @@ import {
   onCleanup,
   untrack,
 } from "solid-js";
-import type { Translator } from "../App";
-import { PendingKind, type PendingMode, type PendingStatus } from "../AppState";
-import { GameModeKind } from "../gameMode/GameMode";
-import { type GameOptions } from "../gameMode/GameOptions";
-import type { HigherKeyboard } from "../keyboard/KeyboardLayout";
 import type { Metrics } from "../metrics/Metrics";
 import TypingGame from "./TypingGame";
 import type { ContentHandler } from "../content/TypingGameSource";
@@ -49,11 +44,14 @@ import {
   createWordMetricsState,
   type WordMetrics,
 } from "../metrics/PromptWordMetrics";
+import { PendingKind, PendingMode, PendingStatus } from "~/appState/appState";
+import { GameOptions } from "~/gameOptions/gameOptions";
+import { HigherKeyboard } from "~/settings/keyboardLayout";
+import { GameModeKind } from "~/gameOptions/gameModeKind";
+import { useI18n } from "~/settings/i18nProvider";
 
 type TypingGameManagerProps = {
-  t: Translator;
   status: PendingStatus;
-  setPending: (status: PendingStatus) => void;
   gameOptions: GameOptions;
   kbLayout: HigherKeyboard;
   showKb: boolean;
@@ -66,6 +64,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
     props.status.mode.getContent(),
   );
 
+  const t = useI18n();
   const [paraStore, setParaStore] = createStore<Paragraphs>(
     Content.deepClone(contentHandler().data.paragraphs),
   );
@@ -448,7 +447,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
 
   return (
     <TypingGame
-      t={props.t}
+      t={t}
       typingEvent={typingEvent()}
       showKb={props.showKb}
       kbLayout={props.kbLayout}
@@ -470,7 +469,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
             totalWords={totalWordsCount()}
           >
             <TypingHelp
-              t={props.t}
+              t={t}
               keyboard={(k) => (onKeyboard = k)}
               isPaused={typingEvent().kind !== TypingEventKind.pending}
               onReset={reset}
@@ -485,7 +484,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
             onTimerEnd={typingOver}
           >
             <TypingHelp
-              t={props.t}
+              t={t}
               keyboard={(k) => (onKeyboard = k)}
               isPaused={typingEvent().kind !== TypingEventKind.pending}
               onReset={reset}

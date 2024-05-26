@@ -1,5 +1,6 @@
 import qwerty from "./layout/qwerty.json";
 import azerty from "./layout/azerty.json";
+import { keyboardLayoutName, type KeyboardLayoutName } from "./settings";
 
 export type KeyLayout = {
   primary: string;
@@ -16,10 +17,7 @@ export type KeyboardLayout = {
   extra: Array<KeyLayout>;
 };
 
-const kblayout = {
-  qwerty,
-  azerty,
-};
+const layouts: Record<KeyboardLayoutName, typeof qwerty> = { qwerty, azerty };
 
 export type HigherKeyboard = (keySet: Set<string>) => KeyboardLayout;
 
@@ -28,8 +26,9 @@ const resetLayout = (layout: Array<RowLayout>) => {
 };
 
 const create = (layoutName: string): HigherKeyboard => {
-  const source = kblayout[layoutName as keyof typeof kblayout];
-  if (!source) throw new Error("Invalid layout");
+  if (!(keyboardLayoutName.includes(layoutName)))
+    throw new Error(`Invalid keyboard layout: ${layoutName}`);
+  const source = layouts[layoutName];
   const layout = source.keys.map((row) =>
     row.map((key) => ({
       primary: key[0],

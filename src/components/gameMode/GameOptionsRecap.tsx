@@ -1,21 +1,17 @@
 import { css } from "solid-styled";
 import { Switch, type JSXElement, Show, Match } from "solid-js";
-import type { Translator } from "../App";
-import {
-  CategoryKind,
-  WordsGenerationCategory,
-  type GameOptions,
-} from "./GameOptions";
-import { GameModeKind } from "./GameMode";
+import { CategoryKind, GameOptions, WordsGenerationCategory } from "~/gameOptions/gameOptions";
+import { useI18n } from "~/settings/i18nProvider";
+import { GameModeKind } from "~/gameOptions/gameModeKind";
 
 // NOTE: make a data to link title + icons + params full/compact
 //
 type GameOptionsRecapProps = {
-  t: Translator;
   gameOptions: GameOptions;
 };
 
 const GameOptionsRecap = (props: GameOptionsRecapProps) => {
+  const t = useI18n();
   css`
     .options-recap {
       display: flex;
@@ -51,7 +47,7 @@ const GameOptionsRecap = (props: GameOptionsRecapProps) => {
       <Switch
         fallback={
           <div class="tag">
-            <span>{props.t("custom")}</span>
+            <span>{t("custom")}</span>
           </div>
         }
       >
@@ -68,7 +64,7 @@ const GameOptionsRecap = (props: GameOptionsRecapProps) => {
               }
             >
               <div class="tag">
-                <span>{props.t("quotes")}</span>
+                <span>{t("quotes")}</span>
               </div>
             </Match>
             <Match
@@ -79,7 +75,7 @@ const GameOptionsRecap = (props: GameOptionsRecapProps) => {
             >
               <div class="tag">
                 <span>
-                  {`${props.gameOptions.random} ${props.t("words")}`}
+                  {`${props.gameOptions.random} ${t("words")}`}
                 </span>
               </div>
             </Match>

@@ -10,12 +10,8 @@ import TimerParams from "./TimerParams";
 import TimerParamsCompact from "./TimerParamsCompact";
 import MonkeySmile from "../svgs/monkeySmile";
 import BunnySmile from "../svgs/bunnySmile";
+import { GameModeKind } from "~/gameOptions/gameModeKind";
 
-// Concernant que les données des modes
-export enum GameModeKind {
-  speed = "speed",
-  timer = "timer",
-}
 
 export type GameModeData = {
   picto: () => JSXElement;

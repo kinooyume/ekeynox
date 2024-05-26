@@ -7,14 +7,16 @@ import {
   WordsGenerationCategory,
   type Category,
   type Languages,
-} from "./GameOptions";
+} from "../../gameOptions/gameOptions";
 import RadioGroup from "../ui/RadioGroup";
 import Quote from "../svgs/quote";
 import Text from "../svgs/text";
 import Customizer from "../svgs/customizer";
 import type { GameParams } from "./GameParams";
+import { useI18n } from "~/settings/i18nProvider";
 
 const SpeedParamsMedium = (props: GameParams) => {
+  const t = useI18n();
   css`
     .time-params {
       display: flex;
@@ -46,12 +48,12 @@ const SpeedParamsMedium = (props: GameParams) => {
   return (
     <div class="random-params">
       <div class="option">
-        <h3>{props.t("content")}</h3>
+        <h3>{t("content")}</h3>
         <RadioGroup
           name="wordsCategory"
           values={[
             {
-              label: props.t("words"),
+              label: t("words"),
               value: {
                 kind: CategoryKind.generation,
                 category: WordsGenerationCategory.words1k,
@@ -59,7 +61,7 @@ const SpeedParamsMedium = (props: GameParams) => {
               icon: <Text />,
             },
             {
-              label: props.t("quotes"),
+              label: t("quotes"),
               value: {
                 kind: CategoryKind.generation,
                 category: WordsGenerationCategory.quotes,
@@ -67,7 +69,7 @@ const SpeedParamsMedium = (props: GameParams) => {
               icon: <Quote />,
             },
             {
-              label: props.t("custom"),
+              label: t("custom"),
               value: { kind: CategoryKind.custom } as Category,
               icon: <Customizer />,
             },
@@ -95,12 +97,12 @@ const SpeedParamsMedium = (props: GameParams) => {
         when={props.gameOptions.categorySelected.kind !== CategoryKind.custom}
       >
         <div class="option">
-          <h3> {props.t("language")} </h3>
+          <h3> {t("language")} </h3>
           <RadioGroup
             name="languages"
             values={[
-              { label: props.t("en"), value: "en" as Languages },
-              { label: props.t("fr"), value: "fr" as Languages },
+              { label: t("en"), value: "en" as Languages },
+              { label: t("fr"), value: "fr" as Languages },
             ]}
             compare={(v) => v === props.gameOptions.generation.language}
             setChecked={(l) =>
@@ -125,7 +127,7 @@ const SpeedParamsMedium = (props: GameParams) => {
           }
         >
           <div class="option">
-            <h3>{props.t("wordCount")}</h3>
+            <h3>{t("wordCount")}</h3>
             <RadioGroup
               name="nbrWords"
               values={[

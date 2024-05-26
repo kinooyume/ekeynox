@@ -1,9 +1,4 @@
-import { GameModeKind } from "../gameMode/GameMode";
-import {
-  type GameOptions,
-  WordsGenerationCategory,
-  CategoryKind,
-} from "../gameMode/GameOptions";
+import { CategoryKind, GameOptions, WordsGenerationCategory } from "~/gameOptions/gameOptions";
 import type { ContentData, Paragraph } from "./Content";
 import Content from "./Content";
 import { randomQuote, randomWords } from "./randomContent";

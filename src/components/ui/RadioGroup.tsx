@@ -118,9 +118,10 @@ function RadioGroup<Value>(props: RadioGroupProps<Value>) {
   `;
   return (
     <div class="radio-group">
-      <Show when={props.children}>
-        <div class={`icon ${props.name}`}>{props.children}</div>
-      </Show>
+      {/* NOTE: check why, minimal repro and github issue */}
+      {/* <Show when={props.children}> */}
+      {/*   <div class={`icon ${props.name}`}>{props.children}</div> */}
+      {/* </Show> */}
       <For each={props.values}>
         {(value) => (
           <div class="input">

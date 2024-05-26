@@ -120,8 +120,10 @@ const parseWords = (source: Array<string>): ContentData => {
   const keySet = new Set<string>();
   const wordParser = parseWord(keySet);
   let wordsCount = 0;
+  console.log("words", source)
   const words = source.flatMap((word, index) => {
     wordsCount++;
+    console.log("word", word)
     if (index < source.length - 1) {
       return [wordParser({ word }), makeSpace()];
     } else {
