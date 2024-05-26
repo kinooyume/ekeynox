@@ -1,19 +1,15 @@
-import { Show, onCleanup } from "solid-js";
+import { Show } from "solid-js";
 import { css } from "solid-styled";
-import type { Translator } from "../App";
-import type { PendingMode } from "../AppState";
 import Content from "../content/Content";
 import { makeRedoContent } from "../content/TypingGameSource";
-import {
-  type ContentGeneration,
-  type GameOptions,
-} from "../gameMode/GameOptions";
 import type { Metrics, MetricsResume } from "../metrics/Metrics";
 import type { CustomInputRef } from "../ui/CustomInput";
 import GameModeDropdown from "../gameMode/GameModeDropdown";
+import { ContentGeneration, GameOptions } from "~/gameOptions/gameOptions";
+import { PendingMode } from "~/appState/appState";
+import { useI18n } from "~/settings/i18nProvider";
 
 type ActionsResumeProps = {
-  t: Translator;
   gameOptions: GameOptions;
   content: PendingMode;
   metrics: Metrics;
@@ -24,6 +20,7 @@ type ActionsResumeProps = {
 };
 
 const ActionsResume = (props: ActionsResumeProps) => {
+  const t = useI18n();
   const restart = () => {
     const redoContent = {
       ...props.content,
@@ -103,7 +100,7 @@ const ActionsResume = (props: ActionsResumeProps) => {
             class="menu-title"
             classList={{ hover: hover(), open: isOpen() }}
           >
-            <span>{`${props.t("newGame.one")} ${props.t("newGame.two")}`}</span>
+            <span>{`${t("newGame.one")} ${t("newGame.two")}`}</span>
             <Show when={!isOpen()}>
               <span class="cursor">▼</span>
             </Show>
@@ -111,10 +108,10 @@ const ActionsResume = (props: ActionsResumeProps) => {
         )}
       </GameModeDropdown>
       <button class="secondary" onClick={restart}>
-        {props.t("playAgain")}
+        {t("playAgain")}
       </button>
       <button class="primary" onClick={start}>
-        {props.t("next")}
+        {t("next")}
       </button>
     </div>
   );

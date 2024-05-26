@@ -1,18 +1,14 @@
-import { type Config, type ConfigLists, type Locale } from "./App.tsx";
 import DarkModeToggle from "./ui/DarkModeToggle.tsx";
 import KeyboardIcon from "./svgs/keyboardIcon.tsx";
 import GlobeIcon from "./svgs/globe.tsx";
 import TinySelect from "./ui/TinySelect.tsx";
 import type { SetStoreFunction } from "solid-js/store";
 import { css } from "solid-styled";
+import { useSettings } from "~/settings/SettingsProvider.tsx";
+import { Theme, keyboardLayoutName, locales } from "~/settings/settings.ts";
 
-type HeaderActionProps = {
-  config: Config;
-  setConfig: SetStoreFunction<Config>;
-  configLists: ConfigLists;
-};
-
-const HeaderAction = (props: HeaderActionProps) => {
+const HeaderAction = () => {
+  const settings = useSettings();
   css`
     .actions {
       display: flex;
@@ -23,29 +19,23 @@ const HeaderAction = (props: HeaderActionProps) => {
   return (
     <div class="actions">
       <TinySelect
-        list={props.configLists.kb}
-        selected={props.config.kb}
-        action={(s) => props.setConfig("kb", s)}
+        list={keyboardLayoutName}
+        selected={settings[0].kb}
+        action={(s) => settings[1]("kb", s)}
       >
         <KeyboardIcon />
       </TinySelect>
       <TinySelect
-        list={props.configLists.locale}
-        selected={props.config.locale}
-        action={(s) => props.setConfig("locale", s)}
+        list={locales}
+        selected={settings[0].locale}
+        action={(s) => settings[1]("locale", s)}
       >
         <GlobeIcon />
       </TinySelect>
-      {/* <div class="toggle"> */}
-      {/*   <ToggleDarkMode */}
-      {/*     dark={props.config.dark} */}
-      {/*     setDark={(dark) => props.setConfig("dark", dark)} */}
-      {/*   /> */}
-      {/* </div> */}
       <div class="toggle">
         <DarkModeToggle
-          dark={props.config.dark}
-          setDark={(dark) => props.setConfig("dark", dark)}
+          dark={settings[0].theme === Theme.dark}
+          setTheme={(theme) => settings[1]("theme", theme)}
         />
       </div>
     </div>

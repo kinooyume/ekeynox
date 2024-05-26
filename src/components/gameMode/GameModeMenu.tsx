@@ -1,20 +1,21 @@
-import { css } from "solid-styled";
-import { Match, Switch, createComputed, createEffect } from "solid-js";
+import { Match, Switch, createComputed } from "solid-js";
 import { createStore } from "solid-js/store";
+import { css } from "solid-styled";
 
-import SpeedParams from "./SpeedParams";
-import TimerParams from "./TimerParams";
+import { GameModeKind } from "../../gameOptions/gameModeKind.ts";
 import {
-  type GameOptions,
-  type ContentGeneration,
   deepCopy,
-} from "./GameOptions";
+  type ContentGeneration,
+  type GameOptions,
+} from "../../gameOptions/gameOptions";
+import { useI18n } from "../../settings/i18nProvider";
 import Bunny from "../svgs/bunny";
 import Monkey from "../svgs/monkey";
 import CustomInput, { type CustomInputRef } from "../ui/CustomInput";
 import GameModeSelection from "./GameModeSelection";
-import type { Translator } from "../App";
-import { GameModeKind } from "./GameMode";
+import SpeedParams from "./SpeedParams";
+import TimerParams from "./TimerParams";
+
 // Gsap animation
 // https://codepen.io/dev_loop/pen/MWKbJmO
 // Store like this
@@ -36,7 +37,6 @@ import { GameModeKind } from "./GameMode";
 // take a list and make cards
 
 type GameModeKindMenuProps = {
-  t: Translator;
   gameOptions: GameOptions;
   setContentGeneration: (type: ContentGeneration) => void;
   start: (opts: GameOptions, customSource: string) => void;
@@ -47,6 +47,8 @@ const customRef: CustomInputRef = {
 };
 
 const GameModeKindMenu = (props: GameModeKindMenuProps) => {
+
+  const t = useI18n();
   const [gameOptions, setGameOptions] = createStore<GameOptions>(
     deepCopy(props.gameOptions),
   );
@@ -204,13 +206,12 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
         <div class="hud">
           <div class="title">
             <div class="title-content">
-              <span>{props.t("chooseYour")}</span>
-              <h1>{props.t("playingMode")}</h1>
+              <span>{t("chooseYour")}</span>
+              <h1>{t("playingMode")}</h1>
             </div>
           </div>
           <div class="selection">
             <GameModeSelection
-              t={props.t}
               selected={gameOptions.modeSelected}
               setSelected={(mode: GameModeKind) =>
                 setGameOptions("modeSelected", mode)
@@ -235,17 +236,16 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
             <Switch>
               <Match when={gameOptions.modeSelected === GameModeKind.speed}>
                 <div class="text">
-                  <h2 class="title-mode">{props.t("gameMode.speed.title")}</h2>
-                  <h3>{props.t("gameMode.speed.subtitle")}</h3>
+                  <h2 class="title-mode">{t("gameMode.speed.title")}</h2>
+                  <h3>{t("gameMode.speed.subtitle")}</h3>
                   <p class="description">
-                    {props.t("gameMode.speed.hugeDescription")}
+                    {t("gameMode.speed.hugeDescription")}
                   </p>
                 </div>
 
                 <div class="options">
-                  {/* <h2 class="options-title">{props.t("options")}</h2> */}
+                  {/* <h2 class="options-title">{t("options")}</h2> */}
                   <SpeedParams
-                    t={props.t}
                     gameOptions={gameOptions}
                     setGameOptions={setGameOptions}
                   >
@@ -258,16 +258,15 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
               </Match>
               <Match when={gameOptions.modeSelected === GameModeKind.timer}>
                 <div class="text">
-                  <h2 class="title-mode">{props.t("gameMode.timer.title")}</h2>
-                  <h3>{props.t("gameMode.timer.subtitle")}</h3>
+                  <h2 class="title-mode">{t("gameMode.timer.title")}</h2>
+                  <h3>{t("gameMode.timer.subtitle")}</h3>
                   <p class="description">
-                    {props.t("gameMode.timer.hugeDescription")}
+                    {t("gameMode.timer.hugeDescription")}
                   </p>
                 </div>
                 <div class="options">
-                  {/* <h2 class="options-title">{props.t("options")}</h2> */}
+                  {/* <h2 class="options-title">{t("options")}</h2> */}
                   <TimerParams
-                    t={props.t}
                     gameOptions={gameOptions}
                     setGameOptions={setGameOptions}
                   >
@@ -280,7 +279,7 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
               </Match>
             </Switch>
             <button class="primary" onClick={start}>
-              {props.t("letsGo")}
+              {t("letsGo")}
             </button>
           </div>
         </div>

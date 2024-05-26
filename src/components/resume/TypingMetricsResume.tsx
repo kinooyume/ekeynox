@@ -1,34 +1,28 @@
+import anime from "animejs";
+import {
+  createComputed,
+  createSignal,
+  onCleanup,
+  onMount,
+  type JSXElement
+} from "solid-js";
 import { css } from "solid-styled";
-import type { HigherKeyboard } from "../keyboard/KeyboardLayout";
-import SpeedChart from "./charts/SpeedChart";
-import DataMetricsResume from "./DataMetricsResume";
-import Prompt from "./PromptResume";
-import type { Translator } from "../App";
+import { useI18n } from "~/settings/i18nProvider";
+import { HigherKeyboard } from "~/settings/keyboardLayout";
+import GameOptionsTitle from "../gameMode/GameOptionsTitle";
 import {
   createMetricsResume,
   type Metrics,
   type MetricsResume,
 } from "../metrics/Metrics";
-import {
-  createComputed,
-  createSignal,
-  Show,
-  type JSXElement,
-  onMount,
-  onCleanup,
-  Match,
-  Switch,
-} from "solid-js";
-import TypingKeyboardResume from "./TypingKeyboardResume";
-import WordMetricsResume from "./charts/WordsChart";
-import TabContainer from "../ui/TabContainer";
-import CharacterChart from "./charts/CharacterChart";
-import GameOptionsTitle from "../gameMode/GameOptionsTitle";
-import anime from "animejs";
 import AccuracyDoughnut from "./charts/AccuracyDoughnut";
+import CharacterChart from "./charts/CharacterChart";
+import SpeedChart from "./charts/SpeedChart";
+import WordMetricsResume from "./charts/WordsChart";
+import Prompt from "./PromptResume";
+import TypingKeyboardResume from "./TypingKeyboardResume";
 
 type TypingMetricsProps = {
-  t: Translator;
   kbLayout: HigherKeyboard;
   metrics: Metrics;
   children: (n: MetricsResume) => JSXElement;
@@ -38,6 +32,7 @@ type TypingMetricsProps = {
 // https://x.com/slavakornilov/status/1787408908069515499
 //
 const TypingMetricsResume = (props: TypingMetricsProps) => {
+  const t = useI18n();
   const keysSet = new Set(Object.keys(props.metrics.keys));
   const [kbLayout, setKbLayout] = createSignal(props.kbLayout(keysSet));
 
@@ -277,7 +272,7 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
           <div class="sticky">
             <div ref={resumeMenu!} class="resume-menu">
               <GameOptionsTitle
-                t={props.t}
+                t={t}
                 gameOptions={props.metrics.gameOptions}
               />
               <div class="actions">{props.children(metricsResume)}</div>
@@ -285,7 +280,7 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
           </div>
           <div class="cards-wrapper">
             <h2 class="stat-title">
-              {props.t("statistics.contentResumeTitle")}
+              {t("statistics.contentResumeTitle")}
             </h2>
             <div class="stat-card">
               <Prompt paragraphs={props.metrics.paragraphs} />
@@ -294,23 +289,23 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
           <div class="cards-wrapper">
             <div class="stat-header">
               <div class="stat-header-content">
-                <h2 class="stat-title">{props.t("statistics.title")}</h2>
+                <h2 class="stat-title">{t("statistics.title")}</h2>
               </div>
             </div>
             <div class="stat-content">
               <div class="stat-card">
-                <p>{props.t("statistics.keysResumeTitle")}</p>
+                <p>{t("statistics.keysResumeTitle")}</p>
                 <TypingKeyboardResume
                   layout={kbLayout()}
                   metrics={props.metrics.keys}
                 />
               </div>
               <div class="stat-card">
-                <p>{props.t("statistics.charactersTyped")}</p>
+                <p>{t("statistics.charactersTyped")}</p>
                 <CharacterChart keys={metricsResume.keys} />
               </div>
               <div class="stat-card">
-                <p>{props.t("statistics.wordsSpeedTitle")}</p>
+                <p>{t("statistics.wordsSpeedTitle")}</p>
                 <WordMetricsResume words={metricsResume.words} />
               </div>
             </div>
@@ -320,7 +315,7 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
       <div class="sidebar-wrapper">
         <div class="sidebar">
           <div class="cards-wrapper">
-            <h2 class="stat-title">{props.t("statistics.gameReport")}</h2>
+            <h2 class="stat-title">{t("statistics.gameReport")}</h2>
             <div class="stat-card report">
               <AccuracyDoughnut stats={props.metrics.typing.logs!.value.stats}>
                 <p class="wpm-data main-data">
@@ -344,7 +339,7 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
                 <p class="main-data main-data-tiny">
                   {getTime(props.metrics.typing.logs!.value.core.duration)}
                 </p>
-                <p class="subtitle">{props.t("elapsedTime")}</p>
+                <p class="subtitle">{t("elapsedTime")}</p>
               </div>
             </div>
             <div class="cards-wrapper">
@@ -352,7 +347,7 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
                 <p class="main-data main-data-tiny">
                   {getTime(props.metrics.typing.logs!.value.core.duration)}
                 </p>
-                <p class="subtitle">{props.t("elapsedTime")}</p>
+                <p class="subtitle">{t("elapsedTime")}</p>
               </div>
             </div>
           </div>
@@ -364,7 +359,7 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
                 ).toFixed(0)}
                 <span>%</span>
               </p>
-              <p class="subtitle">{props.t("consistency")}</p>
+              <p class="subtitle">{t("consistency")}</p>
             </div>
           </div>
         </div>

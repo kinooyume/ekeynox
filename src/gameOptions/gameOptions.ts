@@ -1,7 +1,9 @@
-import { GameModeKind } from "./GameMode";
-
 // TODO: should we build it from folder/files ?
-// keyof Locales
+
+import { SourceProps, makeSourceNested } from "~/components/content/TypingGameSource";
+import { GameModeKind } from "./gameModeKind";
+import { PendingMode } from "~/appState/appState";
+
 export type Languages = "en" | "fr";
 
 export enum WordsGenerationCategory {
@@ -59,7 +61,7 @@ export type GameOptions = {
 type Selected = {
   mode: GameModeKind;
   category: CategoryKind;
-}
+};
 
 const getDefaultGameOptions = (): GameOptions => ({
   modeSelected: GameModeKind.speed,
@@ -83,4 +85,33 @@ const deepCopy = (source: GameOptions): GameOptions => ({
   generation: { ...source.generation },
 });
 
-export { getDefaultGameOptions, deepCopy };
+const optionsToPending = (
+  opts: GameOptions,
+  sources: SourceProps,
+): PendingMode => {
+  switch (opts.modeSelected) {
+    case GameModeKind.speed:
+      return {
+        kind: GameModeKind.speed,
+        isGenerated: opts.categorySelected.kind === CategoryKind.generation,
+        getContent: makeSourceNested({
+          opts,
+          sources,
+          wordsCount: opts.random,
+        }),
+      };
+    case GameModeKind.timer:
+      return {
+        kind: GameModeKind.timer,
+        isGenerated: opts.categorySelected.kind === CategoryKind.generation,
+        time: opts.timer * 1000,
+        getContent: makeSourceNested({
+          opts,
+          sources,
+          wordsCount: 40,
+        }),
+      };
+  }
+};
+
+export { getDefaultGameOptions, deepCopy, optionsToPending };

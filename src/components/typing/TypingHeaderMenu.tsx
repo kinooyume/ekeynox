@@ -1,21 +1,18 @@
 import { css } from "solid-styled";
-import type { Translator } from "../App";
 import GameModeDropdown from "../gameMode/GameModeDropdown";
-import {
-  type ContentGeneration,
-  type GameOptions,
-} from "../gameMode/GameOptions";
 import GameOptionsRecap from "../gameMode/GameOptionsRecap";
 import { Show } from "solid-js";
+import { ContentGeneration, GameOptions } from "~/gameOptions/gameOptions";
+import { useI18n } from "~/settings/i18nProvider";
 
 type HeaderNavLeftProps = {
-  t: Translator;
   gameOptions: GameOptions;
   start: (opts: GameOptions, customSource: string) => void;
   setContentGeneration: (type: ContentGeneration) => void;
 };
 
 const HeaderNavLeft = (props: HeaderNavLeftProps) => {
+  const t = useI18n();
   css`
     .header-mode {
       height: 48px;
@@ -108,8 +105,8 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
           <div
             class="menu-title"
             classList={{ hover: hover(), open: isOpen() }}
-            data-passive={`${props.t("gameMode")[props.gameOptions.modeSelected].subtitle}`}
-            data-active={`${props.t("newGame.one")} ${props.t("newGame.two")}`}
+            data-passive={`${t("gameMode")[props.gameOptions.modeSelected].subtitle}`}
+            data-active={`${t("newGame.one")} ${t("newGame.two")}`}
           >
             <Show when={!isOpen()}>
               <span class="cursor">▼</span>
@@ -118,7 +115,7 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
         )}
       </GameModeDropdown>
       <div class="options-recap">
-        <GameOptionsRecap gameOptions={props.gameOptions} t={props.t} />
+        <GameOptionsRecap gameOptions={props.gameOptions} />
       </div>
     </div>
   );

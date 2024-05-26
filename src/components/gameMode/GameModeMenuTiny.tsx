@@ -5,27 +5,22 @@ import {
   createComputed,
 } from "solid-js";
 import { css } from "solid-styled";
-import { type Translator } from "../App";
 import { createStore } from "solid-js/store";
 import SpeedParamsCompact from "./SpeedParamsCompact";
 import TimerParamsCompact from "./TimerParamsCompact";
 import CustomInput, { type CustomInputRef } from "../ui/CustomInput";
-import {
-  deepCopy,
-  type ContentGeneration,
-  type GameOptions,
-} from "./GameOptions";
 // import GameModeDropdown from "./GameModeDropdown";
 import {
   makeRedoContent,
 } from "../content/TypingGameSource";
-import { GameModeKind } from "./GameMode";
 import Content from "../content/Content";
 import type { Metrics, MetricsResume } from "../metrics/Metrics";
-import type { PendingMode } from "../AppState";
+import { ContentGeneration, GameOptions, deepCopy } from "~/gameOptions/gameOptions";
+import { PendingMode } from "~/appState/appState";
+import { GameModeKind } from "~/gameOptions/gameModeKind";
+import { useI18n } from "~/settings/i18nProvider";
 
 type GameModeSelectionProps = {
-  t: Translator;
   gameOptions: GameOptions;
   content: PendingMode;
   metrics: Metrics;
@@ -36,6 +31,7 @@ type GameModeSelectionProps = {
 };
 
 const GameModeSelectionTiny = (props: GameModeSelectionProps) => {
+  const t = useI18n();
   const [gameOptions, setGameOptions] = createStore<GameOptions>(
     deepCopy(props.gameOptions),
   );
@@ -94,7 +90,7 @@ const GameModeSelectionTiny = (props: GameModeSelectionProps) => {
   return (
     <div class="mode-selection">
       {/* <GameModeDropdown */}
-      {/*   t={props.t} */}
+      {/*   t={t} */}
       {/*   gameOptions={gameOptions} */}
       {/*   setGameOptions={setGameOptions} */}
       {/* /> */}
@@ -102,7 +98,7 @@ const GameModeSelectionTiny = (props: GameModeSelectionProps) => {
         <Switch>
           <Match when={gameOptions.modeSelected === GameModeKind.speed}>
             <SpeedParamsCompact
-              t={props.t}
+              t={t}
               gameOptions={gameOptions}
               setGameOptions={setGameOptions}
             >
@@ -114,7 +110,7 @@ const GameModeSelectionTiny = (props: GameModeSelectionProps) => {
           </Match>
           <Match when={gameOptions.modeSelected === GameModeKind.timer}>
             <TimerParamsCompact
-              t={props.t}
+              t={t}
               gameOptions={gameOptions}
               setGameOptions={setGameOptions}
             >
@@ -128,10 +124,10 @@ const GameModeSelectionTiny = (props: GameModeSelectionProps) => {
       </div>
       <div class="actions">
         <button class="secondary" onClick={restart}>
-          {props.t("playAgain")}
+          {t("playAgain")}
         </button>
         <button class="primary" onClick={start}>
-          {props.t("next")}
+          {t("next")}
         </button>
       </div>
     </div>

@@ -1,17 +1,18 @@
 import { For, onCleanup, createSignal, Show } from "solid-js";
 import { css } from "solid-styled";
-import type { Translator } from "../App";
 import ChooseClip from "../svgs/choose-clip";
 import { TransitionGroup } from "solid-transition-group";
-import { gameModesArray, type GameModeKind } from "./GameMode";
+import { gameModesArray } from "./GameMode";
+import { useI18n } from "~/settings/i18nProvider";
+import { GameModeKind } from "~/gameOptions/gameModeKind";
 
 type GameModeSelectionProps = {
-  t: Translator;
   selected: GameModeKind;
   setSelected: (mode: GameModeKind) => void;
 };
 
 const GameModeSelection = (props: GameModeSelectionProps) => {
+  const t = useI18n();
   css`
     .mode-selection {
       display: flex;
@@ -124,10 +125,10 @@ const GameModeSelection = (props: GameModeSelectionProps) => {
         >
           <Show when={labelHovered() !== null}>
             <p class="title">
-              {props.t("gameMode")[labelHovered() as GameModeKind].title}
+              {t("gameMode")[labelHovered() as GameModeKind].title}
             </p>
             <p class="description">
-              {props.t("gameMode")[labelHovered() as GameModeKind].subtitle}
+              {t("gameMode")[labelHovered() as GameModeKind].subtitle}
             </p>
           </Show>
         </TransitionGroup>

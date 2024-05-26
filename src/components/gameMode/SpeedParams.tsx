@@ -2,19 +2,16 @@ import { Match, Show, Switch, type JSXElement } from "solid-js";
 import { css } from "solid-styled";
 import Lang from "../svgs/lang";
 import Word from "../svgs/word";
-import {
-  CategoryKind,
-  WordsGenerationCategory,
-  type Category,
-  type Languages,
-} from "./GameOptions";
 import RadioGroup from "../ui/RadioGroup";
 import Quote from "../svgs/quote";
 import Text from "../svgs/text";
 import Customizer from "../svgs/customizer";
 import type { GameParams } from "./GameParams";
+import { useI18n } from "~/settings/i18nProvider";
+import { Category, CategoryKind, Languages, WordsGenerationCategory } from "~/gameOptions/gameOptions";
 
 const SpeedParams = (props: GameParams) => {
+const t = useI18n();
   css`
     .random-params {
       display: flex;
@@ -42,12 +39,12 @@ const SpeedParams = (props: GameParams) => {
   return (
     <div class="random-params">
       <div class="option">
-        <h3>{props.t("content")}</h3>
+        <h3>{t("content")}</h3>
         <RadioGroup
           name="wordsCategory"
           values={[
             {
-              label: props.t("words"),
+              label: t("words"),
               value: {
                 kind: CategoryKind.generation,
                 category: WordsGenerationCategory.words1k,
@@ -55,7 +52,7 @@ const SpeedParams = (props: GameParams) => {
               icon: <Text />,
             },
             {
-              label: props.t("quotes"),
+              label: t("quotes"),
               value: {
                 kind: CategoryKind.generation,
                 category: WordsGenerationCategory.quotes,
@@ -63,7 +60,7 @@ const SpeedParams = (props: GameParams) => {
               icon: <Quote />,
             },
             {
-              label: props.t("custom"),
+              label: t("custom"),
               value: { kind: CategoryKind.custom } as Category,
               icon: <Customizer />,
             },
@@ -91,12 +88,12 @@ const SpeedParams = (props: GameParams) => {
         when={props.gameOptions.categorySelected.kind !== CategoryKind.custom}
       >
         <div class="option">
-          <h3> {props.t("language")} </h3>
+          <h3> {t("language")} </h3>
           <RadioGroup
             name="languages"
             values={[
-              { label: props.t("en"), value: "en" as Languages },
-              { label: props.t("fr"), value: "fr" as Languages },
+              { label: t("en"), value: "en" as Languages },
+              { label: t("fr"), value: "fr" as Languages },
             ]}
             compare={(v) => v === props.gameOptions.generation.language}
             setChecked={(l) =>
@@ -122,7 +119,7 @@ const SpeedParams = (props: GameParams) => {
           }
         >
           <div class="option">
-            <h3>{props.t("wordCount")}</h3>
+            <h3>{t("wordCount")}</h3>
             <RadioGroup
               name="nbrWords"
               values={[
@@ -134,7 +131,7 @@ const SpeedParams = (props: GameParams) => {
               compare={(v) => v === props.gameOptions.random}
               setChecked={(v) => props.setGameOptions("random", v)}
             >
-              <Word />
+              <div></div>
             </RadioGroup>
           </div>
         </Match>

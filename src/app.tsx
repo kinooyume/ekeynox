@@ -1,73 +1,85 @@
 import { MetaProvider } from "@solidjs/meta";
-import { Router } from "@solidjs/router";
+import { Router, useLocation, useNavigate } from "@solidjs/router";
 import { FileRoutes } from "@solidjs/start/router";
-import { Suspense } from "solid-js";
+
+import { Show, Suspense, onMount } from "solid-js";
+import { Transition } from "solid-transition-group";
+
+import Header from "./components/Header";
+import TypingHeaderNav from "./components/typing/TypingHeaderNav";
 
 import { useAssets } from "solid-js/web";
 
 import { StyleRegistry, css, renderSheets, type StyleData } from "solid-styled";
 
-function GlobalStyles() {
-  css`
-    @global {
-      body {
-        font-family: Gordita, Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
-          sans-serif;
-      }
+import "./styles/fonts.css";
+import "./styles/global.css";
 
-      a {
-        margin-right: 1rem;
-      }
-
-      main {
-        text-align: center;
-        padding: 1em;
-        margin: 0 auto;
-      }
-
-      h1 {
-        color: #335d92;
-        text-transform: uppercase;
-        font-size: 4rem;
-        font-weight: 100;
-        line-height: 1.1;
-        margin: 4rem auto;
-        max-width: 14rem;
-      }
-
-      p {
-        max-width: 14rem;
-        margin: 2rem auto;
-        line-height: 1.35;
-      }
-
-      @media (min-width: 480px) {
-        h1 {
-          max-width: none;
-        }
-
-        p {
-          max-width: none;
-        }
-      }
-    }
-  `;
-  return null;
-}
+import { AppStateProvider } from "./appState/AppStateProvider";
+import { GameOptionsProvider } from "./gameOptions/GameOptionsProvider";
+import { SettingsProvider } from "./settings/SettingsProvider";
 
 export default function App() {
   const sheets: StyleData[] = [];
   useAssets(() => renderSheets(sheets));
 
+  // css`
+  //   .app {
+  //     display: grid;
+  //     margin: 0;
+  //     min-height: 100%;
+  //     background-color: var(--color-surface-100);
+  //   }
+  //   main {
+  //     margin-top: 96px;
+  //     display: grid;
+  //     grid-template-columns:
+  //       1fr
+  //       min(1400px, 100%)
+  //       1fr;
+  //     grid-template-rows: 1f;
+  //   }
+  // `;
+
+  // onMount(() => {
+  //   const { pathname } = useLocation();
+  //
+  //   console.log(pathname);
+  //   const navigate = useNavigate();
+  //   if (pathname !== "/resume") navigate("/", { replace: true });
+  // });
+
   return (
     <Router
-      root={props => (
+      root={(props) => (
         <MetaProvider>
           <StyleRegistry styles={sheets}>
-            <GlobalStyles />
-            <a href="/">Index</a>
-            <a href="/about">About</a>
-            <Suspense>{props.children}</Suspense>
+            <SettingsProvider>
+              <AppStateProvider>
+                <GameOptionsProvider>
+                  {/* <Header> */}
+                  {/*   <div></div> */}
+                  {/* <Show when={AppState().kind === AppStateKind.pending} keyed> */}
+                  {/*   {/* NOTE: use a portal here 
+                    {/*   <TypingHeaderNav */}
+                  {/*     t={i18nContext.t} */}
+                  {/*     start={start} */}
+                  {/*     gameOptions={persistedOptions} */}
+                  {/*     content={(AppState() as any).data.content} */}
+                  {/*     setGameOptions={setPersistedOptions} */}
+                  {/*     setContentGeneration={setContentGeneration} */}
+                  {/*   /> */}
+                  {/* </Show> */}
+                  {/* </Header> */}
+
+                    <main>
+                      <Suspense>
+                        <div>{props.children}</div>
+                      </Suspense>
+                    </main>
+                </GameOptionsProvider>
+              </AppStateProvider>
+            </SettingsProvider>
           </StyleRegistry>
         </MetaProvider>
       )}

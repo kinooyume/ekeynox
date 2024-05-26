@@ -1,19 +1,17 @@
 import { css } from "solid-styled";
 
-import { type Translator } from "./App.tsx";
 import { type JSXElement } from "solid-js";
 
 import Logo from "./svgs/logo.tsx";
+import HeaderAction from "./HeaderAction.tsx";
+import { useAppState } from "~/appState/AppStateProvider.tsx";
 
 type HeaderProps = {
-  t: Translator;
-  toHome: () => void;
-  actions: JSXElement;
   children: JSXElement;
 };
 
-// NOTE: Similar to GameModeDropdown
 const Header = (props: HeaderProps) => {
+  const { navigation } = useAppState();
   css`
     .header {
       position: fixed;
@@ -22,7 +20,7 @@ const Header = (props: HeaderProps) => {
       left: 0;
       z-index: 100;
       display: flex;
-gap: 36px;
+      gap: 36px;
       align-items: center;
       justify-content: space-between;
       height: 72px;
@@ -46,12 +44,14 @@ gap: 36px;
   return (
     <div class="header">
       <div class="left">
-        <div class="home" onClick={props.toHome}>
+        <div class="home" onClick={navigation.menu}>
           <Logo />
         </div>
       </div>
       <div class="center">{props.children}</div>
-      <div class="right">{props.actions}</div>
+      <div class="right">
+        <HeaderAction />
+      </div>
     </div>
   );
 };
