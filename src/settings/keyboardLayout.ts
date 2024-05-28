@@ -26,7 +26,8 @@ const resetLayout = (layout: Array<RowLayout>) => {
 };
 
 const create = (layoutName: string): HigherKeyboard => {
-  if (!(layoutName in keyboardLayoutName)) throw new Error("Invalid layout");
+  if (!(keyboardLayoutName.includes(layoutName)))
+    throw new Error(`Invalid keyboard layout: ${layoutName}`);
   const source = layouts[layoutName];
   const layout = source.keys.map((row) =>
     row.map((key) => ({

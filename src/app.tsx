@@ -42,10 +42,8 @@ export default function App() {
   // `;
 
   // onMount(() => {
-  //   const { pathname } = useLocation();
   //
   //   console.log(pathname);
-  //   const navigate = useNavigate();
   //   if (pathname !== "/resume") navigate("/", { replace: true });
   // });
 
@@ -55,8 +53,8 @@ export default function App() {
         <MetaProvider>
           <StyleRegistry styles={sheets}>
             <SettingsProvider>
-              <AppStateProvider>
-                <GameOptionsProvider>
+              <GameOptionsProvider>
+                <AppStateProvider>
                   {/* <Header> */}
                   {/*   <div></div> */}
                   {/* <Show when={AppState().kind === AppStateKind.pending} keyed> */}
@@ -72,13 +70,13 @@ export default function App() {
                   {/* </Show> */}
                   {/* </Header> */}
 
-                    <main>
-                      <Suspense>
-                        <div>{props.children}</div>
-                      </Suspense>
-                    </main>
-                </GameOptionsProvider>
-              </AppStateProvider>
+                  <main>
+                    <Suspense>
+                      <div>{props.children}</div>
+                    </Suspense>
+                  </main>
+                </AppStateProvider>
+              </GameOptionsProvider>
             </SettingsProvider>
           </StyleRegistry>
         </MetaProvider>

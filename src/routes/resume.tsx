@@ -27,7 +27,7 @@ export default function Resume() {
   return (
     <TypingMetricsResume
       kbLayout={KeyboardLayout.create(settings.kb)}
-      metrics={(state as any).metrics}
+      metrics={(state() as any).metrics}
     >
       {(metricsResume) => (
         <ActionsResume

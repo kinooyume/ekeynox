@@ -1,5 +1,6 @@
 import {
   JSX,
+  Suspense,
   createContext,
   createResource,
   createSignal,
@@ -71,7 +72,7 @@ export function GameOptionsProvider(props: GameOptionsProviderProps) {
         getPendingMode,
       }}
     >
-      {props.children}
+      <Suspense>{props.children}</Suspense>
     </gameOptionsContext.Provider>
   );
 }

@@ -21,6 +21,7 @@ const createFetchWords = () => {
       throw new Error("Invalid data");
     }
     cached[language][wordsCategory] = data.data;
+    console.log(data.data)
     return data.data;
   };
 };

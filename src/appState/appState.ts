@@ -1,7 +1,5 @@
 import { GameModeKind } from "~/gameOptions/gameModeKind";
-import {
-  type GetContent
-} from "../components/content/TypingGameSource";
+import { type GetContent } from "../components/content/TypingGameSource";
 import type { Metrics, MetricsResume } from "../components/metrics/Metrics";
 
 export type PendingMode =
@@ -16,7 +14,6 @@ export type PendingMode =
       time: number;
       getContent: GetContent;
     };
-
 
 export enum PendingKind {
   new,
@@ -41,10 +38,12 @@ export enum AppStateKind {
   resume,
 }
 
+export type PendingState = {
+  kind: AppStateKind.pending;
+  data: PendingStatus;
+};
+
 export type AppState =
   | { kind: AppStateKind.menu }
-  | {
-      kind: AppStateKind.pending;
-      data: PendingStatus;
-    }
+  | PendingState
   | { kind: AppStateKind.resume; metrics: Metrics; content: PendingMode };

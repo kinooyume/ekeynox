@@ -8,6 +8,7 @@ import {
 import type { Metrics, MetricsResume } from "../components/metrics/Metrics";
 import { AppState, AppStateKind, PendingKind, PendingMode } from "./appState";
 import { useLocation, useNavigate } from "@solidjs/router";
+import { useGameOptions } from "~/gameOptions/GameOptionsProvider";
 
 type AppStateProviderProps = {
   children: JSX.Element | JSX.Element[];
@@ -34,10 +35,20 @@ export function useAppState() {
 }
 
 export function AppStateProvider(props: AppStateProviderProps) {
-  // NOTE: no default without initial root
-  // ==> Menu, ou typing
-  // ==> Redirect to typing if
-  const [state, setState] = createSignal<AppState>({ kind: AppStateKind.menu });
+  const { gameOptions, setGameOptions, setContentGeneration, getPendingMode } =
+    useGameOptions();
+
+  const { pathname } = useLocation();
+
+  const appState: AppState =
+    pathname === "/"
+      ? { kind: AppStateKind.menu }
+      : {
+          kind: AppStateKind.pending,
+          data: { kind: PendingKind.new, mode: getPendingMode() },
+        };
+
+  const [state, setState] = createSignal<AppState>(appState);
 
   const navigation = {
     start: (mode: PendingMode) => {
@@ -68,14 +79,12 @@ export function AppStateProvider(props: AppStateProviderProps) {
           navigate("/");
           break;
         case AppStateKind.pending:
-          console.log(JSON.stringify(state()));
           navigate("/typing");
           break;
         case AppStateKind.resume:
           navigate("/resume");
           break;
       }
-      // On veut surement ici une redirection
     },
     { defer: true },
   );
