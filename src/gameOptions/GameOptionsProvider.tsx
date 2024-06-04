@@ -1,6 +1,11 @@
 import {
   JSX,
+  Resource,
+  ResourceActions,
+  ResourceFetcher,
+  ResourceReturn,
   Suspense,
+  createComputed,
   createContext,
   createResource,
   createSignal,
@@ -14,20 +19,21 @@ import {
 } from "./gameOptions";
 import { makePersisted } from "@solid-primitives/storage";
 import { SetStoreFunction, createStore } from "solid-js/store";
-import { createFetchWords } from "~/components/content/fetchContent";
 import { PendingMode } from "~/appState/appState";
 import { isServer } from "solid-js/web";
+import SourcesGen, {
+  SourcesGenFetch,
+  type SourcesGenCache,
+} from "~/components/content/SourcesGenCache";
 
 type GameOptionsProviderProps = {
   children: JSX.Element | JSX.Element[];
 };
 
 type GameOptionsContext = {
-  gameOptions: GameOptions;
-  setGameOptions: SetStoreFunction<GameOptions>;
-  generationSource: () => string[];
-  setContentGeneration: (type: ContentGeneration) => void;
-  getPendingMode: () => PendingMode;
+  persistedGameOptions: GameOptions;
+  setPersistedGameOptions: SetStoreFunction<GameOptions>;
+  fetchSourcesGen: SourcesGenFetch;
 };
 
 const gameOptionsContext = createContext<GameOptionsContext>(
@@ -47,32 +53,40 @@ export function GameOptionsProvider(props: GameOptionsProviderProps) {
   const [contentGeneration, setContentGeneration] =
     createSignal<ContentGeneration>(gameOptions.generation);
 
-  // NOTE: find something else for here, don't want server code in the build
-  const fetchWords = isServer ? () => [] : createFetchWords();
+  const sourcesGen = SourcesGen.create();
+  const fetchSourcesGen = isServer
+    ? () => Promise.resolve([])
+    : sourcesGen.fetch;
 
-  const [generationSource, { refetch: refetchGenerationSource }] =
-    createResource<string[], ContentGeneration>(contentGeneration, fetchWords, {
-      initialValue: [],
-    });
+  // const [generationSource, { refetch: refetchSource }] = createResource<
+  //   string[],
+  //   ContentGeneration
+  // >(contentGeneration, fetchWords, {
+  //   initialValue: [],
+  // });
 
-  const getPendingMode = () => {
-    return optionsToPending(gameOptions, {
-      random: generationSource(),
-      custom: gameOptions.custom,
-    });
-  };
+  const [currentSource, setCurrentSource] = createSignal<string[]>();
+
+  // const [pendingMode, setPendingMode] = createSignal<PendingMode>();
+  //
+  // createComputed(() => {
+  //   setPendingMode(
+  //     optionsToPending(gameOptions, {
+  //       random: generationSource(),
+  //       custom: gameOptions.custom,
+  //     }),
+  //   );
+  // });
 
   return (
     <gameOptionsContext.Provider
       value={{
-        gameOptions,
-        setGameOptions,
-        setContentGeneration,
-        generationSource,
-        getPendingMode,
+        persistedGameOptions: gameOptions,
+        setPersistedGameOptions: setGameOptions,
+        fetchSourcesGen,
       }}
     >
-      <Suspense>{props.children}</Suspense>
+      {props.children}
     </gameOptionsContext.Provider>
   );
 }

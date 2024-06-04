@@ -71,7 +71,7 @@ export default function App() {
                   {/* </Header> */}
 
                   <main>
-                    <Suspense>
+                    <Suspense fallback={ <div>Loading..</div> }>
                       <div>{props.children}</div>
                     </Suspense>
                   </main>
@@ -82,7 +82,7 @@ export default function App() {
         </MetaProvider>
       )}
     >
-      <FileRoutes />
+      <FileRoutes/>
     </Router>
   );
 }

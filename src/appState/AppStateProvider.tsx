@@ -1,24 +1,31 @@
 import {
+    Accessor,
   JSX,
   createComputed,
   createContext,
   createSignal,
   useContext,
 } from "solid-js";
+
 import type { Metrics, MetricsResume } from "../components/metrics/Metrics";
 import { AppState, AppStateKind, PendingKind, PendingMode } from "./appState";
 import { useLocation, useNavigate } from "@solidjs/router";
 import { useGameOptions } from "~/gameOptions/GameOptionsProvider";
+import { GameOptions } from "~/gameOptions/gameOptions";
 
 type AppStateProviderProps = {
   children: JSX.Element | JSX.Element[];
 };
 
 type AppContext = {
-  state: () => AppState;
+  state: Accessor<AppState>;
   navigation: {
-    start: (mode: PendingMode) => void;
-    redo: (mode: PendingMode, metrics: MetricsResume) => void;
+    start: (mode: Promise<PendingMode>, options: GameOptions) => void;
+    redo: (
+      mode: PendingMode,
+      metrics: MetricsResume,
+      options: GameOptions,
+    ) => void;
     over: (metrics: Metrics, content: PendingMode) => void;
     menu: () => void;
   };
@@ -35,59 +42,80 @@ export function useAppState() {
 }
 
 export function AppStateProvider(props: AppStateProviderProps) {
-  const { gameOptions, setGameOptions, setContentGeneration, getPendingMode } =
-    useGameOptions();
+  const {
+    persistedGameOptions: gameOptions,
+    setPersistedGameOptions: setGameOptions,
+  } = useGameOptions();
 
   const { pathname } = useLocation();
 
-  const appState: AppState =
-    pathname === "/"
-      ? { kind: AppStateKind.menu }
-      : {
-          kind: AppStateKind.pending,
-          data: { kind: PendingKind.new, mode: getPendingMode() },
-        };
+  // start
+  const getAppState = (): AppState => {
+    if (pathname === "/") {
+      return { kind: AppStateKind.menu };
+      // } else if (pendingMode !== undefined) {
+      //   return {
+      //     kind: AppStateKind.pending,
+      //     data: { kind: PendingKind.new, mode: pendingMode },
+      //   };
+    }
+    return { kind: AppStateKind.loading };
+  };
+
+  const appState: AppState = getAppState();
 
   const [state, setState] = createSignal<AppState>(appState);
 
+  const setStateGuard = (newState: AppState) => {
+    // surement pas bon
+    console.log("set state guard");
+    if (state().kind !== newState.kind) setState(newState);
+  };
+
   const navigation = {
-    start: (mode: PendingMode) => {
-      setState({
+    start: (mode: Promise<PendingMode>, options: GameOptions) => {
+      setStateGuard({
         kind: AppStateKind.pending,
-        data: { kind: PendingKind.new, mode },
+        status: mode.then((m) => ({ kind: PendingKind.new, mode: m })),
+        options: options,
       });
     },
-    redo: (mode: PendingMode, metrics: MetricsResume) => {
-      setState({
+    redo: (mode: PendingMode, metrics: MetricsResume, options: GameOptions) => {
+      setStateGuard({
         kind: AppStateKind.pending,
-        data: { kind: PendingKind.redo, mode, prev: metrics },
+        options: options,
+        status: Promise.resolve({
+          kind: PendingKind.redo,
+          mode,
+          prev: metrics,
+        }),
       });
     },
     over: (metrics: Metrics, content: PendingMode) => {
-      setState({ kind: AppStateKind.resume, metrics, content });
+      setStateGuard({ kind: AppStateKind.resume, metrics, content });
     },
     menu: () => {
-      setState({ kind: AppStateKind.menu });
+      setStateGuard({ kind: AppStateKind.menu });
     },
   };
 
-  const navigate = useNavigate();
-  createComputed(
-    () => {
-      switch (state().kind) {
-        case AppStateKind.menu:
-          navigate("/");
-          break;
-        case AppStateKind.pending:
-          navigate("/typing");
-          break;
-        case AppStateKind.resume:
-          navigate("/resume");
-          break;
-      }
-    },
-    { defer: true },
-  );
+  // createComputed(
+  //   () => {
+  //     console.log("god damn it")
+  //     switch (state().kind) {
+  //       case AppStateKind.menu:
+  //         navigate("/");
+  //         break;
+  //       case AppStateKind.pending:
+  //         navigate("/typing");
+  //         break;
+  //       case AppStateKind.resume:
+  //         navigate("/resume");
+  //         break;
+  //     }
+  //   },
+  //   { defer: true },
+  // );
 
   return (
     <AppStateContext.Provider value={{ state, navigation }}>

@@ -116,6 +116,8 @@ export const parse: Parser = (source) => {
   return { paragraphs, keySet, wordsCount };
 };
 
+type NonEmptyArray<T> = [T, ...T[]];
+
 const parseWords = (source: Array<string>): ContentData => {
   const keySet = new Set<string>();
   const wordParser = parseWord(keySet);

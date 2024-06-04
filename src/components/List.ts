@@ -59,6 +59,7 @@ const expandDLinkedList = <T>(target: DLinkedList<T>, elem: T) => {
   return list;
 };
 
+// NOTE: C'est pas vraiment non empty
 type NonEmptyArray<T> = [T, T[]];
 
 const makeDLinkedListFromArray = <T, U>(

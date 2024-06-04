@@ -4,14 +4,16 @@ import {
   createComputed,
   createEffect,
   createMemo,
+  createResource,
   createSignal,
   on,
   onCleanup,
+  onMount,
   untrack,
 } from "solid-js";
 import type { Metrics } from "../metrics/Metrics";
 import TypingGame from "./TypingGame";
-import type { ContentHandler } from "../content/TypingGameSource";
+import type { ContentHandler, GetContent } from "../content/TypingGameSource";
 import { createStore, reconcile } from "solid-js/store";
 import Content, { type Paragraphs } from "../content/Content";
 import makeCursor, { type Cursor, type Position } from "../cursor/Cursor";
@@ -60,6 +62,12 @@ type TypingGameManagerProps = {
 };
 
 const TypingGameManager = (props: TypingGameManagerProps) => {
+  // const [contentHandler, { mutate: setContentHandler }] =
+  // createResource<ContentHandler>(() =>
+  //   props.status.mode.getContent.then((c) => c()),
+  // );
+  //
+
   const [contentHandler, setContentHandler] = createSignal<ContentHandler>(
     props.status.mode.getContent(),
   );
@@ -91,7 +99,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
     contentHandler().data.wordsCount,
   );
 
-; const incrementWordsCount = () => setWordsCount(wordsCount() + 1); // next
+  const incrementWordsCount = () => setWordsCount(wordsCount() + 1); // next
   const decrementWordsCount = () => setWordsCount(wordsCount() - 1); // prev
 
   let setWpm = ({ wpm, duration }: { wpm: number; duration: number }) => {

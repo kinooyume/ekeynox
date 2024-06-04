@@ -1,6 +1,9 @@
 // TODO: should we build it from folder/files ?
 
-import { SourceProps, makeSourceNested } from "~/components/content/TypingGameSource";
+import {
+  SourceProps,
+  makeSourceNested,
+} from "~/components/content/TypingGameSource";
 import { GameModeKind } from "./gameModeKind";
 import { PendingMode } from "~/appState/appState";
 
@@ -85,29 +88,32 @@ const deepCopy = (source: GameOptions): GameOptions => ({
   generation: { ...source.generation },
 });
 
-const optionsToPending = (
+const optionsToPending = async (
   opts: GameOptions,
-  sources: SourceProps,
-): PendingMode => {
+  sourceGen: Promise<string[]>,
+): Promise<PendingMode> => {
+  console.log("optionsToPending");
   switch (opts.modeSelected) {
     case GameModeKind.speed:
+      const source = await sourceGen;
       return {
         kind: GameModeKind.speed,
         isGenerated: opts.categorySelected.kind === CategoryKind.generation,
         getContent: makeSourceNested({
           opts,
-          sources,
+          sources: { random: source, custom: opts.custom },
           wordsCount: opts.random,
         }),
       };
     case GameModeKind.timer:
+      const source_1 = await sourceGen;
       return {
         kind: GameModeKind.timer,
         isGenerated: opts.categorySelected.kind === CategoryKind.generation,
         time: opts.timer * 1000,
         getContent: makeSourceNested({
           opts,
-          sources,
+          sources: { random: source_1, custom: opts.custom },
           wordsCount: 40,
         }),
       };
