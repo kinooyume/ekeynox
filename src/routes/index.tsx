@@ -1,5 +1,6 @@
 import { Title } from "@solidjs/meta";
 import { useNavigate } from "@solidjs/router";
+import { clientOnly } from "@solidjs/start";
 import { createComputed, on } from "solid-js";
 import { useAppState } from "~/appState/AppStateProvider";
 import GameModeMenu from "~/components/gameMode/GameModeMenu";
@@ -10,6 +11,7 @@ import {
   optionsToPending,
 } from "~/gameOptions/gameOptions";
 
+const ClientMenu = clientOnly(() => import("~/components/gameMode/GameModeMenu"));
 export default function Menu() {
   const { persistedGameOptions, setPersistedGameOptions, fetchSourcesGen } =
     useGameOptions();
@@ -18,9 +20,8 @@ export default function Menu() {
 
   const navigate = useNavigate();
 
-  const start = (opts: GameOptions, customSource: string) => {
+  const start = (opts: GameOptions) => {
     setPersistedGameOptions(opts);
-    setPersistedGameOptions("custom", customSource);
 
     const sourcesGen = fetchSourcesGen(opts.generation);
     const pendingMode = optionsToPending(opts, sourcesGen);

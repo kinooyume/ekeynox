@@ -42,11 +42,6 @@ export function useAppState() {
 }
 
 export function AppStateProvider(props: AppStateProviderProps) {
-  const {
-    persistedGameOptions: gameOptions,
-    setPersistedGameOptions: setGameOptions,
-  } = useGameOptions();
-
   const { pathname } = useLocation();
 
   // start
@@ -68,6 +63,7 @@ export function AppStateProvider(props: AppStateProviderProps) {
 
   const navigation = {
     start: (mode: Promise<PendingMode>, options: GameOptions) => {
+
       setStateGuard({
         kind: AppStateKind.pending,
         status: mode.then((m) => ({ kind: PendingKind.new, mode: m })),

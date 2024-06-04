@@ -7,13 +7,13 @@ import {
   Tooltip,
   Colors,
   ScatterController,
+  Chart,
 } from "chart.js";
-
-import gradient from "chartjs-plugin-gradient";
 
 import { DefaultChart } from "solid-chartjs";
 import { css } from "solid-styled";
 import type { ChartMetrics } from "../../metrics/Metrics";
+import { onMount } from "solid-js";
 
 type MyChartProps = {
   metrics: ChartMetrics;
@@ -151,6 +151,10 @@ const MyChart = (props: MyChartProps) => {
     },
   };
 
+  onMount(() => {
+    Chart.register(LineController, PointElement, LineElement, LinearScale, Tooltip, Colors, ScatterController );
+  })
+
   return (
     <div class="chart">
       <DefaultChart
@@ -163,7 +167,6 @@ const MyChart = (props: MyChartProps) => {
           Tooltip,
           Colors,
           ScatterController,
-          gradient,
         ]}
         options={options}
       />

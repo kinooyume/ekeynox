@@ -9,6 +9,7 @@ import TimerParamsMedium from "./TimerParamsMedium";
 import { css } from "solid-styled";
 import { useI18n } from "~/settings/i18nProvider";
 import {
+    CategoryKind,
   ContentGeneration,
   GameOptions,
   deepCopy,
@@ -18,7 +19,7 @@ import { GameModeKind } from "~/gameOptions/gameModeKind";
 type GameModeDropdownProps = {
   reverse?: boolean;
   gameOptions: GameOptions;
-  start: (opts: GameOptions, customSource: string) => void;
+  start: (opts: GameOptions) => void;
   fetchSourcesGen: (opts: ContentGeneration) => Promise<Array<string>>;
 
   children: (isOpen: () => boolean, hover: () => boolean) => JSX.Element;
@@ -160,7 +161,10 @@ const GameModeDropdown = (props: GameModeDropdownProps) => {
 
   const start = (setIsOpen: (o: boolean) => void) => {
     setIsOpen(false);
-    props.start(gameOptions, customRef.ref ? customRef.ref.value : "");
+    if (gameOptions.categorySelected.kind === CategoryKind.custom) {
+      setGameOptions("custom", customRef.ref ? customRef.ref.value : "");
+    }
+    props.start(gameOptions);
   };
 
   return (

@@ -15,13 +15,13 @@ import { DefaultChart } from "solid-chartjs";
 import { css } from "solid-styled";
 
 import type { KeyResume } from "../../metrics/Metrics";
+import { onMount } from "solid-js";
 
 type CharacterCharProps = {
   keys: [KeyResume, Map<string, number>];
 };
 
 const CharacterChart = (props: CharacterCharProps) => {
-
   // get the first 10 words
   // const words = props.words.slice(0, 10);
   // const [labels, speeds] = words.reduce(
@@ -91,10 +91,10 @@ const CharacterChart = (props: CharacterCharProps) => {
       tooltip: {
         callbacks: {
           // label: (context: ChartTooltipItem) => {
-            // let ds = data.datasets[tooltipItem.datasetIndex];
-            // return (
-            //   ds.label + ": " + Math.abs(ds.data[tooltipItem.index] as number)
-            // );
+          // let ds = data.datasets[tooltipItem.datasetIndex];
+          // return (
+          //   ds.label + ": " + Math.abs(ds.data[tooltipItem.index] as number)
+          // );
           // },
         },
       },
@@ -147,6 +147,20 @@ const CharacterChart = (props: CharacterCharProps) => {
       justify-content: center;
     }
   `;
+
+  onMount(() => {
+    Chart.register(
+      CategoryScale,
+      PointElement,
+      Title,
+      Tooltip,
+      Legend,
+      Colors,
+      ArcElement,
+      BarController,
+      BarElement,
+    );
+  });
   return (
     <div class="chart">
       <DefaultChart

@@ -5,6 +5,7 @@ import { type JSXElement } from "solid-js";
 import Logo from "./svgs/logo.tsx";
 import HeaderAction from "./HeaderAction.tsx";
 import { useAppState } from "~/appState/AppStateProvider.tsx";
+import { useNavigate } from "@solidjs/router";
 
 type HeaderProps = {
   children: JSXElement;
@@ -41,10 +42,17 @@ const Header = (props: HeaderProps) => {
     }
   `;
 
+  const navigate = useNavigate();
   return (
     <div class="header">
       <div class="left">
-        <div class="home" onClick={navigation.menu}>
+        <div
+          class="home"
+          onClick={() => {
+            navigation.menu();
+            navigate("/");
+          }}
+        >
           <Logo />
         </div>
       </div>

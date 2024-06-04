@@ -92,11 +92,9 @@ const optionsToPending = async (
   opts: GameOptions,
   sourceGen: Promise<string[]>,
 ): Promise<PendingMode> => {
-  console.log("optionsToPending");
   switch (opts.modeSelected) {
     case GameModeKind.speed:
-      const source = await sourceGen;
-      return {
+      return sourceGen.then((source) => ({
         kind: GameModeKind.speed,
         isGenerated: opts.categorySelected.kind === CategoryKind.generation,
         getContent: makeSourceNested({
@@ -104,19 +102,18 @@ const optionsToPending = async (
           sources: { random: source, custom: opts.custom },
           wordsCount: opts.random,
         }),
-      };
+      }));
     case GameModeKind.timer:
-      const source_1 = await sourceGen;
-      return {
+      return sourceGen.then((source) => ({
         kind: GameModeKind.timer,
         isGenerated: opts.categorySelected.kind === CategoryKind.generation,
         time: opts.timer * 1000,
         getContent: makeSourceNested({
           opts,
-          sources: { random: source_1, custom: opts.custom },
+          sources: { random: source, custom: opts.custom },
           wordsCount: 40,
         }),
-      };
+      }));
   }
 };
 

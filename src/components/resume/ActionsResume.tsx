@@ -5,9 +5,10 @@ import { makeRedoContent } from "../content/TypingGameSource";
 import type { Metrics, MetricsResume } from "../metrics/Metrics";
 import type { CustomInputRef } from "../ui/CustomInput";
 import GameModeDropdown from "../gameMode/GameModeDropdown";
-import { ContentGeneration, GameOptions } from "~/gameOptions/gameOptions";
+import { CategoryKind, ContentGeneration, GameOptions } from "~/gameOptions/gameOptions";
 import { PendingMode } from "~/appState/appState";
 import { useI18n } from "~/settings/i18nProvider";
+import { useNavigate } from "@solidjs/router";
 
 type ActionsResumeProps = {
   gameOptions: GameOptions;
@@ -15,11 +16,16 @@ type ActionsResumeProps = {
   metrics: Metrics;
   metricsResume: MetricsResume;
   fetchSourcesGen: (opts: ContentGeneration) => Promise<Array<string>>;
-  start: (opts: GameOptions, customSource: string) => void;
-  redo: (content: PendingMode, metrics: MetricsResume) => void;
+  start: (opts: GameOptions) => void;
+  redo: (
+    mode: PendingMode,
+    metrics: MetricsResume,
+    options: GameOptions,
+  ) => void;
 };
 
 const ActionsResume = (props: ActionsResumeProps) => {
+  const navigate = useNavigate();
   const t = useI18n();
   const restart = () => {
     const redoContent = {
@@ -32,16 +38,15 @@ const ActionsResume = (props: ActionsResumeProps) => {
         props.content.getContent,
       ),
     };
-    props.redo(redoContent, props.metricsResume);
+    props.redo(redoContent, props.metricsResume, props.gameOptions);
+    navigate("/typing")
   };
 
-  const start = () => {
-    props.start(props.gameOptions, customRef.ref ? customRef.ref.value : "");
+  const start = (opts: GameOptions) => {
+    props.start(opts);
+    navigate("/typing")
   };
 
-  const customRef: CustomInputRef = {
-    ref: undefined,
-  };
   css`
     .cursor {
       corsor: pointer;
@@ -94,7 +99,7 @@ const ActionsResume = (props: ActionsResumeProps) => {
 
   return (
     <div class="actions">
-      <GameModeDropdown {...props} reverse={true}>
+      <GameModeDropdown {...props} start={start} reverse={true}>
         {(isOpen, hover) => (
           <div
             class="menu-title"
@@ -110,7 +115,7 @@ const ActionsResume = (props: ActionsResumeProps) => {
       <button class="secondary" onClick={restart}>
         {t("playAgain")}
       </button>
-      <button class="primary" onClick={start}>
+      <button class="primary" onClick={() => start(props.gameOptions)}>
         {t("next")}
       </button>
     </div>
