@@ -53,11 +53,6 @@ export function AppStateProvider(props: AppStateProviderProps) {
   const getAppState = (): AppState => {
     if (pathname === "/") {
       return { kind: AppStateKind.menu };
-      // } else if (pendingMode !== undefined) {
-      //   return {
-      //     kind: AppStateKind.pending,
-      //     data: { kind: PendingKind.new, mode: pendingMode },
-      //   };
     }
     return { kind: AppStateKind.loading };
   };
@@ -68,7 +63,6 @@ export function AppStateProvider(props: AppStateProviderProps) {
 
   const setStateGuard = (newState: AppState) => {
     // surement pas bon
-    console.log("set state guard");
     if (state().kind !== newState.kind) setState(newState);
   };
 
@@ -98,24 +92,6 @@ export function AppStateProvider(props: AppStateProviderProps) {
       setStateGuard({ kind: AppStateKind.menu });
     },
   };
-
-  // createComputed(
-  //   () => {
-  //     console.log("god damn it")
-  //     switch (state().kind) {
-  //       case AppStateKind.menu:
-  //         navigate("/");
-  //         break;
-  //       case AppStateKind.pending:
-  //         navigate("/typing");
-  //         break;
-  //       case AppStateKind.resume:
-  //         navigate("/resume");
-  //         break;
-  //     }
-  //   },
-  //   { defer: true },
-  // );
 
   return (
     <AppStateContext.Provider value={{ state, navigation }}>

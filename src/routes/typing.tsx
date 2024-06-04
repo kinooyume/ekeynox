@@ -10,9 +10,11 @@ import { GameOptions, optionsToPending } from "~/gameOptions/gameOptions.ts";
 import { Show, createResource, onMount } from "solid-js";
 import { useNavigate } from "@solidjs/router";
 
-const ClientGameManager = clientOnly(
-  () => import("~/components/typing/TypingGameManager"),
-);
+// const ClientGameManager = clientOnly(
+//   () => import("~/components/typing/TypingGameManager"),
+// );
+
+import TypingGameManager from "~/components/typing/TypingGameManager";
 
 export default function Typing() {
   const { state, navigation } = useAppState();
@@ -45,7 +47,7 @@ export default function Typing() {
   return (
     <Show when={state().kind === AppStateKind.pending}>
       <Show when={pendingStatus.state === "ready"}>
-        <ClientGameManager
+        <TypingGameManager
           status={pendingStatus()!}
           gameOptions={(state() as PendingState).options}
           showKb={settings.showKb}
