@@ -38,7 +38,7 @@ import TimerParams from "./TimerParams";
 
 type GameModeKindMenuProps = {
   gameOptions: GameOptions;
-  setContentGeneration: (type: ContentGeneration) => void;
+  fetchSourcesGen: (opts: ContentGeneration) => Promise<Array<string>>;
   start: (opts: GameOptions, customSource: string) => void;
 };
 
@@ -47,14 +47,13 @@ const customRef: CustomInputRef = {
 };
 
 const GameModeKindMenu = (props: GameModeKindMenuProps) => {
-
   const t = useI18n();
   const [gameOptions, setGameOptions] = createStore<GameOptions>(
     deepCopy(props.gameOptions),
   );
 
   createComputed(() => {
-    props.setContentGeneration({
+    props.fetchSourcesGen({
       language: gameOptions.generation.language,
       category: gameOptions.generation.category,
     });

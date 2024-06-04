@@ -1,6 +1,7 @@
 import { GameModeKind } from "~/gameOptions/gameModeKind";
 import { type GetContent } from "../components/content/TypingGameSource";
 import type { Metrics, MetricsResume } from "../components/metrics/Metrics";
+import { GameOptions } from "~/gameOptions/gameOptions";
 
 export type PendingMode =
   | {
@@ -33,6 +34,7 @@ export type PendingStatus =
 
 /* ***  */
 export enum AppStateKind {
+  loading,
   menu,
   pending,
   resume,
@@ -40,10 +42,12 @@ export enum AppStateKind {
 
 export type PendingState = {
   kind: AppStateKind.pending;
-  data: PendingStatus;
+  status: Promise<PendingStatus>;
+  options: GameOptions;
 };
 
 export type AppState =
   | { kind: AppStateKind.menu }
   | PendingState
-  | { kind: AppStateKind.resume; metrics: Metrics; content: PendingMode };
+  | { kind: AppStateKind.resume; metrics: Metrics; content: PendingMode }
+  | { kind: AppStateKind.loading };

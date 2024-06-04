@@ -7,7 +7,7 @@ import { useGameOptions } from "~/gameOptions/GameOptionsProvider.tsx";
 import { GameOptions } from "~/gameOptions/gameOptions.ts";
 
 export default function Resume() {
-  const { gameOptions, setGameOptions, setContentGeneration, getPendingMode } =
+  const { persistedGameOptions: gameOptions, setPersistedGameOptions: setGameOptions, setContentGeneration, getPendingMode } =
     useGameOptions();
 
   const { navigation } = useAppState();
