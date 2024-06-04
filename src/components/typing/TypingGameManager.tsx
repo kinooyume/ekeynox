@@ -51,6 +51,7 @@ import { GameOptions } from "~/gameOptions/gameOptions";
 import { HigherKeyboard } from "~/settings/keyboardLayout";
 import { GameModeKind } from "~/gameOptions/gameModeKind";
 import { useI18n } from "~/settings/i18nProvider";
+import { useNavigate } from "@solidjs/router";
 
 type TypingGameManagerProps = {
   status: PendingStatus;
@@ -265,9 +266,12 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
     );
   };
 
+  const navigate = useNavigate();
+
   const typingOver = () => {
     setTypingEvent({ kind: TypingEventKind.over });
     over();
+    navigate("/resume");
   };
 
   createComputed(

@@ -14,7 +14,7 @@ type ActionsResumeProps = {
   content: PendingMode;
   metrics: Metrics;
   metricsResume: MetricsResume;
-  setContentGeneration: (type: ContentGeneration) => void;
+  fetchSourcesGen: (opts: ContentGeneration) => Promise<Array<string>>;
   start: (opts: GameOptions, customSource: string) => void;
   redo: (content: PendingMode, metrics: MetricsResume) => void;
 };
