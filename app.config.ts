@@ -14,9 +14,10 @@ export default defineConfig({
     ],
   },
   server: {
+    static: true,
     prerender: {
-      routes: ["/"],
+      routes: ["/", "/typing", "/resume"],
+      crawlLinks: true,
     },
   },
-  ssr: false
 });
