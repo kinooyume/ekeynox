@@ -9,6 +9,7 @@ import {
   createContext,
   createResource,
   createSignal,
+  onMount,
   useContext,
 } from "solid-js";
 import {
@@ -32,7 +33,7 @@ type GameOptionsProviderProps = {
 
 type GameOptionsContext = {
   persistedGameOptions: GameOptions;
-  setPersistedGameOptions: SetStoreFunction<GameOptions>;
+  setPersistedGameOptions: (opts: GameOptions) => void;
   fetchSourcesGen: SourcesGenFetch;
 };
 
@@ -45,44 +46,32 @@ export function useGameOptions() {
 }
 
 export function GameOptionsProvider(props: GameOptionsProviderProps) {
-  const [gameOptions, setGameOptions] = makePersisted(
+  const [gameOptions, setGameOptions] = createStore<GameOptions>(
+    getDefaultGameOptions(),
+  );
+
+  const [persistedOptions, setPersistedOptions] = makePersisted(
     createStore<GameOptions>(getDefaultGameOptions()),
     { name: "gameOptions" },
   );
 
-  const [contentGeneration, setContentGeneration] =
-    createSignal<ContentGeneration>(gameOptions.generation);
+  onMount(() => {
+    setGameOptions(persistedOptions);
+  });
 
   const sourcesGen = SourcesGen.create();
   const fetchSourcesGen = isServer
     ? () => Promise.resolve([])
     : sourcesGen.fetch;
 
-  // const [generationSource, { refetch: refetchSource }] = createResource<
-  //   string[],
-  //   ContentGeneration
-  // >(contentGeneration, fetchWords, {
-  //   initialValue: [],
-  // });
-
-  const [currentSource, setCurrentSource] = createSignal<string[]>();
-
-  // const [pendingMode, setPendingMode] = createSignal<PendingMode>();
-  //
-  // createComputed(() => {
-  //   setPendingMode(
-  //     optionsToPending(gameOptions, {
-  //       random: generationSource(),
-  //       custom: gameOptions.custom,
-  //     }),
-  //   );
-  // });
-
   return (
     <gameOptionsContext.Provider
       value={{
         persistedGameOptions: gameOptions,
-        setPersistedGameOptions: setGameOptions,
+        setPersistedGameOptions: (opts) => {
+          setGameOptions(opts);
+          setPersistedOptions(opts);
+        },
         fetchSourcesGen,
       }}
     >

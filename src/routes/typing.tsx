@@ -26,9 +26,8 @@ export default function Typing() {
     s.kind === AppStateKind.pending ? s.status : undefined,
   );
 
-  const start = (opts: GameOptions, customSource: string) => {
+  const start = (opts: GameOptions) => {
     setPersistedGameOptions(opts);
-    setPersistedGameOptions("custom", customSource);
 
     const sourcesGen = fetchSourcesGen(opts.generation);
     const pendingMode = optionsToPending(opts, sourcesGen);
@@ -37,8 +36,11 @@ export default function Typing() {
   };
 
   onMount(() => {
+    console.log("yo mounted")
+    console.log(state())
     if (!(state().kind === AppStateKind.pending)) {
-      start(persistedGameOptions, persistedGameOptions.custom);
+      console.log("gniah")
+      start(persistedGameOptions);
     }
   });
 
@@ -46,7 +48,7 @@ export default function Typing() {
 
   return (
     <Show when={state().kind === AppStateKind.pending}>
-      <Show when={pendingStatus.state === "ready"}>
+      <Show when={pendingStatus.state === "ready" && pendingStatus()}>
         <TypingGameManager
           status={pendingStatus()!}
           gameOptions={(state() as PendingState).options}

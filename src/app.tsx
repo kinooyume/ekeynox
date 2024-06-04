@@ -23,23 +23,23 @@ export default function App() {
   const sheets: StyleData[] = [];
   useAssets(() => renderSheets(sheets));
 
-  // css`
-  //   .app {
-  //     display: grid;
-  //     margin: 0;
-  //     min-height: 100%;
-  //     background-color: var(--color-surface-100);
-  //   }
-  //   main {
-  //     margin-top: 96px;
-  //     display: grid;
-  //     grid-template-columns:
-  //       1fr
-  //       min(1400px, 100%)
-  //       1fr;
-  //     grid-template-rows: 1f;
-  //   }
-  // `;
+  css`
+    .app {
+      display: grid;
+      margin: 0;
+      min-height: 100%;
+      background-color: var(--color-surface-100);
+    }
+    main {
+      margin-top: 96px;
+      display: grid;
+      grid-template-columns:
+        1fr
+        min(1400px, 100%)
+        1fr;
+      grid-template-rows: 1f;
+    }
+  `;
 
   // onMount(() => {
   //
@@ -55,23 +55,22 @@ export default function App() {
             <SettingsProvider>
               <GameOptionsProvider>
                 <AppStateProvider>
-                  {/* <Header> */}
-                  {/*   <div></div> */}
-                  {/* <Show when={AppState().kind === AppStateKind.pending} keyed> */}
-                  {/*   {/* NOTE: use a portal here 
+                  <Header>
+                    <div></div>
+                    {/* <Show when={AppState().kind === AppStateKind.pending} keyed> */}
                     {/*   <TypingHeaderNav */}
-                  {/*     t={i18nContext.t} */}
-                  {/*     start={start} */}
-                  {/*     gameOptions={persistedOptions} */}
-                  {/*     content={(AppState() as any).data.content} */}
-                  {/*     setGameOptions={setPersistedOptions} */}
-                  {/*     setContentGeneration={setContentGeneration} */}
-                  {/*   /> */}
-                  {/* </Show> */}
-                  {/* </Header> */}
+                    {/*     t={i18nContext.t} */}
+                    {/*     start={start} */}
+                    {/*     gameOptions={persistedOptions} */}
+                    {/*     content={(AppState() as any).data.content} */}
+                    {/*     setGameOptions={setPersistedOptions} */}
+                    {/*     setContentGeneration={setContentGeneration} */}
+                    {/*   /> */}
+                    {/* </Show> */}
+                  </Header>
 
                   <main>
-                    <Suspense fallback={ <div>Loading..</div> }>
+                    <Suspense fallback={<div>Loading..</div>}>
                       <div>{props.children}</div>
                     </Suspense>
                   </main>
@@ -82,7 +81,7 @@ export default function App() {
         </MetaProvider>
       )}
     >
-      <FileRoutes/>
+      <FileRoutes />
     </Router>
   );
 }

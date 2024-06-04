@@ -15,13 +15,13 @@ import { DefaultChart } from "solid-chartjs";
 import { css } from "solid-styled";
 
 import type { WordSpeed } from "../../metrics/Metrics";
+import { onMount } from "solid-js";
 
 type WordMetricsResumeProps = {
   words: WordSpeed[];
 };
 
 const WordsChart = (props: WordMetricsResumeProps) => {
-
   // get the first 10 words
   const words = props.words.slice(0, 10);
   const [labels, speeds] = words.reduce(
@@ -89,6 +89,20 @@ const WordsChart = (props: WordMetricsResumeProps) => {
       justify-content: center;
     }
   `;
+
+  onMount(() => {
+    Chart.register(
+      CategoryScale,
+      PointElement,
+      Title,
+      Tooltip,
+      Legend,
+      Colors,
+      ArcElement,
+      BarController,
+      BarElement,
+    );
+  });
   return (
     <div class="chart">
       <DefaultChart

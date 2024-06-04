@@ -15,7 +15,7 @@ import {
 import { DefaultChart } from "solid-chartjs";
 import { css } from "solid-styled";
 import type { StatProjection } from "../../metrics/KeypressMetrics";
-import type { JSXElement } from "solid-js";
+import { onMount, type JSXElement } from "solid-js";
 
 type MyChartProps = {
   stats: StatProjection;
@@ -41,7 +41,7 @@ const AccuracyDoughnut = (props: MyChartProps) => {
     coordinates: { x: number; y: number }[];
   };
 
-  const makeOverlapSegment = (value: any, color: string) : OverlapSegment => {
+  const makeOverlapSegment = (value: any, color: string): OverlapSegment => {
     const { innerRadius, outerRadius, endAngle } = value;
     const radius = (outerRadius - innerRadius) / 2;
     const coordinates = [];
@@ -111,6 +111,20 @@ const AccuracyDoughnut = (props: MyChartProps) => {
       justify-content: center;
     }
   `;
+
+  onMount(() => {
+    Chart.register(
+      CategoryScale,
+      DoughnutController,
+      PointElement,
+      Title,
+      Tooltip,
+      ArcElement,
+      Legend,
+      Colors,
+      overlappingSegments,
+    );
+  });
   return (
     <div class="chart">
       <DefaultChart

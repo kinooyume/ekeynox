@@ -4,6 +4,7 @@ import { css } from "solid-styled";
 
 import { GameModeKind } from "../../gameOptions/gameModeKind.ts";
 import {
+  CategoryKind,
   deepCopy,
   type ContentGeneration,
   type GameOptions,
@@ -39,7 +40,7 @@ import TimerParams from "./TimerParams";
 type GameModeKindMenuProps = {
   gameOptions: GameOptions;
   fetchSourcesGen: (opts: ContentGeneration) => Promise<Array<string>>;
-  start: (opts: GameOptions, customSource: string) => void;
+  start: (opts: GameOptions) => void;
 };
 
 const customRef: CustomInputRef = {
@@ -60,7 +61,10 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
   });
 
   const start = () => {
-    props.start(gameOptions, customRef.ref ? customRef.ref.value : "");
+    if (gameOptions.categorySelected.kind === CategoryKind.custom) {
+      setGameOptions("custom", customRef.ref ? customRef.ref.value : "");
+    }
+    props.start(gameOptions);
   };
 
   css`
@@ -233,7 +237,10 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
           </div>
           <div class="game-description">
             <Switch>
-              <Match when={gameOptions.modeSelected === GameModeKind.speed}>
+              <Match
+                when={gameOptions.modeSelected === GameModeKind.speed}
+                keyed
+              >
                 <div class="text">
                   <h2 class="title-mode">{t("gameMode.speed.title")}</h2>
                   <h3>{t("gameMode.speed.subtitle")}</h3>
@@ -255,7 +262,10 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
                   </SpeedParams>
                 </div>
               </Match>
-              <Match when={gameOptions.modeSelected === GameModeKind.timer}>
+              <Match
+                when={gameOptions.modeSelected === GameModeKind.timer}
+                keyed
+              >
                 <div class="text">
                   <h2 class="title-mode">{t("gameMode.timer.title")}</h2>
                   <h3>{t("gameMode.timer.subtitle")}</h3>
