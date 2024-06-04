@@ -8,10 +8,10 @@ import Prompt from "../prompt/Prompt.tsx";
 import Keyboard, { type KeyboardHandler } from "../keyboard/TypingKeyboard.tsx";
 
 import { type KeysProjection } from "../metrics/KeysProjection.ts";
-import type { Translator } from "../App.tsx";
 import { type TypingEventType } from "./TypingEvent.ts";
-import type { HigherKeyboard } from "../keyboard/KeyboardLayout.ts";
 import type { JSX } from "solid-js";
+import { Translator } from "~/settings/i18nProvider.tsx";
+import { HigherKeyboard } from "~/settings/keyboardLayout.ts";
 
 type TypingGameProps = {
   t: Translator;

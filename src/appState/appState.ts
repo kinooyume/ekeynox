@@ -46,8 +46,14 @@ export type PendingState = {
   options: GameOptions;
 };
 
+export type ResumeState = {
+  kind: AppStateKind.resume;
+  metrics: Metrics;
+  content: PendingMode;
+};
+
 export type AppState =
   | { kind: AppStateKind.menu }
   | PendingState
-  | { kind: AppStateKind.resume; metrics: Metrics; content: PendingMode }
+  | ResumeState
   | { kind: AppStateKind.loading };

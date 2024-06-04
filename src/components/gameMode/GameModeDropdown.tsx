@@ -8,15 +8,20 @@ import SpeedParamsMedium from "./SpeedParamsMedium";
 import TimerParamsMedium from "./TimerParamsMedium";
 import { css } from "solid-styled";
 import { useI18n } from "~/settings/i18nProvider";
-import { ContentGeneration, GameOptions, deepCopy } from "~/gameOptions/gameOptions";
+import {
+  ContentGeneration,
+  GameOptions,
+  deepCopy,
+} from "~/gameOptions/gameOptions";
 import { GameModeKind } from "~/gameOptions/gameModeKind";
 
 type GameModeDropdownProps = {
   reverse?: boolean;
   gameOptions: GameOptions;
   start: (opts: GameOptions, customSource: string) => void;
-  setContentGeneration: (type: ContentGeneration) => void;
-  children: (isOpen: () => boolean,  hover: () => boolean) => JSX.Element;
+  fetchSourcesGen: (opts: ContentGeneration) => Promise<Array<string>>;
+
+  children: (isOpen: () => boolean, hover: () => boolean) => JSX.Element;
 };
 
 const GameModeDropdown = (props: GameModeDropdownProps) => {
@@ -139,7 +144,7 @@ const GameModeDropdown = (props: GameModeDropdownProps) => {
 
   createComputed(
     () => {
-      props.setContentGeneration({
+      props.fetchSourcesGen({
         language: gameOptions.generation.language,
         category: gameOptions.generation.category,
       });
@@ -188,9 +193,7 @@ const GameModeDropdown = (props: GameModeDropdownProps) => {
                     {/* <div class="description"> */}
 
                     <div class="bullet-wrapper"></div>
-                    <p class="title">
-                      {t("gameMode")[modeKind].subtitle}
-                    </p>
+                    <p class="title">{t("gameMode")[modeKind].subtitle}</p>
                     {/* </div> */}
                   </label>
                 </li>
@@ -202,7 +205,6 @@ const GameModeDropdown = (props: GameModeDropdownProps) => {
               <Switch>
                 <Match when={gameOptions.modeSelected === GameModeKind.speed}>
                   <SpeedParamsMedium
-                    t={t}
                     gameOptions={gameOptions}
                     setGameOptions={setGameOptions}
                   >
@@ -214,7 +216,6 @@ const GameModeDropdown = (props: GameModeDropdownProps) => {
                 </Match>
                 <Match when={gameOptions.modeSelected === GameModeKind.timer}>
                   <TimerParamsMedium
-                    t={t}
                     gameOptions={gameOptions}
                     setGameOptions={setGameOptions}
                   >

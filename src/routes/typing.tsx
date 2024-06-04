@@ -32,7 +32,6 @@ export default function Typing() {
     const pendingMode = optionsToPending(opts, sourcesGen);
 
     navigation.start(pendingMode, opts);
-    navigate("/typing");
   };
 
   onMount(() => {
