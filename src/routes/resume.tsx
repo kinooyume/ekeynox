@@ -27,6 +27,10 @@ export default function Resume() {
     navigate("/typing");
   };
 
+  if (state().kind !== AppStateKind.resume) {
+    navigate("/");
+  }
+
   return (
     <Show when={state().kind === AppStateKind.resume}>
       <TypingMetricsResume
