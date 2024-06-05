@@ -41,12 +41,6 @@ export default function App() {
     }
   `;
 
-  // onMount(() => {
-  //
-  //   console.log(pathname);
-  //   if (pathname !== "/resume") navigate("/", { replace: true });
-  // });
-
   return (
     <Router
       root={(props) => (
@@ -55,19 +49,7 @@ export default function App() {
             <SettingsProvider>
               <GameOptionsProvider>
                 <AppStateProvider>
-                  <Header>
-                    <div></div>
-                    {/* <Show when={AppState().kind === AppStateKind.pending} keyed> */}
-                    {/*   <TypingHeaderNav */}
-                    {/*     t={i18nContext.t} */}
-                    {/*     start={start} */}
-                    {/*     gameOptions={persistedOptions} */}
-                    {/*     content={(AppState() as any).data.content} */}
-                    {/*     setGameOptions={setPersistedOptions} */}
-                    {/*     setContentGeneration={setContentGeneration} */}
-                    {/*   /> */}
-                    {/* </Show> */}
-                  </Header>
+                  <Header />
 
                   <main>
                     <Suspense fallback={<div>Loading..</div>}>
