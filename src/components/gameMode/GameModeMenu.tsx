@@ -53,6 +53,13 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
     deepCopy(props.gameOptions),
   );
 
+  createComputed(
+    () => {
+      setGameOptions(deepCopy(props.gameOptions));
+    },
+    { defer: true },
+  );
+
   createComputed(() => {
     props.fetchSourcesGen({
       language: gameOptions.generation.language,
