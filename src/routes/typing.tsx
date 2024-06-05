@@ -22,14 +22,12 @@ export default function Typing() {
     useGameOptions();
 
   const [pendingStatus] = createResource(state, (s) => {
-    console.log("PEN  Ng");
     return s.kind === AppStateKind.pending ? s.status : undefined;
   });
 
   const start = (opts: GameOptions) => {
     setPersistedGameOptions(opts);
 
-    console.log("start");
     const sourcesGen = fetchSourcesGen(opts.generation);
     const pendingMode = optionsToPending(opts, sourcesGen);
 

@@ -30,7 +30,6 @@ export default function Resume() {
     navigate("/");
   }
 
-  console.log(state());
   return (
     <Show when={state().kind === AppStateKind.resume}>
       <TypingMetricsResume
