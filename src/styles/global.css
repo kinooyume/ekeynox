@@ -79,7 +79,7 @@
   --key-focus-color: #82a4cd;
   --key-focus-color-alt: #a4e6fa;
 }
-.dark {
+html[data-theme='dark'] {
   --color-primary-100: #e7af5c;
   --color-primary-200: #ebb86e;
   --color-primary-300: #efc080;
