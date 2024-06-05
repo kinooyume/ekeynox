@@ -1,5 +1,5 @@
 import {
-    Accessor,
+  Accessor,
   JSX,
   createComputed,
   createContext,
@@ -8,7 +8,13 @@ import {
 } from "solid-js";
 
 import type { Metrics, MetricsResume } from "../components/metrics/Metrics";
-import { AppState, AppStateKind, PendingKind, PendingMode } from "./appState";
+import {
+  AppState,
+  AppStateKind,
+  PendingKind,
+  PendingMode,
+  PendingStatusNew,
+} from "./appState";
 import { useLocation, useNavigate } from "@solidjs/router";
 import { useGameOptions } from "~/gameOptions/GameOptionsProvider";
 import { GameOptions } from "~/gameOptions/gameOptions";
@@ -56,22 +62,18 @@ export function AppStateProvider(props: AppStateProviderProps) {
 
   const [state, setState] = createSignal<AppState>(appState);
 
-  const setStateGuard = (newState: AppState) => {
-    // surement pas bon
-    if (state().kind !== newState.kind) setState(newState);
-  };
-
   const navigation = {
     start: (mode: Promise<PendingMode>, options: GameOptions) => {
-
-      setStateGuard({
+      setState({
         kind: AppStateKind.pending,
-        status: mode.then((m) => ({ kind: PendingKind.new, mode: m })),
+        status: mode.then(
+          (m) => ({ kind: PendingKind.new, mode: m }) as PendingStatusNew,
+        ),
         options: options,
       });
     },
     redo: (mode: PendingMode, metrics: MetricsResume, options: GameOptions) => {
-      setStateGuard({
+      setState({
         kind: AppStateKind.pending,
         options: options,
         status: Promise.resolve({
@@ -82,10 +84,10 @@ export function AppStateProvider(props: AppStateProviderProps) {
       });
     },
     over: (metrics: Metrics, content: PendingMode) => {
-      setStateGuard({ kind: AppStateKind.resume, metrics, content });
+      setState({ kind: AppStateKind.resume, metrics, content });
     },
     menu: () => {
-      setStateGuard({ kind: AppStateKind.menu });
+      setState({ kind: AppStateKind.menu });
     },
   };
 

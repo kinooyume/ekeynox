@@ -7,9 +7,7 @@ import HeaderAction from "./HeaderAction.tsx";
 import { useAppState } from "~/appState/AppStateProvider.tsx";
 import { useNavigate } from "@solidjs/router";
 
-type HeaderProps = {
-  children: JSXElement;
-};
+type HeaderProps = {};
 
 const Header = (props: HeaderProps) => {
   const { navigation } = useAppState();
@@ -56,7 +54,9 @@ const Header = (props: HeaderProps) => {
           <Logo />
         </div>
       </div>
-      <div class="center">{props.children}</div>
+      <div class="center">
+        <div id="header-nav-actions-portal"></div>
+      </div>
       <div class="right">
         <HeaderAction />
       </div>

@@ -4,17 +4,15 @@ import {
   createComputed,
   createEffect,
   createMemo,
-  createResource,
   createSignal,
   on,
   onCleanup,
-  onMount,
   untrack,
 } from "solid-js";
 import type { Metrics } from "../metrics/Metrics";
 import TypingGame from "./TypingGame";
-import type { ContentHandler, GetContent } from "../content/TypingGameSource";
-import { createStore, reconcile } from "solid-js/store";
+import type { ContentHandler } from "../content/TypingGameSource";
+import { createStore } from "solid-js/store";
 import Content, { type Paragraphs } from "../content/Content";
 import makeCursor, { type Cursor, type Position } from "../cursor/Cursor";
 import { TypingEventKind, type TypingEventType } from "./TypingEvent";
@@ -47,15 +45,18 @@ import {
   type WordMetrics,
 } from "../metrics/PromptWordMetrics";
 import { PendingKind, PendingMode, PendingStatus } from "~/appState/appState";
-import { GameOptions } from "~/gameOptions/gameOptions";
+import { ContentGeneration, GameOptions } from "~/gameOptions/gameOptions";
 import { HigherKeyboard } from "~/settings/keyboardLayout";
 import { GameModeKind } from "~/gameOptions/gameModeKind";
 import { useI18n } from "~/settings/i18nProvider";
 import { useNavigate } from "@solidjs/router";
+import TypingHeaderNav from "./TypingHeaderNav";
 
 type TypingGameManagerProps = {
   status: PendingStatus;
   gameOptions: GameOptions;
+  start: (options: GameOptions) => void;
+  fetchSourcesGen: (opts: ContentGeneration) => Promise<Array<string>>;
   kbLayout: HigherKeyboard;
   showKb: boolean;
   onOver: (metrics: Metrics, mode: PendingMode) => void;
@@ -63,12 +64,6 @@ type TypingGameManagerProps = {
 };
 
 const TypingGameManager = (props: TypingGameManagerProps) => {
-  // const [contentHandler, { mutate: setContentHandler }] =
-  // createResource<ContentHandler>(() =>
-  //   props.status.mode.getContent.then((c) => c()),
-  // );
-  //
-
   const [contentHandler, setContentHandler] = createSignal<ContentHandler>(
     props.status.mode.getContent(),
   );
@@ -505,15 +500,20 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
         </Match>
       </Switch>
       <Portal mount={document.getElementById("header-nav-actions-portal")!}>
-        <TypingHeaderActions
-          paused={typingEvent().kind !== TypingEventKind.pending}
-          isRedo={(props.status.kind as any) === PendingKind.redo}
-          isGenerated={props.status.mode.isGenerated}
-          onPause={pause}
-          onReset={reset}
-          onShuffle={shuffle(props.status.mode.kind === GameModeKind.timer)}
-          onExit={props.onExit}
-        />
+        <TypingHeaderNav
+          start={props.start} 
+          fetchSourcesGen={props.fetchSourcesGen}
+          gameOptions={props.gameOptions}>
+          <TypingHeaderActions
+            paused={typingEvent().kind !== TypingEventKind.pending}
+            isRedo={(props.status.kind as any) === PendingKind.redo}
+            isGenerated={props.status.mode.isGenerated}
+            onPause={pause}
+            onReset={reset}
+            onShuffle={shuffle(props.status.mode.kind === GameModeKind.timer)}
+            onExit={props.onExit}
+          />
+        </TypingHeaderNav>
       </Portal>
     </TypingGame>
   );
