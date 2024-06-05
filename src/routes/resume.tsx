@@ -14,7 +14,7 @@ export default function Resume() {
   const navigate = useNavigate();
   const { persistedGameOptions, setPersistedGameOptions, fetchSourcesGen } =
     useGameOptions();
-  const [settings] = useSettings();
+  const { settings } = useSettings();
 
   const start = (opts: GameOptions) => {
     setPersistedGameOptions(opts);
@@ -33,7 +33,7 @@ export default function Resume() {
   return (
     <Show when={state().kind === AppStateKind.resume}>
       <TypingMetricsResume
-        kbLayout={KeyboardLayout.create(settings.kb)}
+        kbLayout={KeyboardLayout.create(settings.kb.value)}
         metrics={(state() as ResumeState).metrics}
       >
         {(metricsResume) => (

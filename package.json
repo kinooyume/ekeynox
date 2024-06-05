@@ -8,6 +8,7 @@
     "start": "vinxi start"
   },
   "dependencies": {
+    "@solid-primitives/deep": "^0.2.8",
     "@solid-primitives/i18n": "^2.1.1",
     "@solid-primitives/map": "^0.4.11",
     "@solid-primitives/refs": "^1.0.8",

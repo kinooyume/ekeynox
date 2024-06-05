@@ -6,7 +6,7 @@ export type Locale = (typeof locales)[number];
 
 const toLocale = (s: string): Locale | null => (s in locales ? s : null);
 
-const getDefaultLocale = (): Locale => {
+export const getDefaultLocale = (): Locale => {
   let locale = toLocale(navigator.language.slice(0, 2));
   if (locale) return locale;
 
@@ -16,6 +16,21 @@ const getDefaultLocale = (): Locale => {
   return "en";
 };
 
+export enum SettingsOriginType {
+  auto,
+  user,
+}
+
+export type SettingsOrigin<T> =
+  | {
+      kind: SettingsOriginType.auto;
+      value: T;
+    }
+  | {
+      kind: SettingsOriginType.user;
+      value: T;
+    };
+
 export enum Theme {
   light,
   dark,
@@ -23,16 +38,16 @@ export enum Theme {
 }
 
 export type Settings = {
-  theme: Theme;
-  locale: Locale;
-  kb: KeyboardLayoutName;
+  theme: SettingsOrigin<Theme>;
+  locale: SettingsOrigin<Locale>;
+  kb: SettingsOrigin<KeyboardLayoutName>;
   showKb: boolean;
 };
 
 export const defaultSettings = (): Settings => ({
-  theme: Theme.auto,
-  locale: "en",
-  kb: "qwerty",
+  theme: { kind: SettingsOriginType.auto, value: Theme.auto },
+  locale: { kind: SettingsOriginType.auto, value: "en" },
+  kb: { kind: SettingsOriginType.auto, value: "qwerty" },
   showKb: true,
 });
 

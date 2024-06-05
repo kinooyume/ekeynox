@@ -40,7 +40,7 @@ export default function Typing() {
     }
   });
 
-  const [settings] = useSettings();
+  const { settings } = useSettings();
 
   return (
     <Show when={state().kind === AppStateKind.pending}>
@@ -51,7 +51,7 @@ export default function Typing() {
           fetchSourcesGen={fetchSourcesGen}
           gameOptions={(state() as PendingState).options}
           showKb={settings.showKb}
-          kbLayout={KeyboardLayout.create(settings.kb)}
+          kbLayout={KeyboardLayout.create(settings.kb.value)}
           onExit={() => {
             navigation.menu();
             navigate("/");
