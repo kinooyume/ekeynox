@@ -17,7 +17,6 @@ export default defineConfig({
     static: true,
     prerender: {
       routes: ["/", "/typing", "/resume"],
-      crawlLinks: true,
     },
   },
 });

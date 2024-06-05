@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vinxi dev",
     "build": "vinxi build",
+    "build:online": "vinxi build && cp -rf .output/public/fonts .output/public/_build/assets/fonts",
     "start": "vinxi start"
   },
   "dependencies": {
