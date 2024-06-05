@@ -5,10 +5,15 @@ import TinySelect from "./ui/TinySelect.tsx";
 import type { SetStoreFunction } from "solid-js/store";
 import { css } from "solid-styled";
 import { useSettings } from "~/settings/SettingsProvider.tsx";
-import { Theme, keyboardLayoutName, locales } from "~/settings/settings.ts";
+import {
+  SettingsOriginType,
+  Theme,
+  keyboardLayoutName,
+  locales,
+} from "~/settings/settings.ts";
 
 const HeaderAction = () => {
-  const settings = useSettings();
+  const { settings, setSettings } = useSettings();
   css`
     .actions {
       display: flex;
@@ -20,22 +25,28 @@ const HeaderAction = () => {
     <div class="actions">
       <TinySelect
         list={keyboardLayoutName}
-        selected={settings[0].kb}
-        action={(s) => settings[1]("kb", s)}
+        selected={settings.kb.value}
+        action={(s) =>
+          setSettings("kb", { kind: SettingsOriginType.user, value: s })
+        }
       >
         <KeyboardIcon />
       </TinySelect>
       <TinySelect
         list={locales}
-        selected={settings[0].locale}
-        action={(s) => settings[1]("locale", s)}
+        selected={settings.locale.value}
+        action={(s) =>
+          setSettings("locale", { kind: SettingsOriginType.user, value: s })
+        }
       >
         <GlobeIcon />
       </TinySelect>
       <div class="toggle">
         <DarkModeToggle
-          dark={settings[0].theme === Theme.dark}
-          setTheme={(theme) => settings[1]("theme", theme)}
+          dark={settings.theme.value === Theme.dark}
+          setTheme={(s) =>
+            setSettings("theme", { kind: SettingsOriginType.user, value: s })
+          }
         />
       </div>
     </div>
