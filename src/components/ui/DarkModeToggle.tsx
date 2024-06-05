@@ -232,9 +232,9 @@ const DarkModeToggle = (props: DarkModeToggleProps) => {
           name="theme"
           value="dark"
           checked={props.dark}
-          onClick={() => { 
-            console.log(props.dark)
-            props.setTheme(!props.dark)}}
+          onClick={() => {
+            props.setTheme(!props.dark);
+          }}
         />
         <span class="theme__fill"></span>
         <span class="theme__icon">

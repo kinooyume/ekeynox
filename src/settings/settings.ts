@@ -4,17 +4,27 @@ export type KeyboardLayoutName = (typeof keyboardLayoutName)[number];
 export const locales = ["en", "fr"];
 export type Locale = (typeof locales)[number];
 
-const toLocale = (s: string): Locale | null => (s in locales ? s : null);
+type LocaleToKeyboard = Record<Locale, KeyboardLayoutName>;
 
-const getDefaultLocale = (): Locale => {
+const localeToKeyboard: LocaleToKeyboard = {
+  en: "qwerty",
+  fr: "azerty",
+};
+
+const toLocale = (s: string): Locale | null => (locales.includes(s) ? s : null);
+
+const getDefaultLocale = (): Locale | null => {
   let locale = toLocale(navigator.language.slice(0, 2));
   if (locale) return locale;
 
   locale = toLocale(navigator.language.toLocaleLowerCase());
   if (locale) return locale;
 
-  return "en";
+  return null;
 };
+
+const getKeyboardByLocale = (locale: Locale): KeyboardLayoutName | null =>
+  localeToKeyboard[locale] || null;
 
 export enum SettingsOriginType {
   auto,
@@ -61,4 +71,4 @@ const isDarkTheme = (theme: Theme): boolean => {
       return window.matchMedia("(prefers-color-scheme: dark)").matches;
   }
 };
-export { defaultSettings, getDefaultLocale, isDarkTheme };
+export { defaultSettings, getDefaultLocale, isDarkTheme, getKeyboardByLocale };

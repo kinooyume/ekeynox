@@ -11,7 +11,15 @@ import {
   useContext,
 } from "solid-js";
 import { SetStoreFunction, createStore } from "solid-js/store";
-import { Settings, Theme, defaultSettings, isDarkTheme } from "./settings";
+import {
+  Settings,
+  SettingsOriginType,
+  Theme,
+  defaultSettings,
+  getDefaultLocale,
+  getKeyboardByLocale,
+  isDarkTheme,
+} from "./settings";
 import { I18nProvider } from "./i18nProvider";
 import { KeyboardProvider } from "./KeyboardProvider";
 
@@ -46,18 +54,36 @@ export function SettingsProvider(props: {
     createComputed(() => {
       trackStore(persistedSettings);
       setSettings(persistedSettings);
-      console.log("yop")
     });
 
     createComputed(() => {
-      console.log("yo")
       setDark(isDarkTheme(settings.theme.value));
     });
 
     createComputed(() => {
-      console.log(dark())
-      document.getElementsByTagName("html")[0].dataset.theme = dark() ? "dark" : "light";
-    })
+      document.getElementsByTagName("html")[0].dataset.theme = dark()
+        ? "dark"
+        : "light";
+    });
+
+    createComputed(() => {
+      if (settings.locale.kind === SettingsOriginType.auto) {
+        const locale = getDefaultLocale();
+        if (locale)
+          setPersistedSettings("locale", {
+            kind: SettingsOriginType.auto,
+            value: locale,
+          });
+      }
+      if (settings.kb.kind === SettingsOriginType.auto) {
+        const kbLayout = getKeyboardByLocale(settings.locale.value);
+        if (kbLayout)
+          setPersistedSettings("kb", {
+            kind: SettingsOriginType.auto,
+            value: kbLayout,
+          });
+      }
+    });
   });
 
   return (
