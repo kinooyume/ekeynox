@@ -29,7 +29,7 @@ export default function Typing() {
   const start = (opts: GameOptions) => {
     setPersistedGameOptions(opts);
 
-    console.log("start")
+    console.log("start");
     const sourcesGen = fetchSourcesGen(opts.generation);
     const pendingMode = optionsToPending(opts, sourcesGen);
 
@@ -58,7 +58,10 @@ export default function Typing() {
             navigation.menu();
             navigate("/");
           }}
-          onOver={navigation.over}
+          onOver={(m, c) => {
+            navigation.over(m, c);
+            navigate("/resume");
+          }}
         />
       </Show>
     </Show>
