@@ -24,12 +24,6 @@ export default function App() {
   useAssets(() => renderSheets(sheets));
 
   css`
-    .app {
-      display: grid;
-      margin: 0;
-      min-height: 100%;
-      background-color: var(--color-surface-100);
-    }
     main {
       margin-top: 96px;
       display: grid;
@@ -50,7 +44,6 @@ export default function App() {
               <GameOptionsProvider>
                 <AppStateProvider>
                   <Header />
-
                   <main>
                     <Suspense fallback={<div>Loading..</div>}>
                       <div>{props.children}</div>
