@@ -3,13 +3,14 @@ import TypingHeaderMenu from "./TypingHeaderMenu";
 import { css } from "solid-styled";
 import { ContentGeneration, GameOptions } from "~/gameOptions/gameOptions";
 import { PendingMode } from "~/appState/appState";
+import TypingHeaderActions from "./TypingHeaderActions";
+import { JSX } from "solid-js";
 
 type TypingHeaderNavProps = {
-  start: (opts: GameOptions, customSource: string) => void;
+  start: (opts: GameOptions) => void;
   gameOptions: GameOptions;
-  setGameOptions: SetStoreFunction<GameOptions>;
-  setContentGeneration: (type: ContentGeneration) => void;
-  content: PendingMode;
+  fetchSourcesGen: (opts: ContentGeneration) => Promise<Array<string>>;
+  children: JSX.Element | JSX.Element[];
 };
 
 const TypingHeaderNav = (props: TypingHeaderNavProps) => {
@@ -30,7 +31,7 @@ const TypingHeaderNav = (props: TypingHeaderNavProps) => {
         <TypingHeaderMenu {...props} />
       </div>
       <div class="right">
-        <div id="header-nav-actions-portal"></div>
+        {props.children}
       </div>
     </div>
   );

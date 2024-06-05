@@ -1,7 +1,6 @@
 import { useAppState } from "~/appState/AppStateProvider";
 import { clientOnly } from "@solidjs/start";
 
-
 import KeyboardLayout from "../settings/keyboardLayout.ts";
 import { useGameOptions } from "~/gameOptions/GameOptionsProvider";
 import { useSettings } from "~/settings/SettingsProvider";
@@ -22,13 +21,15 @@ export default function Typing() {
   const { persistedGameOptions, setPersistedGameOptions, fetchSourcesGen } =
     useGameOptions();
 
-  const [pendingStatus] = createResource(state, (s) =>
-    s.kind === AppStateKind.pending ? s.status : undefined,
-  );
+  const [pendingStatus] = createResource(state, (s) => {
+    console.log("PEN  Ng");
+    return s.kind === AppStateKind.pending ? s.status : undefined;
+  });
 
   const start = (opts: GameOptions) => {
     setPersistedGameOptions(opts);
 
+    console.log("start")
     const sourcesGen = fetchSourcesGen(opts.generation);
     const pendingMode = optionsToPending(opts, sourcesGen);
 
@@ -36,10 +37,7 @@ export default function Typing() {
   };
 
   onMount(() => {
-    console.log("yo mounted")
-    console.log(state())
     if (!(state().kind === AppStateKind.pending)) {
-      console.log("gniah")
       start(persistedGameOptions);
     }
   });
@@ -51,10 +49,15 @@ export default function Typing() {
       <Show when={pendingStatus.state === "ready" && pendingStatus()}>
         <TypingGameManager
           status={pendingStatus()!}
+          start={start}
+          fetchSourcesGen={fetchSourcesGen}
           gameOptions={(state() as PendingState).options}
           showKb={settings.showKb}
           kbLayout={KeyboardLayout.create(settings.kb)}
-          onExit={navigation.menu}
+          onExit={() => {
+            navigation.menu();
+            navigate("/");
+          }}
           onOver={navigation.over}
         />
       </Show>

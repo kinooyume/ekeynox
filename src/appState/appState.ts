@@ -21,11 +21,13 @@ export enum PendingKind {
   redo,
 }
 
+export type PendingStatusNew = {
+  kind: PendingKind.new;
+  mode: PendingMode;
+};
+
 export type PendingStatus =
-  | {
-      kind: PendingKind.new;
-      mode: PendingMode;
-    }
+  | PendingStatusNew
   | {
       kind: PendingKind.redo;
       mode: PendingMode;
