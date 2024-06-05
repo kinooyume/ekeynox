@@ -13,7 +13,7 @@ import {
 } from "~/settings/settings.ts";
 
 const HeaderAction = () => {
-  const { settings, setSettings } = useSettings();
+  const { settings, setSettings, dark } = useSettings();
   css`
     .actions {
       display: flex;
@@ -43,7 +43,7 @@ const HeaderAction = () => {
       </TinySelect>
       <div class="toggle">
         <DarkModeToggle
-          dark={settings.theme.value === Theme.dark}
+          dark={dark()}
           setTheme={(s) => {
             const theme = s ? Theme.dark : Theme.light;
             setSettings("theme", {
