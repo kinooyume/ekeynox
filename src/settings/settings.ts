@@ -6,7 +6,7 @@ export type Locale = (typeof locales)[number];
 
 const toLocale = (s: string): Locale | null => (s in locales ? s : null);
 
-export const getDefaultLocale = (): Locale => {
+const getDefaultLocale = (): Locale => {
   let locale = toLocale(navigator.language.slice(0, 2));
   if (locale) return locale;
 
@@ -44,11 +44,21 @@ export type Settings = {
   showKb: boolean;
 };
 
-export const defaultSettings = (): Settings => ({
+const defaultSettings = (): Settings => ({
   theme: { kind: SettingsOriginType.auto, value: Theme.auto },
   locale: { kind: SettingsOriginType.auto, value: "en" },
   kb: { kind: SettingsOriginType.auto, value: "qwerty" },
   showKb: true,
 });
 
-// dark: window.matchMedia("(prefers-color-scheme: dark)").matches,
+const isDarkTheme = (theme: Theme): boolean => {
+  switch (theme) {
+    case Theme.light:
+      return false;
+    case Theme.dark:
+      return true;
+    case Theme.auto:
+      return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  }
+};
+export { defaultSettings, getDefaultLocale, isDarkTheme };

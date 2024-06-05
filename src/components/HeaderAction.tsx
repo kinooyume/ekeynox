@@ -44,9 +44,13 @@ const HeaderAction = () => {
       <div class="toggle">
         <DarkModeToggle
           dark={settings.theme.value === Theme.dark}
-          setTheme={(s) =>
-            setSettings("theme", { kind: SettingsOriginType.user, value: s })
-          }
+          setTheme={(s) => {
+            const theme = s ? Theme.dark : Theme.light;
+            setSettings("theme", {
+              kind: SettingsOriginType.user,
+              value: theme,
+            });
+          }}
         />
       </div>
     </div>

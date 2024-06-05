@@ -3,7 +3,7 @@ import { Theme } from "~/settings/settings";
 
 type DarkModeToggleProps = {
   dark: boolean;
-  setTheme: (theme: Theme) => void;
+  setTheme: (dark: boolean) => void;
 };
 // https://uiverse.io/JkHuger/old-falcon-20
 const DarkModeToggle = (props: DarkModeToggleProps) => {
@@ -232,7 +232,9 @@ const DarkModeToggle = (props: DarkModeToggleProps) => {
           name="theme"
           value="dark"
           checked={props.dark}
-          onClick={() => props.setTheme(props.dark ? Theme.dark : Theme.light)}
+          onClick={() => { 
+            console.log(props.dark)
+            props.setTheme(!props.dark)}}
         />
         <span class="theme__fill"></span>
         <span class="theme__icon">
