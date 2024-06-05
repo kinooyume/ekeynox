@@ -261,12 +261,9 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
     );
   };
 
-  const navigate = useNavigate();
-
   const typingOver = () => {
     setTypingEvent({ kind: TypingEventKind.over });
     over();
-    navigate("/resume");
   };
 
   createComputed(
@@ -501,9 +498,10 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
       </Switch>
       <Portal mount={document.getElementById("header-nav-actions-portal")!}>
         <TypingHeaderNav
-          start={props.start} 
+          start={props.start}
           fetchSourcesGen={props.fetchSourcesGen}
-          gameOptions={props.gameOptions}>
+          gameOptions={props.gameOptions}
+        >
           <TypingHeaderActions
             paused={typingEvent().kind !== TypingEventKind.pending}
             isRedo={(props.status.kind as any) === PendingKind.redo}
