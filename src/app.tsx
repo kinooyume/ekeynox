@@ -1,4 +1,4 @@
-import { MetaProvider } from "@solidjs/meta";
+import { MetaProvider, Title } from "@solidjs/meta";
 import { Router, useLocation, useNavigate } from "@solidjs/router";
 import { FileRoutes } from "@solidjs/start/router";
 
@@ -44,6 +44,7 @@ export default function App() {
               <GameOptionsProvider>
                 <AppStateProvider>
                   <Header />
+                  <Title>Ekeynox</Title>
                   <main>
                     <Suspense fallback={<div>Loading..</div>}>
                       <div>{props.children}</div>
