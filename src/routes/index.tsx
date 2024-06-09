@@ -12,6 +12,7 @@ import {
   optionsToPending,
 } from "~/gameOptions/gameOptions";
 import { isServer } from "solid-js/web";
+import { Transition, TransitionGroup } from "solid-transition-group";
 
 const ClientMenu = clientOnly(() => import("~/components/gameMode/GameModeMenu"));
 

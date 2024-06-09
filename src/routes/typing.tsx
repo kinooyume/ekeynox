@@ -17,11 +17,11 @@ import { GameOptions, optionsToPending } from "~/gameOptions/gameOptions.ts";
 
 import TypingGameManager from "~/components/typing/TypingGameManager";
 
-// import TypingMetricsResume from "~/components/resume/TypingMetricsResume";
-// import ActionsResume from "~/components/resume/ActionsResume";
+import TypingMetricsResume from "~/components/resume/TypingMetricsResume";
+import ActionsResume from "~/components/resume/ActionsResume";
 
-const LazyMetricsResume = lazy(() => import("~/components/resume/TypingMetricsResume"));
-const LazyActionsResume = lazy(() => import("~/components/resume/ActionsResume"));
+// const LazyMetricsResume = lazy(() => import("~/components/resume/TypingMetricsResume"));
+// const LazyActionsResume = lazy(() => import("~/components/resume/ActionsResume"));
 
 export default function Typing() {
   const { state, navigation } = useAppState();
@@ -73,12 +73,12 @@ export default function Typing() {
         </Show>
       </Match>
       <Match when={state().kind === AppStateKind.resume}>
-        <LazyMetricsResume
+        <TypingMetricsResume
           kbLayout={KeyboardLayout.create(settings.kb.value)}
           metrics={(state() as ResumeState).metrics}
         >
           {(metricsResume) => (
-            <LazyActionsResume
+            <ActionsResume
               gameOptions={persistedGameOptions}
               content={(state() as ResumeState).content}
               fetchSourcesGen={fetchSourcesGen}
@@ -88,7 +88,7 @@ export default function Typing() {
               redo={navigation.redo}
             />
           )}
-        </LazyMetricsResume>
+        </TypingMetricsResume>
       </Match>
     </Switch>
   );
