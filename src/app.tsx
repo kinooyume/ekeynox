@@ -2,8 +2,8 @@ import { MetaProvider, Title } from "@solidjs/meta";
 import { Router, useLocation, useNavigate } from "@solidjs/router";
 import { FileRoutes } from "@solidjs/start/router";
 
-import { Show, Suspense, onMount } from "solid-js";
-import { Transition } from "solid-transition-group";
+import { ParentProps, Show, Suspense, onMount } from "solid-js";
+import { Transition, TransitionGroup } from "solid-transition-group";
 
 import Header from "./components/Header";
 import TypingHeaderNav from "./components/typing/TypingHeaderNav";
@@ -35,6 +35,30 @@ export default function App() {
     }
   `;
 
+  const PageTransition = (props: ParentProps) => (
+    <div class="transition-container">
+      <TransitionGroup
+
+        onEnter={(el, done) => {
+          console.log("onEnter")
+          const a = el.animate([{ opacity: 0 }, { opacity: 1 }], {
+            duration: 140
+          });
+          a.finished.then(done);
+        }}
+        onExit={(el, done) => {
+          console.log("Exit")
+          const a = el.animate([{ opacity: 1 }, { opacity: 0 }], {
+            duration: 0
+          });
+          a.finished.then(done);
+        }}
+        >
+        {props.children}
+      </TransitionGroup>
+    </div>
+  );
+
   return (
     <Router
       root={(props) => (
@@ -46,9 +70,9 @@ export default function App() {
                   <Header />
                   <Title>Ekeynox</Title>
                   <main>
-                    <Suspense fallback={<div>Loading..</div>}>
-                      <div>{props.children}</div>
-                    </Suspense>
+                      <Suspense fallback={<div>Loading..</div>}>
+                      <PageTransition {...props}/>
+                      </Suspense>
                   </main>
                 </AppStateProvider>
               </GameOptionsProvider>
@@ -57,7 +81,9 @@ export default function App() {
         </MetaProvider>
       )}
     >
+
       <FileRoutes />
+
     </Router>
   );
 }
