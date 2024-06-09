@@ -1,19 +1,27 @@
 import { useAppState } from "~/appState/AppStateProvider";
 import { clientOnly } from "@solidjs/start";
 
-import KeyboardLayout from "../settings/keyboardLayout.ts";
+
 import { useGameOptions } from "~/gameOptions/GameOptionsProvider";
 import { useSettings } from "~/settings/SettingsProvider";
-import { AppStateKind, PendingState } from "~/appState/appState.ts";
-import { GameOptions, optionsToPending } from "~/gameOptions/gameOptions.ts";
-import { Show, createResource, onMount } from "solid-js";
+import { Match, Show, Switch, createResource, lazy, onMount } from "solid-js";
 import { useNavigate } from "@solidjs/router";
+
+import KeyboardLayout from "../settings/keyboardLayout.ts";
+import { AppStateKind, PendingState, ResumeState } from "~/appState/appState.ts";
+import { GameOptions, optionsToPending } from "~/gameOptions/gameOptions.ts";
 
 // const ClientGameManager = clientOnly(
 //   () => import("~/components/typing/TypingGameManager"),
 // );
 
 import TypingGameManager from "~/components/typing/TypingGameManager";
+
+// import TypingMetricsResume from "~/components/resume/TypingMetricsResume";
+// import ActionsResume from "~/components/resume/ActionsResume";
+
+const LazyMetricsResume = lazy(() => import("~/components/resume/TypingMetricsResume"));
+const LazyActionsResume = lazy(() => import("~/components/resume/ActionsResume"));
 
 export default function Typing() {
   const { state, navigation } = useAppState();
@@ -43,25 +51,45 @@ export default function Typing() {
   const { settings } = useSettings();
 
   return (
-    <Show when={state().kind === AppStateKind.pending}>
-      <Show when={pendingStatus.state === "ready" && pendingStatus()}>
-        <TypingGameManager
-          status={pendingStatus()!}
-          start={start}
-          fetchSourcesGen={fetchSourcesGen}
-          gameOptions={(state() as PendingState).options}
-          showKb={settings.showKb}
+    <Switch>
+      <Match when={state().kind === AppStateKind.pending}>
+        <Show when={pendingStatus.state === "ready" && pendingStatus()}>
+          <TypingGameManager
+            status={pendingStatus()!}
+            start={start}
+            fetchSourcesGen={fetchSourcesGen}
+            gameOptions={(state() as PendingState).options}
+            showKb={settings.showKb}
+            kbLayout={KeyboardLayout.create(settings.kb.value)}
+            onExit={() => {
+              navigation.menu();
+              navigate("/");
+            }}
+            onOver={(m, c) => {
+              navigation.over(m, c);
+              // navigate("/resume");
+            }}
+          />
+        </Show>
+      </Match>
+      <Match when={state().kind === AppStateKind.resume}>
+        <LazyMetricsResume
           kbLayout={KeyboardLayout.create(settings.kb.value)}
-          onExit={() => {
-            navigation.menu();
-            navigate("/");
-          }}
-          onOver={(m, c) => {
-            navigation.over(m, c);
-            navigate("/resume");
-          }}
-        />
-      </Show>
-    </Show>
+          metrics={(state() as ResumeState).metrics}
+        >
+          {(metricsResume) => (
+            <LazyActionsResume
+              gameOptions={persistedGameOptions}
+              content={(state() as ResumeState).content}
+              fetchSourcesGen={fetchSourcesGen}
+              metrics={(state() as ResumeState).metrics}
+              metricsResume={metricsResume}
+              start={start}
+              redo={navigation.redo}
+            />
+          )}
+        </LazyMetricsResume>
+      </Match>
+    </Switch>
   );
 }
