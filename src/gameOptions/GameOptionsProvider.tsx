@@ -1,30 +1,18 @@
 import {
   JSX,
-  Resource,
-  ResourceActions,
-  ResourceFetcher,
-  ResourceReturn,
-  Suspense,
-  createComputed,
   createContext,
-  createResource,
-  createSignal,
   onMount,
   useContext,
 } from "solid-js";
 import {
-  ContentGeneration,
   GameOptions,
   getDefaultGameOptions,
-  optionsToPending,
 } from "./gameOptions";
 import { makePersisted } from "@solid-primitives/storage";
-import { SetStoreFunction, createStore } from "solid-js/store";
-import { PendingMode } from "~/appState/appState";
+import { createStore } from "solid-js/store";
 import { isServer } from "solid-js/web";
 import SourcesGen, {
   SourcesGenFetch,
-  type SourcesGenCache,
 } from "~/components/content/SourcesGenCache";
 
 type GameOptionsProviderProps = {
