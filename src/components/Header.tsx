@@ -3,7 +3,7 @@ import { css } from "solid-styled";
 import { type JSXElement } from "solid-js";
 
 import Logo from "./svgs/logo.tsx";
-import HeaderAction from "./HeaderAction.tsx";
+import HeaderSettings from "./HeaderSettings.tsx";
 import { useAppState } from "~/appState/AppStateProvider.tsx";
 import { useNavigate } from "@solidjs/router";
 
@@ -58,7 +58,7 @@ const Header = (props: HeaderProps) => {
         <div id="header-nav-actions-portal"></div>
       </div>
       <div class="right">
-        <HeaderAction />
+        <HeaderSettings />
       </div>
     </div>
   );
