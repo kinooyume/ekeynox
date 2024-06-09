@@ -39,12 +39,10 @@ const ActionsResume = (props: ActionsResumeProps) => {
       ),
     };
     props.redo(redoContent, props.metricsResume, props.gameOptions);
-    navigate("/typing")
   };
 
   const start = (opts: GameOptions) => {
     props.start(opts);
-    navigate("/typing")
   };
 
   css`
