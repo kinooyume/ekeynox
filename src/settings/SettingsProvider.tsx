@@ -6,7 +6,6 @@ import {
   createComputed,
   createContext,
   createSignal,
-  on,
   onMount,
   useContext,
 } from "solid-js";
@@ -14,14 +13,12 @@ import { SetStoreFunction, createStore } from "solid-js/store";
 import {
   Settings,
   SettingsOriginType,
-  Theme,
   defaultSettings,
   getDefaultLocale,
   getKeyboardByLocale,
   isDarkTheme,
 } from "./settings";
 import { I18nProvider } from "./i18nProvider";
-import { KeyboardProvider } from "./KeyboardProvider";
 
 type SettingsProviderProps = {
   settings: Settings;

@@ -16,9 +16,10 @@
   "characters": " caractères",
   "quotes": "citations",
   "custom": "personnalisé",
-  "language": "language",
+  "language": "langage",
   "chooseYour": "Choisissez votre",
   "playingMode": "mode de jeu",
+  "showKeyboard": "Afficher le clavier",
   "newGame": {
     "one": "Nouvelle",
     "two": "partie"

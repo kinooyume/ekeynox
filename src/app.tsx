@@ -40,14 +40,12 @@ export default function App() {
       <TransitionGroup
 
         onEnter={(el, done) => {
-          console.log("onEnter")
           const a = el.animate([{ opacity: 0 }, { opacity: 1 }], {
             duration: 140
           });
           a.finished.then(done);
         }}
         onExit={(el, done) => {
-          console.log("Exit")
           const a = el.animate([{ opacity: 1 }, { opacity: 0 }], {
             duration: 0
           });

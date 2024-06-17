@@ -16,6 +16,7 @@ import CustomInput, { type CustomInputRef } from "../ui/CustomInput";
 import GameModeSelection from "./GameModeSelection";
 import SpeedParams from "./SpeedParams";
 import TimerParams from "./TimerParams";
+import { A } from "@solidjs/router";
 
 // Gsap animation
 // https://codepen.io/dev_loop/pen/MWKbJmO

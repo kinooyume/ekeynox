@@ -82,7 +82,7 @@ const GameOptionsRecap = (props: GameOptionsRecapProps) => {
           </Switch>
 
           <div class="tag">
-            <span>{props.gameOptions.generation.language}</span>
+            <span>{t(props.gameOptions.generation.language)}</span>
           </div>
         </Match>
       </Switch>

@@ -11,17 +11,10 @@ import KeyboardLayout from "../settings/keyboardLayout.ts";
 import { AppStateKind, PendingState, ResumeState } from "~/appState/appState.ts";
 import { GameOptions, optionsToPending } from "~/gameOptions/gameOptions.ts";
 
-// const ClientGameManager = clientOnly(
-//   () => import("~/components/typing/TypingGameManager"),
-// );
-
 import TypingGameManager from "~/components/typing/TypingGameManager";
 
 import TypingMetricsResume from "~/components/resume/TypingMetricsResume";
 import ActionsResume from "~/components/resume/ActionsResume";
-
-// const LazyMetricsResume = lazy(() => import("~/components/resume/TypingMetricsResume"));
-// const LazyActionsResume = lazy(() => import("~/components/resume/ActionsResume"));
 
 export default function Typing() {
   const { state, navigation } = useAppState();
