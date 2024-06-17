@@ -9,12 +9,14 @@ import TimerParamsMedium from "./TimerParamsMedium";
 import { css } from "solid-styled";
 import { useI18n } from "~/settings/i18nProvider";
 import {
-    CategoryKind,
+  CategoryKind,
   ContentGeneration,
   GameOptions,
   deepCopy,
 } from "~/gameOptions/gameOptions";
 import { GameModeKind } from "~/gameOptions/gameModeKind";
+import VerticalRadioBox from "../ui/VerticalRadioBox";
+import HugeRadioLabel from "../ui/HugeRadioLabel";
 
 type GameModeDropdownProps = {
   reverse?: boolean;
@@ -28,9 +30,22 @@ type GameModeDropdownProps = {
 const GameModeDropdown = (props: GameModeDropdownProps) => {
   const t = useI18n();
   css`
-    .modes {
+    .mode-radio {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      height: 48px;
     }
 
+    .mode-picto {
+      width: 52px;
+      border-radius: 12px;
+      padding: 6px;
+    }
+    .modes {
+      width: 250px;
+    }
     .modes li {
       display: flex;
       padding: 0;
@@ -47,11 +62,10 @@ const GameModeDropdown = (props: GameModeDropdownProps) => {
     }
 
     .title {
-      font-size: 14px;
-      font-weight: 400;
+      font-size: 16px;
+      max-width: 100px;
       margin: 0;
-      margin-left: 16px;
-      color: var(--text-color);
+      color: var(--text-secondary-color);
     }
 
     .description {
@@ -121,29 +135,29 @@ const GameModeDropdown = (props: GameModeDropdownProps) => {
       {(setIsOpen) => (
         <div class="content">
           <ul class="modes">
-            <For each={gameModesArray}>
-              {([modeKind, mode]) => (
-                <li
-                  class={`elem radio ${modeKind}`}
-                  classList={{
-                    selected: gameOptions.modeSelected === modeKind,
-                  }}
-                >
-                  <input
-                    type="radio"
-                    name="mode"
-                    class="select"
-                    id={modeKind}
-                    checked={gameOptions.modeSelected === modeKind}
-                    onChange={() => setGameOptions("modeSelected", modeKind)}
-                  />
-                  <label for={modeKind}>
-                    <div class="bullet-wrapper"></div>
-                    <p class="title">{t("gameMode")[modeKind].subtitle}</p>
-                  </label>
-                </li>
+            <VerticalRadioBox
+              name="game-mode-dropdown"
+              each={gameModesArray}
+              onChange={([modeKind]) => {
+                setGameOptions("modeSelected", modeKind);
+              }}
+              selected={
+                gameModesArray.find(
+                  ([modeKind]) => modeKind === gameOptions.modeSelected,
+                ) || gameModesArray[0]
+              }
+            >
+              {(id, checked, [modeKind, gameMode]) => (
+                <HugeRadioLabel id={id} checked={checked}>
+                  {(checked) => (
+                    <div classList={{ checked }} class="mode-radio">
+                      <div class="mode-picto">{gameMode.head()}</div>
+                      <p class="title">{t("gameMode")[modeKind].subtitle}</p>
+                    </div>
+                  )}
+                </HugeRadioLabel>
               )}
-            </For>
+            </VerticalRadioBox>
           </ul>
           <div class="options-wrapper">
             <div class="elem options">
