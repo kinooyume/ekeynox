@@ -29,12 +29,6 @@ const GameModeDropdown = (props: GameModeDropdownProps) => {
   const t = useI18n();
   css`
     .modes {
-      list-style-type: none;
-      width: 180px;
-      padding: 0;
-      padding-left: 12px;
-      margin: 8px 0;
-      margin-right: 12px;
     }
 
     .modes li {
@@ -50,25 +44,6 @@ const GameModeDropdown = (props: GameModeDropdownProps) => {
     }
     .select {
       display: none;
-    }
-
-    label {
-      width: 100%;
-      height: 24px;
-      border-radius: 12px;
-      padding: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      gap: 6px;
-      user-select: none;
-      transition: all 0.2s ease-in-out;
-
-      cursor: pointer;
-    }
-
-    .selected label .title {
-      font-weight: 800;
     }
 
     .title {
@@ -96,36 +71,6 @@ const GameModeDropdown = (props: GameModeDropdownProps) => {
       transition: all 100ms linear;
     }
 
-    .bullet-wrapper {
-      position: absolute;
-      overflow: hidden;
-      width: 14px;
-      height: 14px;
-    }
-
-    .bullet-wrapper::after {
-      content: "";
-      display: flex;
-      justify-self: center;
-      border-radius: 50%;
-      position: relative;
-      background-color: var(--text-color);
-      width: calc(100% / 2);
-      height: calc(100% / 2);
-      top: var(--y, 100%);
-
-      transition: top 0.3s cubic-bezier(0.48, 1.97, 0.5, 0.63);
-    }
-
-    .selected .bullet-wrapper:after {
-      --y: 18%;
-      opacity: 1;
-      animation: stretch-animate 0.3s ease-out 0.17s;
-    }
-
-    .selected + li .bullet-wrapper:after {
-      --y: -100%;
-    }
     .options-wrapper {
       display: flex;
       flex-direction: column;
@@ -193,12 +138,8 @@ const GameModeDropdown = (props: GameModeDropdownProps) => {
                     onChange={() => setGameOptions("modeSelected", modeKind)}
                   />
                   <label for={modeKind}>
-                    {/* <div class="icon"> {mode.head()}</div> */}
-                    {/* <div class="description"> */}
-
                     <div class="bullet-wrapper"></div>
                     <p class="title">{t("gameMode")[modeKind].subtitle}</p>
-                    {/* </div> */}
                   </label>
                 </li>
               )}

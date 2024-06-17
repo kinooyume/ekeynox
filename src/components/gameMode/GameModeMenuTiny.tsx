@@ -98,7 +98,6 @@ const GameModeSelectionTiny = (props: GameModeSelectionProps) => {
         <Switch>
           <Match when={gameOptions.modeSelected === GameModeKind.speed}>
             <SpeedParamsCompact
-              t={t}
               gameOptions={gameOptions}
               setGameOptions={setGameOptions}
             >
@@ -110,7 +109,6 @@ const GameModeSelectionTiny = (props: GameModeSelectionProps) => {
           </Match>
           <Match when={gameOptions.modeSelected === GameModeKind.timer}>
             <TimerParamsCompact
-              t={t}
               gameOptions={gameOptions}
               setGameOptions={setGameOptions}
             >
