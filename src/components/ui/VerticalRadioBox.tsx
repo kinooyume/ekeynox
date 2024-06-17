@@ -106,7 +106,7 @@ function VerticalRadioBox<T>(props: VerticalRadioBoxProps<T>) {
       <Index each={props.each}>
         {(elem, index) => (
           <li>
-            <div class="input-wrapper">
+            <div class="elem input-wrapper">
               <input
                 type="radio"
                 name={props.name}
