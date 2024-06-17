@@ -3,10 +3,14 @@ import { css } from "solid-styled";
 
 type VerticalRadioBoxProps<T> = {
   name: string;
-  list: T[];
+  each: T[];
   selected: T;
-  onClick: (item: T) => void;
-  children: (item: T) => JSX.Element;
+  onChange: (item: T) => void;
+  children: (
+    id: string,
+    checked: boolean,
+    item: T,
+  ) => JSX.Element | JSX.Element[];
 };
 
 function VerticalRadioBox<T>(props: VerticalRadioBoxProps<T>) {
@@ -95,25 +99,11 @@ function VerticalRadioBox<T>(props: VerticalRadioBoxProps<T>) {
     li:has(input:checked) ~ li {
       --y: -100%;
     }
-
-    label {
-      display: flex;
-      align-items: center;
-      width: 80%;
-      height: 24px;
-      padding-left: 8px;
-      user-select: none;
-      transition: all 0.2s ease-in-out;
-      cursor: pointer;
-    }
-    input:checked + label {
-      font-weight: 600;
-    }
   `;
 
   return (
     <ul>
-      <Index each={props.list}>
+      <Index each={props.each}>
         {(elem, index) => (
           <li>
             <div class="input-wrapper">
@@ -123,11 +113,13 @@ function VerticalRadioBox<T>(props: VerticalRadioBoxProps<T>) {
                 class="select"
                 id={`${props.name}-${index}`}
                 checked={elem() === props.selected}
-                onChange={() => props.onClick(elem())}
+                onChange={() => props.onChange(elem())}
               />
-              <label for={`${props.name}-${index}`}>
-                {props.children(elem())}
-              </label>
+              {props.children(
+                `${props.name}-${index}`,
+                elem() === props.selected,
+                elem(),
+              )}
             </div>
           </li>
         )}

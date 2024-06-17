@@ -36,6 +36,8 @@ type TypingGameProps = {
   children: JSX.Element;
 };
 
+// TODO: better handle no keyboard on keyDown/UP
+
 const TypingGame = (props: TypingGameProps) => {
   let focus: () => void;
   let keyboard: KeyboardHandler;
@@ -71,8 +73,8 @@ const TypingGame = (props: TypingGameProps) => {
     <div class="typing-game" onClick={() => focus()}>
       <UserInput
         typingEvent={props.typingEvent}
-        onKeyDown={onKeyDown}
-        onKeyUp={onKeyUp}
+        onKeyDown={props.showKb ? onKeyDown : props.onKeyDown}
+        onKeyUp={props.showKb ? onKeyUp : props.onKeyUp}
         onKeyAdd={props.onAddKey}
         setFocus={(f) => (focus = f)}
       />

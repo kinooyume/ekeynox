@@ -14,6 +14,7 @@ import VerticalRadioBox from "./ui/VerticalRadioBox.tsx";
 import { useI18n } from "~/settings/i18nProvider.tsx";
 import SettingMenu from "./settings/SettingMenu.tsx";
 import VerticalDropdown from "./ui/VerticalDropdown.tsx";
+import TinyRadioLabel from "./ui/TinyRadioLabel.tsx";
 
 const HeaderAction = () => {
   const t = useI18n();
@@ -64,13 +65,17 @@ const HeaderAction = () => {
             <p class="subtitle">{t("layout")}</p>
             <VerticalRadioBox
               name="keyboardLayout"
-              list={keyboardLayoutName}
+              each={keyboardLayoutName}
               selected={settings.kb.value}
-              onClick={(s) =>
+              onChange={(s) =>
                 setSettings("kb", { kind: SettingsOriginType.user, value: s })
               }
             >
-              {(s) => <p class="opt">{s}</p>}
+              {(id, checked, elem) => (
+                <TinyRadioLabel id={id} checked={checked}>
+                  <p class="opt">{elem}</p>
+                </TinyRadioLabel>
+              )}
             </VerticalRadioBox>
           </div>
           <div class="sub-content">
@@ -98,16 +103,20 @@ const HeaderAction = () => {
           <div class="sub-content">
             <VerticalRadioBox
               name="locale"
-              list={locales}
+              each={locales}
               selected={settings.locale.value}
-              onClick={(s) =>
+              onChange={(s) =>
                 setSettings("locale", {
                   kind: SettingsOriginType.user,
                   value: s,
                 })
               }
             >
-              {(s) => <p class="opt">{t(s as "en" | "fr")}</p>}
+              {(id, checked, elem) => (
+                <TinyRadioLabel id={id} checked={checked}>
+                  <p class="opt">{t(elem as "en" | "fr")}</p>
+                </TinyRadioLabel>
+              )}
             </VerticalRadioBox>
           </div>
         </SettingMenu>
