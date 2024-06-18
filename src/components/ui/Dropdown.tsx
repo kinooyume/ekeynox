@@ -7,6 +7,7 @@ import {
   on,
   type Accessor,
   type Setter,
+  createComputed,
 } from "solid-js";
 import { css } from "solid-styled";
 
@@ -86,7 +87,7 @@ const Dropdown = (props: DropdownProps) => {
 
   const toggle = () => !pendingAnimation() && setIsOpen(!isOpen());
 
-  createEffect(
+  createComputed(
     on(
       isOpen,
       (isOpen) => {
@@ -109,7 +110,7 @@ const Dropdown = (props: DropdownProps) => {
     ),
   );
 
-  createEffect(
+  createComputed(
     on(hover, (hover) => {
       if (pendingAnimation() || hover) return;
       setIsOpen(false);
