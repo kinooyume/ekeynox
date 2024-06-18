@@ -31,8 +31,6 @@ type TypingGameProps = {
 
   promptKey: string;
 
-  onExit: () => void;
-
   children: JSX.Element;
 };
 

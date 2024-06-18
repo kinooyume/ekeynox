@@ -57,24 +57,24 @@ const Dropdown = (props: DropdownProps) => {
 
     openAnimation = anime
       .timeline({
-        easing: "easeOutElastic(3, 0.8)",
+        easing: "easeOutElastic(1, 0.9)",
         autoplay: false,
       })
       .add({
         targets: dropdown,
-        easing: "easeOutElastic(4, 0.8)",
+        // easing: "easeOutElastic(4, 0.8)",
         padding: ["0", "8px 26px 26px"],
         height: [48, 320],
         top: ["0", "-8px"],
         width: [200, 800],
-        duration: 750,
+        duration: 650,
       })
       .add(
         {
           targets: `#${props.id} .elem`,
           translateY: [20, 0],
           opacity: [0, 1],
-          duration: 300,
+          duration: 400,
           delay: (el, i, l) => i * 120,
         },
         "-=425",

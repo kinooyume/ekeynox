@@ -31,7 +31,7 @@ const SettingMenu = (props: SettingMenuProps) => {
 
   return (
     <div class="setting-menu">
-      <p class="title">{props.title}</p>
+      <p class="title elem">{props.title}</p>
       <div class="content">{props.children}</div>
     </div>
   );

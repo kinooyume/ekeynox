@@ -24,7 +24,7 @@ const GameOptionsRecap = (props: GameOptionsRecapProps) => {
     }
 
     .tag {
-background-color: var(--background-color);
+      background-color: var(--background-color);
       border-radius: 4px;
       display: flex;
       gap: 5px;
@@ -41,13 +41,13 @@ background-color: var(--background-color);
   return (
     <div class="options-recap">
       <Show when={props.gameOptions.modeSelected === GameModeKind.timer}>
-        <div class="tag">
+        <div class="tag animate">
           <span>{props.gameOptions.timer}s</span>
         </div>
       </Show>
       <Switch
         fallback={
-          <div class="tag">
+          <div class="tag animate">
             <span>{t("custom")}</span>
           </div>
         }
@@ -64,23 +64,24 @@ background-color: var(--background-color);
                 WordsGenerationCategory.quotes
               }
             >
-              <div class="tag">
+              <div class="tag animate">
                 <span>{t("quotes")}</span>
               </div>
             </Match>
             <Match
               when={
                 (props.gameOptions.categorySelected as any).category ===
-                WordsGenerationCategory.words1k &&  props.gameOptions.modeSelected !== GameModeKind.timer
+                  WordsGenerationCategory.words1k &&
+                props.gameOptions.modeSelected !== GameModeKind.timer
               }
             >
-              <div class="tag">
+              <div class="tag animate">
                 <span>{`${props.gameOptions.random} ${t("words")}`}</span>
               </div>
             </Match>
           </Switch>
 
-          <div class="tag">
+          <div class="tag animate">
             <span>{t(props.gameOptions.generation.language)}</span>
           </div>
         </Match>

@@ -28,7 +28,7 @@ const HeaderNavAction = (props: HeaderNavActionProps) => {
 
   return (
     <div
-      class="nav-action"
+      class="nav-action animate"
       classList={{ clickable: props.clickable }}
       onClick={props.action}
     >
