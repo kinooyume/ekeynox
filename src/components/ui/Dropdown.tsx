@@ -21,12 +21,6 @@ type DropdownProps = {
 };
 
 const Dropdown = (props: DropdownProps) => {
-  const [isOpen, setIsOpen] = createSignal<boolean>(false);
-  const [pendingAnimation, setPendingAnimation] = createSignal(false);
-  const [hover, setHover] = createSignal(false);
-
-  const toggle = () => setIsOpen(!isOpen());
-
   /* Animation */
   let dropdown: HTMLDivElement;
   let dropContent: HTMLDivElement;
@@ -49,14 +43,6 @@ const Dropdown = (props: DropdownProps) => {
         height: [320, 48],
         duration: 250,
       })
-      // .add(
-      //   {
-      //     targets: dropContent,
-      //     height: [280, 0],
-      //     duration: 250,
-      //   },
-      //   "-=150",
-      // )
       .add(
         {
           targets: `#${props.id} .elem`,
@@ -82,15 +68,6 @@ const Dropdown = (props: DropdownProps) => {
         width: [200, 800],
         duration: 750,
       })
-      // .add(
-      //   {
-      //     targets: dropContent,
-      //     easing: "easeOutElastic(4, 0.9)",
-      //     height: [0, 280],
-      //     duration: 850,
-      //   },
-      //   "-=650",
-      // )
       .add(
         {
           targets: `#${props.id} .elem`,
@@ -103,17 +80,23 @@ const Dropdown = (props: DropdownProps) => {
       );
   });
 
+  const [isOpen, setIsOpen] = createSignal<boolean>(false);
+  const [pendingAnimation, setPendingAnimation] = createSignal(false);
+  const [hover, setHover] = createSignal(false);
+
+  const toggle = () => !pendingAnimation() && setIsOpen(!isOpen());
+
   createEffect(
     on(
       isOpen,
       (isOpen) => {
         if (isOpen) {
+          openAnimation.play();
           openAnimation.finished.then(() => {
             setPendingAnimation(false);
             if (!hover()) setIsOpen(false);
           });
           setPendingAnimation(true);
-          openAnimation.play();
         } else {
           closeAnimation.finished.then(() => {
             setPendingAnimation(false);
