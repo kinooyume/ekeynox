@@ -1,6 +1,10 @@
 import { css } from "solid-styled";
 import { Switch, type JSXElement, Show, Match } from "solid-js";
-import { CategoryKind, GameOptions, WordsGenerationCategory } from "~/gameOptions/gameOptions";
+import {
+  CategoryKind,
+  GameOptions,
+  WordsGenerationCategory,
+} from "~/gameOptions/gameOptions";
 import { useI18n } from "~/settings/i18nProvider";
 import { GameModeKind } from "~/gameOptions/gameModeKind";
 
@@ -19,12 +23,8 @@ const GameOptionsRecap = (props: GameOptionsRecapProps) => {
       gap: 10px;
     }
 
-    .tag:hover {
-      filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.25));
-    }
     .tag {
-      background-color: var(--color-primary-400);
-      filter: grayscale(60%);
+background-color: var(--background-color);
       border-radius: 4px;
       display: flex;
       gap: 5px;
@@ -34,6 +34,7 @@ const GameOptionsRecap = (props: GameOptionsRecapProps) => {
 
     span {
       font-size: 14px;
+      text-transform: capitalize;
       color: var(--text-secondary-color);
     }
   `;
@@ -41,7 +42,7 @@ const GameOptionsRecap = (props: GameOptionsRecapProps) => {
     <div class="options-recap">
       <Show when={props.gameOptions.modeSelected === GameModeKind.timer}>
         <div class="tag">
-          <span>{props.gameOptions.timer}"</span>
+          <span>{props.gameOptions.timer}s</span>
         </div>
       </Show>
       <Switch
@@ -70,13 +71,11 @@ const GameOptionsRecap = (props: GameOptionsRecapProps) => {
             <Match
               when={
                 (props.gameOptions.categorySelected as any).category ===
-                WordsGenerationCategory.words1k
+                WordsGenerationCategory.words1k &&  props.gameOptions.modeSelected !== GameModeKind.timer
               }
             >
               <div class="tag">
-                <span>
-                  {`${props.gameOptions.random} ${t("words")}`}
-                </span>
+                <span>{`${props.gameOptions.random} ${t("words")}`}</span>
               </div>
             </Match>
           </Switch>

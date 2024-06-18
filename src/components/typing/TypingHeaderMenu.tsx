@@ -49,7 +49,10 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
       transform: translateY(-50%);
       transition: all 0.2s ease;
     }
+
     .menu-title:after {
+      display: inline-block;
+      width: 200px;
       position: absolute;
       color: var(--text-secondary-color);
       top: 150px;
@@ -74,10 +77,13 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
       filter: none;
       opacity: 1;
     }
-    .menu-title.hover:before,
-    .menu-title.open:before {
+    .menu-title.hover:before {
       top: -50%;
       transform: rotate(5deg);
+    }
+
+    .menu-title.open:before {
+      opacity: 0;
     }
     .menu-title.hover:after,
     .menu-title.open:after {

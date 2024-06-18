@@ -46,16 +46,17 @@ const Dropdown = (props: DropdownProps) => {
         padding: ["8px 26px 26px", "0"],
         top: ["-8px", "0"],
         width: ["800px", "200px"],
+        height: [320, 48],
         duration: 250,
       })
-      .add(
-        {
-          targets: dropContent,
-          height: [280, 0],
-          duration: 250,
-        },
-        "-=150",
-      )
+      // .add(
+      //   {
+      //     targets: dropContent,
+      //     height: [280, 0],
+      //     duration: 250,
+      //   },
+      //   "-=150",
+      // )
       .add(
         {
           targets: `#${props.id} .elem`,
@@ -74,21 +75,22 @@ const Dropdown = (props: DropdownProps) => {
       })
       .add({
         targets: dropdown,
-        easing: "easeOutElastic(6, 0.7)",
+        easing: "easeOutElastic(4, 0.8)",
         padding: ["0", "8px 26px 26px"],
+        height: [48, 320],
         top: ["0", "-8px"],
-        width: ["200px", "800px"],
+        width: [200, 800],
         duration: 750,
       })
-      .add(
-        {
-          targets: dropContent,
-          easing: "easeOutElastic(2, 0.7)",
-          height: [0, 280],
-          duration: 850,
-        },
-        "-=650",
-      )
+      // .add(
+      //   {
+      //     targets: dropContent,
+      //     easing: "easeOutElastic(4, 0.9)",
+      //     height: [0, 280],
+      //     duration: 850,
+      //   },
+      //   "-=650",
+      // )
       .add(
         {
           targets: `#${props.id} .elem`,
@@ -97,7 +99,7 @@ const Dropdown = (props: DropdownProps) => {
           duration: 300,
           delay: (el, i, l) => i * 120,
         },
-        "-=725",
+        "-=425",
       );
   });
 
@@ -137,7 +139,7 @@ const Dropdown = (props: DropdownProps) => {
       margin-left: 12px;
       width: 200px;
       display: block;
-      min-width: 200px;
+      min-width: 200px !important;
       z-index: 205;
       height: 48px;
     }
@@ -176,7 +178,6 @@ const Dropdown = (props: DropdownProps) => {
     .dropdown-wrapper.open .dropdown {
       width: 800px;
       background-color: var(--color-surface-100);
-      height: unset;
       padding: 8px 26px 26px;
       top: -8px;
       border: 1px solid var(--background-color);
@@ -198,6 +199,11 @@ const Dropdown = (props: DropdownProps) => {
 
     .dropdown-content {
       display: flex;
+      height: 0;
+    }
+
+    .open .dropdown-content {
+      height: 280px;
     }
   `;
 

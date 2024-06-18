@@ -1,4 +1,12 @@
+import { css } from "solid-styled";
+
+
 const KeyboardIcon = () => {
+  css`
+    svg {
+      fill: var(--text-secondary-color);
+    }
+  `;
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
