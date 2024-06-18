@@ -54,6 +54,7 @@ const HeaderAction = () => {
   return (
     <ul class="actions">
       <VerticalDropdown
+        id="keyboard"
         label={
           <Tooltip content={<p>{settings.kb.value}</p>}>
             <KeyboardIcon />
@@ -62,7 +63,7 @@ const HeaderAction = () => {
       >
         <SettingMenu title={t("keyboard")}>
           <div class="sub-content">
-            <p class="subtitle">{t("layout")}</p>
+            <p class="subtitle elem">{t("layout")}</p>
             <VerticalRadioBox
               name="keyboardLayout"
               each={keyboardLayoutName}
@@ -78,7 +79,7 @@ const HeaderAction = () => {
               )}
             </VerticalRadioBox>
           </div>
-          <div class="sub-content">
+          <div class="sub-content elem">
             <input
               type="checkbox"
               name="show-keyboard"
@@ -93,6 +94,7 @@ const HeaderAction = () => {
         </SettingMenu>
       </VerticalDropdown>
       <VerticalDropdown
+        id="language"
         label={
           <Tooltip content={<p>{t(settings.locale.value as "en")}</p>}>
             <GlobeIcon />

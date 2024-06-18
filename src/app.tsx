@@ -38,7 +38,6 @@ export default function App() {
   const PageTransition = (props: ParentProps) => (
     <div class="transition-container">
       <TransitionGroup
-
         onEnter={(el, done) => {
           const a = el.animate([{ opacity: 0 }, { opacity: 1 }], {
             duration: 140

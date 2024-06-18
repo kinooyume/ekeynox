@@ -1,5 +1,6 @@
 import {
   Match,
+  Show,
   Switch,
   createComputed,
   createEffect,
@@ -50,7 +51,8 @@ import { HigherKeyboard } from "~/settings/keyboardLayout";
 import { GameModeKind } from "~/gameOptions/gameModeKind";
 import { useI18n } from "~/settings/i18nProvider";
 import { useNavigate } from "@solidjs/router";
-import TypingHeaderNav from "./TypingHeaderNav";
+import TypingHeaderNav, { LeavingFn } from "./TypingHeaderNav";
+import { TransitionGroup } from "solid-transition-group";
 
 type TypingGameManagerProps = {
   status: PendingStatus;
@@ -243,8 +245,10 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
     return cleanParagraphs;
   };
 
+  let headerLeavingAnimate: () => anime.AnimeTimelineInstance;
   const over = () => {
     // NOTE: peut etre le faire en mode "leave"
+    //
     cursor().set.wordStatus(WordStatus.over, false);
     if (wordWpmTimer) wordWpmTimer({ status: WordStatus.over });
     cursor().set.keyFocus(KeyFocus.unfocus);
@@ -263,7 +267,9 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
 
   const typingOver = () => {
     setTypingEvent({ kind: TypingEventKind.over });
-    over();
+    headerLeavingAnimate().finished.then(() => {
+      over();
+    });
   };
 
   createComputed(
@@ -462,7 +468,6 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
       promptKey={promptKey()}
       paragraphs={paraStore}
       keyMetrics={keyMetrics()}
-      onExit={props.onExit}
     >
       <Switch>
         <Match when={props.status.mode.kind === GameModeKind.speed}>
@@ -501,6 +506,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
           start={props.start}
           fetchSourcesGen={props.fetchSourcesGen}
           gameOptions={props.gameOptions}
+          setLeavingAnimate={(an) => (headerLeavingAnimate = an)}
         >
           <TypingHeaderActions
             paused={typingEvent().kind !== TypingEventKind.pending}

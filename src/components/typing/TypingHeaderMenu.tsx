@@ -85,6 +85,7 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
     .menu-title.open:before {
       opacity: 0;
     }
+
     .menu-title.hover:after,
     .menu-title.open:after {
       top: 50%;
@@ -105,7 +106,7 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
   `;
 
   return (
-    <div class="header-mode">
+    <div class="header-mode animate">
       <GameModeDropdown {...props}>
         {(isOpen, hover) => (
           <div
