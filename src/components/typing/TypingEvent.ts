@@ -35,7 +35,7 @@ export enum TypingEventKind {
 }
 
 export type TypingEventType =
-  | { kind: TypingEventKind.unstart; restart?: boolean }
+  | { kind: TypingEventKind.unstart }
   | {
       kind: TypingEventKind.pending;
       key: TypingKey;
