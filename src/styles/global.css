@@ -173,7 +173,7 @@ a {
   }
 }
 
-button {
+button, a.primary {
   border: 0;
   cursor: pointer;
   background: none;
@@ -183,7 +183,7 @@ button {
   text-transform: capitalize;
 }
 
-button.primary {
+button.primary, a.primary {
   height: 48px;
   background-color: var(--color-primary-200);
   transition: all 0.3s ease;
@@ -193,11 +193,16 @@ button.primary {
 /* https://uiverse.io/cssbuttons-io/friendly-dragon-76 */
 /* https://uiverse.io/cssbuttons-io/evil-monkey-41 */
 /* https://codepen.io/havardob/pen/qBvYdXL */
-button.primary:hover {
+button.primary:hover, a.primary:hover {
   box-shadow: var(--shadow-color) 0px 4px 0px 0px;
 }
 
-button.primary:active {
+a.primary {
+  display: flex;
+  align-items: center;
+}
+
+button.primary:active, a.primary:active {
   box-shadow: var(--shadow-color) 0px 0px 0px 0px;
   transform: translateY(5px);
   transition: 200ms;

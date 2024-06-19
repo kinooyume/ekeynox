@@ -16,7 +16,7 @@ import CustomInput, { type CustomInputRef } from "../ui/CustomInput";
 import GameModeSelection from "./GameModeSelection";
 import SpeedParams from "./SpeedParams";
 import TimerParams from "./TimerParams";
-import { A } from "@solidjs/router";
+import { A, useBeforeLeave } from "@solidjs/router";
 
 // Gsap animation
 // https://codepen.io/dev_loop/pen/MWKbJmO
@@ -50,6 +50,11 @@ const customRef: CustomInputRef = {
 
 const GameModeKindMenu = (props: GameModeKindMenuProps) => {
   const t = useI18n();
+
+  useBeforeLeave((e) => {
+    start();
+  });
+
   const [gameOptions, setGameOptions] = createStore<GameOptions>(
     deepCopy(props.gameOptions),
   );
@@ -295,9 +300,10 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
                 </div>
               </Match>
             </Switch>
-            <button class="primary" onClick={start}>
+
+            <a class="primary" href="/typing">
               {t("letsGo")}
-            </button>
+            </a>
           </div>
         </div>
       </div>

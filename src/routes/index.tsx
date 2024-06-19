@@ -1,20 +1,11 @@
-import { Title } from "@solidjs/meta";
 import { useNavigate } from "@solidjs/router";
-import { clientOnly } from "@solidjs/start";
-import { createComputed, lazy, on, onMount } from "solid-js";
+import { onMount } from "solid-js";
+import { isServer } from "solid-js/web";
 import { useAppState } from "~/appState/AppStateProvider";
 import GameModeMenu from "~/components/gameMode/GameModeMenu";
 import { useGameOptions } from "~/gameOptions/GameOptionsProvider";
 
-import {
-  CategoryKind,
-  GameOptions,
-  optionsToPending,
-} from "~/gameOptions/gameOptions";
-import { isServer } from "solid-js/web";
-import { Transition, TransitionGroup } from "solid-transition-group";
-
-const ClientMenu = clientOnly(() => import("~/components/gameMode/GameModeMenu"));
+import { GameOptions, optionsToPending } from "~/gameOptions/gameOptions";
 
 export default function Menu() {
   const { persistedGameOptions, setPersistedGameOptions, fetchSourcesGen } =
@@ -31,7 +22,7 @@ export default function Menu() {
     const pendingMode = optionsToPending(opts, sourcesGen);
 
     navigation.start(pendingMode, persistedGameOptions);
-    navigate("/typing");
+    // navigate("/typing");
   };
 
   return (
