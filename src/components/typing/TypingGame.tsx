@@ -64,6 +64,7 @@ const TypingGame = (props: TypingGameProps) => {
       align-items: center;
       max-width: 1200px;
       margin: 0 auto;
+      height: calc(100% - 70px);
     }
   `;
 

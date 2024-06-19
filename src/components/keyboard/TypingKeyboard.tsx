@@ -2,7 +2,7 @@ import { For, createSignal, onMount } from "solid-js";
 import { css } from "solid-styled";
 import type { KeysProjection } from "../metrics/KeysProjection";
 import KeyboardKey from "./KeyboardKey";
-import type { KeyboardLayout } from "./KeyboardLayout";
+import { KeyboardLayout } from "~/settings/keyboardLayout";
 
 export type KeyboardHandler = {
   keyUp: (key: string) => void;
@@ -49,6 +49,7 @@ const Keyboard = (props: KeyboardProps) => {
       width: 100%;
       max-width: 1032px;
       user-select: none;
+      margin: auto 0;
     }
     .row {
       display: flex;
@@ -69,7 +70,7 @@ const Keyboard = (props: KeyboardProps) => {
   // OUAI ! Ou alors juste, on recupere les used separement
   // et on crée un signal pour key
   // qui lui envois le nouveau truc du coup
-  
+
   const blankCharacters = [" ", "Enter"];
   return (
     <div class="kb">
@@ -102,7 +103,7 @@ const Keyboard = (props: KeyboardProps) => {
               key={lKey.all}
               used={lKey.used}
               current={lKey.all.includes(props.currentKey)}
-                  data={lKey.all.map((c) => props.metrics[c]).filter((c) => c)}
+              data={lKey.all.map((c) => props.metrics[c]).filter((c) => c)}
               size={lKey.size}
               pressed={pressedKeys().includes(lKey.primary)}
             />

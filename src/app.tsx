@@ -1,5 +1,5 @@
 import { MetaProvider, Title } from "@solidjs/meta";
-import { Router, useLocation, useNavigate } from "@solidjs/router";
+import { Router } from "@solidjs/router";
 import { FileRoutes } from "@solidjs/start/router";
 
 import { ParentProps, Show, Suspense, onMount } from "solid-js";

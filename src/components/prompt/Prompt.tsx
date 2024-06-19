@@ -16,8 +16,8 @@ const prompt = (props: PromptProps) => {
 
   css`
     .prompt {
-      height: 230px;
-      margin-bottom: 2rem;
+      height: 180px;
+      margin-bottom: auto;
       max-width: 900px;
       overflow: hidden;
     }
