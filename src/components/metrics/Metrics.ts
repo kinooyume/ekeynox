@@ -127,7 +127,9 @@ const getSequence = (
   const keysSequences: Array<Array<TimedKey>> = [];
   while (event) {
     let logs = event.value.meta.logs;
-    let prevTimestamp = logs!.value.timestamp;
+    event = event.next;
+    if (!logs) continue;
+    let prevTimestamp = logs.value.timestamp;
 
     let localSequence = [];
     while (logs) {
@@ -141,7 +143,6 @@ const getSequence = (
       logs = logs.next;
     }
     keysSequences.unshift(localSequence);
-    event = event.next;
   }
   return keysSequences.flat();
 };
