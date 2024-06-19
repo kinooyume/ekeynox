@@ -55,11 +55,11 @@ const HeaderAction = () => {
     <ul class="actions">
       <VerticalDropdown
         id="keyboard"
-        label={
-          <Tooltip content={<p>{settings.kb.value}</p>}>
+        label={(isOpen) => (
+          <Tooltip show={!isOpen()} content={<p>{settings.kb.value}</p>}>
             <KeyboardIcon />
           </Tooltip>
-        }
+        )}
       >
         <SettingMenu title={t("keyboard")}>
           <div class="sub-content">
@@ -95,11 +95,14 @@ const HeaderAction = () => {
       </VerticalDropdown>
       <VerticalDropdown
         id="language"
-        label={
-          <Tooltip content={<p>{t(settings.locale.value as "en")}</p>}>
+        label={(isOpen) => (
+          <Tooltip
+            show={!isOpen()}
+            content={<p>{t(settings.locale.value as "en")}</p>}
+          >
             <GlobeIcon />
           </Tooltip>
-        }
+        )}
       >
         <SettingMenu title={t("language")}>
           <div class="sub-content">
