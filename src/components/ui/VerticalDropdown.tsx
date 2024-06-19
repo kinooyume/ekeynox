@@ -1,6 +1,8 @@
 import anime from "animejs";
+import useClickOutside from "solid-click-outside";
 import { JSX, createComputed, createSignal, on, onMount } from "solid-js";
 import { css } from "solid-styled";
+import Cross from "../svgs/cross";
 
 type VerticalDropdownProps = {
   id: string;
@@ -20,14 +22,16 @@ const VerticalDropdown = (props: VerticalDropdownProps) => {
       opacity: 0;
       height: 0;
       width: 150px;
-      right: 0;
+      pointer-events: none;
     }
 
     .open .vertical-dropdown {
       display: flex;
       padding: 24px;
+      pointer-events: auto;
       height: auto;
       top: 0;
+      right: 0;
       border: 1px solid var(--background-color);
       box-shadow:
         0.6px 1.8px 2.2px rgba(0, 0, 0, 0.02),
@@ -40,6 +44,11 @@ const VerticalDropdown = (props: VerticalDropdownProps) => {
     .label {
       cursor: pointer;
     }
+
+    .cross {
+      position: absolute;
+      z-index: 200;
+    }
   `;
 
   let openAnimation: () => anime.AnimeInstance;
@@ -49,9 +58,26 @@ const VerticalDropdown = (props: VerticalDropdownProps) => {
   let dropdownMargin: HTMLDivElement;
   let label: HTMLDivElement;
 
+  const [wrapper, setWrapper] = createSignal<HTMLDivElement>();
+  const [currentAnime, setCurrentAnime] = createSignal<
+    anime.AnimeInstance | undefined
+  >();
+
+  useClickOutside(wrapper, () => {
+    // TODO: cancel animation instead
+    if (isOpen()) {
+      const ca = currentAnime();
+      if (ca) {
+        ca.pause();
+        setPendingAnimation(false);
+      }
+      setIsOpen(false);
+    }
+  });
+
   onMount(() => {
-    openAnimation = () =>
-      anime
+    openAnimation = () => {
+      const a = anime
         .timeline({
           autoplay: false,
           easing: "easeOutElastic(1, 0.9)",
@@ -73,21 +99,29 @@ const VerticalDropdown = (props: VerticalDropdownProps) => {
           },
           "-=425",
         );
-    closeAnimation = () =>
-      anime({
+      setCurrentAnime(a);
+      return a;
+    };
+    closeAnimation = () => {
+      const a = anime({
         targets: dropdown,
         height: 0,
         opacity: [1, 0],
         duration: 0,
         easing: "easeOutExpo",
       });
+      setCurrentAnime(a);
+      return a;
+    };
 
     createComputed(
       on(
         isOpen,
         (isOpen) => {
+          if (pendingAnimation()) return;
           if (isOpen) {
             const anim = openAnimation();
+            setPendingAnimation(true);
             anim.finished.then(() => {
               document
                 .querySelectorAll(`#${`dropdown-${props.id}`} .elem`)
@@ -96,51 +130,33 @@ const VerticalDropdown = (props: VerticalDropdownProps) => {
             anim.play();
             anim.finished.then(() => {
               setPendingAnimation(false);
-              if (!hover()) setIsOpen(false);
             });
-            setPendingAnimation(true);
           } else {
+            setPendingAnimation(true);
             const anim = closeAnimation();
             anim.finished.then(() => {
               setPendingAnimation(false);
             });
-            setPendingAnimation(true);
             anim.play();
           }
         },
         { defer: true },
       ),
     );
-
-    createComputed(
-      on(hover, (hover) => {
-        if (pendingAnimation() || hover) return;
-        setIsOpen(false);
-      }),
-    );
   });
 
   const [isOpen, setIsOpen] = createSignal<boolean>(false);
   const [pendingAnimation, setPendingAnimation] = createSignal(false);
-  const [hover, setHover] = createSignal(false);
 
   const toggle = () => !pendingAnimation() && setIsOpen(!isOpen());
 
   return (
     <div
       class="vertical-dropdown-wrapper"
+      ref={setWrapper}
       classList={{ open: isOpen() }}
-      ref={(el) => {
-        dropdownMargin = el;
-        el.addEventListener("mouseleave", () => setHover(false));
-        el.addEventListener("mouseenter", () => setHover(true));
-      }}
     >
-      <div
-        class="label"
-        ref={label!}
-        onClick={() => setIsOpen((isOpen) => !isOpen)}
-      >
+      <div class="label" ref={label!} onClick={() => toggle()}>
         {props.label}
       </div>
       <div
