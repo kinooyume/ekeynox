@@ -342,14 +342,6 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
                 <p class="subtitle">{t("elapsedTime")}</p>
               </div>
             </div>
-            <div class="cards-wrapper">
-              <div class="stat-card">
-                <p class="main-data main-data-tiny">
-                  {getTime(props.metrics.typing.logs!.value.core.duration)}
-                </p>
-                <p class="subtitle">{t("elapsedTime")}</p>
-              </div>
-            </div>
           </div>
           <div class="cards-wrapper">
             <div class="stat-card">
