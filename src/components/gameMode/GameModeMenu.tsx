@@ -1,4 +1,4 @@
-import { Match, Switch, createComputed } from "solid-js";
+import { Match, Switch, createComputed, createSignal } from "solid-js";
 import { createStore } from "solid-js/store";
 import { css } from "solid-styled";
 
@@ -55,6 +55,7 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
     start();
   });
 
+  const [isReady, setIsReady] = createSignal(false);
   const [gameOptions, setGameOptions] = createStore<GameOptions>(
     deepCopy(props.gameOptions),
   );
@@ -214,6 +215,11 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
       text-transform: capitalize;
       margin-bottom: 22px;
     }
+    button.locked {
+      pointer-event: none;
+      cursor: default;
+      filter: grayscale(20%);
+    }
   `;
 
   return (
@@ -301,7 +307,11 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
               </Match>
             </Switch>
 
-            <a class="primary" href="/typing">
+            <a
+              class="primary"
+              classList={{ locked: !isReady() }}
+              href="/typing"
+            >
               {t("letsGo")}
             </a>
           </div>

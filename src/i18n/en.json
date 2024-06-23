@@ -17,6 +17,7 @@
   "quotes": "quotes",
   "custom": "custom",
   "language": "language",
+  "customLimit": " 10 caracters minimum",
   "chooseYour": "choose your",
   "playingMode": "playing mode",
   "showKeyboard": "Display keyboard",

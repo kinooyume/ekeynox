@@ -90,7 +90,7 @@ const AccuracyDoughnut = (props: MyChartProps) => {
     responsive: true,
     maintainAspectRatio: false,
     cutout: "80%",
-    plugins: [overlappingSegments],
+    // plugins: [overlappingSegments],
   } as ChartOptions;
 
   css`
@@ -122,7 +122,7 @@ const AccuracyDoughnut = (props: MyChartProps) => {
       ArcElement,
       Legend,
       Colors,
-      overlappingSegments,
+      // overlappingSegments,
     );
   });
   return (
@@ -139,7 +139,7 @@ const AccuracyDoughnut = (props: MyChartProps) => {
           ArcElement,
           Legend,
           Colors,
-          overlappingSegments,
+          // overlappingSegments,
         ]}
         options={options}
       />
