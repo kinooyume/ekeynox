@@ -1,13 +1,22 @@
 import anime from "animejs";
 import useClickOutside from "solid-click-outside";
-import { Accessor, JSX, Show, createComputed, createSignal, on, onMount } from "solid-js";
+import {
+  Accessor,
+  JSX,
+  Setter,
+  Show,
+  createComputed,
+  createSignal,
+  on,
+  onMount,
+} from "solid-js";
 import { css } from "solid-styled";
 import Cross from "../svgs/cross";
 
 type VerticalDropdownProps = {
   id: string;
   label: (show: Accessor<boolean>) => JSX.Element | JSX.Element[];
-  children: JSX.Element | JSX.Element[];
+  children: (close: () => void) => JSX.Element | JSX.Element[];
 };
 
 const VerticalDropdown = (props: VerticalDropdownProps) => {
@@ -174,7 +183,7 @@ const VerticalDropdown = (props: VerticalDropdownProps) => {
         id={`dropdown-${props.id}`}
         ref={dropdown!}
       >
-        {props.children}
+        {props.children(() => setIsOpen(false))}
         <Show when={isOpen()}>
           <div class="cross" onClick={toggle}>
             <Cross />
