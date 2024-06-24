@@ -309,7 +309,7 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
 
             <a
               class="primary"
-              classList={{ locked: !isReady() }}
+              // classList={{ locked: !isReady() }}
               href="/typing"
             >
               {t("letsGo")}
