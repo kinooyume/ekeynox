@@ -17,6 +17,7 @@ import GameModeSelection from "./GameModeSelection";
 import SpeedParams from "./SpeedParams";
 import TimerParams from "./TimerParams";
 import { A, useBeforeLeave } from "@solidjs/router";
+import { Portal } from "solid-js/web";
 
 // Gsap animation
 // https://codepen.io/dev_loop/pen/MWKbJmO
@@ -56,7 +57,7 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
   });
 
   const [isReady, setIsReady] = createSignal(false);
-  const [customValue, setCustomValue] = createSignal("")
+  const [customValue, setCustomValue] = createSignal("");
 
   const [gameOptions, setGameOptions] = createStore<GameOptions>(
     deepCopy(props.gameOptions),
@@ -92,6 +93,10 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
   };
 
   css`
+    .version {
+font-weight: 200;
+      color: var(--text-secondary-color);
+    }
     .main-view {
       position: relative;
     }
@@ -324,6 +329,9 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
           </div>
         </div>
       </div>
+      <Portal mount={document.getElementById("header-nav-actions-portal")!}>
+        <span class="version">Alpha 0.12-1</span>
+      </Portal>
     </div>
   );
 };
