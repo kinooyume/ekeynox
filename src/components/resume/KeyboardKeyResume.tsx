@@ -57,7 +57,6 @@ const KeyboardKeyResume = (props: KeyboardKeyResumeProps) => {
       color: var(--text-color);
       border-radius: 8px;
       background: var(--key-metric-bg-color);
-      background: white;
       box-shadow:
         2px 2px 7px var(--key-metric-color),
         -2px -2px 7px var(--key-metric-color-alt);
