@@ -464,6 +464,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
       keySet={contentHandler().data.keySet}
       onKeyDown={onKeyDown}
       onKeyUp={onKeyUp}
+      onPause={pause}
       onAddKey={onAddKey}
       promptKey={promptKey()}
       paragraphs={paraStore}
