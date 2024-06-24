@@ -5,10 +5,15 @@ import { makeRedoContent } from "../content/TypingGameSource";
 import type { Metrics, MetricsResume } from "../metrics/Metrics";
 import type { CustomInputRef } from "../ui/CustomInput";
 import GameModeDropdown from "../gameMode/GameModeDropdown";
-import { CategoryKind, ContentGeneration, GameOptions } from "~/gameOptions/gameOptions";
+import {
+  CategoryKind,
+  ContentGeneration,
+  GameOptions,
+} from "~/gameOptions/gameOptions";
 import { PendingMode } from "~/appState/appState";
 import { useI18n } from "~/settings/i18nProvider";
 import { useNavigate } from "@solidjs/router";
+import Ghost from "../svgs/ghost";
 
 type ActionsResumeProps = {
   gameOptions: GameOptions;
@@ -93,6 +98,15 @@ const ActionsResume = (props: ActionsResumeProps) => {
       align: flex-end;
       gap: 16px;
     }
+
+    .secondary {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .secondary span {
+      color: var(--text-secondary-color);
+    }
   `;
 
   return (
@@ -111,7 +125,7 @@ const ActionsResume = (props: ActionsResumeProps) => {
         )}
       </GameModeDropdown>
       <button class="secondary" onClick={restart}>
-        {t("playAgain")}
+        <Ghost /> <span>{t("playAgain")}</span>
       </button>
       <button class="primary" onClick={() => start(props.gameOptions)}>
         {t("next")}
