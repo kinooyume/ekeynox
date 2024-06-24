@@ -12,6 +12,7 @@ import { type TypingEventType } from "./TypingEvent.ts";
 import type { JSX } from "solid-js";
 import { Translator } from "~/settings/i18nProvider.tsx";
 import { HigherKeyboard } from "~/settings/keyboardLayout.ts";
+import useClickOutside from "solid-click-outside";
 
 type TypingGameProps = {
   t: Translator;
@@ -28,6 +29,7 @@ type TypingGameProps = {
   onKeyDown: (key: string) => void;
   onKeyUp: (key: string) => void;
   onAddKey: (key: string, timestamp: number) => void;
+  onPause: () => void;
 
   promptKey: string;
 
@@ -68,6 +70,9 @@ const TypingGame = (props: TypingGameProps) => {
     }
   `;
 
+  const [typingPrompt, setTypingPrompt] = createSignal<HTMLElement>();
+
+  useClickOutside(typingPrompt, props.onPause);
   return (
     <div class="typing-game" onClick={() => focus()}>
       <UserInput
@@ -81,7 +86,9 @@ const TypingGame = (props: TypingGameProps) => {
       {/* TODO: Le prompt ne devrais pas setParaphs */}
       {/* actuellement utilisé pour les words wpm */}
 
-      <Prompt paragraphs={props.paragraphs} />
+      <div ref={setTypingPrompt}>
+        <Prompt paragraphs={props.paragraphs} />
+      </div>
       <Show when={props.showKb}>
         <Keyboard
           metrics={props.keyMetrics}
