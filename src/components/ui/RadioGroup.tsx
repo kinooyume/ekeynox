@@ -70,6 +70,7 @@ function RadioGroup<Value>(props: RadioGroupProps<Value>) {
 
     .label-text {
       padding-top: 2px;
+
     }
 
     .radio-group input:checked + label {
@@ -78,6 +79,11 @@ function RadioGroup<Value>(props: RadioGroupProps<Value>) {
       fill: black;
       animation: rubberBand 0.6s both;
     }
+
+.radio-group input:checked + label .label-text {
+
+      color: var(--color-selected);
+}
 
     @keyframes rubberBand {
       0% {
