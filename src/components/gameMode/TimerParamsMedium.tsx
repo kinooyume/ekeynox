@@ -69,11 +69,11 @@ const TimerParamsMedium = (props: GameParams) => {
               } as Category,
               icon: <Quote />,
             },
-            {
-              label: t("custom"),
-              value: { kind: CategoryKind.custom } as Category,
-              icon: <Customizer />,
-            },
+            // {
+            //   label: t("custom"),
+            //   value: { kind: CategoryKind.custom } as Category,
+            //   icon: <Customizer />,
+            // },
           ]}
           compare={(v) => {
             switch (props.gameOptions.categorySelected.kind) {
