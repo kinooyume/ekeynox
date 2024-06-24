@@ -57,6 +57,7 @@ const TypingModeTimer = (props: TypingModeTimerProps) => {
       font-weight: 600;
       padding-top: 0px;
       text-align: right;
+margin-right: 8px;
     }
   `;
   return (
