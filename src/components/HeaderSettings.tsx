@@ -61,37 +61,39 @@ const HeaderAction = () => {
           </Tooltip>
         )}
       >
-        <SettingMenu title={t("keyboard")}>
-          <div class="sub-content">
-            <p class="subtitle elem">{t("layout")}</p>
-            <VerticalRadioBox
-              name="keyboardLayout"
-              each={keyboardLayoutName}
-              selected={settings.kb.value}
-              onChange={(s) =>
-                setSettings("kb", { kind: SettingsOriginType.user, value: s })
-              }
-            >
-              {(id, checked, elem) => (
-                <TinyRadioLabel id={id} checked={checked}>
-                  <p class="opt">{elem}</p>
-                </TinyRadioLabel>
-              )}
-            </VerticalRadioBox>
-          </div>
-          <div class="sub-content elem">
-            <input
-              type="checkbox"
-              name="show-keyboard"
-              id="show-keyboard"
-              onChange={(e) => {
-                setSettings("showKb", e.target.checked);
-              }}
-              checked={settings.showKb}
-            />
-            <label for="show-keyboard">{t("showKeyboard")}</label>
-          </div>
-        </SettingMenu>
+        {() => (
+          <SettingMenu title={t("keyboard")}>
+            <div class="sub-content">
+              <p class="subtitle elem">{t("layout")}</p>
+              <VerticalRadioBox
+                name="keyboardLayout"
+                each={keyboardLayoutName}
+                selected={settings.kb.value}
+                onChange={(s) =>
+                  setSettings("kb", { kind: SettingsOriginType.user, value: s })
+                }
+              >
+                {(id, checked, elem) => (
+                  <TinyRadioLabel id={id} checked={checked}>
+                    <p class="opt">{elem}</p>
+                  </TinyRadioLabel>
+                )}
+              </VerticalRadioBox>
+            </div>
+            <div class="sub-content elem">
+              <input
+                type="checkbox"
+                name="show-keyboard"
+                id="show-keyboard"
+                onChange={(e) => {
+                  setSettings("showKb", e.target.checked);
+                }}
+                checked={settings.showKb}
+              />
+              <label for="show-keyboard">{t("showKeyboard")}</label>
+            </div>
+          </SettingMenu>
+        )}
       </VerticalDropdown>
       <VerticalDropdown
         id="language"
@@ -104,27 +106,30 @@ const HeaderAction = () => {
           </Tooltip>
         )}
       >
-        <SettingMenu title={t("language")}>
-          <div class="sub-content">
-            <VerticalRadioBox
-              name="locale"
-              each={locales}
-              selected={settings.locale.value}
-              onChange={(s) =>
-                setSettings("locale", {
-                  kind: SettingsOriginType.user,
-                  value: s,
-                })
-              }
-            >
-              {(id, checked, elem) => (
-                <TinyRadioLabel id={id} checked={checked}>
-                  <p class="opt">{t(elem as "en" | "fr")}</p>
-                </TinyRadioLabel>
-              )}
-            </VerticalRadioBox>
-          </div>
-        </SettingMenu>
+        {(close) => (
+          <SettingMenu title={t("language")}>
+            <div class="sub-content">
+              <VerticalRadioBox
+                name="locale"
+                each={locales}
+                selected={settings.locale.value}
+                onChange={(s) => {
+                  setSettings("locale", {
+                    kind: SettingsOriginType.user,
+                    value: s,
+                  });
+                  close();
+                }}
+              >
+                {(id, checked, elem) => (
+                  <TinyRadioLabel id={id} checked={checked}>
+                    <p class="opt">{t(elem as "en" | "fr")}</p>
+                  </TinyRadioLabel>
+                )}
+              </VerticalRadioBox>
+            </div>
+          </SettingMenu>
+        )}
       </VerticalDropdown>
       <div class="toggle">
         <DarkModeToggle
