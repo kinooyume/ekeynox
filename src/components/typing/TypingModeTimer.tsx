@@ -1,9 +1,4 @@
-import {
-  type JSX,
-  createEffect,
-  createSignal,
-  onCleanup,
-} from "solid-js";
+import { type JSX, createEffect, createSignal, onCleanup } from "solid-js";
 import TimerOver from "../timer/TimerStopwatch.ts";
 import Timer, { type TimerEffectStatus } from "../timer/Timer.ts";
 import { type TypingEventType } from "./TypingEvent.ts";
@@ -34,7 +29,7 @@ const TypingModeTimer = (props: TypingModeTimerProps) => {
     setCleanup: (cleanup) => (cleanupTimer = cleanup),
     updateCounter: (elapsed) => {
       // milliseconds to seconds and minutes
-      setElapsed( (elapsed / 1000).toFixed(1));
+      setElapsed((elapsed / 1000).toFixed(1));
       setProgress((elapsed / props.duration) * 100);
     },
   });
@@ -57,7 +52,7 @@ const TypingModeTimer = (props: TypingModeTimerProps) => {
       font-weight: 600;
       padding-top: 0px;
       text-align: right;
-margin-right: 8px;
+      margin-right: 8px;
     }
   `;
   return (
@@ -69,7 +64,7 @@ margin-right: 8px;
       <MetricPreview
         picto={<Stopwatch size="20px" color="var(--text-secondary-color)" />}
       >
-      <span>{elapsed()}s</span>
+        <span>{elapsed()}s</span>
       </MetricPreview>
     </TypingInfo>
   );
