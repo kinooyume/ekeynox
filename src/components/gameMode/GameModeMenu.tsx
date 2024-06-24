@@ -56,6 +56,8 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
   });
 
   const [isReady, setIsReady] = createSignal(false);
+  const [customValue, setCustomValue] = createSignal("")
+
   const [gameOptions, setGameOptions] = createStore<GameOptions>(
     deepCopy(props.gameOptions),
   );
@@ -72,6 +74,14 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
       language: gameOptions.generation.language,
       category: gameOptions.generation.category,
     });
+  });
+
+  createComputed(() => {
+    if (gameOptions.categorySelected.kind !== CategoryKind.custom)
+      setIsReady(true);
+    else {
+      setIsReady(customValue().length > 10);
+    }
   });
 
   const start = () => {
@@ -215,11 +225,6 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
       text-transform: capitalize;
       margin-bottom: 22px;
     }
-    button.locked {
-      pointer-event: none;
-      cursor: default;
-      filter: grayscale(20%);
-    }
   `;
 
   return (
@@ -275,8 +280,9 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
                     setGameOptions={setGameOptions}
                   >
                     <CustomInput
-                      value={customRef.ref ? customRef?.ref.value : ""}
+                      value={customValue()}
                       customInput={customRef}
+                      onInput={setCustomValue}
                     />
                   </SpeedParams>
                 </div>
@@ -299,8 +305,9 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
                     setGameOptions={setGameOptions}
                   >
                     <CustomInput
-                      value={customRef.ref ? customRef?.ref.value : ""}
+                      value={customValue()}
                       customInput={customRef}
+                      onInput={setCustomValue}
                     />
                   </TimerParams>
                 </div>
@@ -309,7 +316,7 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
 
             <a
               class="primary"
-              // classList={{ locked: !isReady() }}
+              classList={{ locked: !isReady() }}
               href="/typing"
             >
               {t("letsGo")}

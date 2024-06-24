@@ -8,9 +8,10 @@ export type CustomInputRef = {
 export type CustomInputPros = {
   value: string;
   customInput: CustomInputRef;
+  onInput: (s: string) => void;
 };
 
-const CustomInput = ({ value, customInput }: CustomInputPros) => {
+const CustomInput = (props: CustomInputPros) => {
   const t = useI18n();
 
   css`
@@ -28,8 +29,14 @@ const CustomInput = ({ value, customInput }: CustomInputPros) => {
 
   return (
     <div class="custom-input">
-      <textarea ref={customInput.ref} value={value}></textarea>
-      {/* <span>{t("customLimit")}</span> */}
+      <textarea
+        ref={props.customInput.ref}
+        value={props.value}
+        onInput={(event) =>
+          props.onInput((event.target as HTMLTextAreaElement).value)
+        }
+      ></textarea>
+      <span>{t("customLimit")}</span>
     </div>
   );
 };

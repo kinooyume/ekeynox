@@ -79,7 +79,7 @@
   --key-focus-color: #82a4cd;
   --key-focus-color-alt: #a4e6fa;
 }
-html[data-theme='dark'] {
+html[data-theme="dark"] {
   --color-primary-100: #e7af5c;
   --color-primary-200: #ebb86e;
   --color-primary-300: #efc080;
@@ -173,7 +173,8 @@ a {
   }
 }
 
-button, a.primary {
+button,
+a.primary {
   border: 0;
   cursor: pointer;
   background: none;
@@ -183,7 +184,8 @@ button, a.primary {
   text-transform: capitalize;
 }
 
-button.primary, a.primary {
+button.primary,
+a.primary {
   height: 48px;
   background-color: var(--color-primary-200);
   transition: all 0.3s ease;
@@ -193,16 +195,25 @@ button.primary, a.primary {
 /* https://uiverse.io/cssbuttons-io/friendly-dragon-76 */
 /* https://uiverse.io/cssbuttons-io/evil-monkey-41 */
 /* https://codepen.io/havardob/pen/qBvYdXL */
-button.primary:hover, a.primary:hover {
+button.primary:hover,
+a.primary:hover {
   box-shadow: var(--shadow-color) 0px 4px 0px 0px;
 }
 
 a.primary {
   display: flex;
   align-items: center;
+  user-select: none;
 }
 
-button.primary:active, a.primary:active {
+a.primary.locked, button.primary:disabled {
+  pointer-events: none;
+  cursor: default;
+  filter: grayscale(80%);
+}
+
+button.primary:active,
+a.primary:active {
   box-shadow: var(--shadow-color) 0px 0px 0px 0px;
   transform: translateY(5px);
   transition: 200ms;

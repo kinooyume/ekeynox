@@ -1,4 +1,11 @@
-import { For, type JSX, Match, Switch, createComputed } from "solid-js";
+import {
+  For,
+  type JSX,
+  Match,
+  Switch,
+  createComputed,
+  createSignal,
+} from "solid-js";
 import { createStore } from "solid-js/store";
 import type { CustomInputRef } from "../ui/CustomInput";
 import CustomInput from "../ui/CustomInput";
@@ -29,6 +36,10 @@ type GameModeDropdownProps = {
 
 const GameModeDropdown = (props: GameModeDropdownProps) => {
   const t = useI18n();
+
+  const [isReady, setIsReady] = createSignal(false);
+  const [customValue, setCustomValue] = createSignal("");
+
   css`
     .mode-radio {
       display: flex;
@@ -118,6 +129,13 @@ const GameModeDropdown = (props: GameModeDropdownProps) => {
 
   /* *** */
 
+  createComputed(() => {
+    if (gameOptions.categorySelected.kind !== CategoryKind.custom)
+      setIsReady(true);
+    else {
+      setIsReady(customValue().length > 10);
+    }
+  });
   const start = (setIsOpen: (o: boolean) => void) => {
     setIsOpen(false);
     if (gameOptions.categorySelected.kind === CategoryKind.custom) {
@@ -168,8 +186,9 @@ const GameModeDropdown = (props: GameModeDropdownProps) => {
                     setGameOptions={setGameOptions}
                   >
                     <CustomInput
-                      value={customRef.ref ? customRef?.ref.value : ""}
+                      value={customValue()}
                       customInput={customRef}
+                      onInput={setCustomValue}
                     />
                   </SpeedParamsMedium>
                 </Match>
@@ -179,15 +198,16 @@ const GameModeDropdown = (props: GameModeDropdownProps) => {
                     setGameOptions={setGameOptions}
                   >
                     <CustomInput
-                      value={customRef.ref ? customRef?.ref.value : ""}
+                      value={customValue()}
                       customInput={customRef}
+                      onInput={setCustomValue}
                     />
                   </TimerParamsMedium>
                 </Match>
               </Switch>
             </div>
             <div class="elem actions">
-              <button onClick={() => start(setIsOpen)} class="primary">
+              <button disabled={!isReady()} onClick={() => start(setIsOpen)} class="primary">
                 {t("letsGo")}
               </button>
             </div>
