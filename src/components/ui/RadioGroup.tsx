@@ -70,7 +70,6 @@ function RadioGroup<Value>(props: RadioGroupProps<Value>) {
 
     .label-text {
       padding-top: 2px;
-
     }
 
     .radio-group input:checked + label {

@@ -4,6 +4,7 @@
 :root {
   font-family: Larsseit, system-ui, sans-serif;
   --background-color: #e0e0e0;
+  --stat-background-color: white;
   --text-color: rgb(0, 31, 63);
   --text-secondary-color: #654f3e;
 
@@ -64,6 +65,10 @@
   --key-color: #c4cacf;
   --key-color-alt: #ffffff;
 
+  --key-metric-bg-color: #ffffff;
+  --key-metric-color: #d9d9d9;
+  --key-metric-color-alt: #ffffff;
+
   --key-correct-bg-color: #b5dd9d;
   --key-correct-color: #9abc85;
   --key-correct-color-alt: #d0feb5;
@@ -104,7 +109,9 @@ html[data-theme="dark"] {
   --color-surface-mixed-300: #867365;
   --color-surface-mixed-400: #978679;
   --color-surface-mixed-500: #a7998e;
-  --color-surface-mixed-600: #b9aca4;
+  --color-surface-mixed-600: #2d2e3b;
+  --color-surface-600: #2d2e3b;
+  --stat-background-color: #1f2233;
 
   --background-color: #1f2233;
   --text-secondary-color: #f8dbb6;
@@ -126,6 +133,10 @@ html[data-theme="dark"] {
   --key-bg-color: linear-gradient(145deg, #27293e, #202234);
   --key-color: #1f2233;
   --key-color-alt: #292e45;
+
+  --key-metric-bg-color: linear-gradient(145deg, #212437, #1c1f2e);
+  --key-metric-color: #1a1d2b;
+  --key-metric-color-alt: #24273b;
 
   --key-correct-bg-color: linear-gradient(145deg, #107b65, #0e6855);
   --key-correct-color: #0d6250;
@@ -207,7 +218,8 @@ a.primary {
   user-select: none;
 }
 
-a.primary.locked, button.primary:disabled {
+a.primary.locked,
+button.primary:disabled {
   pointer-events: none;
   cursor: default;
   filter: grayscale(80%);

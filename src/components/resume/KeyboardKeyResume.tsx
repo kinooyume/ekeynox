@@ -56,35 +56,21 @@ const KeyboardKeyResume = (props: KeyboardKeyResumeProps) => {
       height: 40px;
       color: var(--text-color);
       border-radius: 8px;
-      background: var(--key-bg-color);
-background:white;
+      background: var(--key-metric-bg-color);
+      background: white;
       box-shadow:
-        2px 2px 7px var(--key-color),
-        -2px -2px 7px var(--key-color-alt);
+        2px 2px 7px var(--key-metric-color),
+        -2px -2px 7px var(--key-metric-color-alt);
     }
     .pressed {
-      background: var(--key-bg-color);
-background:white;
+      background: var(--key-metric-bg-color);
       box-shadow:
-        inset 2px 2px 7px var(--key-color),
-        inset -2px -2px 7px var(--key-color-alt);
+        inset 2px 2px 7px var(--key-metric-color),
+        inset -2px -2px 7px var(--key-metric-color-alt);
 
       transform: translate(1px, 1px);
       transition: all 300ms cubic-bezier(0.23, 1, 0.32, 1);
     }
-    .concave {
-      background: linear-gradient(145deg, #cacaca, #f0f0f0);
-      box-shadow:
-        6px 6px 12px var(--key-color),
-        -6px -6px 12px var(--key-color-alt);
-    }
-    .convex {
-      background: linear-gradient(145deg, #f0f0f0, #cacaca);
-      box-shadow:
-        4px 4px 12px var(--key-color),
-        -4px -4px 12px var(--key-color-alt);
-    }
-
     .key.double {
       width: 120px;
     }

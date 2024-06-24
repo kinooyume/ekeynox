@@ -149,9 +149,8 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
 
     .stat-card {
       background-color: var(--color-surface-100);
-      background-color: white;
+      background-color: var(--stat-background-color);
 
-      border: 1px solid var(--color-surface-500);
       padding: 24px;
       border-radius: 18px;
     }
