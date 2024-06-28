@@ -1,15 +1,11 @@
 import { css } from "solid-styled";
 
-import { lazy, type JSXElement } from "solid-js";
-
 import Logo from "./svgs/logo.tsx";
 import HeaderSettings from "./HeaderSettings.tsx";
 import { useAppState } from "~/appState/AppStateProvider.tsx";
 import { useNavigate } from "@solidjs/router";
-
-// NOTE: check why
-import { clientOnly } from "@solidjs/start";
-const ClientSettings = clientOnly(() => import("./HeaderSettings.tsx"));
+import { onMount } from "solid-js";
+import anime from "animejs";
 
 type HeaderProps = {};
 
@@ -45,6 +41,17 @@ const Header = (props: HeaderProps) => {
   `;
 
   const navigate = useNavigate();
+
+  onMount(() => {
+    anime.timeline().add({
+      targets: ".header > div",
+      translateY: [-80, 0],
+      opacity: [0, 1],
+      easing: "easeOutElastic(1, 0.9)",
+      duration: 800,
+      delay: (el, i) => 100 * i,
+    });
+  });
   return (
     <div class="header">
       <div class="left">
@@ -69,7 +76,6 @@ const Header = (props: HeaderProps) => {
 };
 
 export default Header;
-
 
 // cool magnet menu selection, + custom cursor
 // https://codepen.io/dev_loop/pen/KKdEgdz
