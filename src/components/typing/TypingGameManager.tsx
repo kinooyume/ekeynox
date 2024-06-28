@@ -1,6 +1,5 @@
 import {
   Match,
-  Show,
   Switch,
   createComputed,
   createEffect,
@@ -374,7 +373,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
     on(wordsCount, () => {
       if (
         props.status.mode.kind === GameModeKind.timer &&
-        wordsCount() === totalWordsCount()
+        wordsCount() === (totalWordsCount() / 2)
       ) {
         appendContent();
       }
