@@ -371,9 +371,10 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
   // should only be there at timer
   createComputed(
     on(wordsCount, () => {
+      console.log(wordsCount(), totalWordsCount())
       if (
         props.status.mode.kind === GameModeKind.timer &&
-        wordsCount() === (totalWordsCount() / 2)
+        wordsCount() >=  (totalWordsCount() / 2)
       ) {
         appendContent();
       }
