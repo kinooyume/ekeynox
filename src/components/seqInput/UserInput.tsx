@@ -1,16 +1,10 @@
-import {
-  createComputed,
-  createSignal,
-  on,
-  onCleanup,
-  onMount,
-  type Setter,
-} from "solid-js";
-import { WordStatus } from "../prompt/PromptWord.tsx";
+import { createComputed, on, onCleanup, onMount } from "solid-js";
 import {
   TypingEventKind,
   type TypingEventType,
 } from "../typing/TypingEvent.ts";
+import useClickOutside from "solid-click-outside";
+import { FocusType, useFocus } from "../ui/FocusProvider.tsx";
 
 export type UserInputProps = {
   typingEvent: TypingEventType;
@@ -75,12 +69,22 @@ const UserInput = (props: UserInputProps) => {
 
   /* *** */
 
+  const { focus: globalFocus, setFocus: setGlobalFocus } = useFocus();
+
   onMount(() => {
     /* NOTE: input event to handle android/chrome */
     input.addEventListener("input", handleInputEvent);
     input.addEventListener("keydown", handleKeyDown);
     input.addEventListener("keyup", handleKeyUp);
 
+    useClickOutside(
+      () => input,
+      () => {
+        if (globalFocus() === FocusType.View) {
+          input.focus();
+        }
+      },
+    );
     // props.setPromptKey(cursor.get.key().key);
 
     props.setFocus(() => input.focus());

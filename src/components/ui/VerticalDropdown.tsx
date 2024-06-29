@@ -12,6 +12,7 @@ import {
 } from "solid-js";
 import { css } from "solid-styled";
 import Cross from "../svgs/cross";
+import { FocusType, useFocus } from "./FocusProvider";
 
 type VerticalDropdownProps = {
   id: string;
@@ -133,6 +134,8 @@ const VerticalDropdown = (props: VerticalDropdownProps) => {
       return a;
     };
 
+    const { setFocus } = useFocus();
+
     createComputed(
       on(
         isOpen,
@@ -140,6 +143,7 @@ const VerticalDropdown = (props: VerticalDropdownProps) => {
           if (pendingAnimation()) return;
           if (isOpen) {
             const anim = openAnimation();
+            setFocus(FocusType.Hud);
             setPendingAnimation(true);
             anim.finished.then(() => {
               document
@@ -151,6 +155,7 @@ const VerticalDropdown = (props: VerticalDropdownProps) => {
               setPendingAnimation(false);
             });
           } else {
+            setFocus(FocusType.View);
             setPendingAnimation(true);
             const anim = closeAnimation();
             anim.finished.then(() => {
