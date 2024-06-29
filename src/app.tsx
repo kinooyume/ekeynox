@@ -18,6 +18,7 @@ import "./styles/global.css";
 import { AppStateProvider } from "./appState/AppStateProvider";
 import { GameOptionsProvider } from "./gameOptions/GameOptionsProvider";
 import { SettingsProvider } from "./settings/SettingsProvider";
+import { FocusProvider } from "./components/ui/FocusProvider";
 
 export default function App() {
   const sheets: StyleData[] = [];
@@ -40,17 +41,17 @@ export default function App() {
       <TransitionGroup
         onEnter={(el, done) => {
           const a = el.animate([{ opacity: 0 }, { opacity: 1 }], {
-            duration: 140
+            duration: 140,
           });
           a.finished.then(done);
         }}
         onExit={(el, done) => {
           const a = el.animate([{ opacity: 1 }, { opacity: 0 }], {
-            duration: 0
+            duration: 0,
           });
           a.finished.then(done);
         }}
-        >
+      >
         {props.children}
       </TransitionGroup>
     </div>
@@ -64,13 +65,15 @@ export default function App() {
             <SettingsProvider>
               <GameOptionsProvider>
                 <AppStateProvider>
-                  <Header />
-                  <Title>Ekeynox</Title>
-                  <main>
+                  <FocusProvider>
+                    <Header />
+                    <Title>Ekeynox</Title>
+                    <main>
                       <Suspense fallback={<div>Loading..</div>}>
-                      <PageTransition {...props}/>
+                        <PageTransition {...props} />
                       </Suspense>
-                  </main>
+                    </main>
+                  </FocusProvider>
                 </AppStateProvider>
               </GameOptionsProvider>
             </SettingsProvider>
@@ -78,9 +81,7 @@ export default function App() {
         </MetaProvider>
       )}
     >
-
       <FileRoutes />
-
     </Router>
   );
 }
