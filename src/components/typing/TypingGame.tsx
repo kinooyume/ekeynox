@@ -1,5 +1,5 @@
 import { css } from "solid-styled";
-import { Show, createComputed, createSignal } from "solid-js";
+import { Show, createComputed, createSignal, on } from "solid-js";
 
 import { type Paragraphs } from "../content/Content.ts";
 
@@ -13,6 +13,7 @@ import type { JSX } from "solid-js";
 import { Translator } from "~/settings/i18nProvider.tsx";
 import { HigherKeyboard } from "~/settings/keyboardLayout.ts";
 import useClickOutside from "solid-click-outside";
+import { FocusType, useFocus } from "../ui/FocusProvider.tsx";
 
 type TypingGameProps = {
   t: Translator;
@@ -70,9 +71,16 @@ const TypingGame = (props: TypingGameProps) => {
     }
   `;
 
-  const [typingPrompt, setTypingPrompt] = createSignal<HTMLElement>();
+  const { focus: globalFocus } = useFocus();
 
-  useClickOutside(typingPrompt, props.onPause);
+  createComputed(
+    on(globalFocus, (gFocus) => {
+      if (gFocus === FocusType.Hud) {
+        props.onPause();
+      }
+    }),
+  );
+  // useClickOutside(typingPrompt, props.onPause);
   return (
     <div class="typing-game" onClick={() => focus()}>
       <UserInput
@@ -82,13 +90,7 @@ const TypingGame = (props: TypingGameProps) => {
         onKeyAdd={props.onAddKey}
         setFocus={(f) => (focus = f)}
       />
-
-      {/* TODO: Le prompt ne devrais pas setParaphs */}
-      {/* actuellement utilisé pour les words wpm */}
-
-      <div ref={setTypingPrompt}>
-        <Prompt paragraphs={props.paragraphs} />
-      </div>
+      <Prompt paragraphs={props.paragraphs} />
       <Show when={props.showKb}>
         <Keyboard
           metrics={props.keyMetrics}

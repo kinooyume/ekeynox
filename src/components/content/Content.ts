@@ -154,7 +154,7 @@ const deepCloneReset = (paragraphs: Paragraphs) => {
       return newWord;
     }),
   );
-};
+}
 
 const makeKeySet = (paragraphs: Paragraphs) => {
   const keySet = new Set<string>();

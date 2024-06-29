@@ -108,14 +108,6 @@ const makeSourceNested = (firstProps: GetSourceProps): GetContent => {
   return nestedSource(getSource(firstProps));
 };
 
-// const emptyContentHandler =
-//   (nextGetContent: GetContent): NextContent =>
-//   () =>
-//   (prevData: ContentData) => ({
-//     data: prevData,
-//     next: nextGetContent().next,
-//   });
-
 const makeRedoContent = (
   content: ContentData,
   nextGetContent: GetContent,
