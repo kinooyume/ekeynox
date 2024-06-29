@@ -31,7 +31,8 @@ const TypingHeaderNav = (props: TypingHeaderNavProps) => {
   `;
 
   onMount(() => {
-    const animation = anime.timeline().add({
+    anime.timeline().add({
+
       targets: ".header-nav .animate",
       translateY: [-80, 0],
       opacity: [0, 1],
