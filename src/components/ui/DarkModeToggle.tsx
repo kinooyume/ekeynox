@@ -100,6 +100,7 @@ const DarkModeToggle = (props: DarkModeToggleProps) => {
     .theme__toggle,
     .theme__toggle-wrap {
       position: relative;
+      cursor: pointer;
     }
 
     .theme__toggle,
