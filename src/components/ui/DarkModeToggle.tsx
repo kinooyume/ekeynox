@@ -18,19 +18,8 @@ const DarkModeToggle = (props: DarkModeToggleProps) => {
       align-items: center;
     }
 
-    .theme__fill,
     .theme__icon {
       transition: 0.3s;
-    }
-
-    .theme__fill {
-      background-color: var(--bg);
-      display: block;
-      mix-blend-mode: difference;
-      position: fixed;
-      inset: 0;
-      height: 100%;
-      transform: translateX(-100%);
     }
 
     .theme__icon,
@@ -236,7 +225,6 @@ const DarkModeToggle = (props: DarkModeToggleProps) => {
             props.setTheme(!props.dark);
           }}
         />
-        <span class="theme__fill"></span>
         <span class="theme__icon">
           <span class="theme__icon-part"></span>
           <span class="theme__icon-part"></span>
