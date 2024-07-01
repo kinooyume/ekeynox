@@ -82,7 +82,7 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
     if (gameOptions.categorySelected.kind !== CategoryKind.custom)
       setIsReady(true);
     else {
-      setIsReady(customValue().length > 0);
+      setIsReady(customValue().length > 1);
     }
   });
 
