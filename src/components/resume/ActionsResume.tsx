@@ -3,17 +3,14 @@ import { css } from "solid-styled";
 import Content from "../content/Content";
 import { makeRedoContent } from "../content/TypingGameSource";
 import type { Metrics, MetricsResume } from "../metrics/Metrics";
-import type { CustomInputRef } from "../ui/CustomInput";
 import GameModeDropdown from "../gameMode/GameModeDropdown";
 import {
-  CategoryKind,
   ContentGeneration,
   GameOptions,
   deepCopy,
 } from "~/gameOptions/gameOptions";
 import { PendingMode } from "~/appState/appState";
 import { useI18n } from "~/settings/i18nProvider";
-import { useNavigate } from "@solidjs/router";
 import Ghost from "../svgs/ghost";
 
 type ActionsResumeProps = {

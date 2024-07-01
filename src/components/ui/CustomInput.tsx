@@ -36,7 +36,6 @@ const CustomInput = (props: CustomInputPros) => {
           props.onInput((event.target as HTMLTextAreaElement).value)
         }
       ></textarea>
-      <span>{t("customLimit")}</span>
     </div>
   );
 };
