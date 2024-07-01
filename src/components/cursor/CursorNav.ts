@@ -44,10 +44,12 @@ let makeCursorNav = ({
 
   const nextParagraph = () => {
     hooks.paragraph.next.leave(cursor);
+    nextWordHooks && nextWordHooks.leave(cursor.get.word());
     cursor.positions.set.word(0);
     cursor.positions.set.key(0);
     cursor.positions.set.paragraph(cursor.positions.paragraph() + 1);
     hooks.paragraph.next.enter(cursor);
+    nextWordHooks && nextWordHooks.enter(cursor.get.word());
   };
 
   const prevWord = () => {
@@ -61,10 +63,12 @@ let makeCursorNav = ({
 
   const prevParagraph = () => {
     hooks.paragraph.prev.leave(cursor);
+    prevWordHooks && prevWordHooks.leave(cursor.get.word());
     cursor.positions.set.paragraph(cursor.positions.paragraph() - 1);
     cursor.positions.set.word(cursor.get.nbrWords());
     cursor.positions.set.key(cursor.get.nbrKeys());
     hooks.paragraph.prev.enter(cursor);
+    prevWordHooks && prevWordHooks.enter(cursor.get.word());
   };
 
   return {
@@ -75,7 +79,6 @@ let makeCursorNav = ({
         cursor.positions.set.key(cursor.positions.key() + 1);
         hooks.key.next.enter(cursor);
       } else if (cursor.positions.word() < cursor.get.nbrWords()) {
-        nextWordHook && !cursor.get.word().isSeparator && nextWordHook(cursor);
         typingWord = nextWord();
       } else if (cursor.positions.paragraph() < cursor.get.nbrParagraphs()) {
         nextParagraph();
@@ -91,7 +94,6 @@ let makeCursorNav = ({
         cursor.positions.set.key(cursor.positions.key() - 1);
         hooks.key.prev.enter(cursor);
       } else if (cursor.positions.word() > 0) {
-        prevWordHook && !cursor.get.word().isSeparator && prevWordHook(cursor);
         prevWord();
       } else if (cursor.positions.paragraph() > 0) {
         prevParagraph();

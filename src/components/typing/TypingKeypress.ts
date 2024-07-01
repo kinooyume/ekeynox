@@ -28,11 +28,9 @@ type KeypressHandler = {
 const makeKeypressHandler = (
   cursor: Cursor,
   cursorNav: CursorNavType,
-  incrementWordsCount: (cursor: Cursor) => void,
-  decrementWordsCount: (cursor: Cursor) => void,
 ): KeypressHandler => {
   const backKey = (timestamp: number) => {
-    if (!cursorNav.prev(decrementWordsCount)) return;
+    if (!cursorNav.prev()) return;
     const deletedKeyMetrics = makeDeletedKeyMetrics({
       expected: cursor.get.key().key,
       status: cursor.get.key().status,
@@ -68,7 +66,7 @@ const makeKeypressHandler = (
 
       /* ca pourrait reagir a TypingStatus */
       // Donc en fait, si on reagis au typingStatus plutot pour faire next
-      let [hasNext, typingWord] = cursorNav.next(incrementWordsCount);
+      let [hasNext, typingWord] = cursorNav.next();
 
       /* Typing Status */
       const event = {
