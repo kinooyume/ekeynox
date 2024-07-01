@@ -14,7 +14,6 @@ export default defineConfig({
     ],
   },
   server: {
-    static: true,
     prerender: {
       routes: ["/", "/typing"],
     },
