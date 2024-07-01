@@ -14,10 +14,10 @@ import {
   PendingKind,
   PendingMode,
   PendingStatusNew,
+  PendingStatusRedo,
 } from "./appState";
-import { useLocation, useNavigate } from "@solidjs/router";
-import { useGameOptions } from "~/gameOptions/GameOptionsProvider";
-import { GameOptions } from "~/gameOptions/gameOptions";
+import { useLocation } from "@solidjs/router";
+import { GameOptions, deepCopy } from "~/gameOptions/gameOptions";
 
 type AppStateProviderProps = {
   children: JSX.Element | JSX.Element[];
@@ -25,7 +25,7 @@ type AppStateProviderProps = {
 
 type AppContext = {
   state: Accessor<AppState>;
-  navigation: {
+  mutation: {
     start: (mode: Promise<PendingMode>, options: GameOptions) => void;
     redo: (
       mode: PendingMode,
@@ -62,25 +62,25 @@ export function AppStateProvider(props: AppStateProviderProps) {
 
   const [state, setState] = createSignal<AppState>(appState);
 
-  const navigation = {
+  const mutation = {
     start: (mode: Promise<PendingMode>, options: GameOptions) => {
       setState({
         kind: AppStateKind.pending,
+        options: options,
         status: mode.then(
           (m) => ({ kind: PendingKind.new, mode: m }) as PendingStatusNew,
         ),
-        options: options,
       });
     },
     redo: (mode: PendingMode, metrics: MetricsResume, options: GameOptions) => {
       setState({
         kind: AppStateKind.pending,
-        options: options,
+        options: deepCopy(options),
         status: Promise.resolve({
           kind: PendingKind.redo,
           mode,
           prev: metrics,
-        }),
+        } as PendingStatusRedo),
       });
     },
     over: (metrics: Metrics, content: PendingMode) => {
@@ -92,7 +92,7 @@ export function AppStateProvider(props: AppStateProviderProps) {
   };
 
   return (
-    <AppStateContext.Provider value={{ state, navigation }}>
+    <AppStateContext.Provider value={{ state, mutation }}>
       {props.children}
     </AppStateContext.Provider>
   );

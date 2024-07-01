@@ -7,7 +7,6 @@ import { useI18n } from "~/settings/i18nProvider";
 
 type HeaderNavLeftProps = {
   start: (opts: GameOptions) => void;
-  fetchSourcesGen: (opts: ContentGeneration) => Promise<Array<string>>;
   gameOptions: GameOptions;
 };
 

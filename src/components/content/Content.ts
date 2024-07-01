@@ -2,6 +2,7 @@ import { WordStatus } from "../prompt/PromptWord.tsx";
 import { KeyFocus, KeyStatus } from "../metrics/KeyMetrics.ts";
 
 export type Metakey = {
+  // index: number;
   status: KeyStatus;
   focus: KeyFocus;
   ghostFocus: KeyFocus;
@@ -141,20 +142,26 @@ const deepClone = (paragraphs: Paragraphs) =>
     })),
   );
 
-const deepCloneReset = (paragraphs: Paragraphs) => {
+const deepCloneReset = (paragraphs: Paragraphs): Paragraphs => {
   return paragraphs.map((paragraph) =>
     paragraph.map((word) => {
-      const newWord = { ...word, spentTime: 0, wpm: 0, wasCorrect: false };
-      newWord.keys = word.keys.map((key) => ({
-        ...key,
-        status: KeyStatus.unset,
-        focus: KeyFocus.unset,
-        ghostFocus: KeyFocus.unset,
-      }));
-      return newWord;
+      return {
+        keys: word.keys.map((key) => ({
+          status: KeyStatus.unset,
+          focus: KeyFocus.unset,
+          ghostFocus: KeyFocus.unset,
+          key: `${key.key}`,
+        })),
+        isSeparator: word.isSeparator,
+        status: WordStatus.unstart,
+        focus: false,
+        wasCorrect: false,
+        spentTime: 0,
+        wpm: 0,
+      };
     }),
   );
-}
+};
 
 const makeKeySet = (paragraphs: Paragraphs) => {
   const keySet = new Set<string>();

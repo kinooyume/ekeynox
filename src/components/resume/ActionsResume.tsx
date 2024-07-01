@@ -9,6 +9,7 @@ import {
   CategoryKind,
   ContentGeneration,
   GameOptions,
+  deepCopy,
 } from "~/gameOptions/gameOptions";
 import { PendingMode } from "~/appState/appState";
 import { useI18n } from "~/settings/i18nProvider";
@@ -30,9 +31,9 @@ type ActionsResumeProps = {
 };
 
 const ActionsResume = (props: ActionsResumeProps) => {
-  const navigate = useNavigate();
   const t = useI18n();
-  const restart = () => {
+
+  const restart = (opts: GameOptions) => {
     const redoContent = {
       ...props.content,
       getContent: makeRedoContent(
@@ -43,11 +44,11 @@ const ActionsResume = (props: ActionsResumeProps) => {
         props.content.getContent,
       ),
     };
-    props.redo(redoContent, props.metricsResume, props.gameOptions);
+    props.redo(redoContent, props.metricsResume, deepCopy(opts));
   };
 
   const start = (opts: GameOptions) => {
-    props.start(opts);
+    props.start(deepCopy(opts));
   };
 
   css`
@@ -124,7 +125,7 @@ const ActionsResume = (props: ActionsResumeProps) => {
           </div>
         )}
       </GameModeDropdown>
-      <button class="secondary" onClick={restart}>
+      <button class="secondary" onClick={() => restart(props.gameOptions)}>
         <Ghost /> <span>{t("playAgain")}</span>
       </button>
       <button class="primary" onClick={() => start(props.gameOptions)}>

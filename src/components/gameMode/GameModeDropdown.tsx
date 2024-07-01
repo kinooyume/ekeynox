@@ -1,5 +1,4 @@
 import {
-  For,
   type JSX,
   Match,
   Switch,
@@ -17,19 +16,18 @@ import { css } from "solid-styled";
 import { useI18n } from "~/settings/i18nProvider";
 import {
   CategoryKind,
-  ContentGeneration,
   GameOptions,
   deepCopy,
 } from "~/gameOptions/gameOptions";
 import { GameModeKind } from "~/gameOptions/gameModeKind";
 import VerticalRadioBox from "../ui/VerticalRadioBox";
 import HugeRadioLabel from "../ui/HugeRadioLabel";
+import { useGameOptions } from "~/gameOptions/GameOptionsProvider";
 
 type GameModeDropdownProps = {
   reverse?: boolean;
   gameOptions: GameOptions;
   start: (opts: GameOptions) => void;
-  fetchSourcesGen: (opts: ContentGeneration) => Promise<Array<string>>;
 
   children: (isOpen: () => boolean, hover: () => boolean) => JSX.Element;
 };
@@ -37,6 +35,7 @@ type GameModeDropdownProps = {
 const GameModeDropdown = (props: GameModeDropdownProps) => {
   const t = useI18n();
 
+  const { fetchSourcesGen } = useGameOptions();
   const [isReady, setIsReady] = createSignal(false);
   const [customValue, setCustomValue] = createSignal("");
 
@@ -115,7 +114,7 @@ const GameModeDropdown = (props: GameModeDropdownProps) => {
 
   createComputed(
     () => {
-      props.fetchSourcesGen({
+      fetchSourcesGen({
         language: gameOptions.generation.language,
         category: gameOptions.generation.category,
       });
@@ -207,7 +206,11 @@ const GameModeDropdown = (props: GameModeDropdownProps) => {
               </Switch>
             </div>
             <div class="elem actions">
-              <button disabled={!isReady()} onClick={() => start(setIsOpen)} class="primary">
+              <button
+                disabled={!isReady()}
+                onClick={() => start(setIsOpen)}
+                class="primary"
+              >
                 {t("letsGo")}
               </button>
             </div>

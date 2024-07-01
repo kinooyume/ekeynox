@@ -1,4 +1,4 @@
-import { Match, Switch, createComputed, createSignal } from "solid-js";
+import { Match, Switch, createComputed, createSignal, onMount } from "solid-js";
 import { createStore } from "solid-js/store";
 import { css } from "solid-styled";
 
@@ -18,6 +18,7 @@ import SpeedParams from "./SpeedParams";
 import TimerParams from "./TimerParams";
 import { A, useBeforeLeave } from "@solidjs/router";
 import { Portal } from "solid-js/web";
+import anime from "animejs";
 
 // Gsap animation
 // https://codepen.io/dev_loop/pen/MWKbJmO
@@ -231,6 +232,19 @@ font-weight: 200;
       margin-bottom: 22px;
     }
   `;
+
+ 
+  // onMount(() => {
+  //   anime.timeline().add({
+  //     targets: ".menu .title-content *",
+  //     translateY: [-80, 0],
+  //     opacity: [0, 1],
+  //     easing: "easeOutElastic(1, 0.9)",
+  //     duration: 800,
+  //     delay: (el, i) => 100 * i,
+  //   });
+  //
+  // })
 
   return (
     <div class="menu">

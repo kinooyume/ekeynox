@@ -7,6 +7,7 @@ import {
   createSignal,
   on,
   onCleanup,
+  onMount,
   untrack,
 } from "solid-js";
 import type { Metrics } from "../metrics/Metrics";
@@ -49,15 +50,12 @@ import { ContentGeneration, GameOptions } from "~/gameOptions/gameOptions";
 import { HigherKeyboard } from "~/settings/keyboardLayout";
 import { GameModeKind } from "~/gameOptions/gameModeKind";
 import { useI18n } from "~/settings/i18nProvider";
-import { useNavigate } from "@solidjs/router";
 import TypingHeaderNav, { LeavingFn } from "./TypingHeaderNav";
-import { TransitionGroup } from "solid-transition-group";
 
 type TypingGameManagerProps = {
   status: PendingStatus;
   gameOptions: GameOptions;
   start: (options: GameOptions) => void;
-  fetchSourcesGen: (opts: ContentGeneration) => Promise<Array<string>>;
   kbLayout: HigherKeyboard;
   showKb: boolean;
   onOver: (metrics: Metrics, mode: PendingMode) => void;
@@ -470,7 +468,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
       keyMetrics={keyMetrics()}
     >
       <Switch>
-        <Match when={props.status.mode.kind === GameModeKind.speed}>
+        <Match when={props.status.mode.kind === GameModeKind.speed} keyed>
           <TypingModeSpeed
             typingEvent={typingEvent()}
             stat={stat()}
@@ -485,7 +483,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
             />
           </TypingModeSpeed>
         </Match>
-        <Match when={props.status.mode.kind === GameModeKind.timer}>
+        <Match when={props.status.mode.kind === GameModeKind.timer} keyed>
           <TypingModeTimer
             typingEvent={typingEvent()}
             stat={stat()}
@@ -504,7 +502,6 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
       <Portal mount={document.getElementById("header-nav-actions-portal")!}>
         <TypingHeaderNav
           start={props.start}
-          fetchSourcesGen={props.fetchSourcesGen}
           gameOptions={props.gameOptions}
           setLeavingAnimate={(an) => (headerLeavingAnimate = an)}
         >

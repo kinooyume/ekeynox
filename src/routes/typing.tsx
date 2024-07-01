@@ -1,15 +1,32 @@
 import { useAppState } from "~/appState/AppStateProvider";
 import { clientOnly } from "@solidjs/start";
 
-
 import { useGameOptions } from "~/gameOptions/GameOptionsProvider";
 import { useSettings } from "~/settings/SettingsProvider";
-import { Match, Show, Switch, createResource, lazy, onMount } from "solid-js";
+import {
+  Match,
+  Show,
+  Suspense,
+  Switch,
+  createEffect,
+  createResource,
+  lazy,
+  on,
+  onMount,
+} from "solid-js";
 import { useNavigate } from "@solidjs/router";
 
 import KeyboardLayout from "../settings/keyboardLayout.ts";
-import { AppStateKind, PendingState, ResumeState } from "~/appState/appState.ts";
-import { GameOptions, optionsToPending } from "~/gameOptions/gameOptions.ts";
+import {
+  AppStateKind,
+  PendingState,
+  ResumeState,
+} from "~/appState/appState.ts";
+import {
+  GameOptions,
+  deepCopy,
+  optionsToPending,
+} from "~/gameOptions/gameOptions.ts";
 
 import TypingGameManager from "~/components/typing/TypingGameManager";
 
@@ -17,7 +34,7 @@ import TypingMetricsResume from "~/components/resume/TypingMetricsResume";
 import ActionsResume from "~/components/resume/ActionsResume";
 
 export default function Typing() {
-  const { state, navigation } = useAppState();
+  const { state, mutation } = useAppState();
   const navigate = useNavigate();
   const { persistedGameOptions, setPersistedGameOptions, fetchSourcesGen } =
     useGameOptions();
@@ -32,7 +49,7 @@ export default function Typing() {
     const sourcesGen = fetchSourcesGen(opts.generation);
     const pendingMode = optionsToPending(opts, sourcesGen);
 
-    navigation.start(pendingMode, opts);
+    mutation.start(pendingMode, opts);
   };
 
   onMount(() => {
@@ -45,40 +62,40 @@ export default function Typing() {
 
   return (
     <Switch>
-      <Match when={state().kind === AppStateKind.pending}>
-        <Show when={pendingStatus.state === "ready" && pendingStatus()}>
-          <TypingGameManager
-            status={pendingStatus()!}
-            start={start}
-            fetchSourcesGen={fetchSourcesGen}
-            gameOptions={(state() as PendingState).options}
-            showKb={settings.showKb}
-            kbLayout={KeyboardLayout.create(settings.kb.value)}
-            onExit={() => {
-              navigation.menu();
-              navigate("/");
-            }}
-            onOver={(m, c) => {
-              navigation.over(m, c);
-              // navigate("/resume");
-            }}
-          />
+      <Match when={state().kind === AppStateKind.pending} keyed>
+        <Show when={pendingStatus.state === "ready" && pendingStatus()} keyed>
+          <Show when={(state() as PendingState).options} keyed>
+            <TypingGameManager
+              status={pendingStatus()!}
+              start={start}
+              gameOptions={(state() as PendingState).options}
+              showKb={settings.showKb}
+              kbLayout={KeyboardLayout.create(settings.kb.value)}
+              onExit={() => {
+                mutation.menu();
+                navigate("/");
+              }}
+              onOver={mutation.over}
+            />
+          </Show>
         </Show>
       </Match>
-      <Match when={state().kind === AppStateKind.resume}>
+      <Match when={state().kind === AppStateKind.resume} keyed>
         <TypingMetricsResume
           kbLayout={KeyboardLayout.create(settings.kb.value)}
           metrics={(state() as ResumeState).metrics}
         >
           {(metricsResume) => (
             <ActionsResume
-              gameOptions={persistedGameOptions}
+              gameOptions={deepCopy(persistedGameOptions)}
               content={(state() as ResumeState).content}
               fetchSourcesGen={fetchSourcesGen}
               metrics={(state() as ResumeState).metrics}
               metricsResume={metricsResume}
               start={start}
-              redo={navigation.redo}
+              redo={(mode, metrics, opts) => {
+                mutation.redo(mode, metrics, opts);
+              }}
             />
           )}
         </TypingMetricsResume>

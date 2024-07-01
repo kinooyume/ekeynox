@@ -1,12 +1,8 @@
-import type { SetStoreFunction } from "solid-js/store";
 import TypingHeaderMenu from "./TypingHeaderMenu";
 import { css } from "solid-styled";
-import { ContentGeneration, GameOptions } from "~/gameOptions/gameOptions";
-import { PendingMode } from "~/appState/appState";
-import TypingHeaderActions from "./TypingHeaderActions";
 import { JSX, onCleanup, onMount } from "solid-js";
 import anime from "animejs";
-import { Transition } from "solid-transition-group";
+import { GameOptions } from "~/gameOptions/gameOptions";
 
 export type LeavingFn = (fn: () => void) => void;
 
@@ -14,7 +10,6 @@ type TypingHeaderNavProps = {
   start: (opts: GameOptions) => void;
   gameOptions: GameOptions;
   setLeavingAnimate: (anim: () => anime.AnimeTimelineInstance) => void;
-  fetchSourcesGen: (opts: ContentGeneration) => Promise<Array<string>>;
   children: JSX.Element | JSX.Element[];
 };
 

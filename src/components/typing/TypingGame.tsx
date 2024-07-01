@@ -12,7 +12,6 @@ import { type TypingEventType } from "./TypingEvent.ts";
 import type { JSX } from "solid-js";
 import { Translator } from "~/settings/i18nProvider.tsx";
 import { HigherKeyboard } from "~/settings/keyboardLayout.ts";
-import useClickOutside from "solid-click-outside";
 import { FocusType, useFocus } from "../ui/FocusProvider.tsx";
 
 type TypingGameProps = {
@@ -80,9 +79,8 @@ const TypingGame = (props: TypingGameProps) => {
       }
     }),
   );
-  // useClickOutside(typingPrompt, props.onPause);
   return (
-    <div class="typing-game" onClick={() => focus()}>
+    <div class="typing-game">
       <UserInput
         typingEvent={props.typingEvent}
         onKeyDown={props.showKb ? onKeyDown : props.onKeyDown}
@@ -99,7 +97,6 @@ const TypingGame = (props: TypingGameProps) => {
           ref={(k) => (keyboard = k)}
         />
       </Show>
-
       {props.children}
     </div>
   );

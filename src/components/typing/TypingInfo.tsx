@@ -207,9 +207,6 @@ export default TypingInfo;
 // cool todo bar, with spash
 // https://uiverse.io/JkHuger/warm-panther-74
 //
-// THE play button
-//https://uiverse.io/catraco/wet-rabbit-81
-//
 //
 // StopWatch animejs
 // https://codepen.io/MrSung/pen/xaRdjN
