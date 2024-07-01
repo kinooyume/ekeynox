@@ -94,9 +94,6 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
     contentHandler().data.wordsCount,
   );
 
-  const incrementWordsCount = () => setWordsCount(wordsCount() + 1); // next
-  const decrementWordsCount = () => setWordsCount(wordsCount() - 1); // prev
-
   let setWpm = ({ wpm, duration }: { wpm: number; duration: number }) => {
     const { paragraph, word, key } = cursor().positions.get();
     setParaStore(paragraph, word, "wpm", wpm);
@@ -123,11 +120,12 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
         status: WordStatus.pending,
       });
     },
-    leave: () => {
+    leave: (word) => {
       if (!wordWpmTimer) return;
       wordWpmTimer = wordWpmTimer({ status: WordStatus.over });
 
-      // setWordsCount(wordsCount() + 1);
+      if (word.isSeparator) return;
+      setWordsCount(wordsCount() + 1);
     },
   };
 
@@ -137,11 +135,13 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
       wordWpmTimer = createWordMetricsState({ word, setWpm })({
         status: WordStatus.pending,
       });
+
+      if (word.isSeparator) return;
+      setWordsCount(wordsCount() - 1);
     },
     leave: () => {
       if (!wordWpmTimer) return;
       wordWpmTimer = wordWpmTimer({ status: WordStatus.over });
-      //setWordsCount(wordsCount() - 1);
     },
   };
   const [cursorNav, setCursorNav] = createSignal<CursorNavType>(
@@ -158,8 +158,6 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
     TypingKeypress(
       cursor(),
       cursorNav(),
-      incrementWordsCount,
-      decrementWordsCount,
     ),
   );
 
@@ -184,8 +182,6 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
         TypingKeypress(
           untrack(cursor),
           untrack(cursorNav),
-          incrementWordsCount,
-          decrementWordsCount,
         ),
       );
     },
@@ -367,6 +363,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
   );
 
   // should only be there at timer
+  // WordsCount a la fin d'un mot, sauf si c'est un operator
   createComputed(
     on(wordsCount, () => {
       if (
