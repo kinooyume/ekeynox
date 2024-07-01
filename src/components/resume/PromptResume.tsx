@@ -15,7 +15,7 @@ const prompt = (props: PromptProps) => {
       max-width: 900px;
       overflow: hidden;
     }
-    .paragraph {
+    .paragraph-resume {
       display: flex;
       position: relative;
       flex-wrap: wrap;
@@ -35,7 +35,7 @@ const prompt = (props: PromptProps) => {
       <div class="board">
         <For each={props.paragraphs}>
           {(paragraphs) => (
-            <div class="paragraph">
+            <div class="paragraph-resume">
               <For each={paragraphs}>{(word) => <Word {...word} />}</For>
             </div>
           )}

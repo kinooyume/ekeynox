@@ -1,5 +1,5 @@
 import { css } from "solid-styled";
-import { For, Show, createEffect, createSignal } from "solid-js";
+import { For, Show, createEffect, createSignal, on, onMount } from "solid-js";
 
 import Key from "./PromptKey.tsx";
 import type { MetaWord } from "../content/Content.ts";
@@ -18,16 +18,31 @@ type WordProps = {
 
 const Word = (props: WordProps) => {
   const [isObserved, setIsObserved] = createSignal(false);
+  const [toAnimate, setToAnimate] = createSignal(false);
 
- const createObserver = (ref: Element) => createEffect(() => {
-    if (props.status === WordStatus.pending && !isObserved()) {
-      props.observer?.observe(ref);
-      setIsObserved(true);
-    } else if (props.status === WordStatus.over ||  props.status === WordStatus.unstart || props.status === WordStatus.unfocus) {
-      props.observer?.unobserve(ref);
-      setIsObserved(false);
+  const createObserver = (ref: Element) => {
+    if (props.observer?.observe(ref)) {
+      setToAnimate(true);
     }
-  });
+    createEffect(
+      on(
+        () => props.focus,
+        (isFocus) => {
+          if (isFocus && !isObserved()) {
+            props.observer?.observe(ref);
+            setIsObserved(true);
+          } else if (
+            props.status === WordStatus.over ||
+            props.status === WordStatus.unstart ||
+            props.status === WordStatus.unfocus
+          ) {
+            props.observer?.unobserve(ref);
+            setIsObserved(false);
+          }
+        },
+      ),
+    );
+  };
 
   css`
     .keys {
@@ -63,7 +78,7 @@ const Word = (props: WordProps) => {
   `;
 
   return (
-    <div class="word" ref={createObserver}>
+    <div classList={{ animate: toAnimate() }} class="word" ref={createObserver}>
       <div class={`${props.status}  ${props.focus ? "focus" : ""} keys`}>
         <For each={props.keys}>{(key) => <Key {...key} />}</For>
       </div>

@@ -16,6 +16,23 @@ export type PendingMode =
       getContent: GetContent;
     };
 
+export function deepCopyMode(source: PendingMode): PendingMode {
+  if (source.kind === GameModeKind.speed) {
+    return {
+      kind: GameModeKind.speed,
+      isGenerated: source.isGenerated,
+      getContent: source.getContent,
+    };
+  } else {
+    return {
+      kind: GameModeKind.timer,
+      isGenerated: source.isGenerated,
+      time: source.time,
+      getContent: source.getContent,
+    };
+  }
+}
+
 export enum PendingKind {
   new,
   redo,
@@ -26,13 +43,13 @@ export type PendingStatusNew = {
   mode: PendingMode;
 };
 
-export type PendingStatus =
-  | PendingStatusNew
-  | {
-      kind: PendingKind.redo;
-      mode: PendingMode;
-      prev: MetricsResume;
-    };
+export type PendingStatusRedo = {
+  kind: PendingKind.redo;
+  mode: PendingMode;
+  prev: MetricsResume;
+};
+
+export type PendingStatus = PendingStatusNew | PendingStatusRedo;
 
 /* ***  */
 export enum AppStateKind {

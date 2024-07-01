@@ -10,7 +10,7 @@ import anime from "animejs";
 type HeaderProps = {};
 
 const Header = (props: HeaderProps) => {
-  const { navigation } = useAppState();
+  const { mutation: navigation } = useAppState();
   css`
     .header {
       position: fixed;

@@ -10,6 +10,7 @@ import {
   createComputed,
 } from "solid-js";
 import { css } from "solid-styled";
+import { FocusType, useFocus } from "./FocusProvider";
 
 // Dropdown like animation with anime.js
 // https://codepen.io/NielsVoogt/pen/dyGpNOx
@@ -87,11 +88,13 @@ const Dropdown = (props: DropdownProps) => {
 
   const toggle = () => !pendingAnimation() && setIsOpen(!isOpen());
 
+  const { setFocus } = useFocus();
   createComputed(
     on(
       isOpen,
       (isOpen) => {
         if (isOpen) {
+          setFocus(FocusType.Hud);
           openAnimation.play();
           openAnimation.finished.then(() => {
             setPendingAnimation(false);
@@ -99,6 +102,7 @@ const Dropdown = (props: DropdownProps) => {
           });
           setPendingAnimation(true);
         } else {
+          setFocus(FocusType.View);
           closeAnimation.finished.then(() => {
             setPendingAnimation(false);
           });

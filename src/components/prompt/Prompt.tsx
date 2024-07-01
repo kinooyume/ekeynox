@@ -1,4 +1,13 @@
-import { For, createSignal, onCleanup, onMount } from "solid-js";
+import {
+  For,
+  Show,
+  createComputed,
+  createEffect,
+  createSignal,
+  on,
+  onCleanup,
+  onMount,
+} from "solid-js";
 import Word from "./PromptWord.tsx";
 import { css } from "solid-styled";
 import anime from "animejs";
@@ -10,10 +19,6 @@ export type PromptProps = {
 };
 
 const prompt = (props: PromptProps) => {
-  const [observer, setObserver] = createSignal<IntersectionObserver | null>(
-    null,
-  );
-
   css`
     .prompt {
       height: 180px;
@@ -36,18 +41,60 @@ const prompt = (props: PromptProps) => {
     }
   `;
 
+  const [observer, setObserver] = createSignal<IntersectionObserver | null>(
+    null,
+  );
+
+  const [promptElem, setPromptElem] = createSignal<HTMLElement | null>(null);
+
+  createComputed(
+    on(promptElem, (prompt) => {
+      if (!prompt) return;
+      prompt.scrollTo({ top: 0, behavior: "instant" });
+      setObserver((oldObs) => {
+        if (oldObs) oldObs.disconnect();
+        return createIntersectionObserver(prompt);
+      });
+    }),
+  );
+
+  const createIntersectionObserver = (root: HTMLElement) => {
+    const options = { root, rootMargin: "-30px", threshold: 0.5 };
+    return new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting === false) {
+        entries[0].target.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }
+    }, options);
+  };
+
+  onCleanup(() => {
+    let obs = observer();
+    if (obs) obs.disconnect();
+  });
+
   onMount(() => {
+    const getKeys = () =>
+      [...document.querySelectorAll(".paragraph .word .prompt-key")].slice(
+        0,
+        280,
+      );
+    const keys = getKeys();
     anime
       .timeline()
       .add({
-        targets: ".paragraph .word .prompt-key",
+        targets: keys,
         translateY: ["1.1em", 0],
         translateX: ["0.55em", 0],
         translateZ: 0,
         rotateZ: [180, 0],
         duration: 750,
         easing: "easeOutExpo",
-        delay: (el, i) => 6 * i,
+        delay: (el, i) => {
+          return 6 * i;
+        },
       })
       .finished.then(() => {
         document
@@ -56,37 +103,20 @@ const prompt = (props: PromptProps) => {
       });
   });
 
-  const createIntersectionObserver = (root: HTMLElement) => {
-    const options = { root, rootMargin: "-30px", threshold: 0.5 };
-    const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting === false) {
-        entries[0].target.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        });
-      }
-    }, options);
-    onCleanup(() => observer.disconnect());
-    setObserver(observer);
-  };
-
   return (
-    <div class="prompt" ref={createIntersectionObserver}>
+    <div class="prompt" ref={setPromptElem}>
       <div class="board">
-        <For each={props.paragraphs}>
-          {(paragraphs) => (
-            <div class="paragraph">
-              <For each={paragraphs}>
-                {(word) => (
-                  <Word
-                    {...word}
-                    observer={observer()}
-                  />
-                )}
-              </For>
-            </div>
-          )}
-        </For>
+        <Show when={props.paragraphs} keyed>
+          <For each={props.paragraphs}>
+            {(paragraphs) => (
+              <div class="paragraph">
+                <For each={paragraphs}>
+                  {(word) => <Word {...word} observer={observer()} />}
+                </For>
+              </div>
+            )}
+          </For>
+        </Show>
       </div>
     </div>
   );

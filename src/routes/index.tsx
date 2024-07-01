@@ -1,6 +1,3 @@
-import { useNavigate } from "@solidjs/router";
-import { onMount } from "solid-js";
-import { isServer } from "solid-js/web";
 import { useAppState } from "~/appState/AppStateProvider";
 import GameModeMenu from "~/components/gameMode/GameModeMenu";
 import { useGameOptions } from "~/gameOptions/GameOptionsProvider";
@@ -11,9 +8,7 @@ export default function Menu() {
   const { persistedGameOptions, setPersistedGameOptions, fetchSourcesGen } =
     useGameOptions();
 
-  const { navigation } = useAppState();
-
-  const navigate = useNavigate();
+  const { mutation: navigation } = useAppState();
 
   const start = (opts: GameOptions) => {
     setPersistedGameOptions(opts);
@@ -22,7 +17,6 @@ export default function Menu() {
     const pendingMode = optionsToPending(opts, sourcesGen);
 
     navigation.start(pendingMode, persistedGameOptions);
-    // navigate("/typing");
   };
 
   return (
