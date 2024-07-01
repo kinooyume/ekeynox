@@ -344,7 +344,7 @@ font-weight: 200;
         </div>
       </div>
       <Portal mount={document.getElementById("header-nav-actions-portal")!}>
-        <span class="version">Alpha 0.12-1</span>
+        <span class="version">Alpha 0.13-0</span>
       </Portal>
     </div>
   );
