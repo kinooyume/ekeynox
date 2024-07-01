@@ -7,7 +7,6 @@ import {
   createSignal,
   on,
   onCleanup,
-  onMount,
   untrack,
 } from "solid-js";
 import type { Metrics } from "../metrics/Metrics";
@@ -121,23 +120,22 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
       });
     },
     leave: (word) => {
+      if (!word.isSeparator) setWordsCount(wordsCount() + 1);
+
       if (!wordWpmTimer) return;
       wordWpmTimer = wordWpmTimer({ status: WordStatus.over });
-
-      if (word.isSeparator) return;
-      setWordsCount(wordsCount() + 1);
     },
   };
 
   const prevWordHooks: ExtraWordHooks = {
     enter: (word) => {
+      if (!word.isSeparator) setWordsCount(wordsCount() - 1);
+
       if (!wordWpmTimer) return;
       wordWpmTimer = createWordMetricsState({ word, setWpm })({
         status: WordStatus.pending,
       });
 
-      if (word.isSeparator) return;
-      setWordsCount(wordsCount() - 1);
     },
     leave: () => {
       if (!wordWpmTimer) return;
@@ -155,10 +153,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
 
   // pour le counter, on veut just enter/leave
   const [keypressHandler, setKeypressHandler] = createSignal(
-    TypingKeypress(
-      cursor(),
-      cursorNav(),
-    ),
+    TypingKeypress(cursor(), cursorNav()),
   );
 
   createComputed(
@@ -178,12 +173,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
         }),
       );
 
-      setKeypressHandler(
-        TypingKeypress(
-          untrack(cursor),
-          untrack(cursorNav),
-        ),
-      );
+      setKeypressHandler(TypingKeypress(untrack(cursor), untrack(cursorNav)));
     },
     { defer: true },
   );

@@ -1,4 +1,4 @@
-import { Match, Switch, createComputed, createSignal, onMount } from "solid-js";
+import { Match, Switch, createComputed, createSignal } from "solid-js";
 import { createStore } from "solid-js/store";
 import { css } from "solid-styled";
 
@@ -82,7 +82,7 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
     if (gameOptions.categorySelected.kind !== CategoryKind.custom)
       setIsReady(true);
     else {
-      setIsReady(customValue().length > 10);
+      setIsReady(customValue().length > 0);
     }
   });
 
@@ -95,7 +95,7 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
 
   css`
     .version {
-font-weight: 200;
+      font-weight: 200;
       color: var(--text-secondary-color);
     }
     .main-view {
@@ -233,7 +233,6 @@ font-weight: 200;
     }
   `;
 
- 
   // onMount(() => {
   //   anime.timeline().add({
   //     targets: ".menu .title-content *",
