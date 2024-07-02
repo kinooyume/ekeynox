@@ -84,7 +84,6 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
       position: fixed;
       display: flex;
       flex-direction: column;
-      align-items: flex-start;
       justify-content: space-between;
     }
     .content-wrapper::-webkit-scrollbar {
@@ -149,6 +148,10 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
       border-radius: 18px;
     }
 
+    .cards-wrapper.tiny {
+      padding: 4px;
+    }
+
     .stat-card {
       background-color: var(--color-surface-100);
       background-color: var(--stat-background-color);
@@ -187,10 +190,7 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
       margin-left: 8px;
       opacity: 0.6;
     }
-    .report .raw-data {
-      opacity: 0.6;
-      margin: 0;
-    }
+
     .report .raw-data span {
       margin-left: 4px;
     }
@@ -316,10 +316,10 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
                 <CharacterChart keys={metricsResume.keys} />
               </div>
               <Show when={metricsResume.words.length > 1}>
-              <div class="stat-card">
-                <p>{t("statistics.wordsSpeedTitle")}</p>
-                <WordMetricsResume words={metricsResume.words} />
-              </div>
+                <div class="stat-card">
+                  <p>{t("statistics.wordsSpeedTitle")}</p>
+                  <WordMetricsResume words={metricsResume.words} />
+                </div>
               </Show>
             </div>
           </div>
@@ -347,7 +347,7 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
             </div>
           </div>
           <div class="sub-data">
-            <div class="cards-wrapper">
+            <div class="cards-wrapper tiny">
               <div class="stat-card">
                 <p class="main-data main-data-tiny">
                   {getTime(props.metrics.typing.logs!.value.core.duration)}
@@ -355,16 +355,16 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
                 <p class="subtitle">{t("elapsedTime")}</p>
               </div>
             </div>
-          </div>
-          <div class="cards-wrapper">
-            <div class="stat-card">
-              <p class="main-data main-data-tiny">
-                {(
-                  props.metrics.typing.logs!.value.stats.consistency * 100
-                ).toFixed(0)}
-                <span>%</span>
-              </p>
-              <p class="subtitle">{t("consistency")}</p>
+            <div class="cards-wrapper tiny">
+              <div class="stat-card">
+                <p class="main-data main-data-tiny">
+                  {(
+                    props.metrics.typing.logs!.value.stats.consistency * 100
+                  ).toFixed(0)}
+                  <span>%</span>
+                </p>
+                <p class="subtitle">{t("consistency")}</p>
+              </div>
             </div>
           </div>
         </div>
