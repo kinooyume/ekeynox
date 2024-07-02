@@ -315,10 +315,12 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
                 <p>{t("statistics.charactersTyped")}</p>
                 <CharacterChart keys={metricsResume.keys} />
               </div>
+              <Show when={metricsResume.words.length > 1}>
               <div class="stat-card">
                 <p>{t("statistics.wordsSpeedTitle")}</p>
                 <WordMetricsResume words={metricsResume.words} />
               </div>
+              </Show>
             </div>
           </div>
         </div>
