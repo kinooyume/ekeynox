@@ -25,6 +25,10 @@ const Tooltip = (props: TooltipProps) => {
     .tooltip-wrapper {
       margin: 0 10px;
       position: relative;
+      height: 38px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
     .tooltip-wrapper .tooltip {
       position: absolute;
