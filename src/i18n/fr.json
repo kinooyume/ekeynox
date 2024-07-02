@@ -38,6 +38,7 @@
   "statistics": {
     "title": "statistiques",
     "wordsSpeedTitle": "Vitesse par mot",
+    "wordsSpeedSubtitle": "Un mot est considéré comme tel à partir de 5 caractères",
     "contentResumeTitle": "Resume",
     "keysResumeTitle": "Précision par touche",
     "charactersTyped": "Précision par caractère",
