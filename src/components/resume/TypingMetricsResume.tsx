@@ -164,12 +164,21 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
       margin-top: 32px;
     }
 
-    .stat-card p {
+    .stat-card .stat-title-wrapper {
       margin: 22px 12px;
-      text-transform: capitalize;
       margin-top: 4px;
-      font-size: 17px;
       opacity: 0.9;
+    }
+
+    .stat-title-wrapper h3 {
+      text-transform: capitalize;
+      margin: 0;
+      font-size: 15px;
+    }
+
+    .stat-title-wrapper span {
+      font-size: 14px;
+      color: var(--text-secondary-color);
     }
 
     .stat-card p.main-data {
@@ -305,19 +314,26 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
             </div>
             <div class="stat-content">
               <div class="stat-card">
-                <p>{t("statistics.keysResumeTitle")}</p>
+                <div class="stat-title-wrapper">
+                  <h3>{t("statistics.keysResumeTitle")}</h3>
+                </div>
                 <TypingKeyboardResume
                   layout={kbLayout()}
                   metrics={props.metrics.keys}
                 />
               </div>
               <div class="stat-card">
-                <p>{t("statistics.charactersTyped")}</p>
+                <div class="stat-title-wrapper">
+                  <h3>{t("statistics.charactersTyped")}</h3>
+                </div>
                 <CharacterChart keys={metricsResume.keys} />
               </div>
               <Show when={metricsResume.words.length > 1}>
                 <div class="stat-card">
-                  <p>{t("statistics.wordsSpeedTitle")}</p>
+                  <div class="stat-title-wrapper">
+                    <h3>{t("statistics.wordsSpeedTitle")}</h3>
+                    <span>{t("statistics.wordsSpeedSubtitle")}</span>
+                  </div>
                   <WordMetricsResume words={metricsResume.words} />
                 </div>
               </Show>

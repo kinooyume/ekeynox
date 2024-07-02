@@ -38,6 +38,7 @@
   "statistics": { 
    "title": "statistics",
     "wordsSpeedTitle": "Speed per word",
+    "wordsSpeedSubtitle": "A word is considered to be 5 characters or more",
     "contentResumeTitle": "Content typed",
     "keysResumeTitle": "Accuracy pey Keys",
     "charactersTyped": "Accuracy per character",
