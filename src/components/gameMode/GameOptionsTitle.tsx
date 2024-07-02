@@ -12,7 +12,7 @@ type GameOptionsTitleProps = {
 const GameOptionsTitle = (props: GameOptionsTitleProps) => {
   css`
     .picto {
-      width: 180px;
+      width: 130px;
     }
     .game-title {
       display: flex;
@@ -26,7 +26,7 @@ const GameOptionsTitle = (props: GameOptionsTitleProps) => {
       gap: 8px;
     }
     h1 {
-      font-size: 42px;
+      font-size: 32px;
       font-weight: 200;
       margin: 0;
     }

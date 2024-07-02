@@ -1,10 +1,11 @@
 import anime from "animejs";
 import {
+  Show,
   createComputed,
   createSignal,
   onCleanup,
   onMount,
-  type JSXElement
+  type JSXElement,
 } from "solid-js";
 import { css } from "solid-styled";
 import { useI18n } from "~/settings/i18nProvider";
@@ -36,7 +37,6 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
   const keysSet = new Set(Object.keys(props.metrics.keys));
   const [kbLayout, setKbLayout] = createSignal(props.kbLayout(keysSet));
 
-  const [metricIndex, setMetricIndex] = createSignal(0);
   const metricsResume = createMetricsResume(props.metrics);
 
   const getTime = (duration: number) => {
@@ -68,6 +68,7 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
       position: relative;
       grid-column: 2;
       padding: 32px;
+      padding-top: 0;
       height: 100%;
     }
 
@@ -97,6 +98,7 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
       background-color: var(--color-surface-alt);
       border-radius: 36px 36px 0 0;
       padding: 32px;
+      padding-bottom: 0;
       padding-top: 58px;
     }
 
@@ -111,7 +113,7 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 32px;
+      padding: 16px 48px;
       height: 140px;
       z-index: 900;
       background-color: var(--color-surface-alt);
@@ -200,22 +202,32 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
 
     .sidebar-wrapper .cards-wrapper {
       margin: 8px;
+      margin-top: 0;
     }
   `;
 
   let resumeMenu: HTMLDivElement;
+  let resumeHeader: HTMLDivElement;
+
+  const [resumeHeaderHeight, setResumeHeaderHeight] = createSignal(0);
+
+  const updateHeaderHeight = () => {
+    setResumeHeaderHeight(resumeHeader.offsetHeight);
+  };
 
   onMount(() => {
-    const initTop = resumeMenu.getBoundingClientRect().top;
+    updateHeaderHeight();
+    resumeHeader.addEventListener("resize", updateHeaderHeight);
     const blockAnimation = anime({
       targets: resumeMenu,
       autoplay: false,
       height: 54,
       elasticity: 200,
-      borderBottomLeftRadius: 8,
-      borderBottomRightRadius: 8,
+      borderBottomLeftRadius: 22,
+      borderBottomRightRadius: 22,
       easing: "easeInCubic",
-      padding: 16,
+      paddingLeft: 16,
+      paddingRight: 16,
     });
 
     const pictoAnimation = anime({
@@ -234,9 +246,11 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
       easing: "easeInCubic",
     });
 
+    const headerHeight = 104;
+
     window.onscroll = () => {
       const top = resumeMenu.getBoundingClientRect().top;
-      const pourcent = 1.0 - top / initTop;
+      const pourcent = 1.0 - top / (headerHeight + resumeHeaderHeight());
       // NOTE: on peut avoir le pourcent reactive
       // et du coup gérer les animations dans chaque component
       blockAnimation.seek(pourcent * blockAnimation.duration);
@@ -257,30 +271,28 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
 
   onCleanup(() => {
     window.onscroll = null;
+    resumeHeader.removeEventListener("resize", updateHeaderHeight);
   });
 
   return (
     <div class="metrics full-bleed">
       <div class="content-wrapper">
         <div class="content">
-          <div class="resume-header">
-            <div class="chart">
-              <SpeedChart metrics={metricsResume.chart} />
-            </div>
+          <div class="resume-header" ref={resumeHeader!}>
+            <Show when={metricsResume.chart.wpm.length > 1}>
+              <div class="chart">
+                <SpeedChart metrics={metricsResume.chart} />
+              </div>
+            </Show>
           </div>
           <div class="sticky">
             <div ref={resumeMenu!} class="resume-menu">
-              <GameOptionsTitle
-                t={t}
-                gameOptions={props.metrics.gameOptions}
-              />
+              <GameOptionsTitle t={t} gameOptions={props.metrics.gameOptions} />
               <div class="actions">{props.children(metricsResume)}</div>
             </div>
           </div>
           <div class="cards-wrapper">
-            <h2 class="stat-title">
-              {t("statistics.contentResumeTitle")}
-            </h2>
+            <h2 class="stat-title">{t("statistics.contentResumeTitle")}</h2>
             <div class="stat-card">
               <Prompt paragraphs={props.metrics.paragraphs} />
             </div>
