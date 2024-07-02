@@ -61,6 +61,9 @@ const defaultSettings = (): Settings => ({
   showKb: true,
 });
 
+// NOTE: on veut quand meme avoir white ou black, pour les themes
+// chart.js
+
 const isDarkTheme = (theme: Theme): boolean => {
   switch (theme) {
     case Theme.light:

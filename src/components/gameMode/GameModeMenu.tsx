@@ -343,7 +343,7 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
         </div>
       </div>
       <Portal mount={document.getElementById("header-nav-actions-portal")!}>
-        <span class="version">Alpha 0.13-1</span>
+        <span class="version">Alpha 0.13-2</span>
       </Portal>
     </div>
   );

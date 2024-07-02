@@ -67,6 +67,7 @@ const sortKeys = (keys: KeysProjection): KeysProjection => {
   return Object.fromEntries(sorted);
 };
 
+// TODO: rename, logsTo.. Sequences / seconde (wpm, raw, errors) ?
 const logsToChartMetrics = (
   logs: LinkedList<KeypressMetricsProjection>,
 ): ChartMetrics => {

@@ -132,7 +132,7 @@ const GameModeDropdown = (props: GameModeDropdownProps) => {
     if (gameOptions.categorySelected.kind !== CategoryKind.custom)
       setIsReady(true);
     else {
-      setIsReady(customValue().length > 10);
+      setIsReady(customValue().length > 0);
     }
   });
   const start = (setIsOpen: (o: boolean) => void) => {
