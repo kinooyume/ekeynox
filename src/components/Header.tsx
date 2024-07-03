@@ -55,7 +55,7 @@ const Header = (props: HeaderProps) => {
   return (
     <div class="header">
       <div class="left">
-        <a class="home" href="/">
+        <a class="home" aria-label="ekeynox" href="/">
           <Logo />
         </a>
       </div>
