@@ -31,7 +31,6 @@ const GameModeSelection = (props: GameModeSelectionProps) => {
     }
 
     .info .title {
-      text-transform: capitalize;
       font-size: 1.4rem;
       font-weight: 200;
       margin: 0;
@@ -40,6 +39,7 @@ const GameModeSelection = (props: GameModeSelectionProps) => {
     .info .description {
       margin-top: 4px;
       font-size: 1rem;
+      text-transform: capitalize;
       color: var(--text-secondary-color);
     }
     .main-view {
@@ -55,6 +55,7 @@ const GameModeSelection = (props: GameModeSelectionProps) => {
     }
     label {
       position: relative;
+      filter: grayscale(50%);
       display: block;
       border-radius: 50%;
       height: 46px;
@@ -76,8 +77,10 @@ const GameModeSelection = (props: GameModeSelectionProps) => {
 
     input:checked + label {
       background-color: var(--color-primary-400);
+      filter: none;
     }
     input + label:hover {
+      filter: none;
       background-color: var(--color-primary-100);
       transform: scale(1.2);
       overflow: visible;
@@ -125,10 +128,10 @@ const GameModeSelection = (props: GameModeSelectionProps) => {
         >
           <Show when={labelHovered() !== null}>
             <p class="title">
-              {t("gameMode")[labelHovered() as GameModeKind].title}
+              {t("gameMode")[labelHovered() as GameModeKind].subtitle}
             </p>
             <p class="description">
-              {t("gameMode")[labelHovered() as GameModeKind].subtitle}
+              {t("gameMode")[labelHovered() as GameModeKind].title}
             </p>
           </Show>
         </TransitionGroup>

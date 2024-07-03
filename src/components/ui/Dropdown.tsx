@@ -8,9 +8,12 @@ import {
   type Accessor,
   type Setter,
   createComputed,
+  Show,
 } from "solid-js";
 import { css } from "solid-styled";
 import { FocusType, useFocus } from "./FocusProvider";
+import Cross from "../svgs/cross";
+import useClickOutside from "solid-click-outside";
 
 // Dropdown like animation with anime.js
 // https://codepen.io/NielsVoogt/pen/dyGpNOx
@@ -42,7 +45,7 @@ const Dropdown = (props: DropdownProps) => {
         padding: ["8px 26px 26px", "0"],
         top: ["-8px", "0"],
         width: ["800px", "200px"],
-        height: [320, 48],
+        height: [340, 48],
         duration: 250,
       })
       .add(
@@ -67,7 +70,7 @@ const Dropdown = (props: DropdownProps) => {
         padding: ["0", "8px 26px 26px"],
         height: [48, 320],
         top: ["0", "-8px"],
-        width: [200, 800],
+        width: [200, 820],
         duration: 650,
       })
       .add(
@@ -87,18 +90,36 @@ const Dropdown = (props: DropdownProps) => {
   const [hover, setHover] = createSignal(false);
 
   const toggle = () => !pendingAnimation() && setIsOpen(!isOpen());
+  const [wrapper, setWrapper] = createSignal<HTMLDivElement>();
+  const [currentAnime, setCurrentAnime] = createSignal<
+    anime.AnimeInstance | undefined
+  >();
+
+  useClickOutside(wrapper, () => {
+    // TODO: cancel animation instead
+    if (pendingAnimation()) return;
+    if (isOpen()) {
+      const ca = currentAnime();
+      if (ca) {
+        ca.pause();
+        setPendingAnimation(false);
+      }
+      setIsOpen(false);
+    }
+  });
 
   const { setFocus } = useFocus();
   createComputed(
     on(
       isOpen,
       (isOpen) => {
+        if (pendingAnimation()) return;
         if (isOpen) {
           setFocus(FocusType.Hud);
+          setCurrentAnime(openAnimation);
           openAnimation.play();
           openAnimation.finished.then(() => {
             setPendingAnimation(false);
-            if (!hover()) setIsOpen(false);
           });
           setPendingAnimation(true);
         } else {
@@ -107,18 +128,12 @@ const Dropdown = (props: DropdownProps) => {
             setPendingAnimation(false);
           });
           setPendingAnimation(true);
+          setCurrentAnime(openAnimation);
           closeAnimation.play();
         }
       },
       { defer: true },
     ),
-  );
-
-  createComputed(
-    on(hover, (hover) => {
-      if (pendingAnimation() || hover) return;
-      setIsOpen(false);
-    }),
   );
 
   css`
@@ -191,7 +206,16 @@ const Dropdown = (props: DropdownProps) => {
     }
 
     .open .dropdown-content {
-      height: 280px;
+      height: 260px;
+    }
+
+    .cross {
+      cursor: pointer;
+      opacity: 0.8;
+    }
+
+    .cross:hover {
+      opacity: 1;
     }
   `;
 
@@ -201,6 +225,7 @@ const Dropdown = (props: DropdownProps) => {
       class={`dropdown-wrapper`}
       classList={{ open: isOpen(), reverse: props.reverse }}
       ref={(el) => {
+        setWrapper(el);
         el.addEventListener("mouseleave", () => setHover(false));
         el.addEventListener("mouseenter", () => setHover(true));
       }}
@@ -208,6 +233,11 @@ const Dropdown = (props: DropdownProps) => {
       <div class="dropdown" ref={dropdown!}>
         <div class="dropdown-label" onClick={toggle}>
           {props.label(isOpen, hover)}
+          <Show when={isOpen()}>
+            <div class="cross">
+              <Cross />
+            </div>
+          </Show>
         </div>
         <div class="dropdown-content" ref={dropContent!}>
           {props.children(setIsOpen)}

@@ -46,13 +46,13 @@
   },
   "gameMode": {
     "speed": {
-      "title": "singe",
+      "title": "mode singe",
       "subtitle": "Course de mots",
       "description": "Ecrivez des mots au hasard aussi vite que possible, essayez de ne pas faire d'erreur !",
       "hugeDescription": "Banane à la main, clavier sous les doigts, montre que tu es le singe le plus rapide ! Prêt à relever le défi ?"
     },
     "timer": {
-      "title": "lapin",
+      "title": "mode lapin",
       "subtitle": "Contre la montre",
       "description": "Le temps est compté ! Combien de mots pouvez-vous écrire dans le temps imparti ?",
       "hugeDescription": "Clavier prêt, montre à la main, prouve que tu es le lapin le plus rapide ! Défi contre la montre lancé !"

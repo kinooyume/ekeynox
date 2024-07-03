@@ -58,8 +58,7 @@ const VerticalDropdown = (props: VerticalDropdownProps) => {
 
     .cross {
       position: absolute;
-      filter: greyscale(0.6);
-      opacity: 0.6;
+      opacity: 0.8;
       cursor: pointer;
       right: 24px;
       z-index: 200;

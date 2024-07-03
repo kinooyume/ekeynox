@@ -185,16 +185,16 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
       font-size: 2.8rem;
     }
     h2 {
-      font-size: 4rem;
+      font-size: 3.3rem;
       margin-bottom: 0;
       font-weight: 100;
-      text-transform: capitalize;
     }
 
     h3 {
       color: var(--text-secondary-color);
-      font-size: 1.1rem;
-      margin-top: 2px;
+      font-size: 1.3rem;
+      text-transform: capitalize;
+      margin-top: 6px;
       font-weight: 500;
     }
 
@@ -230,6 +230,9 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
       margin-top: 22px;
       text-transform: capitalize;
       margin-bottom: 22px;
+    }
+    .options {
+      max-width: 560px;
     }
   `;
 
@@ -284,8 +287,8 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
                 keyed
               >
                 <div class="text">
-                  <h2 class="title-mode">{t("gameMode.speed.title")}</h2>
-                  <h3>{t("gameMode.speed.subtitle")}</h3>
+                  <h2 class="title-mode">{t("gameMode.speed.subtitle")}</h2>
+                  <h3>{t("gameMode.speed.title")}</h3>
                   <p class="description">
                     {t("gameMode.speed.hugeDescription")}
                   </p>
@@ -310,8 +313,8 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
                 keyed
               >
                 <div class="text">
-                  <h2 class="title-mode">{t("gameMode.timer.title")}</h2>
-                  <h3>{t("gameMode.timer.subtitle")}</h3>
+                  <h2 class="title-mode">{t("gameMode.timer.subtitle")}</h2>
+                  <h3>{t("gameMode.timer.title")}</h3>
                   <p class="description">
                     {t("gameMode.timer.hugeDescription")}
                   </p>

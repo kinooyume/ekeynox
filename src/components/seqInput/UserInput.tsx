@@ -51,6 +51,12 @@ const UserInput = (props: UserInputProps) => {
   // };
 
   const handleInputEvent = (event: Event) => {
+    // TODO: composing for accents, could be great to have some visual feedback
+    if (event instanceof InputEvent) {
+      if (event.isComposing) {
+        return;
+      }
+    }
     const timestamp = performance.now();
     const input = event.target as HTMLInputElement;
     const value = input.value;
@@ -72,7 +78,6 @@ const UserInput = (props: UserInputProps) => {
   const { focus: globalFocus, setFocus: setGlobalFocus } = useFocus();
 
   onMount(() => {
-    /* NOTE: input event to handle android/chrome */
     input.addEventListener("input", handleInputEvent);
     input.addEventListener("keydown", handleKeyDown);
     input.addEventListener("keyup", handleKeyUp);
