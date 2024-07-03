@@ -55,15 +55,9 @@ const Header = (props: HeaderProps) => {
   return (
     <div class="header">
       <div class="left">
-        <div
-          class="home"
-          onClick={() => {
-            navigation.menu();
-            navigate("/");
-          }}
-        >
+        <a class="home" href="/">
           <Logo />
-        </div>
+        </a>
       </div>
       <div class="center">
         <div id="header-nav-actions-portal"></div>
