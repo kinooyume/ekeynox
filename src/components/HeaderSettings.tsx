@@ -50,7 +50,7 @@ const HeaderAction = () => {
     }
   `;
   return (
-    <ul class="actions">
+    <div class="actions">
       <VerticalDropdown
         id="keyboard"
         label={(isOpen) => (
@@ -147,7 +147,7 @@ const HeaderAction = () => {
           }}
         />
       </div>
-    </ul>
+    </div>
   );
 };
 
