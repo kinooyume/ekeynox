@@ -70,6 +70,34 @@ export default function App() {
                     <Title>Ekeynox</Title>
                     <Link
                       rel="preload"
+                      href="/fonts/Larsseit/Larsseit-Regular.woff2"
+                      as="font"
+                      type="font/woff2"
+                      crossorigin="anonymous"
+                    />
+                    <Link
+                      rel="preload"
+                      href="/fonts/Larsseit/Larsseit-Bold.woff2"
+                      as="font"
+                      type="font/woff2"
+                      crossorigin="anonymous"
+                    />
+                    <Link
+                      rel="preload"
+                      href="/fonts/Larsseit/Larsseit-Thin.woff2"
+                      as="font"
+                      type="font/woff2"
+                      crossorigin="anonymous"
+                    />
+                    <Link
+                      rel="preload"
+                      href="/fonts/Larsseit/Larsseit-Light.woff2"
+                      as="font"
+                      type="font/woff2"
+                      crossorigin="anonymous"
+                    />
+                    <Link
+                      rel="preload"
                       href="/fonts/OdudoMono/OdudoMono-Regular.woff2"
                       as="font"
                       type="font/woff2"
