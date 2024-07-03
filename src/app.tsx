@@ -70,7 +70,7 @@ export default function App() {
                     <Title>Ekeynox</Title>
                     <Link
                       rel="preload"
-                      href="/fonts/Larsseit/Larsseit-Regular.woff2"
+                      href="/fonts/Larsseit/Larsseit.woff2"
                       as="font"
                       type="font/woff2"
                       crossorigin="anonymous"
