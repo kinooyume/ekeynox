@@ -1,4 +1,4 @@
-import { MetaProvider, Title } from "@solidjs/meta";
+import { Link, MetaProvider, Title } from "@solidjs/meta";
 import { Router } from "@solidjs/router";
 import { FileRoutes } from "@solidjs/start/router";
 
@@ -68,6 +68,15 @@ export default function App() {
                   <FocusProvider>
                     <Header />
                     <Title>Ekeynox</Title>
+                    <Link
+                      rel="preload"
+                      href="
+fonts/OdudoMono/OdudoMono-Regular.woff2
+                      "
+                      as="font"
+                      type="font/woff2"
+                      crossorigin="anonymous"
+                    ></Link>
                     <main>
                       <Suspense fallback={<div>Loading..</div>}>
                         <PageTransition {...props} />
