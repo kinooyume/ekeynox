@@ -1,4 +1,4 @@
-import { Match, Switch, createComputed, createSignal } from "solid-js";
+import { Match, Switch, createComputed, createSignal, on } from "solid-js";
 import { createStore } from "solid-js/store";
 import { css } from "solid-styled";
 
@@ -60,6 +60,14 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
   const [isReady, setIsReady] = createSignal(false);
   const [customValue, setCustomValue] = createSignal("");
 
+  createComputed(
+    on(
+      () => props.gameOptions,
+      () => {
+        setCustomValue(props.gameOptions.custom);
+      },
+    ),
+  );
   const [gameOptions, setGameOptions] = createStore<GameOptions>(
     deepCopy(props.gameOptions),
   );
@@ -346,7 +354,7 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
         </div>
       </div>
       <Portal mount={document.getElementById("header-nav-actions-portal")!}>
-        <span class="version">Alpha 0.13-2</span>
+        <span class="version">Alpha 0.13-3</span>
       </Portal>
     </div>
   );
