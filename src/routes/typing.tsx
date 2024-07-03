@@ -6,12 +6,8 @@ import { useSettings } from "~/settings/SettingsProvider";
 import {
   Match,
   Show,
-  Suspense,
   Switch,
-  createEffect,
   createResource,
-  lazy,
-  on,
   onMount,
 } from "solid-js";
 import { useNavigate } from "@solidjs/router";
@@ -30,9 +26,11 @@ import {
 
 import TypingGameManager from "~/components/typing/TypingGameManager";
 
-import TypingMetricsResume from "~/components/resume/TypingMetricsResume";
-import ActionsResume from "~/components/resume/ActionsResume";
+//import TypingMetricsResume from "~/components/resume/TypingMetricsResume";
+// import ActionsResume from "~/components/resume/ActionsResume";
 
+const ClientResume = clientOnly(() => import("~/components/resume/TypingMetricsResume"));
+const ClientActionsResume = clientOnly(() => import("~/components/resume/ActionsResume"));
 export default function Typing() {
   const { state, mutation } = useAppState();
   const navigate = useNavigate();
@@ -81,12 +79,12 @@ export default function Typing() {
         </Show>
       </Match>
       <Match when={state().kind === AppStateKind.resume} keyed>
-        <TypingMetricsResume
+        <ClientResume
           kbLayout={KeyboardLayout.create(settings.kb.value)}
           metrics={(state() as ResumeState).metrics}
         >
           {(metricsResume) => (
-            <ActionsResume
+            <ClientActionsResume
               gameOptions={deepCopy(persistedGameOptions)}
               content={(state() as ResumeState).content}
               fetchSourcesGen={fetchSourcesGen}
@@ -98,7 +96,7 @@ export default function Typing() {
               }}
             />
           )}
-        </TypingMetricsResume>
+        </ClientResume>
       </Match>
     </Switch>
   );
