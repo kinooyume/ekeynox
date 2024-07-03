@@ -70,13 +70,11 @@ export default function App() {
                     <Title>Ekeynox</Title>
                     <Link
                       rel="preload"
-                      href="
-fonts/OdudoMono/OdudoMono-Regular.woff2
-                      "
+                      href="/fonts/OdudoMono/OdudoMono-Regular.woff2"
                       as="font"
                       type="font/woff2"
                       crossorigin="anonymous"
-                    ></Link>
+                    />
                     <main>
                       <Suspense fallback={<div>Loading..</div>}>
                         <PageTransition {...props} />
