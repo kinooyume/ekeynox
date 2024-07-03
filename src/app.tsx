@@ -58,8 +58,6 @@ export default function App() {
     </div>
   );
 
-  const t = useI18n();
-
   return (
     <Router
       root={(props) => (
@@ -71,11 +69,11 @@ export default function App() {
                   <FocusProvider>
                     <Header />
                     <Title>Ekeynox</Title>
-                    <Meta name="description" content={t("webDescription")} />
+                    <Meta name="description" content="Learn to type while having fun"/>
                     <Meta property="og:title" content="Ekeynox" />
                     <Meta
                       property="og:description"
-                      content={t("webDescription")}
+                      content="Learn to type while having fun"
                     />
                     <Meta property="og:type" content="website" />
                     <Meta property="og:url" content="https://ekeynox.xyz" />
@@ -88,7 +86,7 @@ export default function App() {
                     <Meta property="og:image:height" content="630" />
                     <Meta
                       property="og:image:alt"
-                      content={t("webDescription")}
+                      content="Learn to type while having fun"
                     />
                     <Link
                       rel="preload"
