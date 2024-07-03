@@ -110,7 +110,7 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
         {(isOpen, hover) => (
           <div
             class="menu-title"
-            classList={{ hover: hover(), open: isOpen() }}
+            classList={{ open: isOpen(), hover: hover() }}
             data-passive={`${t("gameMode")[props.gameOptions.modeSelected].subtitle}`}
             data-active={`${t("newGame.one")} ${t("newGame.two")}`}
           >

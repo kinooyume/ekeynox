@@ -46,13 +46,13 @@
   },
   "gameMode": {
     "speed": {
-      "title": "monkey",
+      "title": "monkey mode",
       "subtitle": "Words sprint",
       "description": "Type random words as quick as possible, try to not make mistake !",
       "hugeDescription": "Banana in hand, keyboard under your fingers, show that you're the fastest monkey! Ready to take up the challenge?"
     },
     "timer": {
-      "title": "bunny",
+      "title": "bunny mode",
       "subtitle": "Against the clock",
       "description": "Time is running out ! how many words can you write in the time allowed?",
       "hugeDescription": "With keyboard ready and watch in hand, prove you're the fastest rabbit! Challenge against the clock begun!"

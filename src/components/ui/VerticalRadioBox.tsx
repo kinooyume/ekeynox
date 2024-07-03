@@ -24,6 +24,7 @@ function VerticalRadioBox<T>(props: VerticalRadioBoxProps<T>) {
 
     li {
       padding: 4px 8px;
+      transition: all 0.2s ease-in-out;
     }
 
     .input-wrapper {

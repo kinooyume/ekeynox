@@ -12,11 +12,11 @@ const SettingMenu = (props: SettingMenuProps) => {
       width: 100%;
     }
     .title {
-      font-size: 21px;
+      font-size: 19px;
       margin: 0;
       font-weight: 400;
       text-transform: capitalize;
-      color: var(--text-color);
+      color: var(--text-secondary-color);
     }
 
     .content {

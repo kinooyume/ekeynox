@@ -30,6 +30,7 @@ const Tooltip = (props: TooltipProps) => {
       justify-content: center;
       align-items: center;
     }
+
     .tooltip-wrapper .tooltip {
       position: absolute;
       bottom: -30px;
@@ -47,7 +48,7 @@ const Tooltip = (props: TooltipProps) => {
     .tooltip-wrapper:hover .tooltip {
       opacity: 1;
       visibility: visible;
-      bottom: -40px;
+      bottom: -48px;
     }
     .tooltip-wrapper a {
       position: relative;

@@ -36,9 +36,6 @@ const HeaderAction = () => {
       text-transform: capitalize;
     }
 
-    .sub-content {
-    }
-
     label {
       color: var(--text-secondary-color);
     }
@@ -57,7 +54,10 @@ const HeaderAction = () => {
       <VerticalDropdown
         id="keyboard"
         label={(isOpen) => (
-          <Tooltip show={!isOpen()} content={<p>{settings.kb.value}</p>}>
+          <Tooltip
+            show={!isOpen()}
+            content={<p class="tooltip-label">{settings.kb.value}</p>}
+          >
             <KeyboardIcon />
           </Tooltip>
         )}
@@ -101,7 +101,9 @@ const HeaderAction = () => {
         label={(isOpen) => (
           <Tooltip
             show={!isOpen()}
-            content={<p>{t(settings.locale.value as "en")}</p>}
+            content={
+              <p class="tooltip-label">{t(settings.locale.value as "en")}</p>
+            }
           >
             <GlobeIcon />
           </Tooltip>
@@ -132,7 +134,7 @@ const HeaderAction = () => {
           </SettingMenu>
         )}
       </VerticalDropdown>
-{/* https://uiverse.io/Shoh2008/big-deer-80 */}
+      {/* https://uiverse.io/Shoh2008/big-deer-80 */}
       <div class="toggle">
         <DarkModeToggle
           dark={dark()}

@@ -14,11 +14,7 @@ import SpeedParamsMedium from "./SpeedParamsMedium";
 import TimerParamsMedium from "./TimerParamsMedium";
 import { css } from "solid-styled";
 import { useI18n } from "~/settings/i18nProvider";
-import {
-  CategoryKind,
-  GameOptions,
-  deepCopy,
-} from "~/gameOptions/gameOptions";
+import { CategoryKind, GameOptions, deepCopy } from "~/gameOptions/gameOptions";
 import { GameModeKind } from "~/gameOptions/gameModeKind";
 import VerticalRadioBox from "../ui/VerticalRadioBox";
 import HugeRadioLabel from "../ui/HugeRadioLabel";
@@ -55,6 +51,7 @@ const GameModeDropdown = (props: GameModeDropdownProps) => {
     }
     .modes {
       width: 250px;
+      margin-right: 20px;
     }
     .modes li {
       display: flex;
@@ -73,9 +70,21 @@ const GameModeDropdown = (props: GameModeDropdownProps) => {
 
     .title {
       font-size: 16px;
-      max-width: 100px;
+      margin: 0;
+    }
+
+    .subtitle {
       margin: 0;
       color: var(--text-secondary-color);
+      text-transform: capitalize;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .mode-description {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
     }
 
     .description {
@@ -101,11 +110,12 @@ const GameModeDropdown = (props: GameModeDropdownProps) => {
       justify-content: space-between;
       border-left: 1px solid var(--border-color);
       padding: 0 26px 26px;
-      margin-bottom: 26px;
       width: 500px;
     }
     .content {
       display: flex;
+      height: 260px;
+      margin-top: 16px;
     }
   `;
   const [gameOptions, setGameOptions] = createStore<GameOptions>(
@@ -169,7 +179,10 @@ const GameModeDropdown = (props: GameModeDropdownProps) => {
                   {(checked) => (
                     <div classList={{ checked }} class="mode-radio">
                       <div class="mode-picto">{gameMode.head()}</div>
-                      <p class="title">{t("gameMode")[modeKind].subtitle}</p>
+                      <div class="mode-description">
+                        <p class="title">{t("gameMode")[modeKind].subtitle}</p>
+                        <p class="subtitle">{t("gameMode")[modeKind].title}</p>
+                      </div>
                     </div>
                   )}
                 </HugeRadioLabel>
