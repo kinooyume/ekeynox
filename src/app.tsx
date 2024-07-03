@@ -79,7 +79,6 @@ export default function App() {
                     />
                     <Meta property="og:type" content="website" />
                     <Meta property="og:url" content="https://ekeynox.xyz" />
-                    <Meta property="og:site_name" content="Ekeynox" />
                     <Meta
                       property="og:image"
                       content="https://ekeynox.xyz/ekeynox-og.jpg"
