@@ -1,4 +1,4 @@
-import { Link, MetaProvider, Title } from "@solidjs/meta";
+import { Link, Meta, MetaProvider, Title } from "@solidjs/meta";
 import { Router } from "@solidjs/router";
 import { FileRoutes } from "@solidjs/start/router";
 
@@ -19,6 +19,7 @@ import { AppStateProvider } from "./appState/AppStateProvider";
 import { GameOptionsProvider } from "./gameOptions/GameOptionsProvider";
 import { SettingsProvider } from "./settings/SettingsProvider";
 import { FocusProvider } from "./components/ui/FocusProvider";
+import { useI18n } from "./settings/i18nProvider";
 
 export default function App() {
   const sheets: StyleData[] = [];
@@ -57,6 +58,8 @@ export default function App() {
     </div>
   );
 
+  const t = useI18n();
+
   return (
     <Router
       root={(props) => (
@@ -68,6 +71,7 @@ export default function App() {
                   <FocusProvider>
                     <Header />
                     <Title>Ekeynox</Title>
+                    <Meta name="description" content={t("webDescription")}/>
                     <Link
                       rel="preload"
                       href="/fonts/Larsseit/Larsseit.woff2"
