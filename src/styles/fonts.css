@@ -1,32 +1,32 @@
 @font-face {
   font-family: Larsseit;
-  src: url("fonts/Larsseit/Larsseit.woff2");
+  src: url("/fonts/Larsseit/Larsseit.woff2");
   font-display: swap;
   }
 
 @font-face {
   font-family: Larsseit;
-  src: url("fonts/Larsseit/Larsseit-ExtraBold.woff2");
+  src: url("/fonts/Larsseit/Larsseit-ExtraBold.woff2");
   font-weight: 800;
   font-display: swap;
   }
 
 @font-face {
   font-family: Larsseit;
-  src: url("fonts/Larsseit/Larsseit-Bold.woff2");
+  src: url("/fonts/Larsseit/Larsseit-Bold.woff2");
   font-weight: bold;
   font-display: swap;
   }
 
 @font-face {
   font-family: Larsseit;
-  src: url("fonts/Larsseit/Larsseit-Light.woff2");
+  src: url("/fonts/Larsseit/Larsseit-Light.woff2");
   font-weight: 200;
   }
 
 @font-face {
   font-family: Larsseit;
-  src: url("fonts/Larsseit/Larsseit-Thin.woff2");
+  src: url("/fonts/Larsseit/Larsseit-Thin.woff2");
   font-weight: 100;
   font-display: swap;
   }
@@ -34,7 +34,7 @@
 
 @font-face {
   font-family: OdudoMono;
-  src: url("fonts/OdudoMono/OdudoMono-Regular.woff2");
+  src: url("/fonts/OdudoMono/OdudoMono-Regular.woff2");
   font-display: swap;
   }
 
