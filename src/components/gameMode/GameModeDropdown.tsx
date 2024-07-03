@@ -170,7 +170,7 @@ const GameModeDropdown = (props: GameModeDropdownProps) => {
     >
       {(setIsOpen) => (
         <div class="content">
-          <ul class="modes">
+          <div class="modes">
             <VerticalRadioBox
               name="game-mode-dropdown"
               each={gameModesArray}
@@ -197,7 +197,7 @@ const GameModeDropdown = (props: GameModeDropdownProps) => {
                 </HugeRadioLabel>
               )}
             </VerticalRadioBox>
-          </ul>
+          </div>
           <div class="options-wrapper">
             <div class="elem options">
               <Switch>
