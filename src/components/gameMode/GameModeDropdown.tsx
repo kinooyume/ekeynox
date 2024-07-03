@@ -4,6 +4,7 @@ import {
   Switch,
   createComputed,
   createSignal,
+  on,
 } from "solid-js";
 import { createStore } from "solid-js/store";
 import type { CustomInputRef } from "../ui/CustomInput";
@@ -138,6 +139,14 @@ const GameModeDropdown = (props: GameModeDropdownProps) => {
 
   /* *** */
 
+  createComputed(
+    on(
+      () => props.gameOptions,
+      () => {
+        setCustomValue(props.gameOptions.custom);
+      },
+    ),
+  );
   createComputed(() => {
     if (gameOptions.categorySelected.kind !== CategoryKind.custom)
       setIsReady(true);
