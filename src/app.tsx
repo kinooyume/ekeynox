@@ -71,7 +71,26 @@ export default function App() {
                   <FocusProvider>
                     <Header />
                     <Title>Ekeynox</Title>
-                    <Meta name="description" content={t("webDescription")}/>
+                    <Meta name="description" content={t("webDescription")} />
+                    <Meta property="og:title" content="Ekeynox" />
+                    <Meta
+                      property="og:description"
+                      content={t("webDescription")}
+                    />
+                    <Meta property="og:type" content="website" />
+                    <Meta property="og:url" content="https://ekeynox.xyz" />
+                    <Meta property="og:site_name" content="Ekeynox" />
+                    <Meta
+                      property="og:image"
+                      content="https://ekeynox.xyz/ekeynox-og.jpg"
+                    />
+                    <Meta property="og:image:type" content="image/jpeg" />
+                    <Meta property="og:image:width" content="1200" />
+                    <Meta property="og:image:height" content="630" />
+                    <Meta
+                      property="og:image:alt"
+                      content={t("webDescription")}
+                    />
                     <Link
                       rel="preload"
                       href="/fonts/Larsseit/Larsseit.woff2"
