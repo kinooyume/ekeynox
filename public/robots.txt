@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: http://ekeynox.xyz/sitemap.xml
+Sitemap: https://ekeynox.xyz/sitemap.xml
