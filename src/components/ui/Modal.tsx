@@ -8,13 +8,12 @@ import Cross from "../svgs/cross";
 
 type AnimationProps = {
   params: anime.AnimeParams;
-  offset?: number;
+  offset?: string;
 };
 
 type ModalProps = {
   button: (isOpen: Accessor<boolean>, toggle: () => void) => JSX.Element;
   portalId: string;
-  childrenTarget: string | string[];
   openAnimation: AnimationProps[];
   closeAnimation: AnimationProps[];
   children: JSX.Element | JSX.Element[];
@@ -36,17 +35,7 @@ const Modal = (props: ModalProps) => {
         height: [0, modalElement()!.clientHeight],
         opacity: [0, 1],
         duration: 650,
-      })
-      .add(
-        {
-          targets: props.childrenTarget,
-          opacity: [0, 1],
-          translateY: [20, 0],
-          duration: 650,
-          delay: (el, i, l) => i * 60,
-        },
-        "-=425",
-      );
+      });
     props.openAnimation.forEach((step) => {
       a.add(step.params, step.offset);
     });
@@ -55,30 +44,24 @@ const Modal = (props: ModalProps) => {
 
   const closeAnimation = () => {
     const height = modalElement()!.clientHeight - 34;
-    const a = anime
-      .timeline({
-        easing: "easeOutElastic(1, 0.9)",
-        autoplay: false,
-      })
-      .add({
-        targets: props.childrenTarget,
-        opacity: [1, 0],
-        translateY: [0, 20],
-        delay: (el, i, l) => i * 60,
-        duration: 550,
-      })
-      .add(
-        {
-          targets: modalElement(),
-          opacity: [1, 0],
-          height: [height, 0],
-          duration: 550,
-        },
-        "-=425",
-      );
+    const a = anime.timeline({
+      easing: "easeOutElastic(1, 0.9)",
+      autoplay: false,
+    });
+
     props.closeAnimation.forEach((step) => {
       a.add(step.params, step.offset);
     });
+
+    a.add(
+      {
+        targets: modalElement(),
+        opacity: [1, 0],
+        height: [height, 0],
+        duration: 550,
+      },
+      "-=425",
+    );
     return a;
   };
 
