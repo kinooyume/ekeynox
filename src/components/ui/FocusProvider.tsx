@@ -30,6 +30,7 @@ export function FocusProvider(props: {
   children: JSX.Element | JSX.Element[];
 }) {
   const [focus, setFocus] = createSignal<FocusType>(FocusType.View);
+
   return (
     <focusContext.Provider
       value={{

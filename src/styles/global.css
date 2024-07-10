@@ -177,20 +177,17 @@ ul {
   width: 100%;
   grid-column: 1 / 4;
 }
-a {
-  color: var(--text-color);
-  text-decoration: none;
-  a:hover {
-    text-decoration: underline;
-  }
-}
 
+a {
+  cursor: pointer;
+}
 /* Cool clicky button, more simple */
 /* https://uiverse.io/gharsh11032000/neat-bullfrog-61 */
 button,
 a.primary {
+  color: var(--text-color);
+  text-decoration: none;
   border: 0;
-  cursor: pointer;
   background: none;
   border-radius: 12px;
   font-size: 16px;

@@ -58,5 +58,9 @@
       "description": "Le temps est compté ! Combien de mots pouvez-vous écrire dans le temps imparti ?",
       "hugeDescription": "Clavier prêt, montre à la main, prouve que tu es le lapin le plus rapide ! Défi contre la montre lancé !"
     }
+  },
+  "about": {
+    "project": "Ekeynox est un jeu de dactylographie expérimental qui vous permet d'apprendre la dactylographie par le biais de la gamification, fortement inspiré par [monkeytype](https://monkeytype.com/).",
+    "me": "## À la recherche d'un freelance ?\n Hello, Je suis Martin Kinoo, developpeur frontend/fullstack en freelance et vous vous trouvez sur mon projet perso. Envie de collaborer ? Découvrez-en plus sur mon parcours sur LinkedIn."
   }
 }

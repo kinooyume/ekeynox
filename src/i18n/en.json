@@ -36,8 +36,8 @@
   "content": "content",
   "timeLimit": "time limit",
   "space": "Space",
-  "statistics": { 
-   "title": "statistics",
+  "statistics": {
+    "title": "statistics",
     "wordsSpeedTitle": "Speed per word",
     "wordsSpeedSubtitle": "A word is considered to be 5 characters or more",
     "contentResumeTitle": "Content typed",
@@ -58,6 +58,9 @@
       "description": "Time is running out ! how many words can you write in the time allowed?",
       "hugeDescription": "With keyboard ready and watch in hand, prove you're the fastest rabbit! Challenge against the clock begun!"
     }
-
+  },
+  "about": {
+    "project": "Ekeynox is an experimental typing game that allows you to learn touch typing through gamification, greatly inspired by [monkeytype](https://monkeytype.com/).",
+    "me": "## Looking for a freelance ?\nHello, I'm Martin Kinoo, freelance frontend/fullstack developer and you're on my personal project. Want to collaborate? Find out more about me on LinkedIn."
   }
 }

@@ -102,10 +102,6 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
   };
 
   css`
-    .version {
-      font-weight: 200;
-      color: var(--text-secondary-color);
-    }
     .main-view {
       position: relative;
     }
@@ -353,9 +349,6 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
           </div>
         </div>
       </div>
-      <Portal mount={document.getElementById("header-nav-actions-portal")!}>
-        <span class="version">Alpha 0.13-3</span>
-      </Portal>
     </div>
   );
 };

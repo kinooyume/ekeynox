@@ -1,4 +1,4 @@
-import { type MetaWord, type Metakey } from "../content/Content.ts";
+import { type MetaWord, type MetaKey } from "../content/Content.ts";
 import {
   promptKeypressHandler,
   type PendingPromptKeypressMetrics,

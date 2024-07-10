@@ -1,5 +1,10 @@
+import { Portal } from "solid-js/web";
+import { css } from "solid-styled";
 import { useAppState } from "~/appState/AppStateProvider";
 import GameModeMenu from "~/components/gameMode/GameModeMenu";
+import ModalAbout from "~/components/modals/ModalAbout";
+import Modal from "~/components/ui/Modal";
+import QuestionMark from "~/components/ui/QuestionMark";
 import { useGameOptions } from "~/gameOptions/GameOptionsProvider";
 
 import { GameOptions, optionsToPending } from "~/gameOptions/gameOptions";
@@ -20,10 +25,49 @@ export default function Menu() {
   };
 
   return (
-    <GameModeMenu
-      gameOptions={persistedGameOptions}
-      fetchSourcesGen={fetchSourcesGen}
-      start={start}
-    />
+    <div>
+      <GameModeMenu
+        gameOptions={persistedGameOptions}
+        fetchSourcesGen={fetchSourcesGen}
+        start={start}
+      />
+      <Portal mount={document.getElementById("header-nav-actions-portal")!}>
+        <div
+          class="info"
+          style={{
+            display: "flex",
+            gap: "4px",
+          }}
+        >
+          <span
+            class="version"
+            style={{
+              "font-weight": 200,
+              color: "var(--text-secondary-color)",
+            }}
+          >
+            Alpha 0.13-3 ·
+          </span>
+          <Modal
+            portalId="modal-portal"
+            openAnimation={[]}
+            childrenTarget={[
+              ".modal-about-content p",
+              ".modal-about-content h2",
+              ".modal-about-content .animate",
+            ]}
+            closeAnimation={[]}
+            button={(isOpen, toggle) => (
+              <QuestionMark
+                onClick={toggle}
+                colorVariable="text-secondary-color"
+              />
+            )}
+          >
+            <ModalAbout />
+          </Modal>
+        </div>
+      </Portal>
+    </div>
   );
 }

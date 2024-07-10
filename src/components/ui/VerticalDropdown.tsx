@@ -140,6 +140,7 @@ const VerticalDropdown = (props: VerticalDropdownProps) => {
         isOpen,
         (isOpen) => {
           if (pendingAnimation()) return;
+        console.log("realyy ?")
           if (isOpen) {
             const anim = openAnimation();
             setFocus(FocusType.Hud);
@@ -179,7 +180,7 @@ const VerticalDropdown = (props: VerticalDropdownProps) => {
       ref={setWrapper}
       classList={{ open: isOpen() }}
     >
-      <div class="label" ref={label!} onClick={() => toggle()}>
+      <div class="label" ref={label!} onClick={toggle}>
         {props.label(isOpen)}
       </div>
       <div
