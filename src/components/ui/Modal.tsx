@@ -1,9 +1,8 @@
-import { Accessor, JSX, Show, createSignal, onMount } from "solid-js";
+import { Accessor, JSX, Show, createSignal } from "solid-js";
 import { Portal } from "solid-js/web";
 import { css } from "solid-styled";
 import anime from "animejs";
 import useModalAnimated from "./ModalAnimated";
-import { Transition, TransitionGroup } from "solid-transition-group";
 import Cross from "../svgs/cross";
 
 type AnimationProps = {
@@ -22,7 +21,6 @@ type ModalProps = {
 const Modal = (props: ModalProps) => {
   const [isOpen, setIsOpen] = createSignal(false);
   const [modalElement, setModalElement] = createSignal<HTMLDivElement>();
-  const [modalContent, setModalContent] = createSignal<HTMLDivElement>();
 
   const openAnimation = () => {
     const a = anime
@@ -95,6 +93,7 @@ const Modal = (props: ModalProps) => {
       background-color: var(--color-surface-100);
       padding: 8px 26px 26px;
       border: 1px solid var(--background-color);
+      border-radius: 12px;
       box-shadow:
         0.6px 1.8px 2.2px rgba(0, 0, 0, 0.02),
         1.5px 4.3px 5.3px rgba(0, 0, 0, 0.028),
@@ -135,7 +134,7 @@ const Modal = (props: ModalProps) => {
             <div class="cross" onClick={toggle}>
               <Cross />
             </div>
-            <div class="modal_content" ref={setModalContent}>
+            <div class="modal_content">
               {props.children}
             </div>
           </div>
