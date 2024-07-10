@@ -52,9 +52,7 @@ export default function Menu() {
             portalId="modal-portal"
             openAnimation={[]}
             childrenTarget={[
-              ".modal-about-content p",
-              ".modal-about-content h2",
-              ".modal-about-content .animate",
+              ".modal-about-content p, .modal-about-content .animate, .modal-about-content h2",
             ]}
             closeAnimation={[]}
             button={(isOpen, toggle) => (
