@@ -1,7 +1,9 @@
 import { WordStatus } from "../prompt/PromptWord.tsx";
 import { KeyFocus, KeyStatus } from "../metrics/KeyMetrics.ts";
 
-export type Metakey = {
+type NonEmptyArray<T> = [T, ...T[]];
+
+export type MetaKey = {
   // index: number;
   status: KeyStatus;
   focus: KeyFocus;
@@ -11,8 +13,10 @@ export type Metakey = {
 };
 
 export type MetaWord = {
-  keys: Array<Metakey>;
+  /* Core */
+  keys: NonEmptyArray<MetaKey>;
   isSeparator: boolean;
+  /* --- */
   status: WordStatus;
   focus: boolean;
   wasCorrect: boolean;
@@ -23,39 +27,50 @@ export type MetaWord = {
 export type Paragraph = Array<MetaWord>;
 export type Paragraphs = Array<Paragraph>;
 
-const makeEnter = (): MetaWord => ({
-  focus: false,
-  status: WordStatus.unstart,
-  isSeparator: true,
-  wasCorrect: false,
-  spentTime: 0,
-  wpm: 0,
-  keys: [
-    {
-      key: "Enter",
-      status: KeyStatus.unset,
-      ghostFocus: KeyFocus.unset,
-      focus: KeyFocus.unset,
-    },
-  ],
+const makeKey = (key: string): MetaKey => ({
+  key,
+  status: KeyStatus.unset,
+  focus: KeyFocus.unset,
+  ghostFocus: KeyFocus.unset,
 });
 
-const makeSpace = (): MetaWord => ({
-  focus: false,
+const makeWordFromKeys = (
+  keys: NonEmptyArray<MetaKey>,
+  isSeparator = false,
+): MetaWord => ({
+  keys,
+  isSeparator,
   status: WordStatus.unstart,
-  isSeparator: true,
+  focus: false,
   wasCorrect: false,
   spentTime: 0,
   wpm: 0,
-  keys: [
-    {
-      key: " ",
-      status: KeyStatus.unset,
-      ghostFocus: KeyFocus.unset,
-      focus: KeyFocus.unset,
-    },
-  ],
 });
+
+const makeWordOneKey = (key: string, isSeparator = false): MetaWord =>
+  makeWordFromKeys([makeKey(key)], isSeparator);
+
+const makeWordFromString = (
+  word: string,
+  keyCallback?: (key: string) => void,
+): MetaWord | null => {
+  const keys = word.split("").map((key) => {
+    keyCallback && keyCallback(key);
+    return makeKey(key);
+  });
+
+  return keys.length > 0
+    ? makeWordFromKeys(keys as NonEmptyArray<MetaKey>, word.trim() === "")
+    : null;
+};
+
+const makeEnter = (): MetaWord => makeWordOneKey("Enter", true);
+const makeSpace = (): MetaWord => makeWordOneKey(" ", true);
+
+const parseWord = (keySet: Set<string>) => (word: string) =>
+  makeWordFromString(word, (key) => keySet.add(key));
+
+/* ContentData */
 
 export type ContentData = {
   paragraphs: Paragraphs;
@@ -68,26 +83,6 @@ const emptyContentData: () => ContentData = () => ({
   keySet: new Set<string>(),
   wordsCount: 0,
 });
-
-const parseWord =
-  (keySet: Set<string>) =>
-  ({ word }: { word: string }) => ({
-    focus: false,
-    status: WordStatus.unstart,
-    wasCorrect: false,
-    spentTime: 0,
-    wpm: 0,
-    isSeparator: word.trim() === "",
-    keys: word.split("").map((key) => {
-      keySet.add(key);
-      return {
-        key,
-        status: KeyStatus.unset,
-        focus: KeyFocus.unset,
-        ghostFocus: KeyFocus.unset,
-      };
-    }),
-  });
 
 export type Parser = (source: string) => ContentData;
 export const parse: Parser = (source) => {
@@ -103,11 +98,11 @@ export const parse: Parser = (source) => {
           if (word.trim() !== "") {
             wordsCount++;
           }
-          return wordParser({ word });
+          return wordParser(word);
         })
-        .filter((word) => word.keys.length > 0);
+        .filter((word) => word);
     })
-    .filter((paragraph) => paragraph.length > 0);
+    .filter((paragraph) => paragraph.length > 0) as Paragraphs;
   // TODO: use a flatMap
   if (paragraphs.length > 1) {
     for (let i = 0; i < paragraphs.length - 1; i++) {
@@ -117,50 +112,23 @@ export const parse: Parser = (source) => {
   return { paragraphs, keySet, wordsCount };
 };
 
-type NonEmptyArray<T> = [T, ...T[]];
 
+// One paragraph from words
 const parseWords = (source: Array<string>): ContentData => {
   const keySet = new Set<string>();
   const wordParser = parseWord(keySet);
   let wordsCount = 0;
-  const words = source.flatMap((word, index) => {
-    wordsCount++;
-    if (index < source.length - 1) {
-      return [wordParser({ word }), makeSpace()];
-    } else {
-      return wordParser({ word });
-    }
-  });
+  const words = source
+    .flatMap((word, index) => {
+      wordsCount++;
+      if (index < source.length - 1) {
+        return [wordParser(word), makeSpace()];
+      } else {
+        return wordParser(word);
+      }
+    })
+    .filter((word) => word) as Paragraph;
   return { paragraphs: [words], keySet, wordsCount };
-};
-
-const deepClone = (paragraphs: Paragraphs) =>
-  paragraphs.map((paragraph) =>
-    paragraph.map((word) => ({
-      ...word,
-      keys: word.keys.map((key) => ({ ...key })),
-    })),
-  );
-
-const deepCloneReset = (paragraphs: Paragraphs): Paragraphs => {
-  return paragraphs.map((paragraph) =>
-    paragraph.map((word) => {
-      return {
-        keys: word.keys.map((key) => ({
-          status: KeyStatus.unset,
-          focus: KeyFocus.unset,
-          ghostFocus: KeyFocus.unset,
-          key: `${key.key}`,
-        })),
-        isSeparator: word.isSeparator,
-        status: WordStatus.unstart,
-        focus: false,
-        wasCorrect: false,
-        spentTime: 0,
-        wpm: 0,
-      };
-    }),
-  );
 };
 
 const makeKeySet = (paragraphs: Paragraphs) => {
@@ -182,11 +150,36 @@ const contentDataFromParagraphs = (
   wordsCount,
 });
 
+const deepClone = (paragraphs: Paragraphs) =>
+  paragraphs.map((paragraph) =>
+    paragraph.map((word) => ({
+      ...word,
+      keys: word.keys.map((key) => ({ ...key })),
+    })),
+  );
+
+const deepCloneReset = (paragraphs: Paragraphs): Paragraphs => {
+  return paragraphs.map(
+    (paragraph) =>
+      paragraph
+        .map((word) => {
+          const keys = word.keys.map((key) => makeKey(`${key.key}`));
+          if (keys.length === 0) return;
+          return makeWordFromKeys(
+            keys as NonEmptyArray<MetaKey>,
+            word.isSeparator,
+          );
+        })
+        .filter((word) => word) as Paragraph,
+  );
+};
+
 export default {
   parse,
   parseWords,
   deepClone,
   deepCloneReset,
+  makeWordOneKey,
   makeEnter,
   makeSpace,
   contentDataFromParagraphs,

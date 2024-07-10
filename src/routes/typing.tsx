@@ -31,6 +31,7 @@ import TypingGameManager from "~/components/typing/TypingGameManager";
 
 const ClientResume = clientOnly(() => import("~/components/resume/TypingMetricsResume"));
 const ClientActionsResume = clientOnly(() => import("~/components/resume/ActionsResume"));
+
 export default function Typing() {
   const { state, mutation } = useAppState();
   const navigate = useNavigate();

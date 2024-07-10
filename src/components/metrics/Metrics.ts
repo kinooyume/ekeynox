@@ -35,7 +35,7 @@ export type TimedKey = {
   duration: number;
 };
 
-export type KeyResume = { [k: string]: KeyStatusProjection };
+export type KeyResume = Record<string, KeyStatusProjection>;
 
 export type MetricsResume = {
   chart: ChartMetrics;
@@ -98,7 +98,7 @@ const logsToChartMetrics = (
 };
 
 const averageWordWpm = (words: Array<MetaWord>): Array<WordSpeed> => {
-  let result = [] as WordSpeed[];
+  let result : WordSpeed[] = [];
   words.forEach((word) => {
     if (word.wpm === 0 || blankCharacters.includes(word.keys[0].key)) return;
     const keys = word.keys.map((k) => k.key).join("");
@@ -157,4 +157,11 @@ const createMetricsResume = (metrics: Metrics): MetricsResume => ({
   keys: makeKeysResume(sortKeys(metrics.keys)),
 });
 
-export { createMetricsResume };
+export {
+  createMetricsResume,
+  // Tests 
+  logsToChartMetrics,
+  averageWordWpm,
+  getSequence,
+  makeKeysResume,
+};

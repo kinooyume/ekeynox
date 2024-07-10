@@ -6,6 +6,7 @@ export type RawDictionary = typeof DictionaryType;
 
 import en_dict from "../i18n/en.json";
 import fr_dict from "../i18n/fr.json";
+
 import { JSX, createContext, createMemo, useContext } from "solid-js";
 import { Locale } from "./settings";
 

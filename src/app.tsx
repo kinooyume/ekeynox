@@ -69,7 +69,10 @@ export default function App() {
                   <FocusProvider>
                     <Header />
                     <Title>Ekeynox</Title>
-                    <Meta name="description" content="Learn to type while having fun"/>
+                    <Meta
+                      name="description"
+                      content="Learn to type while having fun"
+                    />
                     <Meta property="og:title" content="Ekeynox" />
                     <Meta
                       property="og:description"
@@ -127,6 +130,7 @@ export default function App() {
                       <Suspense fallback={<div>Loading..</div>}>
                         <PageTransition {...props} />
                       </Suspense>
+                      <div id="modal-portal"></div>
                     </main>
                   </FocusProvider>
                 </AppStateProvider>

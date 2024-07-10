@@ -149,7 +149,6 @@ const keypressProjectionHandler = (props: KeypressMetricsProps) => {
         wordProjection: Object.assign({}, wordProjection),
         duration,
       },
-      // words: props.words,
       meta: {
         logs: sortedLogs,
         wordsLogs: sortedWordLogs,
