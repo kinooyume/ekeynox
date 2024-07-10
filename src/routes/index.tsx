@@ -50,11 +50,38 @@ export default function Menu() {
           </span>
           <Modal
             portalId="modal-portal"
-            openAnimation={[]}
-            childrenTarget={[
-              ".modal-about-content p, .modal-about-content .animate, .modal-about-content h2",
+            openAnimation={[
+              {
+                params: {
+                  targets: ".modal-about-content.project",
+                  opacity: [0, 1],
+                  translateX: [20, 0],
+                  duration: 500,
+                },
+                offset: "-=300",
+              },
+              {
+                params: {
+                  targets: ".modal-about-content.me",
+                  opacity: [0, 1],
+                  translateX: [-20, 0],
+                  duration: 500,
+                },
+                offset: "-=500",
+              },
             ]}
-            closeAnimation={[]}
+            closeAnimation={[
+              {
+                params: {
+                  targets:
+                    ".modal-about-content p, .modal-about-content .animate, .modal-about-content h2",
+                  opacity: [1, 0],
+                  translateY: [0, 20],
+                  delay: (el, i, l) => i * 60,
+                  duration: 550,
+                },
+              },
+            ]}
             button={(isOpen, toggle) => (
               <QuestionMark
                 onClick={toggle}
