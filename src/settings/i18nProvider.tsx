@@ -28,6 +28,7 @@ type I18nProviderProps = {
   children: JSX.Element | JSX.Element[];
 };
 
+// TODO: check when undefined 
 const i18nContext = createContext<Translator>({} as Translator);
 
 export function useI18n() {

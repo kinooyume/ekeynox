@@ -7,10 +7,8 @@ import { useNavigate } from "@solidjs/router";
 import { onMount } from "solid-js";
 import anime from "animejs";
 
-type HeaderProps = {};
 
-const Header = (props: HeaderProps) => {
-  const { mutation: navigation } = useAppState();
+const Header = () => {
   css`
     .header {
       position: fixed;
@@ -39,8 +37,9 @@ const Header = (props: HeaderProps) => {
       flex-grow: 1;
     }
   `;
+  // const { mutation: navigation } = useAppState();
+  // const navigate = useNavigate();
 
-  const navigate = useNavigate();
 
   onMount(() => {
     anime.timeline().add({
@@ -60,7 +59,7 @@ const Header = (props: HeaderProps) => {
         </a>
       </div>
       <div class="center">
-        <div id="header-nav-actions-portal"></div>
+        <div id="header-nav-actions-portal" />
       </div>
       <div class="right">
         <HeaderSettings />
@@ -71,5 +70,5 @@ const Header = (props: HeaderProps) => {
 
 export default Header;
 
-// cool magnet menu selection, + custom cursor
 // https://codepen.io/dev_loop/pen/KKdEgdz
+// cool magnet menu selection, + custom cursor

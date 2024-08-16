@@ -5,10 +5,13 @@ import { css } from "solid-styled";
 import { useI18n } from "~/settings/i18nProvider";
 import Logo from "../svgs/logo";
 import LinkedinBadge from "../ui/LinkedinBadge";
+import Morphing from "../ui/Morphing";
 
-type ModalAboutProps = {};
+type ModalAboutProps = {
+   next: () => void;
+};
 
-const ModalAbout = (props: ModalAboutProps) => {
+const AboutInfo = (props: ModalAboutProps) => {
   const t = useI18n();
 
   css`
@@ -86,9 +89,10 @@ const ModalAbout = (props: ModalAboutProps) => {
           href="https://www.linkedin.com/in/martin-kinoo/"
           text="martin-kinoo"
         />
+        <button onClick={props.next}>Next</button>
       </div>
     </div>
   );
 };
 
-export default ModalAbout;
+export default AboutInfo;
