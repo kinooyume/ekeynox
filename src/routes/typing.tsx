@@ -3,13 +3,7 @@ import { clientOnly } from "@solidjs/start";
 
 import { useGameOptions } from "~/gameOptions/GameOptionsProvider";
 import { useSettings } from "~/settings/SettingsProvider";
-import {
-  Match,
-  Show,
-  Switch,
-  createResource,
-  onMount,
-} from "solid-js";
+import { Match, Show, Switch, createResource, onMount } from "solid-js";
 import { useNavigate } from "@solidjs/router";
 
 import KeyboardLayout from "../settings/keyboardLayout.ts";
@@ -18,6 +12,7 @@ import {
   PendingState,
   ResumeState,
 } from "~/appState/appState.ts";
+
 import {
   GameOptions,
   deepCopy,
@@ -29,8 +24,12 @@ import TypingGameManager from "~/components/typing/TypingGameManager";
 //import TypingMetricsResume from "~/components/resume/TypingMetricsResume";
 // import ActionsResume from "~/components/resume/ActionsResume";
 
-const ClientResume = clientOnly(() => import("~/components/resume/TypingMetricsResume"));
-const ClientActionsResume = clientOnly(() => import("~/components/resume/ActionsResume"));
+const ClientResume = clientOnly(
+  () => import("~/components/resume/TypingMetricsResume"),
+);
+const ClientActionsResume = clientOnly(
+  () => import("~/components/resume/ActionsResume"),
+);
 
 export default function Typing() {
   const { state, mutation } = useAppState();

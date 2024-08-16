@@ -2,6 +2,7 @@ import { Accessor, createComputed, createSignal, on } from "solid-js";
 import { FocusType, useFocus } from "../ui/FocusProvider";
 import useClickOutside from "solid-click-outside";
 import { AnimeTimelineInstance } from "animejs";
+import { AnimationComp } from "~/animations/animation";
 
 /*
  * - Made for different open/close Animation
@@ -10,15 +11,16 @@ import { AnimeTimelineInstance } from "animejs";
  * - clickOutside
  */
 
-type ModalAnimationProps = {
+// it's an hook
+
+type ToggleAnimatedProps = {
   element: Accessor<HTMLElement | undefined>;
-  openAnimation: () => anime.AnimeTimelineInstance;
-  closeAnimation: () => anime.AnimeTimelineInstance;
+  animation: AnimationComp;
   isOpen: Accessor<boolean>;
   setIsOpen: (value: boolean) => void;
 };
 
-const useModalAnimated = (props: ModalAnimationProps) => {
+const useToggleAnimated = (props: ToggleAnimatedProps) => {
   const [pendingAnimation, setPendingAnimation] = createSignal(false);
 
   const { setFocus } = useFocus();
@@ -34,14 +36,14 @@ const useModalAnimated = (props: ModalAnimationProps) => {
 
   const open = () => {
     props.setIsOpen(true);
-    animationHandler(props.openAnimation(), () => {
+    animationHandler(props.animation.enter(), () => {
       setFocus(FocusType.Hud);
       setPendingAnimation(false);
     });
   };
 
   const close = () =>
-    animationHandler(props.closeAnimation(), () => {
+    animationHandler(props.animation.leave(), () => {
       setFocus(FocusType.View);
       setPendingAnimation(false);
       props.setIsOpen(false);
@@ -62,4 +64,4 @@ const useModalAnimated = (props: ModalAnimationProps) => {
   return { toggle, open, close, pendingAnimation };
 };
 
-export default useModalAnimated;
+export default useToggleAnimated;

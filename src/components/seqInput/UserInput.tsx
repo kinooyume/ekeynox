@@ -42,14 +42,6 @@ const UserInput = (props: UserInputProps) => {
 
   /* Key Handlers */
 
-  // WordsCount
-  // const incrementWordsCount = (c: Cursor) => {
-  //   if (c.get.word().status !== WordStatus.unfocus && !c.get.isSeparator()) {
-  //     setWordsCount((wordsCount) => wordsCount + 1);
-  //     props.setWordsCount(wordsCount());
-  //   }
-  // };
-
   const handleInputEvent = (event: Event) => {
     // TODO: composing for accents, could be great to have some visual feedback
     if (event instanceof InputEvent) {
@@ -116,8 +108,8 @@ const UserInput = (props: UserInputProps) => {
       data-gramm="false"
       data-gramm_editor="false"
       data-enable-grammarly="false"
-      style="position: fixed; top: -100px"
-    ></input>
+      style={{ position: "fixed", top: "-100px" }}
+    />
   );
 };
 

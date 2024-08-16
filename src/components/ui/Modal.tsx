@@ -2,19 +2,20 @@ import { Accessor, JSX, Show, createSignal } from "solid-js";
 import { Portal } from "solid-js/web";
 import { css } from "solid-styled";
 import anime from "animejs";
-import useModalAnimated from "./ModalAnimated";
-import Cross from "../svgs/cross";
+import useToggleAnimated from "./ModalAnimated";
 
-type AnimationProps = {
-  params: anime.AnimeParams;
-  offset?: string;
-};
+import Cross from "../svgs/cross";
+import {
+  type AnimationChildren,
+  createAnimation,
+} from "~/animations/animation";
+
+// NOTE: très similaire à morphing
 
 type ModalProps = {
   button: (isOpen: Accessor<boolean>, toggle: () => void) => JSX.Element;
   portalId: string;
-  openAnimation: AnimationProps[];
-  closeAnimation: AnimationProps[];
+  childrenAnimation: AnimationChildren;
   children: JSX.Element | JSX.Element[];
 };
 
@@ -22,50 +23,44 @@ const Modal = (props: ModalProps) => {
   const [isOpen, setIsOpen] = createSignal(false);
   const [modalElement, setModalElement] = createSignal<HTMLDivElement>();
 
-  const openAnimation = () => {
-    const a = anime
-      .timeline({
-        easing: "easeOutElastic(1, 0.9)",
-        autoplay: false,
-      })
-      .add({
-        targets: modalElement(),
-        height: [0, modalElement()!.clientHeight],
-        opacity: [0, 1],
-        duration: 650,
-      });
-    props.openAnimation.forEach((step) => {
-      a.add(step.params, step.offset);
-    });
-    return a;
-  };
-
-  const closeAnimation = () => {
-    const height = modalElement()!.clientHeight - 34;
-    const a = anime.timeline({
-      easing: "easeOutElastic(1, 0.9)",
-      autoplay: false,
-    });
-
-    props.closeAnimation.forEach((step) => {
-      a.add(step.params, step.offset);
-    });
-
-    a.add(
-      {
-        targets: modalElement(),
-        opacity: [1, 0],
-        height: [height, 0],
-        duration: 550,
+  const animation = createAnimation({
+    parent: {
+      enter: () => {
+        const height = modalElement()!.clientHeight;
+        console.log("height", height);
+        return {
+          timeline: {
+            easing: "easeOutElastic(1, 0.9)",
+          },
+          params: {
+            targets: modalElement(),
+            height: [0, height],
+            opacity: [0, 1],
+            duration: 650,
+          },
+        };
       },
-      "-=425",
-    );
-    return a;
-  };
+      leave: () => {
+        const height = modalElement()!.clientHeight - 34;
+        return {
+          timeline: {
+            easing: "easeOutElastic(1, 0.9)",
+          },
+          params: {
+            targets: modalElement(),
+            opacity: [1, 0],
+            height: [height, 0],
+            duration: 550,
+          },
+          offset: "-=425",
+        };
+      },
+    },
+    children: props.childrenAnimation,
+  });
 
-  const { toggle } = useModalAnimated({
-    openAnimation,
-    closeAnimation,
+  const { toggle } = useToggleAnimated({
+    animation,
     isOpen,
     setIsOpen,
     element: modalElement,
@@ -86,6 +81,7 @@ const Modal = (props: ModalProps) => {
       background-color: red;
       top: 80px;
       margin: 0 auto;
+      opacity: 0;
       right: 0;
       left: 0;
       max-width: 800px;
@@ -134,9 +130,7 @@ const Modal = (props: ModalProps) => {
             <div class="cross" onClick={toggle}>
               <Cross />
             </div>
-            <div class="modal_content">
-              {props.children}
-            </div>
+            <div class="modal_content">{props.children}</div>
           </div>
         </Portal>
       </Show>

@@ -2,7 +2,7 @@ import { css } from "solid-styled";
 import GameModeDropdown from "../gameMode/GameModeDropdown";
 import GameOptionsRecap from "../gameMode/GameOptionsRecap";
 import { Show } from "solid-js";
-import { ContentGeneration, GameOptions } from "~/gameOptions/gameOptions";
+import { GameOptions } from "~/gameOptions/gameOptions";
 import { useI18n } from "~/settings/i18nProvider";
 
 type HeaderNavLeftProps = {

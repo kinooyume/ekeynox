@@ -2,7 +2,6 @@ import {
   For,
   Show,
   createComputed,
-  createEffect,
   createSignal,
   on,
   onCleanup,

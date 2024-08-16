@@ -1,18 +1,9 @@
 import anime from "animejs";
-import useClickOutside from "solid-click-outside";
-import {
-  Accessor,
-  JSX,
-  Setter,
-  Show,
-  createComputed,
-  createSignal,
-  on,
-  onMount,
-} from "solid-js";
+import { Accessor, JSX, Show, createSignal } from "solid-js";
 import { css } from "solid-styled";
 import Cross from "../svgs/cross";
-import { FocusType, useFocus } from "./FocusProvider";
+import useToggleAnimated from "./ModalAnimated";
+import { createAnimation } from "~/animations/animation";
 
 type VerticalDropdownProps = {
   id: string;
@@ -31,7 +22,6 @@ const VerticalDropdown = (props: VerticalDropdownProps) => {
       position: absolute;
       background-color: var(--color-surface-100);
       opacity: 0;
-      height: 0;
       width: 150px;
       pointer-events: none;
     }
@@ -70,109 +60,62 @@ const VerticalDropdown = (props: VerticalDropdownProps) => {
     }
   `;
 
-  let openAnimation: () => anime.AnimeInstance;
-  let closeAnimation: () => anime.AnimeInstance;
-
-  let dropdown: HTMLDivElement;
-  let dropdownMargin: HTMLDivElement;
-  let label: HTMLDivElement;
+  const [dropdown, setDropdown] = createSignal<HTMLDivElement>();
+  const [label, setLabel] = createSignal<HTMLDivElement>();
 
   const [wrapper, setWrapper] = createSignal<HTMLDivElement>();
-  const [currentAnime, setCurrentAnime] = createSignal<
-    anime.AnimeInstance | undefined
-  >();
 
-  useClickOutside(wrapper, () => {
-    // TODO: cancel animation instead
-    if (isOpen()) {
-      const ca = currentAnime();
-      if (ca) {
-        ca.pause();
-        setPendingAnimation(false);
-      }
-      setIsOpen(false);
-    }
-  });
-
-  onMount(() => {
-    openAnimation = () => {
-      const a = anime
-        .timeline({
-          autoplay: false,
-          easing: "easeOutElastic(1, 0.9)",
-        })
-        .add({
-          targets: dropdown,
-          height: [0, dropdown.children[0].clientHeight],
-          marginTop: label.clientHeight,
-          opacity: [0, 1],
-          duration: 650,
-        })
-        .add(
-          {
+  const animation = createAnimation({
+    parent: {
+      enter: () => {
+        const height = dropdown()!.children[0].clientHeight;
+        return {
+          timeline: { easing: "easeOutElastic(1, 0.9)" },
+          params: {
+            targets: dropdown(),
+            height: [0, height],
+            marginTop: label()!.clientHeight,
+            opacity: [0, 1],
+            duration: 650,
+          },
+        };
+      },
+      leave: () => ({
+        timeline: { easing: "easeOutExpo" },
+        params: {
+          targets: dropdown(),
+          height: 0,
+          opacity: [1, 0],
+          duration: 0,
+          easing: "easeOutExpo",
+        },
+      }),
+    },
+    children: {
+      enter: [
+        {
+          params: {
             targets: `#${`dropdown-${props.id}`} .elem`,
             translateY: [20, 0],
             opacity: [0, 1],
             duration: 400,
             delay: (el, i, l) => i * 60,
           },
-          "-=425",
-        );
-      setCurrentAnime(a);
-      return a;
-    };
-    closeAnimation = () => {
-      const a = anime({
-        targets: dropdown,
-        height: 0,
-        opacity: [1, 0],
-        duration: 0,
-        easing: "easeOutExpo",
-      });
-      setCurrentAnime(a);
-      return a;
-    };
-
-    const { setFocus } = useFocus();
-
-    createComputed(
-      on(
-        isOpen,
-        (isOpen) => {
-          if (pendingAnimation()) return;
-        console.log("realyy ?")
-          if (isOpen) {
-            const anim = openAnimation();
-            setFocus(FocusType.Hud);
-            setPendingAnimation(true);
-            anim.finished.then(() => {
-              document
-                .querySelectorAll(`#${`dropdown-${props.id}`} .elem`)
-                ?.forEach((el) => el.removeAttribute("style"));
-            });
-            anim.play();
-            anim.finished.then(() => {
-              setPendingAnimation(false);
-            });
-          } else {
-            setFocus(FocusType.View);
-            setPendingAnimation(true);
-            const anim = closeAnimation();
-            anim.finished.then(() => {
-              setPendingAnimation(false);
-            });
-            anim.play();
-          }
+          offset: "-=425",
         },
-        { defer: true },
-      ),
-    );
+      ],
+      leave: [],
+    },
   });
 
   const [isOpen, setIsOpen] = createSignal<boolean>(false);
-  const [pendingAnimation, setPendingAnimation] = createSignal(false);
 
-  const toggle = () => !pendingAnimation() && setIsOpen(!isOpen());
+  const { toggle } = useToggleAnimated({
+    animation,
+    isOpen,
+    setIsOpen,
+    element: wrapper,
+  });
 
   return (
     <div
@@ -180,21 +123,21 @@ const VerticalDropdown = (props: VerticalDropdownProps) => {
       ref={setWrapper}
       classList={{ open: isOpen() }}
     >
-      <div class="label" ref={label!} onClick={toggle}>
+      <div class="label" ref={setLabel} onClick={toggle}>
         {props.label(isOpen)}
       </div>
-      <div
-        class="vertical-dropdown"
-        id={`dropdown-${props.id}`}
-        ref={dropdown!}
-      >
-        {props.children(() => setIsOpen(false))}
-        <Show when={isOpen()}>
+      <Show when={isOpen()}>
+        <div
+          class="vertical-dropdown"
+          id={`dropdown-${props.id}`}
+          ref={setDropdown}
+        >
+          {props.children(() => setIsOpen(false))}
           <div class="cross" onClick={toggle}>
             <Cross />
           </div>
-        </Show>
-      </div>
+        </div>
+      </Show>
     </div>
   );
 };

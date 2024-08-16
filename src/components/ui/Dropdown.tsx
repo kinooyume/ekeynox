@@ -1,19 +1,14 @@
-import anime from "animejs";
 import {
   createSignal,
-  onMount,
   type JSX,
-  createEffect,
-  on,
   type Accessor,
   type Setter,
-  createComputed,
   Show,
 } from "solid-js";
 import { css } from "solid-styled";
-import { FocusType, useFocus } from "./FocusProvider";
+import { createAnimation } from "~/animations/animation";
+import useToggleAnimated from "./ModalAnimated";
 import Cross from "../svgs/cross";
-import useClickOutside from "solid-click-outside";
 
 // Dropdown like animation with anime.js
 // https://codepen.io/NielsVoogt/pen/dyGpNOx
@@ -26,115 +21,73 @@ type DropdownProps = {
 };
 
 const Dropdown = (props: DropdownProps) => {
-  /* Animation */
-  let dropdown: HTMLDivElement;
-  let dropContent: HTMLDivElement;
-
-  let openAnimation: anime.AnimeInstance;
-  let closeAnimation: anime.AnimeInstance;
-
-  onMount(() => {
-    closeAnimation = anime
-      .timeline({
-        easing: "easeOutCubic",
-        autoplay: false,
-        reverse: true,
-      })
-      .add({
-        targets: dropdown,
-        padding: ["8px 26px 26px", "0"],
-        top: ["-8px", "0"],
-        width: ["800px", "200px"],
-        height: [340, 48],
-        duration: 250,
-      })
-      .add(
-        {
-          targets: `#${props.id} .elem`,
-          translateY: [0, 20],
-          opacity: [1, 0],
-          duration: 160,
-          delay: (el, i, l) => i * 120,
-        },
-        "-=600",
-      );
-
-    openAnimation = anime
-      .timeline({
-        easing: "easeOutElastic(1, 0.9)",
-        autoplay: false,
-      })
-      .add({
-        targets: dropdown,
-        // easing: "easeOutElastic(4, 0.8)",
-        padding: ["0", "8px 26px 26px"],
-        height: [48, 320],
-        top: ["0", "-8px"],
-        width: [200, 820],
-        duration: 650,
-      })
-      .add(
-        {
-          targets: `#${props.id} .elem`,
-          translateY: [20, 0],
-          opacity: [0, 1],
-          duration: 400,
-          delay: (el, i, l) => i * 120,
-        },
-        "-=425",
-      );
-  });
+  const [dropdown, setDropdown] = createSignal<HTMLDivElement>();
 
   const [isOpen, setIsOpen] = createSignal<boolean>(false);
-  const [pendingAnimation, setPendingAnimation] = createSignal(false);
   const [hover, setHover] = createSignal(false);
 
-  const toggle = () => !pendingAnimation() && setIsOpen(!isOpen());
   const [wrapper, setWrapper] = createSignal<HTMLDivElement>();
-  const [currentAnime, setCurrentAnime] = createSignal<
-    anime.AnimeInstance | undefined
-  >();
 
-  useClickOutside(wrapper, () => {
-    // TODO: cancel animation instead
-    if (pendingAnimation()) return;
-    if (isOpen()) {
-      const ca = currentAnime();
-      if (ca) {
-        ca.pause();
-        setPendingAnimation(false);
-      }
-      setIsOpen(false);
-    }
+  const animation = createAnimation({
+    parent: {
+      enter: () => ({
+        timeline: { easing: "easeOutElastic(1, 0.9)" },
+        params: {
+          targets: dropdown(),
+          padding: ["0", "8px 26px 26px"],
+          height: [48, 320],
+          top: ["0", "-8px"],
+          width: [200, 820],
+          duration: 650,
+        },
+      }),
+      leave: () => ({
+        timeline: {
+          easing: "easeOutCubic",
+        },
+        params: {
+          targets: dropdown(),
+          padding: ["8px 26px 26px", "0"],
+          top: ["-8px", "0"],
+          width: ["800px", "200px"],
+          height: [320, 48],
+          duration: 250,
+        },
+      }),
+    },
+    children: {
+      enter: [
+        {
+          params: {
+            targets: `#${props.id} .elem`,
+            translateY: [20, 0],
+            opacity: [0, 1],
+            duration: 400,
+            delay: (el, i, l) => i * 120,
+          },
+          offset: "-=425",
+        },
+      ],
+      leave: [
+        {
+          params: {
+            targets: `#${props.id} .elem`,
+            translateY: [0, 20],
+            opacity: [1, 0],
+            duration: 160,
+            delay: (el, i, l) => i * 120,
+          },
+          offset: "-=600",
+        },
+      ],
+    },
   });
-
-  const { setFocus } = useFocus();
-  createComputed(
-    on(
-      isOpen,
-      (isOpen) => {
-        if (pendingAnimation()) return;
-        if (isOpen) {
-          setFocus(FocusType.Hud);
-          setCurrentAnime(openAnimation);
-          openAnimation.play();
-          openAnimation.finished.then(() => {
-            setPendingAnimation(false);
-          });
-          setPendingAnimation(true);
-        } else {
-          setFocus(FocusType.View);
-          closeAnimation.finished.then(() => {
-            setPendingAnimation(false);
-          });
-          setPendingAnimation(true);
-          setCurrentAnime(openAnimation);
-          closeAnimation.play();
-        }
-      },
-      { defer: true },
-    ),
-  );
+  const { toggle } = useToggleAnimated({
+    animation,
+    isOpen,
+    setIsOpen,
+    element: dropdown,
+  });
 
   css`
     .dropdown-wrapper {
@@ -179,7 +132,6 @@ const Dropdown = (props: DropdownProps) => {
     }
 
     .dropdown-wrapper.open .dropdown {
-      width: 800px;
       background-color: var(--color-surface-100);
       padding: 8px 26px 26px;
       top: -8px;
@@ -230,18 +182,18 @@ const Dropdown = (props: DropdownProps) => {
         el.addEventListener("mouseenter", () => setHover(true));
       }}
     >
-      <div class="dropdown" ref={dropdown!}>
+      <div class="dropdown" ref={setDropdown}>
         <div class="dropdown-label" onClick={toggle}>
           {props.label(isOpen, hover)}
-          <Show when={isOpen()}>
-            <div class="cross">
-              <Cross />
-            </div>
-          </Show>
+        <Show when={isOpen()}>
+          <div class="cross">
+            <Cross />
+          </div>
+        </Show>
         </div>
-        <div class="dropdown-content" ref={dropContent!}>
-          {props.children(setIsOpen)}
-        </div>
+        <Show when={isOpen()}>
+          <div class="dropdown-content">{props.children(toggle)}</div>
+        </Show>
       </div>
     </div>
   );

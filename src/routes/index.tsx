@@ -1,9 +1,10 @@
 import { Portal } from "solid-js/web";
 import { css } from "solid-styled";
 import { useAppState } from "~/appState/AppStateProvider";
+import AboutInfo from "~/components/about/AboutInfo";
 import GameModeMenu from "~/components/gameMode/GameModeMenu";
-import ModalAbout from "~/components/modals/ModalAbout";
 import Modal from "~/components/ui/Modal";
+import Morphing from "~/components/ui/Morphing";
 import QuestionMark from "~/components/ui/QuestionMark";
 import { useGameOptions } from "~/gameOptions/GameOptionsProvider";
 
@@ -50,38 +51,40 @@ export default function Menu() {
           </span>
           <Modal
             portalId="modal-portal"
-            openAnimation={[
-              {
-                params: {
-                  targets: ".modal-about-content.project",
-                  opacity: [0, 1],
-                  translateX: [20, 0],
-                  duration: 500,
+            childrenAnimation={{
+              enter: [
+                {
+                  params: {
+                    targets: ".modal-about-content.project",
+                    opacity: [0, 1],
+                    translateX: [20, 0],
+                    duration: 500,
+                  },
+                  offset: "-=300",
                 },
-                offset: "-=300",
-              },
-              {
-                params: {
-                  targets: ".modal-about-content.me",
-                  opacity: [0, 1],
-                  translateX: [-20, 0],
-                  duration: 500,
+                {
+                  params: {
+                    targets: ".modal-about-content.me",
+                    opacity: [0, 1],
+                    translateX: [-20, 0],
+                    duration: 500,
+                  },
+                  offset: "-=500",
                 },
-                offset: "-=500",
-              },
-            ]}
-            closeAnimation={[
-              {
-                params: {
-                  targets:
-                    ".modal-about-content p, .modal-about-content .animate, .modal-about-content h2",
-                  opacity: [1, 0],
-                  translateY: [0, 20],
-                  delay: (el, i, l) => i * 60,
-                  duration: 550,
+              ],
+              leave: [
+                {
+                  params: {
+                    targets:
+                      ".modal-about-content p, .modal-about-content .animate, .modal-about-content h2",
+                    opacity: [1, 0],
+                    translateY: [0, 20],
+                    delay: (el, i, l) => i * 60,
+                    duration: 550,
+                  },
                 },
-              },
-            ]}
+              ],
+            }}
             button={(isOpen, toggle) => (
               <QuestionMark
                 onClick={toggle}
@@ -89,7 +92,14 @@ export default function Menu() {
               />
             )}
           >
-            <ModalAbout />
+            <AboutInfo next={() => {}}/>
+            {/* <Morphing */}
+            {/*   openAnimation={[]} */}
+            {/*   closeAnimation={[]} */}
+            {/*   to={(close) => <div>contact</div>} */}
+            {/* > */}
+            {/*   {(toggle) => <AboutInfo next={toggle} />} */}
+            {/* </Morphing> */}
           </Modal>
         </div>
       </Portal>
