@@ -26,8 +26,6 @@ const Dropdown = (props: DropdownProps) => {
   const [isOpen, setIsOpen] = createSignal<boolean>(false);
   const [hover, setHover] = createSignal(false);
 
-  const [wrapper, setWrapper] = createSignal<HTMLDivElement>();
-
   const animation = createAnimation({
     parent: {
       enter: () => ({
@@ -177,7 +175,6 @@ const Dropdown = (props: DropdownProps) => {
       class={`dropdown-wrapper`}
       classList={{ open: isOpen(), reverse: props.reverse }}
       ref={(el) => {
-        setWrapper(el);
         el.addEventListener("mouseleave", () => setHover(false));
         el.addEventListener("mouseenter", () => setHover(true));
       }}
