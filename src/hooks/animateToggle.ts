@@ -3,15 +3,6 @@ import { FocusType, useFocus } from "../contexts/FocusProvider";
 import { AnimeTimelineInstance } from "animejs";
 import { AnimationComp } from "~/animations/animation";
 
-/*
- * - Made for different open/close Animation
- * -  Manage animation
- * - Add a toggle managing animation
- * - clickOutside
- */
-
-// it's an hook
-
 export type AnimateToggleProps = {
   element: Accessor<HTMLElement | undefined>;
   animation: AnimationComp;
