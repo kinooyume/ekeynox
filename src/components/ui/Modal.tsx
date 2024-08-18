@@ -1,16 +1,13 @@
 import { Accessor, JSX, Show, createSignal } from "solid-js";
 import { Portal } from "solid-js/web";
 import { css } from "solid-styled";
-import anime from "animejs";
-import useToggleAnimated from "./ModalAnimated";
 
 import Cross from "../svgs/cross";
 import {
   type AnimationChildren,
   createAnimation,
 } from "~/animations/animation";
-
-// NOTE: très similaire à morphing
+import useAnimateModal from "~/hooks/animateModal";
 
 type ModalProps = {
   button: (isOpen: Accessor<boolean>, toggle: () => void) => JSX.Element;
@@ -21,6 +18,8 @@ type ModalProps = {
 
 const Modal = (props: ModalProps) => {
   const [isOpen, setIsOpen] = createSignal(false);
+
+  const [modalWrapper,setModalWrapper] = createSignal<HTMLDivElement>();;
   const [modalElement, setModalElement] = createSignal<HTMLDivElement>();
 
   const animation = createAnimation({
@@ -59,7 +58,7 @@ const Modal = (props: ModalProps) => {
     children: props.childrenAnimation,
   });
 
-  const { toggle } = useToggleAnimated({
+  const { toggle } = useAnimateModal({
     animation,
     isOpen,
     setIsOpen,
@@ -121,7 +120,7 @@ const Modal = (props: ModalProps) => {
   `;
 
   return (
-    <div class="modal-wrapper">
+    <div class="modal-wrapper" ref={setModalWrapper}>
       {props.button(isOpen, toggle)}
       <Show when={isOpen()}>
         <Portal mount={document.getElementById(props.portalId)!}>

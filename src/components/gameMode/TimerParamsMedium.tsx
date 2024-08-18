@@ -14,7 +14,7 @@ import Text from "../svgs/text";
 import Customizer from "../svgs/customizer";
 import Stopwatch from "../svgs/stopwatch";
 import type { GameParams } from "./GameParams";
-import { useI18n } from "~/settings/i18nProvider";
+import { useI18n } from "~/contexts/i18nProvider";
 
 const TimerParamsMedium = (props: GameParams) => {
   const t = useI18n();

@@ -1,12 +1,12 @@
 import { Portal } from "solid-js/web";
 import { css } from "solid-styled";
-import { useAppState } from "~/appState/AppStateProvider";
 import AboutInfo from "~/components/about/AboutInfo";
 import GameModeMenu from "~/components/gameMode/GameModeMenu";
 import Modal from "~/components/ui/Modal";
 import Morphing from "~/components/ui/Morphing";
 import QuestionMark from "~/components/ui/QuestionMark";
-import { useGameOptions } from "~/gameOptions/GameOptionsProvider";
+import { useAppState } from "~/contexts/AppStateProvider";
+import { useGameOptions } from "~/contexts/GameOptionsProvider";
 
 import { GameOptions, optionsToPending } from "~/gameOptions/gameOptions";
 
@@ -92,14 +92,13 @@ export default function Menu() {
               />
             )}
           >
-            <AboutInfo next={() => {}}/>
-            {/* <Morphing */}
-            {/*   openAnimation={[]} */}
-            {/*   closeAnimation={[]} */}
-            {/*   to={(close) => <div>contact</div>} */}
-            {/* > */}
-            {/*   {(toggle) => <AboutInfo next={toggle} />} */}
-            {/* </Morphing> */}
+            <Morphing
+              // openAnimation={[]}
+              // closeAnimation={[]}
+              to={(close) => <div>contact</div>}
+            >
+              {(t) => <AboutInfo next={t} />}
+            </Morphing>
           </Modal>
         </div>
       </Portal>

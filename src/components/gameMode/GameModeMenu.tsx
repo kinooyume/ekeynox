@@ -9,7 +9,7 @@ import {
   type ContentGeneration,
   type GameOptions,
 } from "../../gameOptions/gameOptions";
-import { useI18n } from "../../settings/i18nProvider";
+import { useI18n } from "../../contexts/i18nProvider";
 import Bunny from "../svgs/bunny";
 import Monkey from "../svgs/monkey";
 import CustomInput, { type CustomInputRef } from "../ui/CustomInput";

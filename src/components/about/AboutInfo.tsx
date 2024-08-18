@@ -2,10 +2,10 @@ import rehypeExternalLinks from "rehype-external-links";
 import { SolidMarkdown } from "solid-markdown";
 import { css } from "solid-styled";
 
-import { useI18n } from "~/settings/i18nProvider";
 import Logo from "../svgs/logo";
 import LinkedinBadge from "../ui/LinkedinBadge";
 import Morphing from "../ui/Morphing";
+import { useI18n } from "~/contexts/i18nProvider";
 
 type ModalAboutProps = {
    next: () => void;

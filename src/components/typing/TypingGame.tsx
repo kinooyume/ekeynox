@@ -10,9 +10,9 @@ import Keyboard, { type KeyboardHandler } from "../keyboard/TypingKeyboard.tsx";
 import { type KeysProjection } from "../metrics/KeysProjection.ts";
 import { type TypingEventType } from "./TypingEvent.ts";
 import type { JSX } from "solid-js";
-import { Translator } from "~/settings/i18nProvider.tsx";
+import { Translator } from "~/contexts/i18nProvider.tsx";
 import { HigherKeyboard } from "~/settings/keyboardLayout.ts";
-import { FocusType, useFocus } from "../ui/FocusProvider.tsx";
+import { FocusType, useFocus } from "~/contexts/FocusProvider.tsx";
 
 type TypingGameProps = {
   t: Translator;

@@ -8,7 +8,7 @@ import en_dict from "../i18n/en.json";
 import fr_dict from "../i18n/fr.json";
 
 import { JSX, createContext, createMemo, useContext } from "solid-js";
-import { Locale } from "./settings";
+import { Locale } from "~/settings/settings";
 
 // https://github.com/solidjs/solid-site/blob/cbbbe43a40272d8a78cb94ad81a17d7128912304/src/AppContext.tsx
 

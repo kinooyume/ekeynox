@@ -7,8 +7,8 @@ import {
 } from "solid-js";
 import { css } from "solid-styled";
 import { createAnimation } from "~/animations/animation";
-import useToggleAnimated from "./ModalAnimated";
 import Cross from "../svgs/cross";
+import useAnimateModal from "~/hooks/animateModal";
 
 // Dropdown like animation with anime.js
 // https://codepen.io/NielsVoogt/pen/dyGpNOx
@@ -80,7 +80,7 @@ const Dropdown = (props: DropdownProps) => {
       ],
     },
   });
-  const { toggle } = useToggleAnimated({
+  const { toggle } = useAnimateModal({
     animation,
     isOpen,
     setIsOpen,

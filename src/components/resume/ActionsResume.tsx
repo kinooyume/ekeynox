@@ -10,7 +10,7 @@ import {
   deepCopy,
 } from "~/gameOptions/gameOptions";
 import { PendingMode } from "~/appState/appState";
-import { useI18n } from "~/settings/i18nProvider";
+import { useI18n } from "~/contexts/i18nProvider";
 import Ghost from "../svgs/ghost";
 
 type ActionsResumeProps = {

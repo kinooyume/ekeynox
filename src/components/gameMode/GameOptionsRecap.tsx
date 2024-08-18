@@ -5,7 +5,7 @@ import {
   GameOptions,
   WordsGenerationCategory,
 } from "~/gameOptions/gameOptions";
-import { useI18n } from "~/settings/i18nProvider";
+import { useI18n } from "~/contexts/i18nProvider";
 import { GameModeKind } from "~/gameOptions/gameModeKind";
 
 // NOTE: make a data to link title + icons + params full/compact

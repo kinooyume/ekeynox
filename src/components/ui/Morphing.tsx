@@ -1,19 +1,15 @@
-import useModalAnimated from "./ModalAnimated";
-import { JSX, Show, createSignal } from "solid-js";
+import { JSX, Match, Show, Switch, createSignal } from "solid-js";
 import anime from "animejs";
 import { css } from "solid-styled";
+
 import Cross from "../svgs/cross";
-
-// NOTE: très similaire à modal
-
-type AnimationProps = {
-  params: anime.AnimeParams;
-  offset?: string;
-};
+import {
+  type AnimationChildren,
+  createAnimation,
+} from "~/animations/animation";
+import useAnimateToggle from "~/hooks/animateToggle";
 
 type MorphingProps = {
-  openAnimation: AnimationProps[];
-  closeAnimation: AnimationProps[];
   to: (close: () => void) => JSX.Element | JSX.Element[];
   children: (toggle: () => void) => JSX.Element | JSX.Element[];
 };
@@ -22,50 +18,42 @@ const Morphing = (props: MorphingProps) => {
   const [isOpen, setIsOpen] = createSignal(false);
   const [morphedElement, setMorphedElement] = createSignal<HTMLDivElement>();
 
-  // NOTE: notably similar system; parentAnimation
-  const openAnimation = () => {
-    const a = anime
-      .timeline({
-        easing: "easeOutElastic(1, 0.9)",
-        autoplay: false,
-      })
-      .add({
-        targets: morphedElement(),
-        height: [0, morphedElement()!.clientHeight],
-        opacity: [0, 1],
-        duration: 650,
-      });
-    props.openAnimation.forEach((step) => {
-      a.add(step.params, step.offset);
-    });
-    return a;
-  };
-  const closeAnimation = () => {
-    const height = morphedElement()!.clientHeight - 34;
-    const a = anime.timeline({
-      easing: "easeOutElastic(1, 0.9)",
-      autoplay: false,
-    });
+  const animation = createAnimation({
+    parent: {
+      enter: () => ({
+        timeline: { easing: "easeOutElastic(1, 0.9)" },
+        params: {
+          targets: morphedElement(),
+          padding: ["0", "8px 26px 26px"],
+          height: [48, 320],
+          top: ["0", "-8px"],
+          width: [200, 820],
+          duration: 650,
+        },
+      }),
+      leave: () => ({
+        timeline: {
+          easing: "easeOutCubic",
+        },
+        params: {
+          targets: morphedElement(),
+          padding: ["8px 26px 26px", "0"],
+          top: ["-8px", "0"],
+          width: ["800px", "200px"],
+          height: [320, 48],
+          duration: 250,
+        },
+      }),
+    },
+    children: {
+      enter: [],
+      leave: [],
+    },
+  });
 
-    props.closeAnimation.forEach((step) => {
-      a.add(step.params, step.offset);
-    });
-    a.add(
-      {
-        targets: morphedElement(),
-        opacity: [1, 0],
-        height: [height, 0],
-        duration: 550,
-      },
-      "-=425",
-    );
-    return a;
-  };
-
-  const { toggle, open, close } = useModalAnimated({
+  const { toggle, open, close } = useAnimateToggle({
     element: morphedElement,
-    openAnimation,
-    closeAnimation,
+    animation,
     isOpen,
     setIsOpen,
   });
@@ -83,15 +71,16 @@ const Morphing = (props: MorphingProps) => {
     }
   `;
   return (
-    <div class="morphing-wrapper">
-      <div class="source">{props.children(toggle)}</div>
-      <Show when={isOpen()}>
-        <div class="morphed" ref={setMorphedElement}>
-          {props.to(close)}
-        </div>
-      </Show>
+    <div class="morphing-wrapper" ref={setMorphedElement}>
+      <Switch>
+        <Match when={isOpen()}>
+          <div class="morphed">{props.to(toggle)}</div>
+        </Match>
+        <Match when={!isOpen()}>
+          <div class="source">{props.children(toggle)}</div>
+        </Match>
+      </Switch>
     </div>
   );
 };
 export default Morphing;
-

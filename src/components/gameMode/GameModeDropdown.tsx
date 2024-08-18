@@ -14,12 +14,12 @@ import { gameModesArray } from "./GameMode";
 import SpeedParamsMedium from "./SpeedParamsMedium";
 import TimerParamsMedium from "./TimerParamsMedium";
 import { css } from "solid-styled";
-import { useI18n } from "~/settings/i18nProvider";
 import { CategoryKind, GameOptions, deepCopy } from "~/gameOptions/gameOptions";
 import { GameModeKind } from "~/gameOptions/gameModeKind";
 import VerticalRadioBox from "../ui/VerticalRadioBox";
 import HugeRadioLabel from "../ui/HugeRadioLabel";
-import { useGameOptions } from "~/gameOptions/GameOptionsProvider";
+import { useI18n } from "~/contexts/i18nProvider";
+import { useGameOptions } from "~/contexts/GameOptionsProvider";
 
 type GameModeDropdownProps = {
   reverse?: boolean;

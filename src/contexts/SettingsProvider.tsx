@@ -17,7 +17,7 @@ import {
   getDefaultLocale,
   getKeyboardByLocale,
   isDarkTheme,
-} from "./settings";
+} from "../settings/settings";
 import { I18nProvider } from "./i18nProvider";
 
 type SettingsProviderProps = {

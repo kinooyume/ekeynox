@@ -8,7 +8,7 @@ import {
   type JSXElement,
 } from "solid-js";
 import { css } from "solid-styled";
-import { useI18n } from "~/settings/i18nProvider";
+import { useI18n } from "~/contexts/i18nProvider";
 import { HigherKeyboard } from "~/settings/keyboardLayout";
 import GameOptionsTitle from "../gameMode/GameOptionsTitle";
 import {
