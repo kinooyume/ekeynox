@@ -1,5 +1,5 @@
 import { Accessor, createComputed, createSignal, on } from "solid-js";
-import { FocusType, useFocus } from "../ui/FocusProvider";
+import { FocusType, useFocus } from "..components//ui/FocusProvider";
 import useClickOutside from "solid-click-outside";
 import { AnimeTimelineInstance } from "animejs";
 import { AnimationComp } from "~/animations/animation";
