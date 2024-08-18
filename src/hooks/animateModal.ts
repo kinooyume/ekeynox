@@ -7,7 +7,7 @@ const animateToggle = useAnimateToggle(props)
   useClickOutside(props.element, () => {
     if (animateToggle.pendingAnimation()) return;
     if (props.isOpen()) {
-      close();
+      animateToggle.close();
     }
   });
   return animateToggle;
