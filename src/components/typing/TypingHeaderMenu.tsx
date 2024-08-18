@@ -3,7 +3,7 @@ import GameModeDropdown from "../gameMode/GameModeDropdown";
 import GameOptionsRecap from "../gameMode/GameOptionsRecap";
 import { Show } from "solid-js";
 import { GameOptions } from "~/gameOptions/gameOptions";
-import { useI18n } from "~/settings/i18nProvider";
+import { useI18n } from "~/contexts/i18nProvider";
 
 type HeaderNavLeftProps = {
   start: (opts: GameOptions) => void;

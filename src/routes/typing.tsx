@@ -1,8 +1,7 @@
-import { useAppState } from "~/appState/AppStateProvider";
 import { clientOnly } from "@solidjs/start";
 
-import { useGameOptions } from "~/gameOptions/GameOptionsProvider";
-import { useSettings } from "~/settings/SettingsProvider";
+import { useGameOptions } from "~/contexts/GameOptionsProvider";
+import { useSettings } from "~/contexts/SettingsProvider";
 import { Match, Show, Switch, createResource, onMount } from "solid-js";
 import { useNavigate } from "@solidjs/router";
 
@@ -20,6 +19,7 @@ import {
 } from "~/gameOptions/gameOptions.ts";
 
 import TypingGameManager from "~/components/typing/TypingGameManager";
+import { useAppState } from "~/contexts/AppStateProvider.tsx";
 
 //import TypingMetricsResume from "~/components/resume/TypingMetricsResume";
 // import ActionsResume from "~/components/resume/ActionsResume";

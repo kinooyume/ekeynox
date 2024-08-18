@@ -45,11 +45,11 @@ import {
   type WordMetrics,
 } from "../metrics/PromptWordMetrics";
 import { PendingKind, PendingMode, PendingStatus } from "~/appState/appState";
-import { ContentGeneration, GameOptions } from "~/gameOptions/gameOptions";
+import { GameOptions } from "~/gameOptions/gameOptions";
 import { HigherKeyboard } from "~/settings/keyboardLayout";
 import { GameModeKind } from "~/gameOptions/gameModeKind";
-import { useI18n } from "~/settings/i18nProvider";
-import TypingHeaderNav, { LeavingFn } from "./TypingHeaderNav";
+import TypingHeaderNav from "./TypingHeaderNav";
+import { useI18n } from "~/contexts/i18nProvider";
 
 type TypingGameManagerProps = {
   status: PendingStatus;
@@ -68,7 +68,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
 
   const t = useI18n();
   const [paraStore, setParaStore] = createStore<Paragraphs>(
-    Content.deepClone(contentHandler().data.paragraphs),
+    Content.deepClone(contentHandler().data.paragraphs!),
   );
 
   /* Cursor */

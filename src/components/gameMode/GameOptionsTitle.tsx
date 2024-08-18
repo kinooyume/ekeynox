@@ -1,7 +1,7 @@
 import { css } from "solid-styled";
 import GameOptionsRecap from "./GameOptionsRecap";
 import { gameModes } from "./GameMode";
-import { Translator } from "~/settings/i18nProvider";
+import { Translator } from "~/contexts/i18nProvider";
 import { GameOptions } from "~/gameOptions/gameOptions";
 
 type GameOptionsTitleProps = {

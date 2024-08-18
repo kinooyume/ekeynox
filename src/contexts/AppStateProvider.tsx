@@ -15,7 +15,7 @@ import {
   PendingMode,
   PendingStatusNew,
   PendingStatusRedo,
-} from "./appState";
+} from "../appState/appState";
 import { useLocation } from "@solidjs/router";
 import { GameOptions, deepCopy } from "~/gameOptions/gameOptions";
 

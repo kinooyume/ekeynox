@@ -2,7 +2,6 @@ import DarkModeToggle from "./ui/DarkModeToggle.tsx";
 import KeyboardIcon from "./svgs/keyboardIcon.tsx";
 import GlobeIcon from "./svgs/globe.tsx";
 import { css } from "solid-styled";
-import { useSettings } from "~/settings/SettingsProvider.tsx";
 import {
   SettingsOriginType,
   Theme,
@@ -11,10 +10,11 @@ import {
 } from "~/settings/settings.ts";
 import Tooltip from "./ui/Tooltip.tsx";
 import VerticalRadioBox from "./ui/VerticalRadioBox.tsx";
-import { useI18n } from "~/settings/i18nProvider.tsx";
 import SettingMenu from "./settings/SettingMenu.tsx";
 import VerticalDropdown from "./ui/VerticalDropdown.tsx";
 import TinyRadioLabel from "./ui/TinyRadioLabel.tsx";
+import { useI18n } from "~/contexts/i18nProvider.tsx";
+import { useSettings } from "~/contexts/SettingsProvider.tsx";
 
 const HeaderAction = () => {
   const t = useI18n();

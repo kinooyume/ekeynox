@@ -1,6 +1,5 @@
-import { Accessor, createComputed, createSignal, on } from "solid-js";
-import { FocusType, useFocus } from "..components//ui/FocusProvider";
-import useClickOutside from "solid-click-outside";
+import { Accessor, createSignal } from "solid-js";
+import { FocusType, useFocus } from "../contexts/FocusProvider";
 import { AnimeTimelineInstance } from "animejs";
 import { AnimationComp } from "~/animations/animation";
 
@@ -13,14 +12,14 @@ import { AnimationComp } from "~/animations/animation";
 
 // it's an hook
 
-type ToggleAnimatedProps = {
+export type AnimateToggleProps = {
   element: Accessor<HTMLElement | undefined>;
   animation: AnimationComp;
   isOpen: Accessor<boolean>;
   setIsOpen: (value: boolean) => void;
 };
 
-const useToggleAnimated = (props: ToggleAnimatedProps) => {
+const useAnimateToggle = (props: AnimateToggleProps) => {
   const [pendingAnimation, setPendingAnimation] = createSignal(false);
 
   const { setFocus } = useFocus();
@@ -54,14 +53,7 @@ const useToggleAnimated = (props: ToggleAnimatedProps) => {
     props.isOpen() ? close() : open();
   };
 
-  useClickOutside(props.element, () => {
-    if (pendingAnimation()) return;
-    if (props.isOpen()) {
-      close();
-    }
-  });
-
   return { toggle, open, close, pendingAnimation };
 };
 
-export default useToggleAnimated;
+export default useAnimateToggle;

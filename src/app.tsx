@@ -2,11 +2,10 @@ import { Link, Meta, MetaProvider, Title } from "@solidjs/meta";
 import { Router } from "@solidjs/router";
 import { FileRoutes } from "@solidjs/start/router";
 
-import { ParentProps, Show, Suspense, onMount } from "solid-js";
-import { Transition, TransitionGroup } from "solid-transition-group";
+import { ParentProps, Suspense } from "solid-js";
+import { TransitionGroup } from "solid-transition-group";
 
 import Header from "./components/Header";
-import TypingHeaderNav from "./components/typing/TypingHeaderNav";
 
 import { useAssets } from "solid-js/web";
 
@@ -15,11 +14,10 @@ import { StyleRegistry, css, renderSheets, type StyleData } from "solid-styled";
 import "./styles/fonts.css";
 import "./styles/global.css";
 
-import { AppStateProvider } from "./appState/AppStateProvider";
-import { GameOptionsProvider } from "./gameOptions/GameOptionsProvider";
-import { SettingsProvider } from "./settings/SettingsProvider";
-import { FocusProvider } from "./components/ui/FocusProvider";
-import { useI18n } from "./settings/i18nProvider";
+import { AppStateProvider } from "./contexts/AppStateProvider";
+import { GameOptionsProvider } from "./contexts/GameOptionsProvider";
+import { SettingsProvider } from "./contexts/SettingsProvider";
+import { FocusProvider } from "./contexts/FocusProvider";
 
 export default function App() {
   const sheets: StyleData[] = [];
@@ -35,6 +33,9 @@ export default function App() {
         1fr;
       grid-template-rows: 1f;
     }
+.modal-portal {
+
+}
   `;
 
   const PageTransition = (props: ParentProps) => (

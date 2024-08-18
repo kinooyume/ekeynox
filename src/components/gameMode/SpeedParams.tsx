@@ -7,7 +7,7 @@ import Quote from "../svgs/quote";
 import Text from "../svgs/text";
 import Customizer from "../svgs/customizer";
 import type { GameParams } from "./GameParams";
-import { useI18n } from "~/settings/i18nProvider";
+import { useI18n } from "~/contexts/i18nProvider";
 import { Category, CategoryKind, Languages, WordsGenerationCategory } from "~/gameOptions/gameOptions";
 
 const SpeedParams = (props: GameParams) => {

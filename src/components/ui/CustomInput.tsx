@@ -1,5 +1,5 @@
 import { css } from "solid-styled";
-import { useI18n } from "~/settings/i18nProvider";
+import { useI18n } from "~/contexts/i18nProvider";
 
 export type CustomInputRef = {
   ref?: HTMLTextAreaElement;

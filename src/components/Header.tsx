@@ -2,8 +2,6 @@ import { css } from "solid-styled";
 
 import Logo from "./svgs/logo.tsx";
 import HeaderSettings from "./HeaderSettings.tsx";
-import { useAppState } from "~/appState/AppStateProvider.tsx";
-import { useNavigate } from "@solidjs/router";
 import { onMount } from "solid-js";
 import anime from "animejs";
 

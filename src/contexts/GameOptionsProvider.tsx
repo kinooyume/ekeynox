@@ -7,7 +7,7 @@ import {
 import {
   GameOptions,
   getDefaultGameOptions,
-} from "./gameOptions";
+} from "../gameOptions/gameOptions";
 import { makePersisted } from "@solid-primitives/storage";
 import { createStore } from "solid-js/store";
 import { isServer } from "solid-js/web";

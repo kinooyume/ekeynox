@@ -2,8 +2,8 @@ import anime from "animejs";
 import { Accessor, JSX, Show, createSignal } from "solid-js";
 import { css } from "solid-styled";
 import Cross from "../svgs/cross";
-import useToggleAnimated from "./ModalAnimated";
 import { createAnimation } from "~/animations/animation";
+import useAnimateModal from "~/hooks/animateModal";
 
 type VerticalDropdownProps = {
   id: string;
@@ -110,7 +110,7 @@ const VerticalDropdown = (props: VerticalDropdownProps) => {
 
   const [isOpen, setIsOpen] = createSignal<boolean>(false);
 
-  const { toggle } = useToggleAnimated({
+  const { toggle } = useAnimateModal({
     animation,
     isOpen,
     setIsOpen,

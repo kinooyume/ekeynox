@@ -3,7 +3,7 @@ import { css } from "solid-styled";
 import ChooseClip from "../svgs/choose-clip";
 import { TransitionGroup } from "solid-transition-group";
 import { gameModesArray } from "./GameMode";
-import { useI18n } from "~/settings/i18nProvider";
+import { useI18n } from "~/contexts/i18nProvider";
 import { GameModeKind } from "~/gameOptions/gameModeKind";
 
 type GameModeSelectionProps = {
