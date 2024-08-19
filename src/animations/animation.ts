@@ -1,11 +1,15 @@
 import anime from "animejs";
 
+export type MinimalAnimationInstance = {
+  play: () => void;
+  finished: Promise<void>;
+};
 export interface AnimationProps {
   params: anime.AnimeParams;
   offset?: string;
 }
 
-export interface ParentAnimationProps extends AnimationProps {
+export interface AnimationParentProps extends AnimationProps {
   timeline: anime.AnimeParams;
 }
 
@@ -14,20 +18,15 @@ export type AnimationChildren = {
   leave: AnimationProps[];
 };
 
-export type AnimationParent = {
-  enter: () => ParentAnimationProps;
-  leave: () => ParentAnimationProps;
-};
-
-export type AnimationComp = {
-  enter: () => anime.AnimeTimelineInstance;
-  leave: () => anime.AnimeTimelineInstance;
+const emptyAnimationChildren = {
+  enter: [],
+  leave: [],
 };
 
 const createAnimationTimeline = (
   timeline: anime.AnimeParams,
-  anims: AnimationProps[],
-) => {
+  anims: AnimationProps[] = [],
+): MinimalAnimationInstance => {
   const a = anime.timeline({
     ...timeline,
     autoplay: false,
@@ -38,28 +37,83 @@ const createAnimationTimeline = (
   return a;
 };
 
+const createAnimationEnter = (
+  getParent: () => AnimationParentProps,
+  children: AnimationProps[] = [],
+): (() => MinimalAnimationInstance) => {
+  return () => {
+    const parent = getParent();
+    return createAnimationTimeline(parent.timeline, [parent, ...children]);
+  };
+};
+
+const createAnimationLeave = (
+  getParent: () => AnimationParentProps,
+  children: AnimationProps[] = [],
+): (() => MinimalAnimationInstance) => {
+  return () => {
+    const parent = getParent();
+    return createAnimationTimeline(parent.timeline, [...children, parent]);
+  };
+};
+
+export type AnimationParent = {
+  enter: () => AnimationParentProps;
+  leave: () => AnimationParentProps;
+};
+
 export type CreateAnimationProps = {
   parent: AnimationParent;
   children: AnimationChildren;
 };
-const createAnimation = ({
+
+export type AnimationComp = {
+  enter: () => MinimalAnimationInstance;
+  leave: () => MinimalAnimationInstance;
+};
+
+const createAnimationComp = ({
   parent,
-  children,
+  children = emptyAnimationChildren,
 }: CreateAnimationProps): AnimationComp => ({
-  enter: () => {
-    const parentAnim = parent.enter();
-    return createAnimationTimeline(parentAnim.timeline, [
-      parentAnim,
-      ...children.enter,
-    ]);
-  },
-  leave: () => {
-    const parentAnim = parent.leave();
-    return createAnimationTimeline(parentAnim.timeline, [
-      ...children.leave,
-      parentAnim,
-    ]);
-  },
+  enter: createAnimationEnter(parent.enter, children.enter),
+  leave: createAnimationLeave(parent.leave, children.leave),
 });
 
-export { createAnimation };
+const createParallelAnimationInstance = (
+  instances: Array<() => MinimalAnimationInstance>,
+): MinimalAnimationInstance => {
+  const parallelInstance = {
+    play: () => {
+      const anims = instances.map((getInstance) => {
+        const instance = getInstance();
+        instance.play();
+        return instance.finished;
+      });
+      parallelInstance.finished = Promise.all(anims).then(() => {});
+    },
+    finished: Promise.resolve(),
+  };
+  return parallelInstance;
+};
+
+export type ParallelAnimationComp = {
+  enter: Array<() => MinimalAnimationInstance>;
+  leave: Array<() => MinimalAnimationInstance>;
+};
+
+const createParallelAnimationComp = (
+  animations: ParallelAnimationComp,
+): AnimationComp => ({
+  enter: () => createParallelAnimationInstance(animations.enter),
+  leave: () => createParallelAnimationInstance(animations.leave),
+});
+
+export {
+  emptyAnimationChildren,
+  createAnimationTimeline,
+  createAnimationEnter,
+  createAnimationLeave,
+  createAnimationComp,
+  createParallelAnimationComp,
+};
