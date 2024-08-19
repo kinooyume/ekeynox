@@ -1,22 +1,30 @@
 import { Accessor, createSignal } from "solid-js";
 import { FocusType, useFocus } from "../contexts/FocusProvider";
 import { AnimeTimelineInstance } from "animejs";
-import { AnimationComp } from "~/animations/animation";
+import {
+  AnimationComp,
+  MinimalAnimationInstance,
+} from "~/animations/animation";
 
-export type AnimateToggleProps = {
-  element: Accessor<HTMLElement | undefined>;
+export interface AnimateToggleProps {
   animation: AnimationComp;
   isOpen: Accessor<boolean>;
   setIsOpen: (value: boolean) => void;
+}
+
+export type AnimateToggleType = {
+  toggle: () => void;
+  open: () => void;
+  close: () => void;
+  pendingAnimation: Accessor<boolean>;
 };
 
 const useAnimateToggle = (props: AnimateToggleProps) => {
   const [pendingAnimation, setPendingAnimation] = createSignal(false);
 
   const { setFocus } = useFocus();
-
   const animationHandler = (
-    animation: AnimeTimelineInstance,
+    animation: MinimalAnimationInstance,
     after: () => void,
   ) => {
     setPendingAnimation(true);
@@ -25,6 +33,7 @@ const useAnimateToggle = (props: AnimateToggleProps) => {
   };
 
   const open = () => {
+    if (pendingAnimation()) return;
     props.setIsOpen(true);
     animationHandler(props.animation.enter(), () => {
       setFocus(FocusType.Hud);
@@ -32,15 +41,16 @@ const useAnimateToggle = (props: AnimateToggleProps) => {
     });
   };
 
-  const close = () =>
-    animationHandler(props.animation.leave(), () => {
+  const close = () => {
+    if (pendingAnimation()) return;
+    return animationHandler(props.animation.leave(), () => {
       setFocus(FocusType.View);
       setPendingAnimation(false);
       props.setIsOpen(false);
     });
+  };
 
   const toggle = () => {
-    if (pendingAnimation()) return;
     props.isOpen() ? close() : open();
   };
 

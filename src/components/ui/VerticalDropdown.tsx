@@ -2,7 +2,7 @@ import anime from "animejs";
 import { Accessor, JSX, Show, createSignal } from "solid-js";
 import { css } from "solid-styled";
 import Cross from "../svgs/cross";
-import { createAnimation } from "~/animations/animation";
+import { createAnimationComp } from "~/animations/animation";
 import useAnimateModal from "~/hooks/animateModal";
 
 type VerticalDropdownProps = {
@@ -65,7 +65,7 @@ const VerticalDropdown = (props: VerticalDropdownProps) => {
 
   const [wrapper, setWrapper] = createSignal<HTMLDivElement>();
 
-  const animation = createAnimation({
+  const animation = createAnimationComp({
     parent: {
       enter: () => {
         const height = dropdown()!.children[0].clientHeight;
