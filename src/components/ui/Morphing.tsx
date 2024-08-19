@@ -1,61 +1,98 @@
 import { JSX, Match, Show, Switch, createSignal } from "solid-js";
-import anime from "animejs";
 import { css } from "solid-styled";
 
-import Cross from "../svgs/cross";
 import {
-  type AnimationChildren,
-  createAnimation,
+  type AnimationParent,
+  AnimationChildren,
+  createAnimationEnter,
+  createAnimationLeave,
+  createParallelAnimationComp,
 } from "~/animations/animation";
-import useAnimateToggle from "~/hooks/animateToggle";
+import useAnimateSwitch, {
+  AnimateSwitchProps,
+  AnimateSwitchState,
+} from "~/hooks/animateSwitch";
 
 type MorphingProps = {
-  to: (close: () => void) => JSX.Element | JSX.Element[];
+  target: (close: () => void) => JSX.Element | JSX.Element[];
+  sourceAnimation: AnimationChildren;
+  targetAnimation: AnimationChildren;
   children: (toggle: () => void) => JSX.Element | JSX.Element[];
 };
 
 const Morphing = (props: MorphingProps) => {
-  const [isOpen, setIsOpen] = createSignal(false);
-  const [morphedElement, setMorphedElement] = createSignal<HTMLDivElement>();
+  const [state, setState] = createSignal<AnimateSwitchState>(
+    AnimateSwitchState.source,
+  );
 
-  const animation = createAnimation({
-    parent: {
-      enter: () => ({
-        timeline: { easing: "easeOutElastic(1, 0.9)" },
-        params: {
-          targets: morphedElement(),
-          padding: ["0", "8px 26px 26px"],
-          height: [48, 320],
-          top: ["0", "-8px"],
-          width: [200, 820],
-          duration: 650,
-        },
-      }),
-      leave: () => ({
+  const [source, setSource] = createSignal<HTMLDivElement>();
+  const [target, setTarget] = createSignal<HTMLDivElement>();
+
+  let sourceHeight = 0;
+  let targetHeight = 0;
+
+  const sourceAnimation: AnimationParent = {
+    enter: () => ({
+      timeline: { easing: "easeOutElastic(1, 0.9)" },
+      params: {
+        targets: source(),
+        opacity: [0, 1],
+        height: [0, sourceHeight],
+        duration: 250,
+      },
+    }),
+    leave: () => {
+      sourceHeight = source()!.clientHeight;
+      return {
         timeline: {
           easing: "easeOutCubic",
         },
         params: {
-          targets: morphedElement(),
-          padding: ["8px 26px 26px", "0"],
-          top: ["-8px", "0"],
-          width: ["800px", "200px"],
-          height: [320, 48],
+          targets: source(),
+          opacity: [1, 0],
+          height: [sourceHeight, 0],
           duration: 250,
         },
-      }),
+      };
     },
-    children: {
-      enter: [],
-      leave: [],
-    },
+  };
+
+  const targetAnimation: AnimationParent = {
+    enter: () => ({
+      timeline: { easing: "easeOutElastic(1, 0.9)" },
+      params: {
+        targets: target(),
+        opacity: [0, 1],
+        duration: 250,
+      },
+    }),
+    leave: () => ({
+      timeline: {
+        easing: "easeOutCubic",
+      },
+      params: {
+        targets: target(),
+        padding: ["8px 26px 26px", "0"],
+        duration: 250,
+      },
+    }),
+  };
+
+  const animation = createParallelAnimationComp({
+    enter: [
+      createAnimationLeave(sourceAnimation.leave, props.sourceAnimation.leave),
+      createAnimationEnter(targetAnimation.enter, props.targetAnimation.enter),
+    ],
+    leave: [
+      createAnimationEnter(sourceAnimation.enter, props.sourceAnimation.enter),
+      createAnimationLeave(targetAnimation.leave, props.targetAnimation.leave),
+    ],
   });
 
-  const { toggle, open, close } = useAnimateToggle({
-    element: morphedElement,
+  const { toggle } = useAnimateSwitch({
     animation,
-    isOpen,
-    setIsOpen,
+    state,
+    setState,
   });
 
   css`
@@ -69,17 +106,22 @@ const Morphing = (props: MorphingProps) => {
       right: 0;
       bottom: 0;
     }
+    .source {
+      overflow: hidden;
+    }
   `;
   return (
-    <div class="morphing-wrapper" ref={setMorphedElement}>
-      <Switch>
-        <Match when={isOpen()}>
-          <div class="morphed">{props.to(toggle)}</div>
-        </Match>
-        <Match when={!isOpen()}>
-          <div class="source">{props.children(toggle)}</div>
-        </Match>
-      </Switch>
+    <div class="morphing-wrapper">
+      <Show when={state() !== AnimateSwitchState.target}>
+        <div class="source" ref={setSource}>
+          {props.children(toggle)}
+        </div>
+      </Show>
+      <Show when={state() !== AnimateSwitchState.source}>
+        <div class="morphed target" ref={setTarget}>
+          {props.target(toggle)}
+        </div>
+      </Show>
     </div>
   );
 };

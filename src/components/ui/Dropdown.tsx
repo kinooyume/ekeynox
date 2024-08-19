@@ -6,7 +6,7 @@ import {
   Show,
 } from "solid-js";
 import { css } from "solid-styled";
-import { createAnimation } from "~/animations/animation";
+import { createAnimationComp } from "~/animations/animation";
 import Cross from "../svgs/cross";
 import useAnimateModal from "~/hooks/animateModal";
 
@@ -26,7 +26,7 @@ const Dropdown = (props: DropdownProps) => {
   const [isOpen, setIsOpen] = createSignal<boolean>(false);
   const [hover, setHover] = createSignal(false);
 
-  const animation = createAnimation({
+  const animation = createAnimationComp({
     parent: {
       enter: () => ({
         timeline: { easing: "easeOutElastic(1, 0.9)" },

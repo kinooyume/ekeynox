@@ -5,7 +5,7 @@ import { css } from "solid-styled";
 import Cross from "../svgs/cross";
 import {
   type AnimationChildren,
-  createAnimation,
+  createAnimationComp,
 } from "~/animations/animation";
 import useAnimateModal from "~/hooks/animateModal";
 
@@ -19,14 +19,12 @@ type ModalProps = {
 const Modal = (props: ModalProps) => {
   const [isOpen, setIsOpen] = createSignal(false);
 
-  const [modalWrapper,setModalWrapper] = createSignal<HTMLDivElement>();;
   const [modalElement, setModalElement] = createSignal<HTMLDivElement>();
 
-  const animation = createAnimation({
+  const animation = createAnimationComp({
     parent: {
       enter: () => {
         const height = modalElement()!.clientHeight;
-        console.log("height", height);
         return {
           timeline: {
             easing: "easeOutElastic(1, 0.9)",
@@ -120,7 +118,7 @@ const Modal = (props: ModalProps) => {
   `;
 
   return (
-    <div class="modal-wrapper" ref={setModalWrapper}>
+    <div class="modal-wrapper">
       {props.button(isOpen, toggle)}
       <Show when={isOpen()}>
         <Portal mount={document.getElementById(props.portalId)!}>
