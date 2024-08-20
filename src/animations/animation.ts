@@ -115,10 +115,8 @@ export enum AnimateState {
   target,
 }
 
-function isInitialAnimation(state: AnimateState) {
-  console.log("YES")
-    return state === AnimateState.initial;
-}
+const isInitialAnimation = (state: AnimateState) =>
+  state === AnimateState.initial;
 
 export {
   emptyAnimationChildren,
@@ -127,5 +125,5 @@ export {
   createAnimationLeave,
   createAnimationComp,
   createParallelAnimationComp,
-  isInitialAnimation
+  isInitialAnimation,
 };
