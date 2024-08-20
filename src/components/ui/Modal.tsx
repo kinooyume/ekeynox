@@ -79,6 +79,7 @@ const Modal = (props: ModalProps) => {
     .modal {
       position: absolute;
       background-color: red;
+overflow: hidden;
       top: 80px;
       margin: 0 auto;
       opacity: 0;

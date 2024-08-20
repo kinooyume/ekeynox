@@ -1,5 +1,7 @@
 import { Portal } from "solid-js/web";
-import { css } from "solid-styled";
+import { emptyAnimationChildren } from "~/animations/animation";
+import About from "~/components/about/About";
+import ContactForm from "~/components/about/AboutContactForm";
 import AboutInfo from "~/components/about/AboutInfo";
 import GameModeMenu from "~/components/gameMode/GameModeMenu";
 import Modal from "~/components/ui/Modal";
@@ -33,74 +35,7 @@ export default function Menu() {
         start={start}
       />
       <Portal mount={document.getElementById("header-nav-actions-portal")!}>
-        <div
-          class="info"
-          style={{
-            display: "flex",
-            gap: "4px",
-          }}
-        >
-          <span
-            class="version"
-            style={{
-              "font-weight": 200,
-              color: "var(--text-secondary-color)",
-            }}
-          >
-            Alpha 0.13-3 ·
-          </span>
-          <Modal
-            portalId="modal-portal"
-            childrenAnimation={{
-              enter: [
-                {
-                  params: {
-                    targets: ".modal-about-content.project",
-                    opacity: [0, 1],
-                    translateX: [20, 0],
-                    duration: 500,
-                  },
-                  offset: "-=300",
-                },
-                {
-                  params: {
-                    targets: ".modal-about-content.me",
-                    opacity: [0, 1],
-                    translateX: [-20, 0],
-                    duration: 500,
-                  },
-                  offset: "-=500",
-                },
-              ],
-              leave: [
-                {
-                  params: {
-                    targets:
-                      ".modal-about-content p, .modal-about-content .animate, .modal-about-content h2",
-                    opacity: [1, 0],
-                    translateY: [0, 20],
-                    delay: (el, i, l) => i * 60,
-                    duration: 550,
-                  },
-                },
-              ],
-            }}
-            button={(isOpen, toggle) => (
-              <QuestionMark
-                onClick={toggle}
-                colorVariable="text-secondary-color"
-              />
-            )}
-          >
-            <Morphing
-              // openAnimation={[]}
-              // closeAnimation={[]}
-              to={(close) => <div>contact</div>}
-            >
-              {(t) => <AboutInfo next={t} />}
-            </Morphing>
-          </Modal>
-        </div>
+        <About />
       </Portal>
     </div>
   );

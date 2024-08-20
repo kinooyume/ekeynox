@@ -1,4 +1,4 @@
-import { JSX, Show, createSignal } from "solid-js";
+import { Component, JSX, Show, createSignal } from "solid-js";
 import { css } from "solid-styled";
 
 import {
@@ -10,8 +10,7 @@ import {
   AnimateState,
   isInitialAnimation,
 } from "~/animations/animation";
-import useAnimateSwitch, {
-} from "~/hooks/animateSwitch";
+import useAnimateSwitch from "~/hooks/animateSwitch";
 
 type MorphingProps = {
   target: (close: () => void) => JSX.Element | JSX.Element[];
@@ -20,10 +19,8 @@ type MorphingProps = {
   children: (toggle: () => void) => JSX.Element | JSX.Element[];
 };
 
-const Morphing = (props: MorphingProps) => {
-  const [state, setState] = createSignal<AnimateState>(
-    AnimateState.initial,
-  );
+const Morphing : Component<MorphingProps> = (props) => {
+  const [state, setState] = createSignal<AnimateState>(AnimateState.initial);
 
   const [source, setSource] = createSignal<HTMLDivElement>();
   const [target, setTarget] = createSignal<HTMLDivElement>();
@@ -43,6 +40,8 @@ const Morphing = (props: MorphingProps) => {
     }),
     leave: () => {
       sourceHeight = source()!.clientHeight;
+      console.log(sourceHeight)
+
       return {
         timeline: {
           easing: "easeOutCubic",
@@ -50,7 +49,7 @@ const Morphing = (props: MorphingProps) => {
         params: {
           targets: source(),
           opacity: [1, 0],
-          height: [sourceHeight, 0],
+          height: 0,
           duration: 250,
         },
       };
@@ -65,14 +64,16 @@ const Morphing = (props: MorphingProps) => {
         opacity: [0, 1],
         duration: 250,
       },
+      offset: "+=50",
     }),
     leave: () => ({
       timeline: {
-        easing: "easeOutCubic",
+        easing: "easeOutElastic(1, 0.9)",
       },
       params: {
         targets: target(),
-        padding: ["8px 26px 26px", "0"],
+        height: 0,
+        opacity: [1, 0],
         duration: 250,
       },
     }),
@@ -97,17 +98,11 @@ const Morphing = (props: MorphingProps) => {
 
   css`
     .morphing-wrapper {
-      display: relative;
+      overflow: hidden;
     }
     .morphed {
-      display: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
     }
     .source {
-      overflow: hidden;
     }
   `;
   return (
