@@ -1,4 +1,4 @@
-import { JSX, Match, Show, Switch, createSignal } from "solid-js";
+import { JSX, Show, createSignal } from "solid-js";
 import { css } from "solid-styled";
 
 import {
@@ -7,10 +7,10 @@ import {
   createAnimationEnter,
   createAnimationLeave,
   createParallelAnimationComp,
+  AnimateState,
+  isInitialAnimation,
 } from "~/animations/animation";
 import useAnimateSwitch, {
-  AnimateSwitchProps,
-  AnimateSwitchState,
 } from "~/hooks/animateSwitch";
 
 type MorphingProps = {
@@ -21,8 +21,8 @@ type MorphingProps = {
 };
 
 const Morphing = (props: MorphingProps) => {
-  const [state, setState] = createSignal<AnimateSwitchState>(
-    AnimateSwitchState.source,
+  const [state, setState] = createSignal<AnimateState>(
+    AnimateState.initial,
   );
 
   const [source, setSource] = createSignal<HTMLDivElement>();
@@ -112,12 +112,12 @@ const Morphing = (props: MorphingProps) => {
   `;
   return (
     <div class="morphing-wrapper">
-      <Show when={state() !== AnimateSwitchState.target}>
+      <Show when={state() !== AnimateState.target}>
         <div class="source" ref={setSource}>
           {props.children(toggle)}
         </div>
       </Show>
-      <Show when={state() !== AnimateSwitchState.source}>
+      <Show when={!isInitialAnimation(state())}>
         <div class="morphed target" ref={setTarget}>
           {props.target(toggle)}
         </div>

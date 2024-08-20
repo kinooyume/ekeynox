@@ -6,7 +6,7 @@ import {
   Show,
 } from "solid-js";
 import { css } from "solid-styled";
-import { createAnimationComp } from "~/animations/animation";
+import { AnimateState, createAnimationComp, isInitialAnimation } from "~/animations/animation";
 import Cross from "../svgs/cross";
 import useAnimateModal from "~/hooks/animateModal";
 
@@ -23,7 +23,8 @@ type DropdownProps = {
 const Dropdown = (props: DropdownProps) => {
   const [dropdown, setDropdown] = createSignal<HTMLDivElement>();
 
-  const [isOpen, setIsOpen] = createSignal<boolean>(false);
+  const [state, setState] = createSignal<AnimateState>(AnimateState.initial);
+
   const [hover, setHover] = createSignal(false);
 
   const animation = createAnimationComp({
@@ -80,10 +81,10 @@ const Dropdown = (props: DropdownProps) => {
       ],
     },
   });
-  const { toggle } = useAnimateModal({
+  const { toggle, toInitial } = useAnimateModal({
     animation,
-    isOpen,
-    setIsOpen,
+    state,
+    setState,
     element: dropdown,
   });
 
@@ -169,11 +170,15 @@ const Dropdown = (props: DropdownProps) => {
     }
   `;
 
+
   return (
     <div
       id={props.id}
       class={`dropdown-wrapper`}
-      classList={{ open: isOpen(), reverse: props.reverse }}
+      classList={{
+        open: !isInitialAnimation(state()),
+        reverse: props.reverse,
+      }}
       ref={(el) => {
         el.addEventListener("mouseleave", () => setHover(false));
         el.addEventListener("mouseenter", () => setHover(true));
@@ -181,15 +186,15 @@ const Dropdown = (props: DropdownProps) => {
     >
       <div class="dropdown" ref={setDropdown}>
         <div class="dropdown-label" onClick={toggle}>
-          {props.label(isOpen, hover)}
-        <Show when={isOpen()}>
-          <div class="cross">
-            <Cross />
-          </div>
-        </Show>
+          {props.label(() => !isInitialAnimation(state()), hover)}
+          <Show when={!isInitialAnimation(state())}>
+            <div class="cross">
+              <Cross />
+            </div>
+          </Show>
         </div>
-        <Show when={isOpen()}>
-          <div class="dropdown-content">{props.children(toggle)}</div>
+        <Show when={!isInitialAnimation(state())}>
+          <div class="dropdown-content">{props.children(toInitial)}</div>
         </Show>
       </div>
     </div>

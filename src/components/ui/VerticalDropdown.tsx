@@ -2,7 +2,11 @@ import anime from "animejs";
 import { Accessor, JSX, Show, createSignal } from "solid-js";
 import { css } from "solid-styled";
 import Cross from "../svgs/cross";
-import { createAnimationComp } from "~/animations/animation";
+import {
+    AnimateState,
+  createAnimationComp,
+  isInitialAnimation,
+} from "~/animations/animation";
 import useAnimateModal from "~/hooks/animateModal";
 
 type VerticalDropdownProps = {
@@ -108,31 +112,31 @@ const VerticalDropdown = (props: VerticalDropdownProps) => {
     },
   });
 
-  const [isOpen, setIsOpen] = createSignal<boolean>(false);
+  const [state, setState] = createSignal<AnimateState>(AnimateState.initial);
 
-  const { toggle } = useAnimateModal({
+  const { toggle, toTarget, toInitial } = useAnimateModal({
     animation,
-    isOpen,
-    setIsOpen,
-    element: wrapper,
+    state,
+    setState,
+    element: dropdown,
   });
 
   return (
     <div
       class="vertical-dropdown-wrapper"
       ref={setWrapper}
-      classList={{ open: isOpen() }}
+      classList={{ open: !isInitialAnimation(state()) }}
     >
       <div class="label" ref={setLabel} onClick={toggle}>
-        {props.label(isOpen)}
+        {props.label(() => !isInitialAnimation(state()))}
       </div>
-      <Show when={isOpen()}>
+      <Show when={!isInitialAnimation(state())}>
         <div
           class="vertical-dropdown"
           id={`dropdown-${props.id}`}
           ref={setDropdown}
         >
-          {props.children(() => setIsOpen(false))}
+          {props.children(toInitial)}
           <div class="cross" onClick={toggle}>
             <Cross />
           </div>

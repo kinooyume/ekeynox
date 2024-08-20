@@ -1,57 +1,60 @@
 import { Accessor } from "solid-js";
 import {
+    AnimateState,
   AnimationComp,
   MinimalAnimationInstance,
 } from "~/animations/animation";
 
-export enum AnimateSwitchState {
-  source,
-  transition,
-  target,
-}
+type AnimationSwitchCallbacks = {
+  toInitial: () => void;
+  toTarget: () => void;
+};
 
 export interface AnimateSwitchProps {
   animation: AnimationComp;
-  state: Accessor<AnimateSwitchState>;
-  setState: (value: AnimateSwitchState) => void;
+  state: Accessor<AnimateState>;
+  setState: (value: AnimateState) => void;
+  on?: AnimationSwitchCallbacks;
 }
+
 
 const useAnimateSwitch = (props: AnimateSwitchProps) => {
   const animationHandler = (
-    animation: MinimalAnimationInstance,
+    getAnimation: () => MinimalAnimationInstance,
     after: () => void,
   ) => {
-    props.setState(AnimateSwitchState.transition);
+    props.setState(AnimateState.transition);
+    const animation = getAnimation();
     animation.play();
     animation.finished.then(after);
   };
 
-  const open = () => {
-    if (props.state() !== AnimateSwitchState.source) return;
-    animationHandler(props.animation.enter(), () => {
-      // setFocus(FocusType.Hud);
-      props.setState(AnimateSwitchState.target);
+  const toTarget = () => {
+    if (props.state() !== AnimateState.initial) return;
+    animationHandler(props.animation.enter, () => {
+      if (props.on) props.on.toTarget();
+      props.setState(AnimateState.target);
     });
   };
 
-  const close = () => {
-    if (props.state() !== AnimateSwitchState.target) return;
-    return animationHandler(props.animation.leave(), () => {
-      // setFocus(FocusType.View);
-      props.setState(AnimateSwitchState.source);
+  const toInitial = () => {
+    if (props.state() !== AnimateState.target) return;
+    return animationHandler(props.animation.leave, () => {
+      if (props.on) props.on.toInitial();
+      props.setState(AnimateState.initial);
     });
   };
 
   const toggle = () => {
     switch (props.state()) {
-      case AnimateSwitchState.source:
-        return open();
-      case AnimateSwitchState.target:
-        return close();
+      case AnimateState.initial:
+        return toTarget();
+      case AnimateState.target:
+        return toInitial();
     }
   };
 
-  return { toggle, open, close };
+  return { toggle, toTarget, toInitial };
 };
 
 export default useAnimateSwitch;

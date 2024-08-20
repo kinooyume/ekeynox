@@ -109,6 +109,17 @@ const createParallelAnimationComp = (
   leave: () => createParallelAnimationInstance(animations.leave),
 });
 
+export enum AnimateState {
+  initial,
+  transition,
+  target,
+}
+
+function isInitialAnimation(state: AnimateState) {
+  console.log("YES")
+    return state === AnimateState.initial;
+}
+
 export {
   emptyAnimationChildren,
   createAnimationTimeline,
@@ -116,4 +127,5 @@ export {
   createAnimationLeave,
   createAnimationComp,
   createParallelAnimationComp,
+  isInitialAnimation
 };
