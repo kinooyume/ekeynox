@@ -1,21 +1,34 @@
-import useClickOutside from "solid-click-outside";
-import useAnimateToggle, { type AnimateToggleProps } from "./animateToggle";
 import { Accessor } from "solid-js";
+import { FocusType, useFocus } from "~/contexts/FocusProvider";
+import useAnimateSwitch, {
+  AnimateSwitchProps,
+} from "./animateSwitch";
+import useClickOutside from "./useClickOutside";
+import { AnimateState } from "~/animations/animation";
 
-interface AnimateModalProps extends AnimateToggleProps {
+interface AnimateModalProps extends AnimateSwitchProps {
   element: Accessor<HTMLElement | undefined>;
 }
 
-const useAnimateModal = (props : AnimateModalProps) => {
-const animateToggle = useAnimateToggle(props)
+const useAnimateModal = (props: AnimateModalProps) => {
+  const { setFocus } = useFocus();
+  const animation = useAnimateSwitch({
+    ...props,
+    on: {
+      toInitial: () => setFocus(FocusType.View),
+      toTarget: () => setFocus(FocusType.Hud),
+    },
+  });
 
+  // TODO:  should be mount with the component
+  // to avoir unecessary listener
   useClickOutside(props.element, () => {
-    if (animateToggle.pendingAnimation()) return;
-    if (props.isOpen()) {
-      animateToggle.close();
+    if (props.state() === AnimateState.target) {
+      animation.toInitial();
     }
   });
-  return animateToggle;
-}
+
+  return animation;
+};
 
 export default useAnimateModal;

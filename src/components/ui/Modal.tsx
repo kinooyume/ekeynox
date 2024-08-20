@@ -6,19 +6,22 @@ import Cross from "../svgs/cross";
 import {
   type AnimationChildren,
   createAnimationComp,
+  AnimateState,
+  isInitialAnimation,
 } from "~/animations/animation";
 import useAnimateModal from "~/hooks/animateModal";
 
 type ModalProps = {
-  button: (isOpen: Accessor<boolean>, toggle: () => void) => JSX.Element;
+  button: (toggle: () => void) => JSX.Element;
   portalId: string;
   childrenAnimation: AnimationChildren;
   children: JSX.Element | JSX.Element[];
 };
 
 const Modal = (props: ModalProps) => {
-  const [isOpen, setIsOpen] = createSignal(false);
-
+  const [state, setState] = createSignal<AnimateState>(
+    AnimateState.initial,
+  );
   const [modalElement, setModalElement] = createSignal<HTMLDivElement>();
 
   const animation = createAnimationComp({
@@ -56,10 +59,10 @@ const Modal = (props: ModalProps) => {
     children: props.childrenAnimation,
   });
 
-  const { toggle } = useAnimateModal({
+  const { toInitial, toggle } = useAnimateModal({
     animation,
-    isOpen,
-    setIsOpen,
+    state,
+    setState,
     element: modalElement,
   });
 
@@ -119,12 +122,12 @@ const Modal = (props: ModalProps) => {
 
   return (
     <div class="modal-wrapper">
-      {props.button(isOpen, toggle)}
-      <Show when={isOpen()}>
+      {props.button(toggle)}
+      <Show when={!isInitialAnimation(state())}>
         <Portal mount={document.getElementById(props.portalId)!}>
           <div class="blur"></div>
           <div class="modal" ref={setModalElement}>
-            <div class="cross" onClick={toggle}>
+            <div class="cross" onClick={toInitial}>
               <Cross />
             </div>
             <div class="modal_content">{props.children}</div>

@@ -3,8 +3,8 @@ import {
   TypingEventKind,
   type TypingEventType,
 } from "../typing/TypingEvent.ts";
-import useClickOutside from "solid-click-outside";
 import { FocusType, useFocus } from "~/contexts/FocusProvider.tsx";
+import useClickOutside from "~/hooks/useClickOutside.ts";
 
 export type UserInputProps = {
   typingEvent: TypingEventType;
