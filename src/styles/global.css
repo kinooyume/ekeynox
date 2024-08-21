@@ -233,24 +233,28 @@ a.primary:active {
 
 button.secondary {
   background-color: var(--color-surface-100);
+  cursor: pointer;
   color: var(--text-secondary-color);
 }
 
 button.secondary:hover {
   filter: none;
+  text-decoration: underline;
   opacity: 1;
 }
 
 input {
-  border: 1px solid var(--color-surface-alt);
-  height: 42px;
-  min-width: 300;
+  border: 1px solid var(--background-color);
   border-radius: 10px;
+
+  transition: all 0.06s ease;
+  background-color: var(--color-surface-mixed-200);
 }
 
 input:focus {
   outline: none;
-  border: 3px solid var(--color-surface-alt);
+  background-color: var(--color-surface-mixed-500);
+  border-color: var(--color-surface-alt);
 }
 
 textarea {
@@ -258,18 +262,19 @@ textarea {
   width: 100%;
   padding: 12px;
   border-radius: 10px;
-  border: 2px solid var(--background-color);
+  border: 1px solid var(--background-color);
 
+  background-color: var(--color-surface-mixed-200);
   font-size: 13px;
   transition: all 0.06s ease;
-  background-color: var(--color-surface-200);
-  cursor: pointer;
+  /*background-color: var(--color-surface-200);*/
   color: var(--text-color);
 }
 
 textarea:focus {
   outline: none !important;
-  border: 2px solid var(--background-color);
+  background-color: var(--color-surface-mixed-500);
+  border-color: var(--color-surface-alt);
 }
 
 h1,

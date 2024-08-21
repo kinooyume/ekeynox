@@ -8,7 +8,7 @@ import {
 import { css } from "solid-styled";
 import { AnimateState, createAnimationComp, isInitialAnimation } from "~/animations/animation";
 import Cross from "../svgs/cross";
-import useAnimateModal from "~/hooks/animateModal";
+import useAnimateModal from "~/hooks/useAnimateModal";
 
 // Dropdown like animation with anime.js
 // https://codepen.io/NielsVoogt/pen/dyGpNOx

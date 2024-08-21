@@ -1,12 +1,10 @@
 import { Accessor } from "solid-js";
 import { FocusType, useFocus } from "~/contexts/FocusProvider";
-import useAnimateSwitch, {
-  AnimateSwitchProps,
-} from "./animateSwitch";
+import useAnimateSwitch, { AnimateSwitchProps } from "./useAnimateSwitch";
 import useClickOutside from "./useClickOutside";
 import { AnimateState } from "~/animations/animation";
 
-interface AnimateModalProps extends AnimateSwitchProps {
+export interface AnimateModalProps extends AnimateSwitchProps {
   element: Accessor<HTMLElement | undefined>;
 }
 
@@ -20,8 +18,6 @@ const useAnimateModal = (props: AnimateModalProps) => {
     },
   });
 
-  // TODO:  should be mount with the component
-  // to avoir unecessary listener
   useClickOutside(props.element, () => {
     if (props.state() === AnimateState.target) {
       animation.toInitial();

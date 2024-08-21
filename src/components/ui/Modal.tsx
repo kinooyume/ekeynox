@@ -8,21 +8,32 @@ import {
   createAnimationComp,
   AnimateState,
   isInitialAnimation,
+  createAnimationTimeline,
 } from "~/animations/animation";
-import useAnimateModal from "~/hooks/animateModal";
+import useAnimateModalMorphing, { AnimateModalHooks } from "~/hooks/useAnimateModalMorphing";
 
 type ModalProps = {
   button: (toggle: () => void) => JSX.Element;
   portalId: string;
   childrenAnimation: AnimationChildren;
-  children: JSX.Element | JSX.Element[];
+  children: (hooks: AnimateModalHooks) => JSX.Element | JSX.Element[];
 };
 
 const Modal = (props: ModalProps) => {
-  const [state, setState] = createSignal<AnimateState>(
-    AnimateState.initial,
-  );
+  const [state, setState] = createSignal<AnimateState>(AnimateState.initial);
   const [modalElement, setModalElement] = createSignal<HTMLDivElement>();
+
+  const resizeParams = ({width, height} : {width: number, height: number}) => {
+    const fromDimensions = modalElement()!.getBoundingClientRect();
+    return {
+      params: {
+        targets: modalElement(),
+        height: [fromDimensions.height,  height + 26 * 2 ],
+        width: [fromDimensions.width,  width + 26 * 2 ],
+        duration: 650,
+      },
+    };
+  };
 
   const animation = createAnimationComp({
     parent: {
@@ -59,11 +70,20 @@ const Modal = (props: ModalProps) => {
     children: props.childrenAnimation,
   });
 
-  const { toInitial, toggle } = useAnimateModal({
+  const { toInitial, toggle, transitions } = useAnimateModalMorphing({
     animation,
     state,
     setState,
     element: modalElement,
+    transitions: {
+      resize: (params) =>
+        createAnimationTimeline(
+          {
+            easing: "easeOutElastic(1, 0.9)",
+          },
+          [resizeParams(params)],
+        ),
+    },
   });
 
   css`
@@ -78,8 +98,7 @@ const Modal = (props: ModalProps) => {
     }
     .modal {
       position: absolute;
-      background-color: red;
-overflow: hidden;
+      overflow: hidden;
       top: 80px;
       margin: 0 auto;
       opacity: 0;
@@ -87,7 +106,7 @@ overflow: hidden;
       left: 0;
       max-width: 800px;
       width: 100%;
-      background-color: var(--color-surface-100);
+      background-color: var(--color-surface-mixed-100);
       padding: 8px 26px 26px;
       border: 1px solid var(--background-color);
       border-radius: 12px;
@@ -131,7 +150,7 @@ overflow: hidden;
             <div class="cross" onClick={toInitial}>
               <Cross />
             </div>
-            <div class="modal_content">{props.children}</div>
+            <div class="modal_content">{props.children(transitions)}</div>
           </div>
         </Portal>
       </Show>
