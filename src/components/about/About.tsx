@@ -69,13 +69,16 @@ const About: Component<AboutProps> = (props) => {
           />
         )}
       >
-        <Morphing
-          sourceAnimation={emptyAnimationChildren}
-          targetAnimation={emptyAnimationChildren}
-          target={(back) => <ContactForm back={back} />}
-        >
-          {(t) => <AboutInfo next={t} />}
-        </Morphing>
+        {(transition) => (
+          <Morphing
+            sourceAnimation={emptyAnimationChildren}
+            targetAnimation={emptyAnimationChildren}
+            onTransition={transition.resize}
+            target={(back) => <ContactForm back={back} />}
+          >
+            {(t) => <AboutInfo next={t} />}
+          </Morphing>
+        )}
       </Modal>
     </div>
   );

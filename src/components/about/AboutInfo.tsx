@@ -8,7 +8,7 @@ import Morphing from "../ui/Morphing";
 import { useI18n } from "~/contexts/i18nProvider";
 
 type ModalAboutProps = {
-   next: () => void;
+  next: () => void;
 };
 
 const AboutInfo = (props: ModalAboutProps) => {

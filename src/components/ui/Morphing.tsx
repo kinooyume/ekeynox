@@ -10,16 +10,22 @@ import {
   AnimateState,
   isInitialAnimation,
 } from "~/animations/animation";
-import useAnimateSwitch from "~/hooks/animateSwitch";
+import useAnimateSwitch from "~/hooks/useAnimateSwitch";
+
+type TransitionSize = {
+  height: number;
+  width: number;
+};
 
 type MorphingProps = {
   target: (close: () => void) => JSX.Element | JSX.Element[];
   sourceAnimation: AnimationChildren;
   targetAnimation: AnimationChildren;
+  onTransition?: (t: TransitionSize) => void;
   children: (toggle: () => void) => JSX.Element | JSX.Element[];
 };
 
-const Morphing : Component<MorphingProps> = (props) => {
+const Morphing: Component<MorphingProps> = (props) => {
   const [state, setState] = createSignal<AnimateState>(AnimateState.initial);
 
   const [source, setSource] = createSignal<HTMLDivElement>();
@@ -40,7 +46,6 @@ const Morphing : Component<MorphingProps> = (props) => {
     }),
     leave: () => {
       sourceHeight = source()!.clientHeight;
-      console.log(sourceHeight)
 
       return {
         timeline: {
@@ -94,11 +99,20 @@ const Morphing : Component<MorphingProps> = (props) => {
     animation,
     state,
     setState,
+    on: {
+      transition: (prevState: AnimateState) => {
+        if (!props.onTransition) return;
+        const nextElement =
+          prevState === AnimateState.target ? source() : target();
+        if (!nextElement) return;
+        return props.onTransition(nextElement.getBoundingClientRect());
+      },
+    },
   });
 
   css`
     .morphing-wrapper {
-      overflow: hidden;
+      position: relative;
     }
     .morphed {
     }

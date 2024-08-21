@@ -7,7 +7,7 @@ import {
   createAnimationComp,
   isInitialAnimation,
 } from "~/animations/animation";
-import useAnimateModal from "~/hooks/animateModal";
+import useAnimateModal from "~/hooks/useAnimateModal";
 
 type VerticalDropdownProps = {
   id: string;
