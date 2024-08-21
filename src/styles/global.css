@@ -244,9 +244,11 @@ button.secondary:hover {
 }
 
 input {
+  font-family: Larsseit, system-ui, sans-serif;
   border: 1px solid var(--background-color);
   border-radius: 10px;
 
+  font-size: 16px;
   transition: all 0.06s ease;
   background-color: var(--color-surface-mixed-200);
 }
@@ -257,6 +259,7 @@ input:focus {
   border-color: var(--color-surface-alt);
 }
 
+
 textarea {
   font-family: Larsseit, system-ui, sans-serif;
   width: 100%;
@@ -265,7 +268,7 @@ textarea {
   border: 1px solid var(--background-color);
 
   background-color: var(--color-surface-mixed-200);
-  font-size: 13px;
+  font-size: 16px;
   transition: all 0.06s ease;
   /*background-color: var(--color-surface-200);*/
   color: var(--text-color);

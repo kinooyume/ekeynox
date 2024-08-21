@@ -1,7 +1,6 @@
 // TODO: should we build it from folder/files ?
 
 import {
-  SourceProps,
   makeSourceNested,
 } from "~/components/content/TypingGameSource";
 import { GameModeKind } from "./gameModeKind";
