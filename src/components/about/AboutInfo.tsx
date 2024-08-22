@@ -17,6 +17,7 @@ const AboutInfo = (props: ModalAboutProps) => {
   css`
     .about-wrapper {
       display: flex;
+width: 800px;
     }
 
     .modal-about-content {

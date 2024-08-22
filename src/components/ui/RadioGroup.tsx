@@ -37,11 +37,16 @@ function RadioGroup<Value>(props: RadioGroupProps<Value>) {
     .radio-group {
       padding: 4px;
       border-radius: 10px;
-      background-color: var(--color-surface-200);
+      background-color: var(--color-surface-mixed-200);
+      padding: 8px 20px;
+
       position: relative;
       display: flex;
       border: 1px solid var(--background-color);
       transition: all 100ms linear;
+    }
+    .radio-group:hover {
+      background-color: var(--color-surface-mixed-500);
     }
 
     .radio-group input:not(:checked) + label:hover {
@@ -69,6 +74,7 @@ function RadioGroup<Value>(props: RadioGroupProps<Value>) {
     }
 
     .label-text {
+      font-size: 14px;
       padding-top: 2px;
     }
 
@@ -79,10 +85,9 @@ function RadioGroup<Value>(props: RadioGroupProps<Value>) {
       animation: rubberBand 0.6s both;
     }
 
-.radio-group input:checked + label .label-text {
-
+    .radio-group input:checked + label .label-text {
       color: var(--color-selected);
-}
+    }
 
     @keyframes rubberBand {
       0% {
