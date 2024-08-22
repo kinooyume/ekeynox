@@ -24,6 +24,7 @@ enum FormState {
 
 type ContactFormProps = {
   back: () => void;
+  onSuccess: () => void;
 };
 
 const ContactForm: Component<ContactFormProps> = (props) => {
@@ -36,14 +37,14 @@ const ContactForm: Component<ContactFormProps> = (props) => {
     values,
     event,
   ) => {
+
+    props.onSuccess()
+    return;
     const form = {
       ...values,
       access_key: import.meta.env.VITE_WEB3FORMS_ACCESS_KEY,
     };
 
-    console.log(import.meta.env.VITE_WEB3FORMS_ACCESS_KEY);
-
-    console.log(form);
     setFormState(FormState.sending);
     try {
       const response = await fetch("https://api.web3forms.com/submit", {
@@ -69,6 +70,7 @@ const ContactForm: Component<ContactFormProps> = (props) => {
       setError("POST: " + error);
       setFormState(FormState.error);
     }
+    props.onSuccess()
   };
 
   // TODO: remoe global style

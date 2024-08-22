@@ -112,7 +112,7 @@ const Morphing: Component<MorphingProps> = (props) => {
 
   css`
     .morphing-wrapper {
-width: 100%;
+      width: 100%;
     }
     .morphed {
     }
