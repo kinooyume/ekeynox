@@ -10,7 +10,9 @@ import {
   isInitialAnimation,
   createAnimationTimeline,
 } from "~/animations/animation";
-import useAnimateModalMorphing, { AnimateModalHooks } from "~/hooks/useAnimateModalMorphing";
+import useAnimateModalMorphing, {
+  AnimateModalHooks,
+} from "~/hooks/useAnimateModalMorphing";
 
 type ModalProps = {
   button: (toggle: () => void) => JSX.Element;
@@ -23,13 +25,19 @@ const Modal = (props: ModalProps) => {
   const [state, setState] = createSignal<AnimateState>(AnimateState.initial);
   const [modalElement, setModalElement] = createSignal<HTMLDivElement>();
 
-  const resizeParams = ({width, height} : {width: number, height: number}) => {
+  const resizeParams = ({
+    width,
+    height,
+  }: {
+    width: number;
+    height: number;
+  }) => {
     const fromDimensions = modalElement()!.getBoundingClientRect();
     return {
       params: {
         targets: modalElement(),
-        height: [fromDimensions.height,  height + 26 * 2 ],
-        width: [fromDimensions.width,  width + 26 * 2 ],
+        height: [fromDimensions.height, height + 26 * 2],
+        // width: [fromDimensions.width, width + 26 * 2],
         duration: 650,
       },
     };
@@ -97,15 +105,14 @@ const Modal = (props: ModalProps) => {
       backdrop-filter: grayscale(80%);
     }
     .modal {
-      position: absolute;
+      position: fixed;
       overflow: hidden;
       top: 80px;
       margin: 0 auto;
       opacity: 0;
       right: 0;
       left: 0;
-      max-width: 800px;
-      width: 100%;
+      width: 900px;
       background-color: var(--color-surface-mixed-100);
       padding: 8px 26px 26px;
       border: 1px solid var(--background-color);
