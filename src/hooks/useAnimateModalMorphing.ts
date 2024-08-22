@@ -21,7 +21,13 @@ const useAnimateModalMorphing = (
 ) => {
   const animation = useAnimateModal(props);
 
-  const resize = async ({ width, height }: { width: number; height: number }) => {
+  const resize = async ({
+    width,
+    height,
+  }: {
+    width: number;
+    height: number;
+  }) => {
     const prevState = props.state();
     if (prevState === AnimateState.transition) return;
     props.setState(AnimateState.transition);
@@ -34,7 +40,7 @@ const useAnimateModalMorphing = (
   };
 
   const transitions = {
-    resize
+    resize,
   };
 
   return { ...animation, transitions };

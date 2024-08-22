@@ -5,6 +5,7 @@ import Morphing from "../ui/Morphing";
 import QuestionMark from "../ui/QuestionMark";
 import ContactForm from "./AboutContactForm";
 import AboutInfo from "./AboutInfo";
+import AboutContact from "./AboutContact";
 
 type AboutProps = {};
 
@@ -69,12 +70,14 @@ const About: Component<AboutProps> = (props) => {
           />
         )}
       >
-        {(transition) => (
+        {(transition, exit) => (
           <Morphing
             sourceAnimation={emptyAnimationChildren}
             targetAnimation={emptyAnimationChildren}
             onTransition={transition.resize}
-            target={(back) => <ContactForm back={back} />}
+            target={(back) => (
+              <AboutContact back={back} onTransition={transition.resize} exit={exit} />
+            )}
           >
             {(t) => <AboutInfo next={t} />}
           </Morphing>

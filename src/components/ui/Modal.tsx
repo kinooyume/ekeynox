@@ -18,7 +18,10 @@ type ModalProps = {
   button: (toggle: () => void) => JSX.Element;
   portalId: string;
   childrenAnimation: AnimationChildren;
-  children: (hooks: AnimateModalHooks) => JSX.Element | JSX.Element[];
+  children: (
+    hooks: AnimateModalHooks,
+    toInitial: () => void,
+  ) => JSX.Element | JSX.Element[];
 };
 
 const Modal = (props: ModalProps) => {
@@ -157,7 +160,9 @@ const Modal = (props: ModalProps) => {
             <div class="cross" onClick={toInitial}>
               <Cross />
             </div>
-            <div class="modal_content">{props.children(transitions)}</div>
+            <div class="modal_content">
+              {props.children(transitions, toInitial)}
+            </div>
           </div>
         </Portal>
       </Show>

@@ -4,20 +4,21 @@ import AboutContactForm from "./AboutContactForm";
 import { emptyAnimationChildren } from "~/animations/animation";
 import AboutContactSended from "./AboutContactSended";
 import { css } from "solid-styled";
+import ContactForm from "./AboutContactForm";
 
 type AboutContactProps = {
   back: () => void;
+  exit: () => void;
   onTransition?: (t: TransitionSize) => void;
 };
 
-// NOTE: example of nested morphing
+// NOTE: example of nested morphin
 // example aussi de Morphing unilateral
 
 const AboutContact: Component<AboutContactProps> = (props) => {
   css`
     .about-contact {
       display: block;
-      width: 400px;
     }
   `;
   return (
@@ -31,9 +32,9 @@ const AboutContact: Component<AboutContactProps> = (props) => {
         sourceAnimation={emptyAnimationChildren}
         targetAnimation={emptyAnimationChildren}
         onTransition={props.onTransition}
-        target={() => <AboutContactSended />}
+        target={() => <AboutContactSended close={props.exit} />}
       >
-        {(t) => <AboutContactForm back={props.back} />}
+        {(toggle) => <ContactForm back={props.back} onSuccess={toggle} />}
       </Morphing>
     </div>
   );
