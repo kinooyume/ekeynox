@@ -22,6 +22,7 @@ const LinkedinBadge = (props: LinkedinBadgeProps) => {
     .btn-linkedin {
       background: #0e76a8;
       font-size: 18px;
+      height: 26px;
       display: inline-block;
       text-decoration: none;
       border-radius: 12px;
