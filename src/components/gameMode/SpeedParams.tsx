@@ -23,9 +23,9 @@ const t = useI18n();
       margin: 0;
       font-weight: 400;
       color: var(--text-secondary-color);
-      font-size: 16px;
+      font-size: 18px;
       cursor: default;
-      text-transform: uppercase;
+      text-transform: capitalize;
     }
     .option {
       display: flex;
