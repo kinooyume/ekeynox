@@ -250,7 +250,8 @@ input {
 
   font-size: 16px;
   transition: all 0.06s ease;
-  background-color: var(--color-surface-mixed-200);
+  /*background-color: var(--color-surface-mixed-200);*/
+  background-color: var(--background-color);
 }
 
 input:focus {
@@ -259,7 +260,6 @@ input:focus {
   border-color: var(--color-surface-alt);
 }
 
-
 textarea {
   font-family: Larsseit, system-ui, sans-serif;
   width: 100%;
@@ -267,7 +267,7 @@ textarea {
   border-radius: 10px;
   border: 1px solid var(--background-color);
 
-  background-color: var(--color-surface-mixed-200);
+  background-color: var(--background-color);
   font-size: 16px;
   transition: all 0.06s ease;
   /*background-color: var(--color-surface-200);*/
