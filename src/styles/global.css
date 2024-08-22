@@ -198,17 +198,22 @@ a.primary {
 button.primary,
 a.primary {
   height: 48px;
-  background-color: var(--color-primary-200);
+  background-color: var(--text-secondary-color);
   transition: all 0.3s ease;
-  box-shadow: var(--shadow-color) 0px 6px 0px 0px;
-  color: var(--button-text-color);
+  cursor: pointer;
+  border: 1px solid transparent;
+  color: var(--background-color);
 }
 /* https://uiverse.io/cssbuttons-io/friendly-dragon-76 */
 /* https://uiverse.io/cssbuttons-io/evil-monkey-41 */
 /* https://codepen.io/havardob/pen/qBvYdXL */
 button.primary:hover,
+a.primary:hover,
+button.secondary:hover {
+  transform: translateY(-2px);
+}
+button.primary:hover,
 a.primary:hover {
-  box-shadow: var(--shadow-color) 0px 4px 0px 0px;
 }
 
 a.primary {
@@ -225,21 +230,22 @@ button.primary:disabled {
 }
 
 button.primary:active,
-a.primary:active {
-  box-shadow: var(--shadow-color) 0px 0px 0px 0px;
+a.primary:active,
+button.secondary:active {
   transform: translateY(5px);
   transition: 200ms;
 }
 
 button.secondary {
-  background-color: var(--color-surface-100);
   cursor: pointer;
   color: var(--text-secondary-color);
+  border: 1px solid;
+  border-color: var(--text-secondary-color);
+
+  transition: all 0.3s ease;
 }
 
 button.secondary:hover {
-  filter: none;
-  text-decoration: underline;
   opacity: 1;
 }
 
@@ -262,7 +268,7 @@ input:focus {
 
 textarea {
   font-family: Larsseit, system-ui, sans-serif;
-  width: 100%;
+  width: calc(100% - 40px);
   padding: 12px;
   border-radius: 10px;
   border: 1px solid var(--background-color);

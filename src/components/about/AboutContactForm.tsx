@@ -78,10 +78,9 @@ const ContactForm: Component<ContactFormProps> = (props) => {
       border-color: var(--color-surface-alt);
       padding: 26px;
     }
-    .about-contact h1 {
+    .about-contact h2 {
       color: var(--text-secondary-color);
       font-size: 28px;
-      font-weight: 200;
       font-weight: 300;
       margin-top: 0;
     }
@@ -138,14 +137,14 @@ const ContactForm: Component<ContactFormProps> = (props) => {
 
     .actions {
       display: flex;
-gap: 16px;
+      gap: 16px;
       margin-left: auto;
     }
   `;
 
   return (
     <div class="about-contact">
-      <h1>Contact</h1>
+      <h2>Contact</h2>
       <Show when={formState() === FormState.error}>
         <span class="error">{error()}</span>
       </Show>

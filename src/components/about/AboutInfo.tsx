@@ -15,37 +15,49 @@ const AboutInfo = (props: ModalAboutProps) => {
   const t = useI18n();
 
   css`
+    .modal-about-project {
+      display: none;
+    }
+
+    .modal-about-me {
+    }
+
+    .actions {
+      display: flex;
+      gap: 16px;
+      justify-content: flex-end;
+      padding-top: 64px;
+      padding-bottom: 32px;
+    }
+
     .about-wrapper {
       display: flex;
-width: 800px;
+      flex-direction: column;
+      gap: 16px;
+      padding: 32px;
+      padding-right: 64px;
+      margin: 0 auto;
     }
 
     .modal-about-content {
-      padding: 24px;
-      max-width: 300px;
     }
 
     @global {
       .modal-about-content {
         h2 {
+          font-size: 28px;
           font-weight: 300;
-          font-size: 32px;
+          margin-top: 0;
+          margin-bottom: 64px;
           color: var(--text-secondary-color);
         }
 
         p {
+          padding-left: 32px;
+          padding-right: 32px;
           text-align: justify;
         }
       }
-    }
-
-    .project {
-      border-right: 2px solid var(--border-color);
-      padding-right: 48px;
-    }
-
-    .me {
-      padding-left: 48px;
     }
 
     .logo {
@@ -59,24 +71,7 @@ width: 800px;
 
   return (
     <div class="about-wrapper">
-      <div class="modal-about-content project">
-        <div class="logo animate">
-          <Logo width="130px" />
-        </div>
-        <SolidMarkdown
-          rehypePlugins={[
-            [
-              rehypeExternalLinks,
-              {
-                target: "_blank",
-                rel: "noopener noreferrer",
-              },
-            ],
-          ]}
-          children={t("about.project")}
-        />
-      </div>
-      <div class="modal-about-content me">
+      <div class="modal-about-content modal-about-me">
         <SolidMarkdown
           rehypePlugins={[
             [
@@ -86,11 +81,15 @@ width: 800px;
           ]}
           children={t("about.me")}
         />
+      </div>
+      <div class="actions">
         <LinkedinBadge
           href="https://www.linkedin.com/in/martin-kinoo/"
           text="martin-kinoo"
         />
-        <button onClick={props.next}>Next</button>
+        <button class="primary" onClick={props.next}>
+          Me contacter
+        </button>
       </div>
     </div>
   );
