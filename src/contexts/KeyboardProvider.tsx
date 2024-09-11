@@ -1,6 +1,6 @@
 import { JSX, createContext, useContext } from "solid-js";
-import KeyboardLayout, { type HigherKeyboard } from "./keyboardLayout";
-import { KeyboardLayoutName } from "./settings";
+import { KeyboardLayoutName } from "~/settings/settings";
+import KeyboardLayout, { HigherKeyboard } from "../settings/keyboardLayout.ts";
 
 const keyboardContext = createContext<HigherKeyboard>();
 
