@@ -1,4 +1,5 @@
-import { For, createSignal, onMount } from "solid-js";
+import { For, Show, createEffect, createSignal, onMount } from "solid-js";
+import { useWindowSize } from "@solid-primitives/resize-observer";
 import { css } from "solid-styled";
 import type { KeysProjection } from "../metrics/KeysProjection";
 import KeyboardKey from "./KeyboardKey";
@@ -19,7 +20,16 @@ type KeyboardProps = {
 
 const Keyboard = (props: KeyboardProps) => {
   const [pressedKeys, setPressedKeys] = createSignal<string[]>([]);
+  const [showKb, setShowKb] = createSignal(true);
 
+  const size = useWindowSize();
+  createEffect(() => {
+    if (size.width < 1120 || size.height < 800) {
+      setShowKb(false);
+    } else {
+      setShowKb(true);
+    }
+  });
   const findPrimaryKey = (key: string) => {
     const keyFound =
       props.layout.layoutFlat.find((lKey) => lKey.all.includes(key)) ||
@@ -73,44 +83,46 @@ const Keyboard = (props: KeyboardProps) => {
 
   const blankCharacters = [" ", "Enter"];
   return (
-    <div class="kb">
-      <For each={props.layout.layout}>
-        {(row) => (
-          <div class="row">
-            <For each={row}>
-              {(lKey) => (
-                <KeyboardKey
-                  key={lKey.all}
-                  used={lKey.used}
-                  current={lKey.all.includes(props.currentKey)}
-                  data={
-                    blankCharacters.includes(lKey.primary)
-                      ? []
-                      : lKey.all.map((c) => props.metrics[c]).filter((c) => c)
-                  }
-                  size={lKey.size}
-                  pressed={pressedKeys().includes(lKey.primary)}
-                />
-              )}
-            </For>
-          </div>
-        )}
-      </For>
-      <div class="extraKeys">
-        <For each={props.layout.extra}>
-          {(lKey) => (
-            <KeyboardKey
-              key={lKey.all}
-              used={lKey.used}
-              current={lKey.all.includes(props.currentKey)}
-              data={lKey.all.map((c) => props.metrics[c]).filter((c) => c)}
-              size={lKey.size}
-              pressed={pressedKeys().includes(lKey.primary)}
-            />
+    <Show when={showKb()}>
+      <div class="kb">
+        <For each={props.layout.layout}>
+          {(row) => (
+            <div class="row">
+              <For each={row}>
+                {(lKey) => (
+                  <KeyboardKey
+                    key={lKey.all}
+                    used={lKey.used}
+                    current={lKey.all.includes(props.currentKey)}
+                    data={
+                      blankCharacters.includes(lKey.primary)
+                        ? []
+                        : lKey.all.map((c) => props.metrics[c]).filter((c) => c)
+                    }
+                    size={lKey.size}
+                    pressed={pressedKeys().includes(lKey.primary)}
+                  />
+                )}
+              </For>
+            </div>
           )}
         </For>
+        <div class="extraKeys">
+          <For each={props.layout.extra}>
+            {(lKey) => (
+              <KeyboardKey
+                key={lKey.all}
+                used={lKey.used}
+                current={lKey.all.includes(props.currentKey)}
+                data={lKey.all.map((c) => props.metrics[c]).filter((c) => c)}
+                size={lKey.size}
+                pressed={pressedKeys().includes(lKey.primary)}
+              />
+            )}
+          </For>
+        </div>
       </div>
-    </div>
+    </Show>
   );
 };
 

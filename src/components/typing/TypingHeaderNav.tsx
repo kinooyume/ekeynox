@@ -23,14 +23,13 @@ const TypingHeaderNav = (props: TypingHeaderNavProps) => {
       border-left: 2px solid var(--border-color);
       border-right: 2px solid var(--border-color);
     }
-.left {
-z-index: 920;
-}
+    .left {
+      z-index: 920;
+    }
   `;
 
   onMount(() => {
     anime.timeline().add({
-
       targets: ".header-nav .animate",
       translateY: [-80, 0],
       opacity: [0, 1],

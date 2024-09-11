@@ -14,6 +14,7 @@
     "@solid-primitives/i18n": "^2.1.1",
     "@solid-primitives/map": "^0.4.11",
     "@solid-primitives/refs": "^1.0.8",
+    "@solid-primitives/resize-observer": "^2.0.26",
     "@solid-primitives/storage": "^3.7.1",
     "@solid-primitives/transition-group": "^1.0.5",
     "@solidjs/meta": "^0.29.4",
