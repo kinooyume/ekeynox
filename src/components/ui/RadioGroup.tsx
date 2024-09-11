@@ -88,6 +88,12 @@ function RadioGroup<Value>(props: RadioGroupProps<Value>) {
       color: var(--color-selected);
     }
 
+    @media screen and (max-width: 1300px) {
+      .radio-group {
+        padding: 4px 18px;
+      }
+    }
+
     @keyframes rubberBand {
       0% {
         -webkit-transform: scale3d(1, 1, 1);

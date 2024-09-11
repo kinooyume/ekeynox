@@ -16,9 +16,7 @@ import CustomInput, { type CustomInputRef } from "../ui/CustomInput";
 import GameModeSelection from "./GameModeSelection";
 import SpeedParams from "./SpeedParams";
 import TimerParams from "./TimerParams";
-import { A, useBeforeLeave } from "@solidjs/router";
-import { Portal } from "solid-js/web";
-import anime from "animejs";
+import { useBeforeLeave } from "@solidjs/router";
 
 // Le gars a fait pleins de menu de selection stylax
 // https://in.pinterest.com/pin/12525705207244555/
@@ -243,6 +241,129 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
     }
     .options {
       max-width: 560px;
+    }
+
+    @media screen and (max-width: 1400px) {
+      .illustration-container {
+        height: 280px;
+        width: 320px;
+      }
+
+      .title {
+        padding-left: 36px;
+      }
+      .title span {
+        font-size: 1rem;
+      }
+      .title h1 {
+        font-size: 2.2rem;
+      }
+
+      h2 {
+        font-size: 2.8rem;
+      }
+
+      h3 {
+        font-size: 1.2rem;
+      }
+      .title-mode {
+        margin-top: 80px;
+      }
+      .description {
+        margin-top: 24px;
+      }
+
+      .game-description {
+        height: 80%;
+      }
+    }
+    @media screen and (max-width: 1200px) {
+      .illustration-container {
+        height: 240px;
+        width: 280px;
+      }
+
+      .title h1 {
+        font-size: 2rem;
+      }
+
+      h2 {
+        font-size: 2.4rem;
+      }
+
+      h3 {
+        font-size: 1.1rem;
+        margin-top: 0;
+      }
+      .title-mode {
+        margin-top: 64px;
+      }
+      .description {
+        display: none;
+      }
+    }
+
+    @media screen and (max-width: 1000px) {
+      .illustration-container {
+        height: 200px;
+        width: 240px;
+      }
+      .title-mode {
+        margin-top: 36px;
+      }
+    }
+    @media screen and (max-width: 900px) {
+      h2 {
+        font-size: 2.2rem;
+      }
+    }
+    @media screen and (max-width: 800px) {
+      .title h1 {
+        font-size: 2.4rem;
+      }
+      .title span {
+        font-size: 1rem;
+      }
+      .title-mode {
+        margin-top: 60px;
+      }
+      .description {
+        margin-top: 36px;
+      }
+      .options-title {
+        font-size: 22px;
+        margin-top: 16px;
+        margin-bottom: 16px;
+      }
+    }
+    @media screen and (max-width: 600px) {
+      .title h1 {
+        font-size: 2rem;
+      }
+      .title span {
+        font-size: 0.9rem;
+      }
+      .title-mode {
+        margin-top: 40px;
+      }
+      .description {
+        margin-top: 26px;
+      }
+      .options-title {
+        font-size: 20px;
+        margin-top: 12px;
+        margin-bottom: 12px;
+      }
+    }
+    @media screen and (max-width: 500px) {
+      .title h1 {
+        font-size: 1.8rem;
+      }
+      .title span {
+        font-size: 0.8rem;
+      }
+      .title-mode {
+      }
     }
   `;
 
