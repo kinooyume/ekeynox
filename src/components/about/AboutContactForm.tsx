@@ -1,5 +1,5 @@
-import { Component, JSX, Show, createSignal } from "solid-js";
-import { createStore } from "solid-js/store";
+import { Component, Show, createSignal } from "solid-js";
+
 import {
   SubmitHandler,
   createForm,
@@ -39,7 +39,6 @@ const ContactForm: Component<ContactFormProps> = (props) => {
   ) => {
 
     props.onSuccess()
-    return;
     const form = {
       ...values,
       access_key: import.meta.env.VITE_WEB3FORMS_ACCESS_KEY,

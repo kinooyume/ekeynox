@@ -46,7 +46,6 @@ function RadioGroup<Value>(props: RadioGroupProps<Value>) {
       transition: all 100ms linear;
     }
     .radio-group:hover {
-      background-color: var(--background-color);
     }
 
     .radio-group input:not(:checked) + label:hover {
