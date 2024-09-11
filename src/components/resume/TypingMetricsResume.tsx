@@ -68,6 +68,8 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
       grid-template-columns: 1fr min(1200px, 100%) max(400px) 1fr;
       grid-template-rows: 1fr;
       grid-column-gap: 10px;
+      position: absolute;
+      left: 0;
     }
 
     .reset {
