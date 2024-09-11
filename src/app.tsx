@@ -2,7 +2,7 @@ import { Link, Meta, MetaProvider, Title } from "@solidjs/meta";
 import { Router } from "@solidjs/router";
 import { FileRoutes } from "@solidjs/start/router";
 
-import { ParentProps, Suspense } from "solid-js";
+import { ParentProps, Show, Suspense, createEffect, createSignal } from "solid-js";
 import { TransitionGroup } from "solid-transition-group";
 
 import Header from "./components/Header";
@@ -18,11 +18,22 @@ import { AppStateProvider } from "./contexts/AppStateProvider";
 import { GameOptionsProvider } from "./contexts/GameOptionsProvider";
 import { SettingsProvider } from "./contexts/SettingsProvider";
 import { FocusProvider } from "./contexts/FocusProvider";
+import { useWindowSize } from "@solid-primitives/resize-observer";
+import MobileWarning from "./components/MobileWarning";
 
 export default function App() {
   const sheets: StyleData[] = [];
   useAssets(() => renderSheets(sheets));
 
+  const [showWarning, setShowWarning] = createSignal(false);
+  createEffect(() => {
+    if (size.width < 1050 ) {
+      setShowWarning(true);
+    } else {
+      setShowWarning(false);
+    }
+  });
+  const size = useWindowSize();
   css`
     main {
       margin-top: 96px;
@@ -33,9 +44,8 @@ export default function App() {
         1fr;
       grid-template-rows: 1f;
     }
-.modal-portal {
-
-}
+    .modal-portal {
+    }
   `;
 
   const PageTransition = (props: ParentProps) => (
@@ -128,6 +138,9 @@ export default function App() {
                       crossorigin="anonymous"
                     />
                     <main>
+                      <Show when={showWarning()}>
+                        <MobileWarning />
+                      </Show>
                       <Suspense fallback={<div>Loading..</div>}>
                         <PageTransition {...props} />
                       </Suspense>

@@ -62,5 +62,6 @@
   "about": {
     "project": "Ekeynox est un jeu de dactylographie expérimental qui vous permet d'apprendre la dactylographie par le biais de la gamification, fortement inspiré par [monkeytype](https://monkeytype.com/).",
     "me": "## À la recherche d'un freelance ?\n Hello, Je suis Martin Kinoo, developpeur frontend/fullstack en freelance et vous vous trouvez sur mon projet perso. Envie de collaborer ? Découvrez-en plus sur mon parcours sur LinkedIn."
-  }
+  },
+  "mobileWarning": "Ce site web n'est pas compatible avec les appareils mobiles. Veuillez utiliser un ordinateur ou agrandir votre fenêtre pour y accéder."
 }

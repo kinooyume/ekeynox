@@ -102,6 +102,12 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
       transition: all 0.2s ease-in-out;
       z-index: 206;
     }
+
+    @media screen and (max-width: 1100px) {
+      .options-recap {
+        display: none;
+      }
+    }
   `;
 
   return (
