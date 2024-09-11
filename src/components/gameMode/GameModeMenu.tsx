@@ -20,6 +20,12 @@ import { A, useBeforeLeave } from "@solidjs/router";
 import { Portal } from "solid-js/web";
 import anime from "animejs";
 
+// Le gars a fait pleins de menu de selection stylax
+// https://in.pinterest.com/pin/12525705207244555/
+//
+//Et eux ils font des trucs de malade en mode qui pourrait bien allez à des jeux et tout
+// https://dribbble.com/studiovor
+//
 // Gsap animation
 // https://codepen.io/dev_loop/pen/MWKbJmO
 // Store like this

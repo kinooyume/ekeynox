@@ -13,6 +13,12 @@ const DarkModeToggle = (props: DarkModeToggleProps) => {
       padding: 0;
       box-sizing: border-box;
     }
+
+    input {
+      border: unset;
+font-size: 13px;
+    }
+
     .theme {
       display: flex;
       align-items: center;

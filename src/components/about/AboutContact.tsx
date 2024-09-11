@@ -1,5 +1,5 @@
 import { Component, onMount } from "solid-js";
-import Morphing, { TransitionSize } from "../ui/Morphing";
+import Morphing  from "../ui/Morphing";
 import AboutContactForm from "./AboutContactForm";
 import { emptyAnimationChildren } from "~/animations/animation";
 import AboutContactSended from "./AboutContactSended";
