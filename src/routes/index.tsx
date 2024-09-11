@@ -1,12 +1,6 @@
 import { Portal } from "solid-js/web";
-import { emptyAnimationChildren } from "~/animations/animation";
 import About from "~/components/about/About";
-import ContactForm from "~/components/about/AboutContactForm";
-import AboutInfo from "~/components/about/AboutInfo";
 import GameModeMenu from "~/components/gameMode/GameModeMenu";
-import Modal from "~/components/ui/Modal";
-import Morphing from "~/components/ui/Morphing";
-import QuestionMark from "~/components/ui/QuestionMark";
 import { useAppState } from "~/contexts/AppStateProvider";
 import { useGameOptions } from "~/contexts/GameOptionsProvider";
 

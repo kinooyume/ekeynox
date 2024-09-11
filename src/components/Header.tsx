@@ -5,7 +5,6 @@ import HeaderSettings from "./HeaderSettings.tsx";
 import { onMount } from "solid-js";
 import anime from "animejs";
 
-
 const Header = () => {
   css`
     .header {
@@ -20,7 +19,9 @@ const Header = () => {
       justify-content: space-between;
       height: 72px;
       padding: 1rem 2rem;
-      background-color: var(--bg-secondary-color);
+padding-bottom: 0;
+      margin-bottom: 1rem;
+      background-color: var(--color-surface-100);
     }
     .home {
       cursor: pointer;
@@ -37,7 +38,6 @@ const Header = () => {
   `;
   // const { mutation: navigation } = useAppState();
   // const navigate = useNavigate();
-
 
   onMount(() => {
     anime.timeline().add({
