@@ -19,7 +19,7 @@ const Header = () => {
       justify-content: space-between;
       height: 72px;
       padding: 1rem 2rem;
-padding-bottom: 0;
+      padding-bottom: 0;
       margin-bottom: 1rem;
       background-color: var(--color-surface-100);
     }
@@ -34,6 +34,7 @@ padding-bottom: 0;
 
     .center {
       flex-grow: 1;
+z-index: 920;
     }
   `;
   // const { mutation: navigation } = useAppState();

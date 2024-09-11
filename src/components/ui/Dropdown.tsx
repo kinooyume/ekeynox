@@ -6,7 +6,11 @@ import {
   Show,
 } from "solid-js";
 import { css } from "solid-styled";
-import { AnimateState, createAnimationComp, isInitialAnimation } from "~/animations/animation";
+import {
+  AnimateState,
+  createAnimationComp,
+  isInitialAnimation,
+} from "~/animations/animation";
 import Cross from "../svgs/cross";
 import useAnimateModal from "~/hooks/useAnimateModal";
 
@@ -110,6 +114,7 @@ const Dropdown = (props: DropdownProps) => {
       overflow: hidden;
       position: absolute;
       border-radius: 12px;
+      z-index: 999;
       width: 200px;
       height: 100%;
       display: flex;
@@ -169,7 +174,6 @@ const Dropdown = (props: DropdownProps) => {
       opacity: 1;
     }
   `;
-
 
   return (
     <div

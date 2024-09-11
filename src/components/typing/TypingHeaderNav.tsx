@@ -23,6 +23,9 @@ const TypingHeaderNav = (props: TypingHeaderNavProps) => {
       border-left: 2px solid var(--border-color);
       border-right: 2px solid var(--border-color);
     }
+.left {
+z-index: 920;
+}
   `;
 
   onMount(() => {
