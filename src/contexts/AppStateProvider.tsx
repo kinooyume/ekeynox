@@ -3,6 +3,7 @@ import {
   JSX,
   createComputed,
   createContext,
+  createEffect,
   createSignal,
   useContext,
 } from "solid-js";
@@ -48,17 +49,7 @@ export function useAppState() {
 }
 
 export function AppStateProvider(props: AppStateProviderProps) {
-  const { pathname } = useLocation();
-
-  // start
-  const getAppState = (): AppState => {
-    if (pathname === "/") {
-      return { kind: AppStateKind.menu };
-    }
-    return { kind: AppStateKind.loading };
-  };
-
-  const appState: AppState = getAppState();
+  const appState: AppState = { kind: AppStateKind.loading };
 
   const [state, setState] = createSignal<AppState>(appState);
 
