@@ -4,6 +4,7 @@ import {
   PointElement,
   Title,
   Tooltip,
+  LinearScale,
   Legend,
   Colors,
   ArcElement,
@@ -153,6 +154,7 @@ const CharacterChart = (props: CharacterCharProps) => {
       CategoryScale,
       PointElement,
       Title,
+      LinearScale,
       Tooltip,
       Legend,
       Colors,
@@ -169,13 +171,13 @@ const CharacterChart = (props: CharacterCharProps) => {
         plugins={[
           CategoryScale,
           PointElement,
-          BarController,
-          BarElement,
           Title,
           Tooltip,
-          ArcElement,
           Legend,
           Colors,
+          ArcElement,
+          BarController,
+          BarElement,
         ]}
         options={options}
       />

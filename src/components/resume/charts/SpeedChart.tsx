@@ -152,8 +152,16 @@ const MyChart = (props: MyChartProps) => {
   };
 
   onMount(() => {
-    Chart.register(LineController, PointElement, LineElement, LinearScale, Tooltip, Colors, ScatterController );
-  })
+    Chart.register(
+      LineController,
+      PointElement,
+      LineElement,
+      LinearScale,
+      Tooltip,
+      Colors,
+      ScatterController,
+    );
+  });
 
   return (
     <div class="chart">
