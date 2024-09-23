@@ -1,9 +1,11 @@
-dist
-.solid
-.output
-.vercel
-.netlify
-netlify
+# Front
+packages/front/dist
+packages/front/.solid
+packages/front/.output
+packages/front/.vercel
+packages/front/.netlify
+packages/front/netlify
+packages/front/.vinxi
 .vinxi
 
 # Environment
