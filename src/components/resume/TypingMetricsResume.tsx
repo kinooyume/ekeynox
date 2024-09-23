@@ -65,9 +65,9 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
   css`
     .metrics {
       display: grid;
-      grid-template-columns: 1fr min(1200px, 100%) max(400px) 1fr;
+      grid-template-columns: 1fr min(1100px, 100%) max(400px) 1fr;
       grid-template-rows: 1fr;
-      grid-column-gap: 10px;
+      grid-column-gap: 32px;
       position: absolute;
       left: 0;
     }
@@ -75,25 +75,22 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
     .reset {
       margin: 64px;
     }
-    .content-wrapper {
-      position: relative;
-      grid-column: 2;
-      padding: 32px;
-      padding-top: 0;
-      height: 100%;
-    }
 
-    .content {
+    .resume-header,
+    .sticky,
+    .statistics {
+      grid-column: 2;
     }
 
     .sidebar-wrapper {
+      grid-row: 1;
       grid-column: 3;
       position: relative;
     }
 
     .sidebar {
-      position: fixed;
       display: flex;
+      width: 100%;
       flex-direction: column;
       justify-content: space-between;
     }
@@ -161,6 +158,7 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
 
     .cards-wrapper.tiny {
       padding: 4px;
+      width: 100%;
     }
 
     .stat-card {
@@ -211,18 +209,47 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
       opacity: 0.6;
     }
 
+    .report {
+      display: flex;
+      justify-content: center;
+    }
+
     .report .raw-data span {
       margin-left: 4px;
     }
 
     .sub-data {
       display: flex;
-      gap: 16px;
+      justify-content: space-between;
     }
 
     .sidebar-wrapper .cards-wrapper {
       margin: 8px;
       margin-top: 0;
+    }
+
+    @media screen and (min-width: 1600px) {
+      .sidebar {
+        position: fixed;
+        max-width: 400px;
+      }
+    }
+    @media screen and (max-width: 1600px) {
+      .metrics {
+        grid-template-columns: 1fr 100% 1fr;
+        display: flex;
+        flex-direction: column;
+        padding: 0 32px;
+        width: calc(100vw - 64px);
+        max-width: 1100px;
+        margin: 0 auto;
+        position: relative !important;
+      }
+      .sidebar-wrapper {
+        margin-top: 32px;
+        grid-column: 2;
+        grid-row: unset;
+      }
     }
   `;
 
@@ -296,60 +323,17 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
 
   return (
     <div class="metrics full-bleed">
-      <div class="content-wrapper">
-        <div class="content">
-          <div class="resume-header" ref={resumeHeader!}>
-            <Show when={metricsResume.chart.wpm.length > 1}>
-              <div class="chart">
-                <SpeedChart metrics={metricsResume.chart} />
-              </div>
-            </Show>
+      <div class="resume-header" ref={resumeHeader!}>
+        <Show when={metricsResume.chart.wpm.length > 1}>
+          <div class="chart">
+            <SpeedChart metrics={metricsResume.chart} />
           </div>
-          <div class="sticky">
-            <div ref={resumeMenu!} class="resume-menu">
-              <GameOptionsTitle t={t} gameOptions={props.metrics.gameOptions} />
-              <div class="actions">{props.children(metricsResume)}</div>
-            </div>
-          </div>
-          <div class="cards-wrapper">
-            <h2 class="stat-title">{t("statistics.contentResumeTitle")}</h2>
-            <div class="stat-card">
-              <Prompt paragraphs={props.metrics.paragraphs} />
-            </div>
-          </div>
-          <div class="cards-wrapper">
-            <div class="stat-header">
-              <div class="stat-header-content">
-                <h2 class="stat-title">{t("statistics.title")}</h2>
-              </div>
-            </div>
-            <div class="stat-content">
-              <div class="stat-card">
-                <div class="stat-title-wrapper">
-                  <h3>{t("statistics.keysResumeTitle")}</h3>
-                </div>
-                <TypingKeyboardResume
-                  layout={kbLayout()}
-                  metrics={props.metrics.keys}
-                />
-              </div>
-              <div class="stat-card">
-                <div class="stat-title-wrapper">
-                  <h3>{t("statistics.charactersTyped")}</h3>
-                </div>
-                <CharacterChart keys={metricsResume.keys} />
-              </div>
-              <Show when={metricsResume.words.length > 1}>
-                <div class="stat-card">
-                  <div class="stat-title-wrapper">
-                    <h3>{t("statistics.wordsSpeedTitle")}</h3>
-                    <span>{t("statistics.wordsSpeedSubtitle")}</span>
-                  </div>
-                  <WordMetricsResume words={metricsResume.words} />
-                </div>
-              </Show>
-            </div>
-          </div>
+        </Show>
+      </div>
+      <div class="sticky">
+        <div ref={resumeMenu!} class="resume-menu">
+          <GameOptionsTitle t={t} gameOptions={props.metrics.gameOptions} />
+          <div class="actions">{props.children(metricsResume)}</div>
         </div>
       </div>
       <div class="sidebar-wrapper">
@@ -393,6 +377,47 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
                 <p class="subtitle">{t("consistency")}</p>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+      <div class="statistics">
+        <div class="cards-wrapper">
+          <h2 class="stat-title">{t("statistics.contentResumeTitle")}</h2>
+          <div class="stat-card">
+            <Prompt paragraphs={props.metrics.paragraphs} />
+          </div>
+        </div>
+        <div class="cards-wrapper">
+          <div class="stat-header">
+            <div class="stat-header-content">
+              <h2 class="stat-title">{t("statistics.title")}</h2>
+            </div>
+          </div>
+          <div class="stat-content">
+            <div class="stat-card">
+              <div class="stat-title-wrapper">
+                <h3>{t("statistics.keysResumeTitle")}</h3>
+              </div>
+              <TypingKeyboardResume
+                layout={kbLayout()}
+                metrics={props.metrics.keys}
+              />
+            </div>
+            <div class="stat-card">
+              <div class="stat-title-wrapper">
+                <h3>{t("statistics.charactersTyped")}</h3>
+              </div>
+              <CharacterChart keys={metricsResume.keys} />
+            </div>
+            <Show when={metricsResume.words.length > 1}>
+              <div class="stat-card">
+                <div class="stat-title-wrapper">
+                  <h3>{t("statistics.wordsSpeedTitle")}</h3>
+                  <span>{t("statistics.wordsSpeedSubtitle")}</span>
+                </div>
+                <WordMetricsResume words={metricsResume.words} />
+              </div>
+            </Show>
           </div>
         </div>
       </div>
