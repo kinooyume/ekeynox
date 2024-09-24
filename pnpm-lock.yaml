@@ -13,6 +13,9 @@ importers:
       '@trpc/server':
         specifier: ^10.45.2
         version: 10.45.2
+      common:
+        specifier: workspace:*
+        version: link:../common
       dotenv:
         specifier: ^16.4.5
         version: 16.4.5
@@ -107,6 +110,9 @@ importers:
       chartjs-plugin-gradient:
         specifier: ^0.6.1
         version: 0.6.1(chart.js@4.4.4)
+      common:
+        specifier: workspace:*
+        version: link:../common
       prettier:
         specifier: ^3.3.3
         version: 3.3.3
