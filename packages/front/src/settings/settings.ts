@@ -1,15 +1,4 @@
-export const keyboardLayoutName = ["qwerty", "azerty"];
-export type KeyboardLayoutName = (typeof keyboardLayoutName)[number];
-
-export const locales = ["en", "fr"];
-export type Locale = (typeof locales)[number];
-
-type LocaleToKeyboard = Record<Locale, KeyboardLayoutName>;
-
-const localeToKeyboard: LocaleToKeyboard = {
-  en: "qwerty",
-  fr: "azerty",
-};
+import { KeyboardLayoutName, Locale, locales, localeToKeyboard, Settings, SettingsOriginType, Theme } from "common/settings"
 
 const toLocale = (s: string): Locale | null => (locales.includes(s) ? s : null);
 
@@ -25,34 +14,6 @@ const getDefaultLocale = (): Locale | null => {
 
 const getKeyboardByLocale = (locale: Locale): KeyboardLayoutName | null =>
   localeToKeyboard[locale] || null;
-
-export enum SettingsOriginType {
-  auto,
-  user,
-}
-
-export type SettingsOrigin<T> =
-  | {
-      kind: SettingsOriginType.auto;
-      value: T;
-    }
-  | {
-      kind: SettingsOriginType.user;
-      value: T;
-    };
-
-export enum Theme {
-  light,
-  dark,
-  auto,
-}
-
-export type Settings = {
-  theme: SettingsOrigin<Theme>;
-  locale: SettingsOrigin<Locale>;
-  kb: SettingsOrigin<KeyboardLayoutName>;
-  showKb: boolean;
-};
 
 const defaultSettings = (): Settings => ({
   theme: { kind: SettingsOriginType.auto, value: Theme.auto },

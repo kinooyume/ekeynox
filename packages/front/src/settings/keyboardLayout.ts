@@ -1,6 +1,6 @@
 import qwerty from "./layout/qwerty.json";
 import azerty from "./layout/azerty.json";
-import { keyboardLayoutName, type KeyboardLayoutName } from "./settings";
+import { keyboardLayoutName, KeyboardLayoutName } from "common/settings";
 
 export type KeyLayout = {
   primary: string;
