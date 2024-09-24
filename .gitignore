@@ -6,7 +6,14 @@ packages/front/.vercel
 packages/front/.netlify
 packages/front/netlify
 packages/front/.vinxi
-.vinxi
+packages/front/node_modules
+
+# Back
+packages/back/dist
+packages/back/node_modules
+
+# Common
+packages/common/node_modules
 
 # Environment
 .env
