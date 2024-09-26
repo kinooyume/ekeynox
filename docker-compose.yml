@@ -1,7 +1,6 @@
 services:
-  api:
+  dev:
     build: .
-    command: pnpm run dev
     container_name: api
     restart: always
     image: ekeynox:latest
@@ -12,6 +11,24 @@ services:
     working_dir: /prod/back
     volumes:
       - ./packages/back/src:/prod/back/src
+      - ./packages/common/src:/prod/back/packages/common/src
+      - ./packages/common/dist:/prod/back/packages/common/dist
+    stdin_open: true
+    tty: true
+  api:
+    build: .
+    container_name: api
+    restart: always
+    image: ekeynox:latest
+    ports:
+      - ${PORT}:${PORT}
+    depends_on:
+      - db
+    working_dir: /prod/back
+    volumes:
+      - ./packages/back/src:/prod/back/src
+      - ./packages/common/src:/prod/back/packages/common/src
+      - ./packages/common/dist:/prod/back/packages/common/dist
     stdin_open: true
     tty: true
 
