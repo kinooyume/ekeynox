@@ -1,20 +1,4 @@
 services:
-  dev:
-    build: .
-    container_name: api
-    restart: always
-    image: ekeynox:latest
-    ports:
-      - ${PORT}:${PORT}
-    depends_on:
-      - db
-    working_dir: /prod/back
-    volumes:
-      - ./packages/back/src:/prod/back/src
-      - ./packages/common/src:/prod/back/packages/common/src
-      - ./packages/common/dist:/prod/back/packages/common/dist
-    stdin_open: true
-    tty: true
   api:
     build: .
     container_name: api
@@ -27,8 +11,7 @@ services:
     working_dir: /prod/back
     volumes:
       - ./packages/back/src:/prod/back/src
-      - ./packages/common/src:/prod/back/packages/common/src
-      - ./packages/common/dist:/prod/back/packages/common/dist
+      - ./packages/back/prisma:/prod/back/prisma
     stdin_open: true
     tty: true
 
@@ -36,7 +19,7 @@ services:
     container_name: postgres
     image: postgres:15-alpine
     ports:
-      - "${DB_HOST_PORT}:${DB_PORT}"
+      - "${DB_PORT}:${DB_PORT}"
     volumes:
       - data:/var/lib/postgresql/data
     environment:

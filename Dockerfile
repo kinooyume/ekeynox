@@ -19,6 +19,7 @@ ENV NODE_ENV=development
 WORKDIR /prod/back
 RUN pnpm install -g nodemon tsx
 EXPOSE 5000
+EXPOSE 5432
 CMD [ "pnpm", "dev" ]
 
 FROM base AS prod
