@@ -57,6 +57,7 @@ export enum AppStateKind {
   menu,
   pending,
   resume,
+  login,
 }
 
 export type PendingState = {
@@ -75,4 +76,5 @@ export type AppState =
   | { kind: AppStateKind.menu }
   | PendingState
   | ResumeState
-  | { kind: AppStateKind.loading };
+  | { kind: AppStateKind.loading }
+  | { kind: AppStateKind.login };

@@ -1,0 +1,53 @@
+import { css } from "solid-styled";
+
+export default () => {
+  css`
+    .B {
+      stroke-linejoin: round;
+    }
+    .C {
+      stroke-dashoffset: 513.601;
+    }
+    .D {
+      stroke-width: 0.16;
+    }
+  `;
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="36"
+      height="36"
+      viewBox="0 0 12.832 8.12"
+    >
+      <g fill="#a4c3b4" stroke="#a4c3b4" class="B C">
+        <g class="D">
+          <rect width="2.137" height="2.241" x="10.029" y="4.627" ry=".366" />
+          <rect width="2.137" height="2.241" x="6.15" y="1.356" ry=".366" />
+        </g>
+        <rect
+          width="3.187"
+          height="2.207"
+          x="8.911"
+          y="1.373"
+          ry=".36"
+          stroke-width=".194"
+        />
+        <rect
+          width="2.137"
+          height="2.241"
+          x="7.208"
+          y="4.627"
+          ry=".366"
+          class="D"
+        />
+      </g>
+      <g fill="#df9b6a" stroke="#df9b6a" class="B C D">
+        <rect width="2.137" height="2.241" x="3.373" y="1.356" ry=".366" />
+        <rect width="2.137" height="2.241" x="4.431" y="4.627" ry=".366" />
+        <rect width="2.137" height="2.241" x=".684" y="1.356" ry=".366" />
+        <rect width="3.145" height="2.208" x=".717" y="4.643" ry=".36" />
+      </g>
+    </svg>
+  );
+};
+

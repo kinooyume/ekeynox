@@ -37,7 +37,7 @@ function RadioGroup<Value>(props: RadioGroupProps<Value>) {
     .radio-group {
       padding: 4px;
       border-radius: 10px;
-      background-color: var(--color-surface-mixed-200);
+      background-color: var(--background-radiogroup);
       padding: 8px 20px;
 
       position: relative;

@@ -15,7 +15,7 @@ const ProgressBar = (props: ProgressBarProps) => {
     <svg>
       <g>
         <line
-          stroke="var(--color-surface-alt)"
+          stroke="var(--progress-bar-background)"
           x1="0"
           y1="50%"
           x2="100%"

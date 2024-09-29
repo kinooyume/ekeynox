@@ -1,9 +1,7 @@
 import {
   Accessor,
   JSX,
-  createComputed,
   createContext,
-  createEffect,
   createSignal,
   useContext,
 } from "solid-js";
@@ -17,7 +15,6 @@ import {
   PendingStatusNew,
   PendingStatusRedo,
 } from "../appState/appState";
-import { useLocation } from "@solidjs/router";
 import { GameOptions, deepCopy } from "~/gameOptions/gameOptions";
 
 type AppStateProviderProps = {
@@ -35,6 +32,7 @@ type AppContext = {
     ) => void;
     over: (metrics: Metrics, content: PendingMode) => void;
     menu: () => void;
+    login: () => void;
   };
 };
 
@@ -79,6 +77,9 @@ export function AppStateProvider(props: AppStateProviderProps) {
     },
     menu: () => {
       setState({ kind: AppStateKind.menu });
+    },
+    login: () => {
+      setState({ kind: AppStateKind.login });
     },
   };
 

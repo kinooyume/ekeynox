@@ -1,4 +1,7 @@
-FROM node:20-slim AS base
+# https://github.com/shkim04/find-your-wc/blob/main/Dockerfile
+# Some interesting stuffs
+
+FROM node:lts-alpine AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable && corepack install --global pnpm@9.11.0
@@ -14,12 +17,13 @@ RUN pnpm deploy --filter=back --prod /prod/back
 FROM base AS dev
 COPY . /usr/app
 WORKDIR /usr/app
-COPY --from=build /prod/back /prod/back
 ENV NODE_ENV=development
+RUN pnpm deploy --filter=back --prod /prod/back
 WORKDIR /prod/back
-RUN pnpm install -g nodemon tsx
-EXPOSE 5000
+RUN pnpm install
+RUN pnpm exec prisma generate
 EXPOSE 5432
+EXPOSE 5000
 CMD [ "pnpm", "dev" ]
 
 FROM base AS prod

@@ -1,0 +1,52 @@
+/* switch settings 👇 */
+
+.ui-switch {
+  /* switch */
+  --switch-height: 20px;
+  /* circle */
+  --circle-diameter: 32px;
+  --circle-inset: calc((var(--circle-diameter) - var(--switch-height)) / 2);
+  cursor: pointer;
+}
+
+.ui-switch input {
+  display: none;
+}
+
+.circle {
+  width: var(--circle-diameter);
+  height: var(--circle-diameter);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 4px;
+  padding-left: 3px;
+  border-radius: 20px;
+  -webkit-transition:
+    left 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    -webkit-transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  -o-transition:
+    left 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition:
+    left 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    -webkit-transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+
+/* actions */
+
+.ui-switch input:checked + .circle {
+
+  padding-left: 0;
+  padding-bottom: 6px;
+}
+
+.ui-switch input:active + .circle::before {
+  -webkit-transition: 0s;
+  -o-transition: 0s;
+  transition: 0s;
+  opacity: 1;
+  width: 0;
+  height: 0;
+}

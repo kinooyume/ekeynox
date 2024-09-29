@@ -14,6 +14,7 @@ import Accuracy from "../svgs/accuracy.tsx";
 import anime from "animejs";
 import ProgressBar from "../svgs/progressBar.tsx";
 import MetricPreview from "../ui/MetricPreview.tsx";
+import { useWindowSize } from "@solid-primitives/resize-observer";
 
 type TypingNavProps = {
   stat: StatProjection;
@@ -151,19 +152,40 @@ const TypingInfo = (props: TypingNavProps) => {
     span {
       color: var(--text-secondary-color);
     }
+
+    @media screen and (max-width: 860px) {
+      .content {
+        background-color: var(--color-surface-alt);
+        padding: 8px 36px;
+        width: 100%;
+        border-radius: 22px 22px 0 0;
+      }
+      nav {
+        height: unset;
+      }
+    }
+    @media screen and (max-width: 700px) {
+      .content {
+        justify-content: center;
+      }
+    }
   `;
 
   // pitetre interessant: https://codepen.io/juliangarnier/pen/XvjWvx
   // https://codepen.io/AlikinVV/pen/OrmJxj
 
+  const size = useWindowSize();
+
   return (
     <div class="typing-nav">
       <nav>
-        <div class="svg-wrapper">
-          <Nav width={navWidth()} borderWidth={navBorder()} />
-        </div>
+        <Show when={size.width > 860}>
+          <div class="svg-wrapper">
+            <Nav width={navWidth()} borderWidth={navBorder()} />
+          </div>
+        </Show>
         <div class="content">
-          {props.typingHelp}
+          <Show when={size.width > 700}>{props.typingHelp}</Show>
           <div class="stats">
             <Show when={props.children}>
               <div class="child">{props.children}</div>
