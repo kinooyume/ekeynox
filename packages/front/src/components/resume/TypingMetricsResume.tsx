@@ -273,6 +273,9 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
       }
     }
     @media screen and (max-width: 740px) {
+      .metrics {
+        margin-bottom: 64px;
+      }
       .actions {
         position: fixed;
         bottom: 0;
