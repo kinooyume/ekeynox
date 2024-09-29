@@ -166,9 +166,9 @@ padding-bottom: 2px;
           }}
         />
       </div>
-      <div class="profile-adjust">
-        <ProfilePicto logged={false} />
-      </div>
+      {/* <div class="profile-adjust"> */}
+      {/*   <ProfilePicto logged={false} /> */}
+      {/* </div> */}
     </div>
   );
 };
