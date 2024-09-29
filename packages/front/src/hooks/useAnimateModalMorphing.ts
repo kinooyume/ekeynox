@@ -34,7 +34,6 @@ const useAnimateModalMorphing = (
     const animation = props.transitions.resize({ width, height });
     animation.play();
     return animation.finished.then(() => {
-      console.log("resize finished", prevState);
       props.setState(prevState);
     });
   };

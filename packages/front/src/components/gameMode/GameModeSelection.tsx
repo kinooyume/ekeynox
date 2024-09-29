@@ -53,25 +53,26 @@ const GameModeSelection = (props: GameModeSelectionProps) => {
       align-items: flex-end;
       justify-content: center;
     }
+
     label {
       position: relative;
       filter: grayscale(50%);
       display: block;
       border-radius: 50%;
-      height: 46px;
-      width: 46px;
+      height: 54px;
+      width: 54px;
       cursor: pointer;
-      background-color: var(--color-surface-300);
+      background-color: var(--text-secondary-color);
       overflow: hidden;
       transition: all 100ms linear;
     }
 
     label .icon {
       position: absolute;
-      left: -7px;
-      top: 2px;
-      width: 60px;
-      height: 60px;
+      left: -4px;
+      top: 6px;
+      width: 62px;
+      height: 62px;
       transition: all 100ms linear;
     }
 
@@ -79,24 +80,37 @@ const GameModeSelection = (props: GameModeSelectionProps) => {
       background-color: var(--color-primary-400);
       filter: none;
     }
-    input + label:hover {
-      filter: none;
-      background-color: var(--color-primary-100);
-      transform: scale(1.2);
-      overflow: visible;
-    }
+    @media screen and (min-width: 860px) {
+      input + label:hover {
+        filter: none;
+        background-color: var(--color-primary-100);
+        transform: scale(1.3);
+        overflow: visible;
+      }
 
-    label:hover .icon {
-      transform: translateY(-4px);
+      label:hover .icon {
+        transform: translateY(-6px);
+        left: -5px;
+        height: 64px;
+        width: 64px;
+      }
     }
-
     .radio {
     }
     .select {
       display: none;
     }
+    @media screen and (max-width: 860px) {
+      .mode-selection {
+        align-items: flex-start;
+      }
+      .info {
+        display: none;
+      }
+    }
   `;
 
+  // TODO: better handler mobile stuff (don't show .info)
   onCleanup(() =>
     labelRef.forEach((el) => {
       el.removeEventListener("mouseenter", () => {});

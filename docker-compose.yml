@@ -6,6 +6,8 @@ services:
     image: ekeynox:latest
     ports:
       - ${PORT}:${PORT}
+    environment:
+    - DATABASE_URL=${DATABASE_URL}
     depends_on:
       - db
     working_dir: /prod/back

@@ -2,8 +2,12 @@ import { css } from "solid-styled";
 
 import Logo from "./svgs/logo.tsx";
 import HeaderSettings from "./HeaderSettings.tsx";
-import { onMount } from "solid-js";
+import { onMount, Show } from "solid-js";
 import anime from "animejs";
+import { A } from "@solidjs/router";
+import { useWindowSize } from "@solid-primitives/resize-observer";
+import LogoTiny from "./svgs/logoTiny.tsx";
+import HeaderSettingsMobile from "./HeaderSettingsMobile.tsx";
 
 const Header = () => {
   css`
@@ -34,11 +38,21 @@ const Header = () => {
 
     .center {
       flex-grow: 1;
-z-index: 920;
+      z-index: 920;
+    }
+
+    @media screen and (max-width: 860px) {
+      .header {
+        height: 48px;
+        gap: 16px;
+        padding: 12px 16px;
+      }
     }
   `;
   // const { mutation: navigation } = useAppState();
   // const navigate = useNavigate();
+
+  const size = useWindowSize();
 
   onMount(() => {
     anime.timeline().add({
@@ -54,14 +68,18 @@ z-index: 920;
     <div class="header">
       <div class="left">
         <a class="home" aria-label="ekeynox" href="/">
-          <Logo />
+          <Show when={size.width > 860} fallback={<LogoTiny />}>
+            <Logo />
+          </Show>
         </a>
       </div>
       <div class="center">
         <div id="header-nav-actions-portal" />
       </div>
       <div class="right">
-        <HeaderSettings />
+        <Show when={size.width > 860} fallback={<HeaderSettingsMobile />}>
+          <HeaderSettings />
+        </Show>
       </div>
     </div>
   );

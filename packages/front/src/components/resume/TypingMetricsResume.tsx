@@ -22,6 +22,7 @@ import SpeedChart from "./charts/SpeedChart";
 import WordMetricsResume from "./charts/WordsChart";
 import Prompt from "./PromptResume";
 import TypingKeyboardResume from "./TypingKeyboardResume";
+import { useWindowSize } from "@solid-primitives/resize-observer";
 
 type TypingMetricsProps = {
   kbLayout: HigherKeyboard;
@@ -101,6 +102,7 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
     .resume-header {
       display: flex;
       flex-direction: column;
+      z-index: 100;
       gap: 32px;
       background-color: var(--color-surface-alt);
       border-radius: 36px 36px 0 0;
@@ -251,6 +253,38 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
         grid-row: unset;
       }
     }
+    @media screen and (max-width: 860px) {
+      .metrics {
+        padding: 0 16px;
+        width: calc(100vw - 32px);
+      }
+      .resume-header {
+        padding: 16px;
+        padding-top: 32px;
+      }
+      .resume-menu {
+        flex-direction: column;
+        padding: 16px;
+      }
+      .actions {
+        flex-wrap: wrap;
+      }
+      .chart {
+        padding: 0;
+      }
+    }
+    @media screen and (max-width: 740px) {
+      .actions {
+        position: fixed;
+        bottom: 0;
+        background-color: var(--color-surface-alt);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        border-radius: 18px 18px 0 0;
+      }
+    }
   `;
 
   let resumeMenu: HTMLDivElement;
@@ -320,6 +354,8 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
     window.onscroll = null;
     resumeHeader.removeEventListener("resize", updateHeaderHeight);
   });
+
+  const size = useWindowSize();
 
   return (
     <div class="metrics full-bleed">
@@ -394,15 +430,17 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
             </div>
           </div>
           <div class="stat-content">
-            <div class="stat-card">
-              <div class="stat-title-wrapper">
-                <h3>{t("statistics.keysResumeTitle")}</h3>
+            <Show when={size.width > 1111}>
+              <div class="stat-card">
+                <div class="stat-title-wrapper">
+                  <h3>{t("statistics.keysResumeTitle")}</h3>
+                </div>
+                <TypingKeyboardResume
+                  layout={kbLayout()}
+                  metrics={props.metrics.keys}
+                />
               </div>
-              <TypingKeyboardResume
-                layout={kbLayout()}
-                metrics={props.metrics.keys}
-              />
-            </div>
+            </Show>
             <div class="stat-card">
               <div class="stat-title-wrapper">
                 <h3>{t("statistics.charactersTyped")}</h3>
