@@ -17,7 +17,11 @@ import { useI18n } from "~/contexts/i18nProvider.tsx";
 import { useSettings } from "~/contexts/SettingsProvider.tsx";
 import ProfilePicto from "./ui/ProfilePicto.tsx";
 
-const HeaderSettings = () => {
+// TODO: Important !!!
+// Refacto with HeaderSettings
+// Should be only one
+
+const HeaderSettingsMobile = () => {
   const t = useI18n();
   const { settings, setSettings, dark } = useSettings();
 
@@ -169,4 +173,4 @@ padding-bottom: 2px;
   );
 };
 
-export default HeaderSettings;
+export default HeaderSettingsMobile;

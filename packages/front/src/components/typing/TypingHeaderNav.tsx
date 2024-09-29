@@ -1,8 +1,9 @@
 import TypingHeaderMenu from "./TypingHeaderMenu";
 import { css } from "solid-styled";
-import { JSX, onCleanup, onMount } from "solid-js";
+import { JSX, onCleanup, onMount, Show } from "solid-js";
 import anime from "animejs";
 import { GameOptions } from "~/gameOptions/gameOptions";
+import { useWindowSize } from "@solid-primitives/resize-observer";
 
 export type LeavingFn = (fn: () => void) => void;
 
@@ -22,9 +23,15 @@ const TypingHeaderNav = (props: TypingHeaderNavProps) => {
       width: 100%;
       border-left: 2px solid var(--border-color);
       border-right: 2px solid var(--border-color);
+      padding-bottom: 3px;
     }
     .left {
       z-index: 920;
+    }
+    @media screen and (max-width: 860px) {
+      .header-nav {
+        height: 24px;
+      }
     }
   `;
 
@@ -50,11 +57,15 @@ const TypingHeaderNav = (props: TypingHeaderNavProps) => {
     });
   });
 
+  const size = useWindowSize();
+
   return (
     <div class="header-nav">
-      <div class="left">
-        <TypingHeaderMenu {...props} />
-      </div>
+      <Show when={size.width > 860}>
+        <div class="left">
+          <TypingHeaderMenu {...props} />
+        </div>
+      </Show>
       <div class="right">{props.children}</div>
     </div>
   );

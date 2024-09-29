@@ -9,10 +9,14 @@ import Customizer from "../svgs/customizer";
 import Stopwatch from "../svgs/stopwatch";
 import type { GameParams } from "./GameParams";
 import { useI18n } from "~/contexts/i18nProvider";
-import { Category, CategoryKind, Languages, WordsGenerationCategory } from "~/gameOptions/gameOptions";
+import {
+  Category,
+  CategoryKind,
+  Languages,
+  WordsGenerationCategory,
+} from "~/gameOptions/gameOptions";
 
 const TimerParams = (props: GameParams) => {
-
   const t = useI18n();
   css`
     .time-params {
@@ -23,10 +27,10 @@ const TimerParams = (props: GameParams) => {
     }
     h3 {
       margin: 0;
-      font-size: 16px;
+      font-size: 18px;
       font-weight: 400;
       color: var(--text-secondary-color);
-      text-transform: uppercase;
+      text-transform: capitalize;
       cursor: default;
     }
     .option {
@@ -35,6 +39,16 @@ const TimerParams = (props: GameParams) => {
       align-items: center;
       width: 100%;
       transition: opacity 0.15s ease-in-out;
+    }
+    @media screen and (max-width: 860px) {
+      .option {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+      }
+      h3 {
+        font-size: 14px;
+      }
     }
   `;
 
@@ -124,9 +138,7 @@ const TimerParams = (props: GameParams) => {
             { label: "2m", value: 120 },
           ]}
           compare={(v) => v === props.gameOptions.timer}
-          setChecked={(time) =>
-            props.setGameOptions("timer", time)
-          }
+          setChecked={(time) => props.setGameOptions("timer", time)}
         >
           <Stopwatch />
         </RadioGroup>

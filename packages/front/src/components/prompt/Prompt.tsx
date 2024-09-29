@@ -38,6 +38,12 @@ const prompt = (props: PromptProps) => {
       width: 100%;
       align-items: center;
     }
+
+    @media screen and (max-width: 860px) {
+      .prompt {
+        margin: 0 16px auto 16px;
+      }
+    }
   `;
 
   const [observer, setObserver] = createSignal<IntersectionObserver | null>(

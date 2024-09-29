@@ -2,8 +2,14 @@ import { Link, Meta, MetaProvider, Title } from "@solidjs/meta";
 import { Router } from "@solidjs/router";
 import { FileRoutes } from "@solidjs/start/router";
 
-import { ParentProps, Show, Suspense, createEffect, createSignal } from "solid-js";
-import { TransitionGroup } from "solid-transition-group";
+import {
+  ParentProps,
+  Show,
+  Suspense,
+  createEffect,
+  createSignal,
+} from "solid-js";
+import { Transition, TransitionGroup } from "solid-transition-group";
 
 import Header from "./components/Header";
 
@@ -27,7 +33,7 @@ export default function App() {
 
   const [showWarning, setShowWarning] = createSignal(false);
   createEffect(() => {
-    if (size.width < 1050 ) {
+    if (size.width < 1050) {
       setShowWarning(true);
     } else {
       setShowWarning(false);
@@ -44,13 +50,14 @@ export default function App() {
         1fr;
       grid-template-rows: 1f;
     }
-    .modal-portal {
+    .modal {
+      position: absolute;
     }
   `;
 
   const PageTransition = (props: ParentProps) => (
     <div class="transition-container">
-      <TransitionGroup
+      <Transition
         onEnter={(el, done) => {
           const a = el.animate([{ opacity: 0 }, { opacity: 1 }], {
             duration: 140,
@@ -64,8 +71,9 @@ export default function App() {
           a.finished.then(done);
         }}
       >
+        lid
         {props.children}
-      </TransitionGroup>
+      </Transition>
     </div>
   );
 
@@ -138,13 +146,14 @@ export default function App() {
                       crossorigin="anonymous"
                     />
                     <main>
-                      <Show when={showWarning()}>
-                        <MobileWarning />
-                      </Show>
+                      {/* <Show when={showWarning()}> */}
+                      {/*   <MobileWarning /> */}
+                      {/* </Show> */}
                       <Suspense fallback={<div>Loading..</div>}>
                         <PageTransition {...props} />
                       </Suspense>
-                      <div id="modal-portal"></div>
+                      <div class="modal" id="modal-portal"></div>
+                      <div class="modal" id="modal-toaster"></div>
                     </main>
                   </FocusProvider>
                 </AppStateProvider>
