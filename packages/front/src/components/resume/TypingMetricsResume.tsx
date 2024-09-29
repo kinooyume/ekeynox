@@ -102,7 +102,6 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
     .resume-header {
       display: flex;
       flex-direction: column;
-      z-index: 100;
       gap: 32px;
       background-color: var(--color-surface-alt);
       border-radius: 36px 36px 0 0;
