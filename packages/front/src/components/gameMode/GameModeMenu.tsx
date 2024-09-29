@@ -57,6 +57,7 @@ const customRef: CustomInputRef = {
 const GameModeKindMenu = (props: GameModeKindMenuProps) => {
   const t = useI18n();
 
+  // NOTE: ???
   useBeforeLeave((e) => {
     start();
   });
@@ -72,6 +73,7 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
       },
     ),
   );
+
   const [gameOptions, setGameOptions] = createStore<GameOptions>(
     deepCopy(props.gameOptions),
   );
@@ -127,14 +129,8 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
 
     .cliped,
     .hud {
-      display: flex;
       display: grid;
       aspect-ratio: 203/106;
-      /* position: absolute; */
-      /* top: 0; */
-      /* left: 0; */
-      /* right: 0; */
-      /* bottom: 0; */
       grid-template-columns: 1fr 1.2fr;
       grid-template-rows: 1fr;
       grid-column-gap: 0px;
@@ -243,6 +239,9 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
       max-width: 560px;
     }
 
+    .button-wrapper {
+      display: flex;
+    }
     @media screen and (max-width: 1400px) {
       .illustration-container {
         height: 280px;
@@ -313,56 +312,62 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
       }
     }
     @media screen and (max-width: 900px) {
+      .title h1 {
+        font-size: 1.7rem;
+      }
+    }
+    @media screen and (max-width: 860px) {
       h2 {
-        font-size: 2.2rem;
-      }
-    }
-    @media screen and (max-width: 800px) {
-      .title h1 {
-        font-size: 2.4rem;
-      }
-      .title span {
-        font-size: 1rem;
-      }
-      .title-mode {
-        margin-top: 60px;
-      }
-      .description {
-        margin-top: 36px;
-      }
-      .options-title {
-        font-size: 22px;
-        margin-top: 16px;
-        margin-bottom: 16px;
-      }
-    }
-    @media screen and (max-width: 600px) {
-      .title h1 {
         font-size: 2rem;
       }
-      .title span {
-        font-size: 0.9rem;
-      }
-      .title-mode {
-        margin-top: 40px;
-      }
-      .description {
-        margin-top: 26px;
-      }
-      .options-title {
-        font-size: 20px;
-        margin-top: 12px;
-        margin-bottom: 12px;
-      }
     }
-    @media screen and (max-width: 500px) {
-      .title h1 {
-        font-size: 1.8rem;
+    @media screen and (max-width: 860px) {
+      .cliped {
+        clip-path: none;
+        border-radius: 20px;
+        margin: 0 12px;
+        margin-top: 64px;
+        padding: 32px 0;
       }
-      .title span {
-        font-size: 0.8rem;
+      .hud {
+        flex-direction: row !important;
+        align-items: flex-start;
+        width: 100%;
+        justify-content: space-between;
+        top: -64px;
       }
-      .title-mode {
+      .cliped,
+      .hud {
+        display: flex;
+        flex-direction: column;
+        aspect-ratio: unset;
+        margin-bottom: 82px;
+      }
+      .selection {
+        align-items: flex-start;
+      }
+
+      .illustration-container {
+        width: 180px;
+height: unset;
+      }
+
+      .button-wrapper {
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        padding: 16px 0;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        background-color: var(--color-surface-100);
+      }
+      .game-description {
+        margin-left: 32px;
+        padding-bottom: 32px;
+      }
+      a.primary {
+        margin-right: unset;
       }
     }
   `;
@@ -465,14 +470,15 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
                 </div>
               </Match>
             </Switch>
-
-            <a
-              class="primary"
-              classList={{ locked: !isReady() }}
-              href="/typing"
-            >
-              {t("letsGo")}
-            </a>
+            <div class="button-wrapper">
+              <a
+                class="primary"
+                classList={{ locked: !isReady() }}
+                href="/typing"
+              >
+                {t("letsGo")}
+              </a>
+            </div>
           </div>
         </div>
       </div>

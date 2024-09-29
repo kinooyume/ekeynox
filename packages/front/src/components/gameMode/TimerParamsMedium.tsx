@@ -26,10 +26,10 @@ const TimerParamsMedium = (props: GameParams) => {
     }
     h3 {
       margin: 0;
-      font-size: 14px;
+      font-size: 16px;
       font-weight: 400;
       color: var(--text-secondary-color);
-      text-transform: uppercase;
+      text-transform: capitalize;
       cursor: default;
     }
     .option {

@@ -8,10 +8,15 @@ import Text from "../svgs/text";
 import Customizer from "../svgs/customizer";
 import type { GameParams } from "./GameParams";
 import { useI18n } from "~/contexts/i18nProvider";
-import { Category, CategoryKind, Languages, WordsGenerationCategory } from "~/gameOptions/gameOptions";
+import {
+  Category,
+  CategoryKind,
+  Languages,
+  WordsGenerationCategory,
+} from "~/gameOptions/gameOptions";
 
 const SpeedParams = (props: GameParams) => {
-const t = useI18n();
+  const t = useI18n();
   css`
     .random-params {
       display: flex;
@@ -33,6 +38,16 @@ const t = useI18n();
       align-items: center;
       width: 100%;
       transition: all 0.15s ease-in-out;
+    }
+    @media screen and (max-width: 860px) {
+      .option {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+      }
+      h3 {
+        font-size: 14px;
+      }
     }
   `;
 

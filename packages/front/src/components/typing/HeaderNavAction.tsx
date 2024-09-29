@@ -21,8 +21,22 @@ const HeaderNavAction = (props: HeaderNavActionProps) => {
     .nav-action.clickable {
       cursor: pointer;
     }
-    .nav-action.clickable:hover {
-      border: 1px solid var(--background-color);
+    @media screen and (hover: hover) {
+      .nav-action.clickable:hover {
+        border: 1px solid var(--background-color);
+      }
+    }
+    @media screen and (max-width: 580px) {
+      .nav-action {
+        width: 40px;
+        height: 40px;
+      }
+    }
+    @media screen and (max-width: 500px) {
+      .nav-action {
+        width: 30px;
+        height: 30px;
+      }
     }
   `;
 

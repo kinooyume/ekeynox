@@ -31,6 +31,16 @@ enum KeyboardLayout {
   QWERTY
 }
 
+model UserSettings {
+  id             Int             @id @default(autoincrement())
+  name           String?
+  theme          Theme           @default(AUTO)
+  locale         Locale          @default(EN)
+  keyboardLayout KeyboardLayout  @default(QWERTY)
+  showKb         Boolean         @default(true)
+  credential     UserCredential?
+}
+
 // *** //
 
 enum Role {
@@ -38,19 +48,11 @@ enum Role {
   ADMIN
 }
 
-enum Plan {
-  FREE
-  PAID
-}
-
-model User {
-  id             Int            @id @default(autoincrement())
-  role           Role           @default(USER)
-  plan           Plan           @default(FREE)
-  name           String?
-  email          String         @unique
-  theme          Theme          @default(AUTO)
-  locale         Locale         @default(EN)
-  keyboardLayout KeyboardLayout @default(QWERTY)
-  showKb         Boolean        @default(true)
+model UserCredential {
+  id         Int          @id @default(autoincrement())
+  email      String       @unique
+  password   String
+  role       Role         @default(USER)
+  settings   UserSettings @relation(fields: [settingsId], references: [id])
+  settingsId Int          @unique @map("userId")
 }

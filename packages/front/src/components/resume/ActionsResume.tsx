@@ -12,6 +12,7 @@ import {
 import { PendingMode } from "~/appState/appState";
 import { useI18n } from "~/contexts/i18nProvider";
 import Ghost from "../svgs/ghost";
+import { useWindowSize } from "@solid-primitives/resize-observer";
 
 type ActionsResumeProps = {
   gameOptions: GameOptions;
@@ -107,21 +108,25 @@ const ActionsResume = (props: ActionsResumeProps) => {
     }
   `;
 
+  const size = useWindowSize();
+
   return (
     <div class="actions">
-      <GameModeDropdown {...props} start={start} reverse={true}>
-        {(isOpen, hover) => (
-          <div
-            class="menu-title"
-            classList={{ hover: hover(), open: isOpen() }}
-          >
-            <span>{`${t("newGame.one")} ${t("newGame.two")}`}</span>
-            <Show when={!isOpen()}>
-              <span class="cursor">▼</span>
-            </Show>
-          </div>
-        )}
-      </GameModeDropdown>
+      <Show when={size.width > 740}>
+        <GameModeDropdown {...props} start={start} reverse={true}>
+          {(isOpen, hover) => (
+            <div
+              class="menu-title"
+              classList={{ hover: hover(), open: isOpen() }}
+            >
+              <span>{`${t("newGame.one")} ${t("newGame.two")}`}</span>
+              <Show when={!isOpen()}>
+                <span class="cursor">▼</span>
+              </Show>
+            </div>
+          )}
+        </GameModeDropdown>
+      </Show>
       <button class="secondary" onClick={() => restart(props.gameOptions)}>
         <Ghost /> <span>{t("playAgain")}</span>
       </button>

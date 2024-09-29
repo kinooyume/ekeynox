@@ -63,5 +63,17 @@
     "project": "Ekeynox is an experimental typing game that allows you to learn touch typing through gamification, greatly inspired by [monkeytype](https://monkeytype.com/).",
     "me": "## Looking for a freelance ?\nHello, I'm Martin Kinoo, freelance frontend/fullstack developer and you're on my personal project. Want to collaborate? Find out more about me on LinkedIn."
   },
-  "mobileWarning": "This website is not compatible with mobile devices. Please use a computer or enlarge your window to access it."
+  "mobileWarning": "This website is not compatible with mobile devices. Please use a computer or enlarge your window to access it.",
+  "login": {
+    "title": "Login",
+    "description": "Connect to your account to save your progress and access your statistics."
+  },
+  "register": {
+    "title": "Register",
+    "description": "Create an account to save your progress and access your statistics."
+  },
+  "email": "Email",
+  "password": "Password",
+  "confirmPassword": "Confirm password",
+  "forgotPassword": "Forgot password ?"
 }
