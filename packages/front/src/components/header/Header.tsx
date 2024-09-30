@@ -1,13 +1,11 @@
 import { css } from "solid-styled";
 
-import Logo from "./svgs/logo.tsx";
+import Logo from "../svgs/logo.tsx";
 import HeaderSettings from "./HeaderSettings.tsx";
 import { onMount, Show } from "solid-js";
 import anime from "animejs";
-import { A } from "@solidjs/router";
 import { useWindowSize } from "@solid-primitives/resize-observer";
-import LogoTiny from "./svgs/logoTiny.tsx";
-import HeaderSettingsMobile from "./HeaderSettingsMobile.tsx";
+import LogoTiny from "../svgs/logoTiny.tsx";
 
 const Header = () => {
   css`
@@ -77,9 +75,7 @@ const Header = () => {
         <div id="header-nav-actions-portal" />
       </div>
       <div class="right">
-        <Show when={size.width > 860} fallback={<HeaderSettingsMobile />}>
-          <HeaderSettings />
-        </Show>
+        <HeaderSettings />
       </div>
     </div>
   );
