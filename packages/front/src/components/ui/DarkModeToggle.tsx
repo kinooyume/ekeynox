@@ -3,15 +3,12 @@ import Moon from "../svgs/moon.tsx";
 import "./DarkModeToggle.css";
 import { Match, Switch } from "solid-js";
 import { Transition } from "solid-transition-group";
+import { DarkModeSettings } from "../header/HeaderSettingsGlobal.tsx";
 
-type DarkModeToggleProps = {
-  dark: boolean;
-  setTheme: (dark: boolean) => void;
-};
 // v1: https://uiverse.io/JkHuger/old-falcon-20
 // v2: https://uiverse.io/Galahhad/heavy-dog-14
 //
-const DarkModeToggle = (props: DarkModeToggleProps) => {
+const DarkModeToggle = (props: DarkModeSettings) => {
   return (
     <label for="theme" class="ui-switch">
       <input
@@ -21,9 +18,9 @@ const DarkModeToggle = (props: DarkModeToggleProps) => {
         role="switch"
         name="theme"
         value="dark"
-        checked={props.dark}
+        checked={props.value()}
         onClick={() => {
-          props.setTheme(!props.dark);
+          props.set(!props.value());
         }}
       />
       <div class="circle">
@@ -41,14 +38,28 @@ const DarkModeToggle = (props: DarkModeToggleProps) => {
             a.finished.then(done);
           }}
           onExit={(el, done) => {
-            const a = el.animate([{ opacity: 1, transform: "translateX(-0)", position: "absolute" }, { opacity: 0, transform: "translateX(20px)", position: "absolute" }], {
-              duration: 300,
-            });
+            const a = el.animate(
+              [
+                {
+                  opacity: 1,
+                  transform: "translateX(-0)",
+                  position: "absolute",
+                },
+                {
+                  opacity: 0,
+                  transform: "translateX(20px)",
+                  position: "absolute",
+                },
+              ],
+              {
+                duration: 300,
+              },
+            );
             a.finished.then(done);
           }}
         >
           <Switch fallback={<Sun />}>
-            <Match when={props.dark}>
+            <Match when={props.value()}>
               <Moon />
             </Match>
           </Switch>

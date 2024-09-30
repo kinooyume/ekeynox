@@ -4,14 +4,13 @@ import { FileRoutes } from "@solidjs/start/router";
 
 import {
   ParentProps,
-  Show,
   Suspense,
   createEffect,
   createSignal,
 } from "solid-js";
-import { Transition, TransitionGroup } from "solid-transition-group";
+import { Transition } from "solid-transition-group";
 
-import Header from "./components/Header";
+import Header from "./components/header/Header";
 
 import { useAssets } from "solid-js/web";
 
@@ -25,7 +24,6 @@ import { GameOptionsProvider } from "./contexts/GameOptionsProvider";
 import { SettingsProvider } from "./contexts/SettingsProvider";
 import { FocusProvider } from "./contexts/FocusProvider";
 import { useWindowSize } from "@solid-primitives/resize-observer";
-import MobileWarning from "./components/MobileWarning";
 
 export default function App() {
   const sheets: StyleData[] = [];
@@ -154,6 +152,7 @@ export default function App() {
                       </Suspense>
                       <div class="modal" id="modal-portal"></div>
                       <div class="modal" id="modal-toaster"></div>
+                      <div class="modal" id="modal-settings"></div>
                     </main>
                   </FocusProvider>
                 </AppStateProvider>
