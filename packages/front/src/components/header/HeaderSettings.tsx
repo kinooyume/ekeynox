@@ -164,12 +164,14 @@ const HeaderSettings = () => {
 
   return (
     <ul class="actions">
-      <Show
-        when={size.width < 860}
-        fallback={<HeaderSettingsDesktop {...settingsUI} />}
-      >
-        <HeaderSettingsMobile {...settingsUI} />
-      </Show>
+      {/*       <Show */}
+      {/*         when={size.width > 860} */}
+      {/*         fallback={ */}
+      {/*         <HeaderSettingsMobile {...settingsUI} /> */}
+      {/* } */}
+      {/*       > */}
+      <HeaderSettingsDesktop {...settingsUI} />
+      {/* </Show> */}
       {/* <div class="profile-adjust"> */}
       {/*   <ProfilePicto logged={false} /> */}
       {/* </div> */}

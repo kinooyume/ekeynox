@@ -156,7 +156,7 @@ const GameModeSelection = (props: GameModeSelectionProps) => {
             <div class={`radio ${modeKind}`}>
               <input
                 type="radio"
-                name="mode"
+                name={modeKind}
                 class="select"
                 id={modeKind}
                 checked={props.selected === modeKind}

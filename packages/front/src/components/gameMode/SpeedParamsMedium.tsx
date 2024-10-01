@@ -23,7 +23,7 @@ const SpeedParamsMedium = (props: GameParams) => {
       flex-direction: column;
       align-items: flex-start;
     }
-    h3 {
+    p {
       margin: 0;
       font-size: 16px;
       font-weight: 400;
@@ -48,7 +48,7 @@ const SpeedParamsMedium = (props: GameParams) => {
   return (
     <div class="random-params">
       <div class="option">
-        <h3>{t("content")}</h3>
+        <p>{t("content")}</p>
         <RadioGroup
           name="wordsCategory"
           values={[
@@ -97,7 +97,7 @@ const SpeedParamsMedium = (props: GameParams) => {
         when={props.gameOptions.categorySelected.kind !== CategoryKind.custom}
       >
         <div class="option">
-          <h3> {t("language")} </h3>
+          <p> {t("language")} </p>
           <RadioGroup
             name="languages"
             values={[
@@ -127,7 +127,7 @@ const SpeedParamsMedium = (props: GameParams) => {
           }
         >
           <div class="option">
-            <h3>{t("wordCount")}</h3>
+            <p>{t("wordCount")}</p>
             <RadioGroup
               name="nbrWords"
               values={[

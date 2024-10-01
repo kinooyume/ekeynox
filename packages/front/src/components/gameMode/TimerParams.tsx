@@ -25,7 +25,7 @@ const TimerParams = (props: GameParams) => {
       gap: 1rem;
       align-items: flex-start;
     }
-    h3 {
+    p {
       margin: 0;
       font-size: 18px;
       font-weight: 400;
@@ -46,7 +46,7 @@ const TimerParams = (props: GameParams) => {
         align-items: flex-start;
         gap: 4px;
       }
-      h3 {
+      p {
         font-size: 14px;
       }
     }
@@ -55,7 +55,7 @@ const TimerParams = (props: GameParams) => {
   return (
     <div class="time-params">
       <div class="option">
-        <h3>{t("content")}</h3>
+        <p>{t("content")}</p>
         <RadioGroup
           name="wordsCategory-timer"
           values={[
@@ -104,7 +104,7 @@ const TimerParams = (props: GameParams) => {
         when={props.gameOptions.categorySelected.kind !== CategoryKind.custom}
       >
         <div class="option">
-          <h3> {t("language")} </h3>
+          <p> {t("language")} </p>
           <RadioGroup
             name="languages-timer"
             values={[
@@ -128,7 +128,7 @@ const TimerParams = (props: GameParams) => {
         </Match>
       </Switch>
       <div class="option">
-        <h3>{t("timeLimit")}</h3>
+        <p>{t("timeLimit")}</p>
         <RadioGroup
           name="time"
           values={[

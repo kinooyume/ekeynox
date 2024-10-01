@@ -3,6 +3,7 @@ const BunnyHead = () => (
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 127 95.25"
   >
+    <title>Speed Mode</title>
     <g fill="#c9986d" stroke="#4a4240" stroke-width="2.231">
       <path d="M41.499 9.134s-9.897-1.248-19.995 10.062C11.864 29.991.35 52.87 2.204 74.333s9.707 16.622 9.707 16.622 12.843-3.906 18.161-23.566 5.195-40.335 5.195-40.335z" />
       <path
