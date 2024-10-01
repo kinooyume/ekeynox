@@ -3,6 +3,7 @@ const MonkeyHead = () => (
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 127 95.25"
   >
+    <title>Speed Mode</title>
     <path
       d="M29.326 23.859s-12.118-5.634-17.848 2.339-4.599 19.211 1.905 24.611 18.282 6.751 18.668 4.882-2.725-31.832-2.725-31.832z"
       fill="#d7b68c"

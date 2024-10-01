@@ -1,4 +1,4 @@
-import { Component, Show, type JSX, type JSXElement } from "solid-js";
+import { Component, Show, type JSXElement } from "solid-js";
 import { css } from "solid-styled";
 
 type Props = {

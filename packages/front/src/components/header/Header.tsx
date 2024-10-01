@@ -47,6 +47,12 @@ const Header = () => {
       }
     }
   `;
+
+      // .center {
+      //   width: 100%;
+      //   max-width: 396px;
+      //   margin: 0 auto;
+      // }
   // const { mutation: navigation } = useAppState();
   // const navigate = useNavigate();
 

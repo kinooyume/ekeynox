@@ -349,7 +349,7 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
 
       .illustration-container {
         width: 180px;
-height: unset;
+        height: unset;
       }
 
       .button-wrapper {
@@ -386,7 +386,7 @@ height: unset;
 
   return (
     <div class="menu">
-      <div class="main-view">
+      <form class="main-view">
         <div class="hud">
           <div class="title">
             <div class="title-content">
@@ -481,7 +481,7 @@ height: unset;
             </div>
           </div>
         </div>
-      </div>
+      </form>
     </div>
   );
 };
