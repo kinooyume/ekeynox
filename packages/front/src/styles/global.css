@@ -195,6 +195,10 @@ ul {
 a {
   cursor: pointer;
 }
+button.reset {
+  all: unset;
+}
+
 /* Cool clicky button, more simple */
 /* https://uiverse.io/gharsh11032000/neat-bullfrog-61 */
 button,

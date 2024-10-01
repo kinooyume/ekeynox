@@ -114,8 +114,10 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
     <div class="header-mode animate">
       <GameModeDropdown {...props}>
         {(isOpen, hover) => (
-          <div
-            class="menu-title"
+          <button
+            aria-expanded={isOpen()}
+            aria-haspopup="dialog"
+            class="reset menu-title"
             classList={{ open: isOpen(), hover: hover() }}
             data-passive={`${t("gameMode")[props.gameOptions.modeSelected].subtitle}`}
             data-active={`${t("newGame.one")} ${t("newGame.two")}`}
@@ -123,7 +125,7 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
             <Show when={!isOpen()}>
               <span class="cursor">▼</span>
             </Show>
-          </div>
+          </button>
         )}
       </GameModeDropdown>
       <div class="options-recap">

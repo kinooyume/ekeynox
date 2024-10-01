@@ -123,7 +123,7 @@ const TypingInfo = (props: TypingNavProps) => {
       display: flex;
     }
 
-    nav {
+    .nav {
       height: 63.593px;
       display: flex;
       justify-content: center;
@@ -160,7 +160,7 @@ const TypingInfo = (props: TypingNavProps) => {
         width: 100%;
         border-radius: 22px 22px 0 0;
       }
-      nav {
+      .nav {
         height: unset;
       }
     }
@@ -178,7 +178,7 @@ const TypingInfo = (props: TypingNavProps) => {
 
   return (
     <div class="typing-nav">
-      <nav>
+      <div class="nav">
         <Show when={size.width > 860}>
           <div class="svg-wrapper">
             <Nav width={navWidth()} borderWidth={navBorder()} />
@@ -207,7 +207,7 @@ const TypingInfo = (props: TypingNavProps) => {
             </MetricPreview>
           </div>
         </div>
-      </nav>
+      </div>
       <div class="progress-bar">
         <ProgressBar progress={props.progress} />
       </div>
