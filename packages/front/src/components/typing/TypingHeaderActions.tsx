@@ -42,7 +42,7 @@ const TypingHeaderActions = (props: TypingHeaderActionsProps) => {
       </Show>
       <HeaderNavAction clickable={!props.paused} action={() => props.onPause}>
         <Resume paused={props.paused} />
-      </HeaderNavAction >
+      </HeaderNavAction>
       <HeaderNavAction clickable={true} action={props.onReset}>
         <Reset />
       </HeaderNavAction>

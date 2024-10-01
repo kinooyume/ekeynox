@@ -150,7 +150,7 @@ const GameModeSelection = (props: GameModeSelectionProps) => {
           </Show>
         </TransitionGroup>
       </div>
-      <div class="modes">
+      <fieldset class="modes" aria-label="Game mode selection" role="group">
         <For each={gameModesArray}>
           {([modeKind, mode]) => (
             <div class={`radio ${modeKind}`}>
@@ -179,7 +179,7 @@ const GameModeSelection = (props: GameModeSelectionProps) => {
             </div>
           )}
         </For>
-      </div>
+      </fieldset>
       <ChooseClip></ChooseClip>
     </div>
   );

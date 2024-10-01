@@ -103,29 +103,31 @@ function VerticalRadioBox<T>(props: VerticalRadioBoxProps<T>) {
   `;
 
   return (
-    <ul>
-      <Index each={props.each}>
-        {(elem, index) => (
-          <li>
-            <div class="elem input-wrapper">
-              <input
-                type="radio"
-                name={props.name}
-                class="select"
-                id={`${props.name}-${index}`}
-                checked={elem() === props.selected}
-                onChange={() => props.onChange(elem())}
-              />
-              {props.children(
-                `${props.name}-${index}`,
-                elem() === props.selected,
-                elem(),
-              )}
-            </div>
-          </li>
-        )}
-      </Index>
-    </ul>
+    <fieldset>
+      <ul role="group" aria-label="Game mode selection">
+        <Index each={props.each}>
+          {(elem, index) => (
+            <li>
+              <div class="elem input-wrapper">
+                <input
+                  type="radio"
+                  name={props.name}
+                  class="select"
+                  id={`${props.name}-${index}`}
+                  checked={elem() === props.selected}
+                  onChange={() => props.onChange(elem())}
+                />
+                {props.children(
+                  `${props.name}-${index}`,
+                  elem() === props.selected,
+                  elem(),
+                )}
+              </div>
+            </li>
+          )}
+        </Index>
+      </ul>
+    </fieldset>
   );
 }
 
