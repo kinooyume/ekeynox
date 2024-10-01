@@ -5,7 +5,7 @@ import {
 } from "./HeaderSettingsGlobal";
 import Drawer from "@corvu/drawer";
 
-import { Component, createSignal } from "solid-js";
+import { Component, createSignal, onCleanup } from "solid-js";
 import "./Drawer.css";
 import Kebab from "../svgs/kebab";
 import { css } from "solid-styled";
@@ -157,6 +157,13 @@ const HeaderSettingsContent: Component<SettingsUI> = (props) => {
 const HeaderSettingsMobile: Component<SettingsUI> = (props) => {
   const { setFocus } = useFocus();
   const { state } = useAppState();
+
+  // TODO: should not be here
+  // ==> trigger when switching desktop/mobile
+  onCleanup(() => {
+    setFocus(FocusType.View);
+  });
+
   return (
     <Drawer
       side="right"
