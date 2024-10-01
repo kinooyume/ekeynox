@@ -33,14 +33,16 @@ function VerticalRadioBox<T>(props: VerticalRadioBoxProps<T>) {
       width: 100%;
     }
 
-    li:hover {
-      border-radius: 12px;
-      background-color: var(--background-color);
-    }
+    @media screen and (hover: hover) {
+      li:hover {
+        border-radius: 12px;
+        background-color: var(--background-color);
+      }
 
-    li:hover .input-wrapper {
-      transform: translateX(4px);
-      transition: all 0.2s ease-in-out;
+      li:hover .input-wrapper {
+        transform: translateX(4px);
+        transition: all 0.2s ease-in-out;
+      }
     }
 
     input {

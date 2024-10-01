@@ -1,12 +1,13 @@
 import { Component } from "solid-js";
 import { ListSettings, SettingsUI } from "./HeaderSettingsGlobal";
-import VerticalDropdown from "../ui/VerticalDropdown";
+import VerticalPopover from "../ui/VerticalDropdown";
 import Tooltip from "../ui/Tooltip";
 import SettingMenu from "../settings/SettingMenu";
 import DarkModeToggle from "../ui/DarkModeToggle";
+import { css } from "solid-styled";
 
 const ListSettingsDesktop: Component<ListSettings> = (props) => (
-  <VerticalDropdown
+  <VerticalPopover
     id={props.id}
     label={(isOpen) => (
       <Tooltip
@@ -22,21 +23,30 @@ const ListSettingsDesktop: Component<ListSettings> = (props) => (
         <props.List />
       </SettingMenu>
     )}
-  </VerticalDropdown>
+  </VerticalPopover>
 );
 
-const HeaderSettingsDesktop: Component<SettingsUI> = (props) => (
-  <>
-    <li>
-      <ListSettingsDesktop {...props.keyboard} />
-    </li>
-    <li>
-      <ListSettingsDesktop {...props.langue} />
-    </li>
-    <li>
-      <DarkModeToggle {...props.darkMode} />
-    </li>
-  </>
-);
+const HeaderSettingsDesktop: Component<SettingsUI> = (props) => {
+  css`
+    ul {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+  `;
+  return (
+    <ul>
+      <li>
+        <ListSettingsDesktop {...props.keyboard} />
+      </li>
+      <li>
+        <ListSettingsDesktop {...props.langue} />
+      </li>
+      <li>
+        <DarkModeToggle {...props.darkMode} />
+      </li>
+    </ul>
+  );
+};
 
 export default HeaderSettingsDesktop;
