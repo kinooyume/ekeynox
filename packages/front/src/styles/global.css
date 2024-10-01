@@ -195,8 +195,10 @@ ul {
 a {
   cursor: pointer;
 }
+
 button.reset {
   all: unset;
+  cursor: pointer;
 }
 
 /* Cool clicky button, more simple */
