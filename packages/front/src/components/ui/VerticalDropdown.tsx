@@ -3,7 +3,7 @@ import { Accessor, JSX, Show, createSignal } from "solid-js";
 import { css } from "solid-styled";
 import Cross from "../svgs/cross";
 import {
-    AnimateState,
+  AnimateState,
   createAnimationComp,
   isInitialAnimation,
 } from "~/animations/animation";
@@ -48,6 +48,7 @@ const VerticalDropdown = (props: VerticalDropdownProps) => {
     }
     .label {
       cursor: pointer;
+      padding: 0;
     }
 
     .cross {
@@ -127,9 +128,9 @@ const VerticalDropdown = (props: VerticalDropdownProps) => {
       ref={setWrapper}
       classList={{ open: !isInitialAnimation(state()) }}
     >
-      <div class="label" ref={setLabel} onClick={toggle}>
+      <button class="label" ref={setLabel} onClick={toggle}>
         {props.label(() => !isInitialAnimation(state()))}
-      </div>
+      </button>
       <Show when={!isInitialAnimation(state())}>
         <div
           class="vertical-dropdown"

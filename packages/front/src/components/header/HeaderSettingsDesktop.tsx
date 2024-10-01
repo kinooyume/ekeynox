@@ -27,9 +27,15 @@ const ListSettingsDesktop: Component<ListSettings> = (props) => (
 
 const HeaderSettingsDesktop: Component<SettingsUI> = (props) => (
   <>
-    <ListSettingsDesktop {...props.keyboard} />
-    <ListSettingsDesktop {...props.langue} />
-    <DarkModeToggle {...props.darkMode} />
+    <li>
+      <ListSettingsDesktop {...props.keyboard} />
+    </li>
+    <li>
+      <ListSettingsDesktop {...props.langue} />
+    </li>
+    <li>
+      <DarkModeToggle {...props.darkMode} />
+    </li>
   </>
 );
 
