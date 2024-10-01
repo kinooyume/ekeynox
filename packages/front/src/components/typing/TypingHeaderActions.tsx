@@ -36,22 +36,22 @@ const TypingHeaderActions = (props: TypingHeaderActionsProps) => {
   return (
     <div class="nav-actions">
       <Show when={props.isRedo}>
-        <HeaderNavAction>
+        <HeaderNavAction clickable={false}>
           <Ghost />
         </HeaderNavAction>
       </Show>
-      <HeaderNavAction action={props.paused ? undefined : () => props.onPause}>
+      <HeaderNavAction clickable={!props.paused} action={() => props.onPause}>
         <Resume paused={props.paused} />
-      </HeaderNavAction>
-      <HeaderNavAction action={props.onReset}>
+      </HeaderNavAction >
+      <HeaderNavAction clickable={true} action={props.onReset}>
         <Reset />
       </HeaderNavAction>
       <Show when={props.isGenerated && !props.isRedo}>
-        <HeaderNavAction action={props.onShuffle}>
+        <HeaderNavAction clickable={true} action={props.onShuffle}>
           <Shuffle />
         </HeaderNavAction>
       </Show>
-      <HeaderNavAction action={props.onExit}>
+      <HeaderNavAction clickable={true} action={props.onExit}>
         <Cross />
       </HeaderNavAction>
     </div>
