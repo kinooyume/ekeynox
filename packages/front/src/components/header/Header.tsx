@@ -9,7 +9,7 @@ import LogoTiny from "../svgs/logoTiny.tsx";
 
 const Header = () => {
   css`
-    .header {
+    header {
       position: fixed;
       top: 0;
       right: 0;
@@ -29,7 +29,7 @@ const Header = () => {
       cursor: pointer;
     }
 
-    .header .left {
+    header .left {
       display: flex;
       align-items: center;
     }
@@ -60,7 +60,7 @@ const Header = () => {
 
   onMount(() => {
     anime.timeline().add({
-      targets: ".header > div",
+      targets: "header > div",
       translateY: [-80, 0],
       opacity: [0, 1],
       easing: "easeOutElastic(1, 0.9)",
@@ -69,7 +69,7 @@ const Header = () => {
     });
   });
   return (
-    <div class="header">
+    <header>
       <div class="left">
         <a class="home" aria-label="ekeynox" href="/">
           <Show when={size.width > 860} fallback={<LogoTiny />}>
@@ -83,7 +83,7 @@ const Header = () => {
       <div class="right">
         <HeaderSettings />
       </div>
-    </div>
+    </header>
   );
 };
 
