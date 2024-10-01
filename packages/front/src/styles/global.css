@@ -239,9 +239,6 @@ a.primary:hover,
 button.secondary:hover {
   transform: translateY(-2px);
 }
-button.primary:hover,
-a.primary:hover {
-}
 
 a.primary {
   display: flex;
@@ -274,6 +271,14 @@ button.secondary {
 
 button.secondary:hover {
   opacity: 1;
+}
+
+  @media screen and (max-width: 600px) {
+  a.primary, button.primary, button.secondary {
+    height: 36px;
+    padding: 0 24px;
+  }
+
 }
 
 input {

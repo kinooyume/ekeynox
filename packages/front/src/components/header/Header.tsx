@@ -40,9 +40,9 @@ const Header = () => {
     }
 
     @media screen and (max-width: 860px) {
-      .header {
+      header {
         height: 48px;
-        gap: 0px;
+        gap: 16px;
         padding: 12px 16px;
       }
       .left,
