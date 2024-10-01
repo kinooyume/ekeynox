@@ -23,6 +23,7 @@ const Reset = () => {
       height="1.3em"
       viewBox="0 0 24 24"
     >
+      <title>Reset</title>
       <path
         class="path"
         fill="none"
