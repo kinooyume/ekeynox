@@ -241,6 +241,7 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
 
     .button-wrapper {
       display: flex;
+      margin-top: auto;
     }
     @media screen and (max-width: 1400px) {
       .illustration-container {
