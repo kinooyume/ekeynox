@@ -2,7 +2,7 @@ import { Match, Switch, createEffect, createSignal, onMount } from "solid-js";
 import type { Translator } from "../App";
 import type { KeyboardHandler } from "../keyboard/TypingKeyboard";
 import { css } from "solid-styled";
-import HeaderNavAction from "./HeaderNavAction";
+import HeaderNavAction from "./HeaderTypingAction";
 import Resume from "../svgs/Resume";
 
 type TypingHelpProps = {
