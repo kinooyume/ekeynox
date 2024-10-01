@@ -1,5 +1,5 @@
 import { css } from "solid-styled";
-import HeaderNavAction from "./HeaderNavAction";
+import HeaderNavAction from "./HeaderTypingAction";
 import Resume from "../svgs/Resume";
 import Reset from "../svgs/reset";
 import Cross from "../svgs/cross";
@@ -25,34 +25,35 @@ const TypingHeaderActions = (props: TypingHeaderActionsProps) => {
       justify-content: center;
       padding: 0 16px;
     }
+
+    @media screen and (max-width: 860px) {
+      .nav-actions {
+        justify-content: space-between;
+        width: 100%;
+      }
+    }
   `;
   return (
     <div class="nav-actions">
       <Show when={props.isRedo}>
-        <HeaderNavAction
-          svg={<Ghost />}
-          clickable={false}
-          action={() => {}}
-        />
+        <HeaderNavAction>
+          <Ghost />
+        </HeaderNavAction>
       </Show>
-      <HeaderNavAction
-        svg={<Resume paused={props.paused} />}
-        clickable={!props.paused}
-        action={props.onPause}
-      />
-      <HeaderNavAction
-        svg={<Reset />}
-        clickable={true}
-        action={props.onReset}
-      />
+      <HeaderNavAction action={props.paused ? undefined : () => props.onPause}>
+        <Resume paused={props.paused} />
+      </HeaderNavAction>
+      <HeaderNavAction action={props.onReset}>
+        <Reset />
+      </HeaderNavAction>
       <Show when={props.isGenerated && !props.isRedo}>
-        <HeaderNavAction
-          svg={<Shuffle />}
-          clickable={true}
-          action={props.onShuffle}
-        />
+        <HeaderNavAction action={props.onShuffle}>
+          <Shuffle />
+        </HeaderNavAction>
       </Show>
-      <HeaderNavAction svg={<Cross />} clickable={true} action={props.onExit} />
+      <HeaderNavAction action={props.onExit}>
+        <Cross />
+      </HeaderNavAction>
     </div>
   );
 };

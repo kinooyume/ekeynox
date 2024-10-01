@@ -31,6 +31,7 @@ const TypingHeaderNav = (props: TypingHeaderNavProps) => {
     @media screen and (max-width: 860px) {
       .header-nav {
         height: 24px;
+        justify-content: center;
       }
     }
   `;

@@ -61,6 +61,13 @@ const HeaderSettings = () => {
     .keyboard-adjust {
       padding-bottom: 2px;
     }
+
+    @media screen and (max-width: 860px) {
+      .actions {
+        min-width: 42px;
+        justify-content: center;
+      }
+    }
   `;
 
   const keyboardSettings: ListSettings = {

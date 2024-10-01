@@ -5,9 +5,9 @@ import Kebab from "../svgs/kebab";
 
   const HeaderSettingsMobile: Component<SettingsUI> = (props) => {
     const [open, setOpen] = createSignal<boolean>(false);
-    return <div>
+    return <li>
     <Kebab />
-  </div>;
+  </li>;
   };
 
   export default HeaderSettingsMobile;
