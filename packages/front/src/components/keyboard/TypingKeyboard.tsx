@@ -22,10 +22,10 @@ const Keyboard = (props: KeyboardProps) => {
   const [pressedKeys, setPressedKeys] = createSignal<string[]>([]);
   const [showKb, setShowKb] = createSignal(true);
 
-  // On devrais pas l'avoir ici je pense
+  // NOTE: BAD !! On devrais pas l'avoir ici je pense
   const size = useWindowSize();
   createEffect(() => {
-    if (size.width < 1120 || size.height < 800) {
+    if (size.width < 1120 || size.height < 700) {
       setShowKb(false);
     } else {
       setShowKb(true);
