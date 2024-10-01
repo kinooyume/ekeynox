@@ -9,6 +9,7 @@ type SettingMenuProps = {
 const SettingMenu = (props: SettingMenuProps) => {
   css`
     .setting-menu {
+      padding-top: 3px;
       width: 100%;
     }
     .title {

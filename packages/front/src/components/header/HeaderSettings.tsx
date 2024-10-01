@@ -16,6 +16,7 @@ import { Show } from "solid-js";
 import { ListSettings, SettingsUI } from "./HeaderSettingsGlobal.tsx";
 import HeaderSettingsDesktop from "./HeaderSettingsDesktop.tsx";
 import HeaderSettingsMobile from "./HeaderSettingsMobile.tsx";
+import EyeToggle from "../ui/EyeToggle.tsx";
 
 const HeaderSettings = () => {
   const t = useI18n();
@@ -31,9 +32,6 @@ const HeaderSettings = () => {
       text-transform: capitalize;
     }
 
-    label {
-      color: var(--text-secondary-color);
-    }
     .opt {
       margin: 0;
       color: var(--text-secondary-color);
@@ -56,6 +54,9 @@ const HeaderSettings = () => {
       padding-bottom: 2px;
     }
 
+    .show-keyboard-toggle {
+      margin-top: 8px;
+    }
     @media screen and (max-width: 860px) {
       .actions {
         display: block;
@@ -91,17 +92,16 @@ const HeaderSettings = () => {
             )}
           </VerticalRadioBox>
         </div>
-        <div class="sub-content elem">
-          <input
-            type="checkbox"
-            name="show-keyboard"
+        <div class="sub-content elem show-keyboard-toggle">
+          <EyeToggle
             id="show-keyboard"
-            onChange={(e) => {
-              setSettings("showKb", e.target.checked);
+            onChange={(value) => {
+              setSettings("showKb", value);
             }}
             checked={settings.showKb}
-          />
-          <label for="show-keyboard">{t("showKeyboard")}</label>
+          >
+            <>{t("showKeyboard")}</>
+          </EyeToggle>
         </div>
       </>
     ),

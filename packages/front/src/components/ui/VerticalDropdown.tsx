@@ -32,7 +32,7 @@ const VerticalPopover = (props: VerticalPopoverProps) => {
       position: absolute;
       background-color: var(--color-surface-100);
       opacity: 0;
-      width: 150px;
+      width: 180px;
       pointer-events: none;
     }
 
