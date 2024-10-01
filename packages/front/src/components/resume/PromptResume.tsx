@@ -28,6 +28,11 @@ const prompt = (props: PromptProps) => {
       width: 100%;
       align-items: center;
     }
+    @media screen and (max-width: 860px) {
+      .paragraph-resume {
+        font-size: 1.2em;
+      }
+    }
   `;
 
   return (

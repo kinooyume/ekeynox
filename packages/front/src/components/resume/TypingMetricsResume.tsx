@@ -276,15 +276,21 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
       .metrics {
         margin-bottom: 64px;
       }
+      .resume-menu {
+        align-items: flex-start;
+      }
       .actions {
         position: fixed;
-        bottom: 0;
+        align-self: center;
+        border: 1px solid var(--background-color);
+        bottom: 8px;
         background-color: var(--color-surface-alt);
         display: flex;
         align-items: center;
         justify-content: center;
         padding: 16px;
         border-radius: 18px 18px 0 0;
+        border-radius: 16px;
       }
     }
   `;

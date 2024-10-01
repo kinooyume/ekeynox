@@ -2,10 +2,7 @@ import { Link, Meta, MetaProvider, Title } from "@solidjs/meta";
 import { Router } from "@solidjs/router";
 import { FileRoutes } from "@solidjs/start/router";
 
-import {
-  ParentProps,
-  Suspense,
-} from "solid-js";
+import { ParentProps, Suspense } from "solid-js";
 import { Transition } from "solid-transition-group";
 
 import Header from "./components/header/Header";
@@ -38,6 +35,11 @@ export default function App() {
     }
     .modal {
       position: absolute;
+    }
+    @media screen and (max-width: 860px) {
+      main {
+        margin-top: 72px;
+      }
     }
   `;
 
