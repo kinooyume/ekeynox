@@ -96,20 +96,31 @@ const UserInput = (props: UserInputProps) => {
   /****/
 
   return (
-    <input
-      ref={input!}
-      type="text"
-      autofocus
-      autocorrect="off"
-      autocomplete="off"
-      autocapitalize="none"
-      spellcheck={false}
-      aria-hidden
-      data-gramm="false"
-      data-gramm_editor="false"
-      data-enable-grammarly="false"
-      style={{ position: "fixed", top: "-100px" }}
-    />
+    <>
+      <label
+        for="user-input"
+        style={{ position: "fixed", top: "-100px" }}
+        aria-hidden
+      >
+        User input
+      </label>
+      <input
+        ref={input!}
+        name="user-input"
+        id="user-input"
+        type="text"
+        autofocus
+        autocorrect="off"
+        autocomplete="off"
+        autocapitalize="none"
+        spellcheck={false}
+        aria-hidden
+        data-gramm="false"
+        data-gramm_editor="false"
+        data-enable-grammarly="false"
+        style={{ position: "fixed", top: "-100px" }}
+      />
+    </>
   );
 };
 
