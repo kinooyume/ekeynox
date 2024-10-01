@@ -125,10 +125,21 @@ const VerticalDropdown = (props: VerticalDropdownProps) => {
   return (
     <div
       class="vertical-dropdown-wrapper"
+      role="dialog"
+      id={`dropdown-${props.id}`}
+      aria-labelledby={`dropdown-${props.id}`}
+      aria-modal="false"
       ref={setWrapper}
       classList={{ open: !isInitialAnimation(state()) }}
     >
-      <button class="label" ref={setLabel} onClick={toggle}>
+      <button
+        aria-expanded={!isInitialAnimation(state())}
+        aria-haspopup="dialog"
+        aria-controls={`dropdown-${props.id}`}
+        class="label"
+        ref={setLabel}
+        onClick={toggle}
+      >
         {props.label(() => !isInitialAnimation(state()))}
       </button>
       <Show when={!isInitialAnimation(state())}>
