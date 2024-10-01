@@ -1,10 +1,11 @@
-import { Component } from "solid-js";
+import { Component, onCleanup } from "solid-js";
 import { ListSettings, SettingsUI } from "./HeaderSettingsGlobal";
 import VerticalPopover from "../ui/VerticalDropdown";
 import Tooltip from "../ui/Tooltip";
 import SettingMenu from "../settings/SettingMenu";
 import DarkModeToggle from "../ui/DarkModeToggle";
 import { css } from "solid-styled";
+import { FocusType, useFocus } from "~/contexts/FocusProvider";
 
 const ListSettingsDesktop: Component<ListSettings> = (props) => (
   <VerticalPopover
@@ -27,6 +28,12 @@ const ListSettingsDesktop: Component<ListSettings> = (props) => (
 );
 
 const HeaderSettingsDesktop: Component<SettingsUI> = (props) => {
+  const { setFocus } = useFocus();
+  // TODO: should not be here
+  // ==> trigger when switching desktop/mobile
+  onCleanup(() => {
+    setFocus(FocusType.View);
+  });
   css`
     ul {
       display: flex;
@@ -50,3 +57,6 @@ const HeaderSettingsDesktop: Component<SettingsUI> = (props) => {
 };
 
 export default HeaderSettingsDesktop;
+function setFocus(View: any) {
+  throw new Error("Function not implemented.");
+}
