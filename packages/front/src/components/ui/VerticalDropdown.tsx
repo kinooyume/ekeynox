@@ -1,5 +1,11 @@
-import anime from "animejs";
-import { Accessor, JSX, Show, createSignal } from "solid-js";
+import {
+  Accessor,
+  JSX,
+  Show,
+  createSignal,
+  onCleanup,
+  onMount,
+} from "solid-js";
 import { css } from "solid-styled";
 import Cross from "../svgs/cross";
 import {
@@ -9,19 +15,19 @@ import {
 } from "~/animations/animation";
 import useAnimateModal from "~/hooks/useAnimateModal";
 
-type VerticalDropdownProps = {
+type VerticalPopoverProps = {
   id: string;
   label: (show: Accessor<boolean>) => JSX.Element | JSX.Element[];
   children: (close: () => void) => JSX.Element | JSX.Element[];
 };
 
-const VerticalDropdown = (props: VerticalDropdownProps) => {
+const VerticalPopover = (props: VerticalPopoverProps) => {
   css`
-    .vertical-dropdown-wrapper {
+    .vertical-popover-wrapper {
       position: relative;
     }
 
-    .vertical-dropdown {
+    .vertical-popover {
       border-radius: 12px;
       position: absolute;
       background-color: var(--color-surface-100);
@@ -30,7 +36,7 @@ const VerticalDropdown = (props: VerticalDropdownProps) => {
       pointer-events: none;
     }
 
-    .open .vertical-dropdown {
+    .open .vertical-popover {
       display: flex;
       padding: 24px;
       pointer-events: auto;
@@ -65,7 +71,7 @@ const VerticalDropdown = (props: VerticalDropdownProps) => {
     }
   `;
 
-  const [dropdown, setDropdown] = createSignal<HTMLDivElement>();
+  const [popover, setPopover] = createSignal<HTMLDivElement>();
   const [label, setLabel] = createSignal<HTMLDivElement>();
 
   const [wrapper, setWrapper] = createSignal<HTMLDivElement>();
@@ -73,11 +79,11 @@ const VerticalDropdown = (props: VerticalDropdownProps) => {
   const animation = createAnimationComp({
     parent: {
       enter: () => {
-        const height = dropdown()!.children[0].clientHeight;
+        const height = popover()!.children[0].clientHeight;
         return {
           timeline: { easing: "easeOutElastic(1, 0.9)" },
           params: {
-            targets: dropdown(),
+            targets: popover(),
             height: [0, height],
             marginTop: label()!.clientHeight,
             opacity: [0, 1],
@@ -88,7 +94,7 @@ const VerticalDropdown = (props: VerticalDropdownProps) => {
       leave: () => ({
         timeline: { easing: "easeOutExpo" },
         params: {
-          targets: dropdown(),
+          targets: popover(),
           height: 0,
           opacity: [1, 0],
           duration: 0,
@@ -100,7 +106,7 @@ const VerticalDropdown = (props: VerticalDropdownProps) => {
       enter: [
         {
           params: {
-            targets: `#${`dropdown-${props.id}`} .elem`,
+            targets: `#${`popover-${props.id}`} .elem`,
             translateY: [20, 0],
             opacity: [0, 1],
             duration: 400,
@@ -119,23 +125,43 @@ const VerticalDropdown = (props: VerticalDropdownProps) => {
     animation,
     state,
     setState,
-    element: dropdown,
+    element: popover,
   });
 
+  const Popover = () => {
+    onMount(() => {
+      // focus
+      // listen for escape
+    });
+
+    onCleanup(() => {});
+
+    return (
+      <div
+        class="vertical-popover"
+        ref={setPopover}
+        role="dialog"
+        id={`popover-${props.id}`}
+        aria-labelledby={`popover-${props.id}`}
+        aria-modal="false"
+      >
+        {props.children(toInitial)}
+        <div class="cross" onClick={toggle}>
+          <Cross />
+        </div>
+      </div>
+    );
+  };
   return (
     <div
-      class="vertical-dropdown-wrapper"
-      role="dialog"
-      id={`dropdown-${props.id}`}
-      aria-labelledby={`dropdown-${props.id}`}
-      aria-modal="false"
+      class="vertical-popover-wrapper"
       ref={setWrapper}
       classList={{ open: !isInitialAnimation(state()) }}
     >
       <button
         aria-expanded={!isInitialAnimation(state())}
         aria-haspopup="dialog"
-        aria-controls={`dropdown-${props.id}`}
+        aria-controls={`popover-${props.id}`}
         class="label"
         ref={setLabel}
         onClick={toggle}
@@ -143,19 +169,10 @@ const VerticalDropdown = (props: VerticalDropdownProps) => {
         {props.label(() => !isInitialAnimation(state()))}
       </button>
       <Show when={!isInitialAnimation(state())}>
-        <div
-          class="vertical-dropdown"
-          id={`dropdown-${props.id}`}
-          ref={setDropdown}
-        >
-          {props.children(toInitial)}
-          <div class="cross" onClick={toggle}>
-            <Cross />
-          </div>
-        </div>
+        <Popover />
       </Show>
     </div>
   );
 };
 
-export default VerticalDropdown;
+export default VerticalPopover;

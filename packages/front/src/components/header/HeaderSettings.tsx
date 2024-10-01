@@ -163,19 +163,17 @@ const HeaderSettings = () => {
   const size = useWindowSize();
 
   return (
-    <ul class="actions">
-      {/*       <Show */}
-      {/*         when={size.width > 860} */}
-      {/*         fallback={ */}
-      {/*         <HeaderSettingsMobile {...settingsUI} /> */}
-      {/* } */}
-      {/*       > */}
-      <HeaderSettingsDesktop {...settingsUI} />
-      {/* </Show> */}
+    <div class="actions">
+      <Show
+        when={size.width > 860}
+        fallback={<HeaderSettingsMobile {...settingsUI} />}
+      >
+        <HeaderSettingsDesktop {...settingsUI} />
+      </Show>
       {/* <div class="profile-adjust"> */}
       {/*   <ProfilePicto logged={false} /> */}
       {/* </div> */}
-    </ul>
+    </div>
   );
 };
 

@@ -309,6 +309,13 @@ fieldset {
   padding: 0;
 }
 
+@media screen and (max-width: 860px) {
+  button {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+}
+
 h1,
 h2,
 h3,
