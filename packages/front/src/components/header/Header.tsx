@@ -36,23 +36,26 @@ const Header = () => {
 
     .center {
       flex-grow: 1;
-      z-index: 920;
+      z-index: 42;
     }
 
     @media screen and (max-width: 860px) {
       .header {
         height: 48px;
-        gap: 16px;
+        gap: 0px;
         padding: 12px 16px;
+      }
+      .left,
+      .right {
       }
     }
   `;
 
-      // .center {
-      //   width: 100%;
-      //   max-width: 396px;
-      //   margin: 0 auto;
-      // }
+  // .center {
+  //   width: 100%;
+  //   max-width: 396px;
+  //   margin: 0 auto;
+  // }
   // const { mutation: navigation } = useAppState();
   // const navigate = useNavigate();
 

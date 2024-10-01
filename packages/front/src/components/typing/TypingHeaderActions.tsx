@@ -29,7 +29,12 @@ const TypingHeaderActions = (props: TypingHeaderActionsProps) => {
     @media screen and (max-width: 860px) {
       .nav-actions {
         justify-content: space-between;
+        padding: 0;
         width: 100%;
+      }
+      .right {
+        width: 100%;
+        padding: 0 20px;
       }
     }
   `;
@@ -40,7 +45,7 @@ const TypingHeaderActions = (props: TypingHeaderActionsProps) => {
           <Ghost />
         </HeaderNavAction>
       </Show>
-      <HeaderNavAction clickable={!props.paused} action={() => props.onPause}>
+      <HeaderNavAction clickable={!props.paused} action={props.onPause}>
         <Resume paused={props.paused} />
       </HeaderNavAction>
       <HeaderNavAction clickable={true} action={props.onReset}>

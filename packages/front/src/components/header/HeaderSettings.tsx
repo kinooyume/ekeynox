@@ -12,7 +12,7 @@ import TinyRadioLabel from "../ui/TinyRadioLabel.tsx";
 import { useI18n } from "~/contexts/i18nProvider.tsx";
 import { useSettings } from "~/contexts/SettingsProvider.tsx";
 import { useWindowSize } from "@solid-primitives/resize-observer";
-import { createSignal, Show } from "solid-js";
+import { Show } from "solid-js";
 import { ListSettings, SettingsUI } from "./HeaderSettingsGlobal.tsx";
 import HeaderSettingsDesktop from "./HeaderSettingsDesktop.tsx";
 import HeaderSettingsMobile from "./HeaderSettingsMobile.tsx";
@@ -22,12 +22,6 @@ const HeaderSettings = () => {
   const { settings, setSettings, dark } = useSettings();
 
   css`
-    .actions {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
     .subtitle {
       font-size: 15px;
       font-weight: 600;
@@ -64,8 +58,7 @@ const HeaderSettings = () => {
 
     @media screen and (max-width: 860px) {
       .actions {
-        min-width: 42px;
-        justify-content: center;
+        display: block;
       }
     }
   `;

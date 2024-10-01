@@ -95,6 +95,7 @@ const Morphing: Component<MorphingProps> = (props) => {
     ],
   });
 
+  // NOTE: could be broken, changed in toTaret/Initial callback time
   const { toggle } = useAnimateSwitch({
     animation,
     state,

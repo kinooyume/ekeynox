@@ -9,12 +9,19 @@ export interface AnimateModalProps extends AnimateSwitchProps {
 }
 
 const useAnimateModal = (props: AnimateModalProps) => {
-  const { setFocus } = useFocus();
+  const { focus, setFocus, locked, setLocked } = useFocus();
   const animation = useAnimateSwitch({
     ...props,
+    locked,
+    setLocked,
     on: {
-      toInitial: () => setFocus(FocusType.View),
-      toTarget: () => setFocus(FocusType.Hud),
+      toInitial: () => {
+        setFocus(FocusType.View);
+      },
+      toTarget: () => {
+        setFocus(FocusType.Hud);
+      },
+      transition: () => setLocked(true),
     },
   });
 

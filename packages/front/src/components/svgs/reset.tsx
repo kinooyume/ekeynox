@@ -7,7 +7,6 @@ const Reset = () => {
       transition: ease-in-out 0.2s;
     }
     svg:hover .arrow path {
-      fill: black;
       transition: ease-in-out 0.2s;
     }
     .path {

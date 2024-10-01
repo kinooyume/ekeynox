@@ -6,19 +6,20 @@ import {
 import { FocusType, useFocus } from "~/contexts/FocusProvider.tsx";
 import useClickOutside from "~/hooks/useClickOutside.ts";
 
-export type UserInputProps = {
+export type UserInputRef = {
+  focus: () => void;
+};
+
+type UserInputProps = {
   typingEvent: TypingEventType;
-  // setWordsCount: (n: number) => void;
   onKeyDown: (key: string) => void;
   onKeyUp: (key: string) => void;
   onKeyAdd: (key: string, timestamp: number) => void;
-
-  setFocus: (focus: () => void) => void;
+  ref?: (ref: UserInputRef) => void;
 };
 
 const UserInput = (props: UserInputProps) => {
   let input: HTMLInputElement;
-  // const [wordsCount, setWordsCount] = createSignal(0);
 
   // PendingStatus change
   createComputed(
@@ -43,7 +44,7 @@ const UserInput = (props: UserInputProps) => {
   /* Key Handlers */
 
   const handleInputEvent = (event: Event) => {
-    // TODO: composing for accents, could be great to have some visual feedback
+    // NOTE: composing for accents, could be great to have some visual feedback
     if (event instanceof InputEvent) {
       if (event.isComposing) {
         return;
@@ -82,9 +83,15 @@ const UserInput = (props: UserInputProps) => {
         }
       },
     );
-    // props.setPromptKey(cursor.get.key().key);
 
-    props.setFocus(() => input.focus());
+    input.addEventListener("focus", () => {
+      console.log("Focus from input !")
+    })
+    input.addEventListener("blur", () => {
+      console.log("blur from input !")
+    })
+    props.ref?.(input);
+    // unfocus input
     input.focus();
   });
 
