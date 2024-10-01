@@ -114,7 +114,7 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
       position: sticky;
       background-color: var(--color-surface-100);
       top: 0;
-      z-index: 900;
+      z-index: 41;
     }
 
     .resume-menu {
@@ -123,7 +123,7 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
       align-items: center;
       padding: 16px 48px;
       height: 140px;
-      z-index: 900;
+      z-index: 41;
       background-color: var(--color-surface-alt);
       border-radius: 0 0 36px 36px;
       border-bottom: 4px solid var(--color-surface-200);
@@ -272,7 +272,7 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
         padding: 0;
       }
     }
-    @media screen and (max-width: 740px) {
+    @media screen and (max-width: 760px) {
       .metrics {
         margin-bottom: 64px;
       }

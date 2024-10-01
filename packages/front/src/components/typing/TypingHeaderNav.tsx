@@ -26,12 +26,17 @@ const TypingHeaderNav = (props: TypingHeaderNavProps) => {
       padding-bottom: 3px;
     }
     .left {
-      z-index: 920;
+      z-index: 9;
     }
     @media screen and (max-width: 860px) {
       .header-nav {
         height: 24px;
         justify-content: center;
+      }
+      .right {
+        width: 100%;
+        max-width: 300px;
+        padding: 0 20px;
       }
     }
   `;

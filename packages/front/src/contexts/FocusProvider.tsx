@@ -14,6 +14,8 @@ export enum FocusType {
 type FocusProps = {
   focus: Accessor<FocusType>;
   setFocus: (focus: FocusType) => void;
+  locked: Accessor<boolean>;
+  setLocked: (locked: boolean) => void;
 };
 
 const focusContext = createContext<FocusProps>({} as FocusProps);
@@ -30,12 +32,18 @@ export function FocusProvider(props: {
   children: JSX.Element | JSX.Element[];
 }) {
   const [focus, setFocus] = createSignal<FocusType>(FocusType.View);
+  const [locked, setLocked] = createSignal<boolean>(false);
 
   return (
     <focusContext.Provider
       value={{
         focus,
         setFocus,
+        locked,
+        setLocked: (a) => {
+          // console.log("setLocked", a);
+          setLocked(a);
+        },
       }}
     >
       {props.children}

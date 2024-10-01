@@ -100,7 +100,7 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
       color: var(--background-color);
       color: var(--text-secondary-color);
       transition: all 0.2s ease-in-out;
-      z-index: 206;
+      z-index: 41;
     }
 
     @media screen and (max-width: 1100px) {

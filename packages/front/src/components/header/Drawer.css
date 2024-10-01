@@ -6,17 +6,11 @@
   animation-duration: 100ms;
 }
 
-[data-corvu-drawer-trigger]:hover {
-}
-
-[data-corvu-drawer-trigger]:active {
-}
-
 [data-corvu-drawer-overlay] {
   position: fixed;
   top: 0;
   inset: 0px;
-  z-index: 40;
+  z-index: 49;
 }
 
 [data-corvu-drawer-overlay][data-transitioning] {

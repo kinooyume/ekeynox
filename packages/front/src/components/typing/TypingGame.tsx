@@ -3,7 +3,7 @@ import { Show, createComputed, createSignal, on } from "solid-js";
 
 import { type Paragraphs } from "../content/Content.ts";
 
-import UserInput from "../seqInput/UserInput";
+import UserInput, { UserInputRef } from "../seqInput/UserInput";
 import Prompt from "../prompt/Prompt.tsx";
 import Keyboard, { type KeyboardHandler } from "../keyboard/TypingKeyboard.tsx";
 
@@ -39,7 +39,7 @@ type TypingGameProps = {
 // TODO: better handle no keyboard on keyDown/UP
 
 const TypingGame = (props: TypingGameProps) => {
-  let focus: () => void;
+  const [inputRef, setInputRef] = createSignal<HTMLInputElement>();
   let keyboard: KeyboardHandler;
 
   let onKeyDown = (key: string) => {
@@ -73,11 +73,20 @@ const TypingGame = (props: TypingGameProps) => {
   const { focus: globalFocus } = useFocus();
 
   createComputed(
-    on(globalFocus, (gFocus) => {
-      if (gFocus === FocusType.Hud) {
-        props.onPause();
-      }
-    }),
+    on(
+      globalFocus,
+      (gFocus) => {
+        if (gFocus === FocusType.Hud) {
+          // console.log("unfocus")
+          inputRef()!.blur();
+          props.onPause();
+        } else {
+          // console.log("focus")
+          inputRef()?.focus();
+        }
+      },
+      { defer: true },
+    ),
   );
   return (
     <div class="typing-game">
@@ -86,7 +95,7 @@ const TypingGame = (props: TypingGameProps) => {
         onKeyDown={props.showKb ? onKeyDown : props.onKeyDown}
         onKeyUp={props.showKb ? onKeyUp : props.onKeyUp}
         onKeyAdd={props.onAddKey}
-        setFocus={(f) => (focus = f)}
+        ref={setInputRef}
       />
       <Prompt paragraphs={props.paragraphs} />
       <Show when={props.showKb}>

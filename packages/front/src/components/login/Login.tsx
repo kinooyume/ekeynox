@@ -61,7 +61,7 @@ const Login: Component<{}> = () => {
       <Portal mount={document.getElementById("modal-toaster")!}>
         <Toaster
           gutter={8}
-          position="top-center"
+          position="top-right"
           toastOptions={{
             duration: 7000,
           }}

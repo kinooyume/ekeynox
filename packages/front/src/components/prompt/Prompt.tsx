@@ -41,7 +41,12 @@ const prompt = (props: PromptProps) => {
 
     @media screen and (max-width: 860px) {
       .prompt {
+        height: 160px;
         margin: 0 16px auto 16px;
+        margin-left: 32px;
+      }
+      .paragraph {
+        font-size: 1.2em;
       }
     }
   `;

@@ -15,6 +15,9 @@ import TinyRadioLabel from "../ui/TinyRadioLabel";
 import Moon from "../svgs/moon";
 import Sun from "../svgs/sun";
 import Cross from "../svgs/cross";
+import { FocusType, useFocus } from "~/contexts/FocusProvider";
+import { useAppState } from "~/contexts/AppStateProvider";
+import { AppStateKind } from "~/appState/appState";
 
 const ListSettingsMobile: Component<ListSettings> = (props) => {
   css`
@@ -150,9 +153,27 @@ const HeaderSettingsContent: Component<SettingsUI> = (props) => {
   );
 };
 
+// Interessant ce fonctionnement !
 const HeaderSettingsMobile: Component<SettingsUI> = (props) => {
+  const { setFocus } = useFocus();
+  const { state } = useAppState();
   return (
-    <Drawer side="right">
+    <Drawer
+      side="right"
+      onFinalFocus={(e) => {
+        // NOTE:  should let the game handle the focus
+        if (state().kind === AppStateKind.pending) {
+          e.preventDefault();
+        }
+      }}
+      onOpenChange={(open) => {
+        if (open) {
+          setFocus(FocusType.Hud);
+        } else {
+          setFocus(FocusType.View);
+        }
+      }}
+    >
       <Drawer.Trigger class="reset">
         <Kebab />
       </Drawer.Trigger>

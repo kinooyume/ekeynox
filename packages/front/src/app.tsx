@@ -5,8 +5,6 @@ import { FileRoutes } from "@solidjs/start/router";
 import {
   ParentProps,
   Suspense,
-  createEffect,
-  createSignal,
 } from "solid-js";
 import { Transition } from "solid-transition-group";
 
@@ -23,21 +21,11 @@ import { AppStateProvider } from "./contexts/AppStateProvider";
 import { GameOptionsProvider } from "./contexts/GameOptionsProvider";
 import { SettingsProvider } from "./contexts/SettingsProvider";
 import { FocusProvider } from "./contexts/FocusProvider";
-import { useWindowSize } from "@solid-primitives/resize-observer";
 
 export default function App() {
   const sheets: StyleData[] = [];
   useAssets(() => renderSheets(sheets));
 
-  const [showWarning, setShowWarning] = createSignal(false);
-  createEffect(() => {
-    if (size.width < 1050) {
-      setShowWarning(true);
-    } else {
-      setShowWarning(false);
-    }
-  });
-  const size = useWindowSize();
   css`
     main {
       margin-top: 96px;
@@ -144,9 +132,6 @@ export default function App() {
                       crossorigin="anonymous"
                     />
                     <main>
-                      {/* <Show when={showWarning()}> */}
-                      {/*   <MobileWarning /> */}
-                      {/* </Show> */}
                       <Suspense fallback={<div>Loading..</div>}>
                         <PageTransition {...props} />
                       </Suspense>

@@ -15,6 +15,8 @@ export interface AnimateSwitchProps {
   animation: AnimationComp;
   state: Accessor<AnimateState>;
   setState: (value: AnimateState) => void;
+  locked: () => boolean;
+  setLocked: (value: boolean) => void;
   on?: AnimationSwitchCallbacks;
 }
 
@@ -28,14 +30,19 @@ function useAnimateSwitch(props: AnimateSwitchProps) {
     getAnimation: () => MinimalAnimationInstance,
     after: () => void,
   ) => {
+    props.setLocked(true);
     props.setState(AnimateState.transition);
     const animation = getAnimation();
     animation.play();
-    animation.finished.then(after);
+    animation.finished.then(() => {
+      props.setLocked(false);
+      after();
+    });
   };
 
   const toTarget = () => {
-    if (props.state() !== AnimateState.initial) return;
+    if (props.locked() || props.state() !== AnimateState.initial) return;
+    props.on?.toTarget?.();
     animationHandler(props.animation.enter, () => {
       props.setState(AnimateState.target);
     });
@@ -45,25 +52,28 @@ function useAnimateSwitch(props: AnimateSwitchProps) {
     if (props.state() !== AnimateState.target) return;
     return animationHandler(props.animation.leave, () => {
       props.setState(AnimateState.initial);
+      props.on?.toInitial?.();
     });
   };
 
   if (props.on) {
     createEffect(
-        on(props.state, (state, prevState) => {
-          switch (state) {
-            case AnimateState.transition:
-              props.on?.transition?.(prevState!);
-              break;
-            case AnimateState.target:
-              props.on?.toTarget?.();
-              break;
-            case AnimateState.initial:
-              props.on?.toInitial?.();
-              break;
-          }
-          return state;
-        }),
+      on(props.state, (state, prevState) => {
+        switch (state) {
+          case AnimateState.transition:
+            props.on?.transition?.(prevState!);
+            break;
+          // NOTE: was used for morphing
+          //
+          // case AnimateState.target:
+          //   props.on?.toTarget?.();
+          //   break;
+          // case AnimateState.initial:
+          //   props.on?.toInitial?.();
+          //   break;
+        }
+        return state;
+      }),
       props.state(),
     );
   }
