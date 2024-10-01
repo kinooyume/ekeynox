@@ -84,12 +84,12 @@ const UserInput = (props: UserInputProps) => {
       },
     );
 
-    input.addEventListener("focus", () => {
-      console.log("Focus from input !")
-    })
-    input.addEventListener("blur", () => {
-      console.log("blur from input !")
-    })
+    // input.addEventListener("focus", () => {
+    //   console.log("Focus from input !")
+    // })
+    // input.addEventListener("blur", () => {
+    //   console.log("blur from input !")
+    // })
     props.ref?.(input);
     // unfocus input
     input.focus();
