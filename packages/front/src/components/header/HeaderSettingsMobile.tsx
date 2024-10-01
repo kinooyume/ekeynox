@@ -164,6 +164,7 @@ const HeaderSettingsMobile: Component<SettingsUI> = (props) => {
     setFocus(FocusType.View);
   });
 
+  // TODO: focus first input 
   return (
     <Drawer
       side="right"
