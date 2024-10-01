@@ -2,6 +2,7 @@ import { Component, Show, type JSXElement } from "solid-js";
 import { css } from "solid-styled";
 
 type Props = {
+  clickable: boolean;
   action?: () => void;
   children: JSXElement;
 };
@@ -40,7 +41,7 @@ const HeaderTypingAction: Component<Props> = (props) => {
   `;
   return (
     <Show
-      when={props.action}
+      when={props.clickable}
       fallback={<div class="nav-action animate">{props.children}</div>}
     >
       <button class="nav-action animate" onClick={props.action}>
