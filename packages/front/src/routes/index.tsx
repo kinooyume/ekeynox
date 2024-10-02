@@ -1,3 +1,4 @@
+import { usePreloadRoute } from "@solidjs/router";
 import { onMount } from "solid-js";
 import { Portal } from "solid-js/web";
 import About from "~/components/about/About";
@@ -21,11 +22,6 @@ export default function Menu() {
 
     navigation.start(pendingMode, persistedGameOptions);
   };
-
-  onMount(() => {
-    navigation.menu();
-
-  })
 
   return (
     <div>
