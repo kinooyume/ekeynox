@@ -1,4 +1,11 @@
-import { Match, Switch, createComputed, createSignal, on } from "solid-js";
+import {
+  Match,
+  Switch,
+  createComputed,
+  createSignal,
+  on,
+  onMount,
+} from "solid-js";
 import { createStore } from "solid-js/store";
 import { css } from "solid-styled";
 
@@ -16,7 +23,7 @@ import CustomInput, { type CustomInputRef } from "../ui/CustomInput";
 import GameModeSelection from "./GameModeSelection";
 import SpeedParams from "./SpeedParams";
 import TimerParams from "./TimerParams";
-import { useBeforeLeave } from "@solidjs/router";
+import { useBeforeLeave, usePreloadRoute } from "@solidjs/router";
 
 // Le gars a fait pleins de menu de selection stylax
 // https://in.pinterest.com/pin/12525705207244555/
@@ -371,19 +378,27 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
         margin-right: unset;
       }
     }
+
+    @media screen and (max-width: 370px) {
+      .title h1 {
+        font-size: 1.4rem;
+      }
+    }
   `;
 
-  // onMount(() => {
-  //   anime.timeline().add({
-  //     targets: ".menu .title-content *",
-  //     translateY: [-80, 0],
-  //     opacity: [0, 1],
-  //     easing: "easeOutElastic(1, 0.9)",
-  //     duration: 800,
-  //     delay: (el, i) => 100 * i,
-  //   });
-  //
-  // })
+  onMount(() => {
+    const preload = usePreloadRoute();
+    preload(new URL(`${import.meta.env.VITE_BASE_URL}/typing`), { preloadData: true });
+    //   anime.timeline().add({
+    //     targets: ".menu .title-content *",
+    //     translateY: [-80, 0],
+    //     opacity: [0, 1],
+    //     easing: "easeOutElastic(1, 0.9)",
+    //     duration: 800,
+    //     delay: (el, i) => 100 * i,
+    //   });
+    //
+  });
 
   return (
     <div class="menu">
