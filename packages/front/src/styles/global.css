@@ -3,6 +3,7 @@
 }
 :root {
   font-family: Larsseit, system-ui, sans-serif;
+  --logo-color: #343450;
   --background-color: #e0e0e0;
   --stat-background-color: white;
   --text-color: rgb(0, 31, 63);
@@ -89,6 +90,8 @@
   --key-focus-color-alt: #a4e6fa;
 }
 html[data-theme="dark"] {
+
+  --logo-color: rgb(246, 245, 250, 0.9);
   --color-primary-100: #e7af5c;
   --color-primary-200: #ebb86e;
   --color-primary-300: #efc080;
