@@ -10,16 +10,16 @@
   },
   "dependencies": {
     "@corvu/drawer": "^0.2.2",
-    "@modular-forms/solid": "^0.22.1",
+    "@modular-forms/solid": "^0.23.0",
     "@solid-primitives/deep": "^0.2.9",
     "@solid-primitives/i18n": "^2.1.1",
     "@solid-primitives/map": "^0.4.13",
     "@solid-primitives/refs": "^1.0.8",
     "@solid-primitives/resize-observer": "^2.0.26",
-    "@solid-primitives/storage": "^3.8.0",
+    "@solid-primitives/storage": "^4.2.1",
     "@solid-primitives/transition-group": "^1.0.5",
     "@solidjs/meta": "^0.29.4",
-    "@solidjs/router": "^0.13.6",
+    "@solidjs/router": "^0.14.7",
     "@solidjs/start": "^1.0.8",
     "@types/animejs": "^3.1.12",
     "@types/chart.js": "^2.9.41",
@@ -37,7 +37,7 @@
     "solid-toast": "^0.5.0",
     "solid-transition-group": "^0.2.3",
     "typescript": "^5.6.2",
-    "vinxi": "^0.3.14",
+    "vinxi": "^0.4.3",
     "vite-plugin-solid-styled": "^0.11.1",
     "zod": "^3.23.8"
   },
@@ -46,7 +46,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.11.1",
-    "@types/chai": "^4.3.20",
+    "@types/chai": "^5.0.0",
     "@types/mocha": "^10.0.8",
     "@types/sinon": "^17.0.3",
     "chai": "^5.1.1",
@@ -54,7 +54,7 @@
     "eslint-plugin-solid": "^0.14.3",
     "globals": "^15.10.0",
     "mocha": "^10.7.3",
-    "sinon": "^18.0.1",
-    "typescript-eslint": "^7.18.0"
+    "sinon": "^19.0.2",
+    "typescript-eslint": "^8.8.0"
   }
 }
