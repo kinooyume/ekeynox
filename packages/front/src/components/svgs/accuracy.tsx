@@ -32,7 +32,7 @@ const Accuracy = (props: AccuracyProps) => (
     <path
       d="M8.75 11.581l1.836 1.865c.014.014.033.022.052.022s.038-.008.052-.023l3.629-3.854"
       fill="none"
-      stroke="var(--color-surface-200)"
+      stroke="var(--color-background-metric-preview)"
       stroke-linecap="round"
       stroke-width="2.247"
     />
