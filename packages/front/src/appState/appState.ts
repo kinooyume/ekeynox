@@ -1,8 +1,9 @@
 import { GameModeKind } from "~/gameOptions/gameModeKind";
-import { type GetContent } from "../components/content/TypingGameSource";
-import type { Metrics, MetricsResume } from "../components/metrics/Metrics";
 import { GameOptions } from "~/gameOptions/gameOptions";
+import { GetContent } from "~/typingContent/TypingGameSource";
+import { Metrics, MetricsResume } from "~/typingMetrics/Metrics";
 
+// NOTE: Ca doit pas etre ici; je pense pas
 export type PendingMode =
   | {
       kind: GameModeKind.speed;

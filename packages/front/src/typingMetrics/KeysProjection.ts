@@ -1,4 +1,5 @@
-import { TypingEventKind, type TypingEventType } from "../typing/TypingEvent";
+import { TypingEventKind, type TypingEventType } from "../components/typing/TypingEvent";
+
 import {
   createTypingProjection,
   updateTypingProjection,

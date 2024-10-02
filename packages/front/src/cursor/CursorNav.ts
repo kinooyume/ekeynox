@@ -1,7 +1,7 @@
-import type { MetaWord } from "../content/Content";
-import type { TypingWord } from "../typing/TypingEvent";
+import { TypingWord } from "~/components/typing/TypingEvent";
 import type { Cursor } from "./Cursor";
 import type { CursorNavHooks } from "./CursorNavHooks";
+import { MetaWord } from "~/typingContent/Content";
 
 export type ExtraWordHooks = {
   enter: (word: MetaWord) => void;

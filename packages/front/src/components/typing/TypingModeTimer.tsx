@@ -1,12 +1,16 @@
 import { type JSX, createEffect, createSignal, onCleanup } from "solid-js";
-import TimerOver from "../timer/TimerStopwatch.ts";
-import Timer, { type TimerEffectStatus } from "../timer/Timer.ts";
+import { css } from "solid-styled";
+
+import TimerOver from "~/timer/TimerStopwatch.ts";
+import Timer, { type TimerEffectStatus } from "~/timer/Timer.ts";
+
+import type { StatProjection } from "~/typingMetrics/KeypressMetrics.ts";
+
 import { type TypingEventType } from "./TypingEvent.ts";
-import type { StatProjection } from "../metrics/KeypressMetrics.ts";
 import TypingInfo from "./TypingInfo.tsx";
+
 import MetricPreview from "../ui/MetricPreview.tsx";
 import Stopwatch from "../svgs/stopwatch.tsx";
-import { css } from "solid-styled";
 
 type TypingModeTimerProps = {
   typingEvent: TypingEventType;

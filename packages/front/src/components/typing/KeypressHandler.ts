@@ -1,12 +1,12 @@
-import type { Cursor } from "../cursor/Cursor";
-import type { CursorNavType } from "../cursor/CursorNav";
+import type { Cursor } from "~/cursor/Cursor";
+import type { CursorNavType } from "~/cursor/CursorNav";
 import {
   KeyEventKind,
   KeyFocus,
   getKeyDownMetrics,
   getKeyMetrics,
   makeDeletedKeyMetrics,
-} from "../metrics/KeyMetrics";
+} from "~/typingMetrics/KeyMetrics";
 import { WordStatus } from "../prompt/PromptWord";
 import TypingEvent, {
   TypingWordKind,

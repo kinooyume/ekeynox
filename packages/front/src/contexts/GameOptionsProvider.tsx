@@ -4,16 +4,19 @@ import {
   onMount,
   useContext,
 } from "solid-js";
-import {
-  GameOptions,
-  getDefaultGameOptions,
-} from "../gameOptions/gameOptions";
+
 import { makePersisted } from "@solid-primitives/storage";
 import { createStore } from "solid-js/store";
 import { isServer } from "solid-js/web";
+
+import {
+  GameOptions,
+  getDefaultGameOptions,
+} from "~/gameOptions/gameOptions";
+
 import SourcesGen, {
   SourcesGenFetch,
-} from "~/components/content/SourcesGenCache";
+} from "~/typingContent/SourcesGenCache";
 
 type GameOptionsProviderProps = {
   children: JSX.Element | JSX.Element[];

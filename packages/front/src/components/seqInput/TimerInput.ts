@@ -1,10 +1,10 @@
-import { type Cursor } from "../cursor/Cursor";
-import type { TimerEffectStatus } from "../timer/Timer";
-import TimerKeypress, { type SetCleanup } from "../timer/TimerKeypress";
-import CursorNav from "../cursor/CursorNav";
-import TimerNavHooks from "../cursor/TimerNavHooks";
-import Timer from "../timer/Timer";
-import type { TimedKey } from "../metrics/Metrics";
+import { type Cursor } from "~/cursor/Cursor";
+import type { TimerEffectStatus } from "~/timer/Timer";
+import TimerKeypress, { type SetCleanup } from "~/timer/TimerKeypress";
+import CursorNav from "~/cursor/CursorNav";
+import TimerNavHooks from "~/cursor/TimerNavHooks";
+import Timer from "~/timer/Timer";
+import type { TimedKey } from "~/typingMetrics/Metrics";
 
 type TimerInputProps = {
   cursor: Cursor;

@@ -1,4 +1,4 @@
-import { TypingEventKind, type TypingEventType } from "../typing/TypingEvent";
+import { TypingEventKind, type TypingEventType } from "~/components/typing/TypingEvent";
 
 export type TimerPause = { resume: () => TimerPending };
 export type TimerPending = { pause: () => TimerPause };

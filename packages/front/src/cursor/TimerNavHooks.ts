@@ -1,4 +1,4 @@
-import { KeyFocus } from "../metrics/KeyMetrics";
+import { KeyFocus } from "~/typingMetrics/KeyMetrics";
 import type { CursorNavHooks } from "./CursorNavHooks";
 
 const TimerNavHooks: CursorNavHooks = {

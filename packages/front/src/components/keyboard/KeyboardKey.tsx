@@ -1,11 +1,12 @@
 import { Show } from "solid-js";
 import { css } from "solid-styled";
+
 import {
   createTypingProjection,
   diffKeyStatusProjections,
   mergeTypingProjections,
   type TypingProjection,
-} from "../metrics/TypingProjection";
+} from "~/typingMetrics/TypingProjection";
 
 type transform = Array<[string, string]>;
 

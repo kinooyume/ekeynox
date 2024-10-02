@@ -1,7 +1,7 @@
 import { css } from "solid-styled";
-import { createSignal, createEffect, on, createComputed } from "solid-js";
-import { KeyFocus, KeyStatus } from "../metrics/KeyMetrics";
-import { type MetaKey } from "../content/Content.ts";
+import { createSignal, createComputed } from "solid-js";
+import { KeyFocus, KeyStatus } from "~/typingMetrics/KeyMetrics";
+import { type MetaKey } from "~/typingContent/Content.ts";
 
 const transformDict = [
   ["Enter", "↵"],

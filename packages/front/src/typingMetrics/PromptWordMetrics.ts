@@ -1,12 +1,12 @@
-import { type MetaWord, type MetaKey } from "../content/Content.ts";
+import { type MetaWord } from "~/typingContent/Content.ts";
+import { WordStatus } from "../components/prompt/PromptWord";
+
 import {
   promptKeypressHandler,
   type PendingPromptKeypressMetrics,
   type PausedPromptKeypressMetrics,
   PromptWpmKind,
-  type PromptWpm,
 } from "./PromptKeypressMetrics.ts";
-import { WordStatus } from "../prompt/PromptWord";
 
 // TODO: Redo all of it
 // TODO: make a proper pause management

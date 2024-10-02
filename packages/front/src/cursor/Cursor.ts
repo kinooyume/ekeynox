@@ -1,9 +1,12 @@
 import { createSignal } from "solid-js";
-import type { MetaWord, Paragraph, Paragraphs } from "../content/Content";
-import { KeyFocus, KeyStatus } from "../metrics/KeyMetrics";
+import type { MetaWord, Paragraph, Paragraphs } from "~/typingContent/Content";
+import { KeyFocus, KeyStatus } from "~/typingMetrics/KeyMetrics";
 import type { SetStoreFunction } from "solid-js/store";
-import type { WordStatus } from "../prompt/PromptWord";
-import { TypingWordKind, type TypingWord } from "../typing/TypingEvent";
+import type { WordStatus } from "~/components/prompt/PromptWord";
+import {
+  TypingWordKind,
+  type TypingWord,
+} from "~/components/typing/TypingEvent";
 
 type CursorProps = {
   paragraphs: Paragraphs;

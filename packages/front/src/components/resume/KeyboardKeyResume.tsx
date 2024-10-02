@@ -1,12 +1,14 @@
 import { Show } from "solid-js";
+
 import { css } from "solid-styled";
 import "balloon-css";
+
 import {
   createTypingProjection,
   diffKeyStatusProjections,
   mergeTypingProjections,
   type TypingProjection,
-} from "../metrics/TypingProjection";
+} from "~/typingMetrics/TypingProjection";
 
 type transform = Array<[string, string]>;
 

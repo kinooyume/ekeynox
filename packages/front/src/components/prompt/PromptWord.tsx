@@ -1,8 +1,8 @@
 import { css } from "solid-styled";
-import { For, Show, createEffect, createSignal, on, onMount } from "solid-js";
+import { For, Show, createEffect, createSignal, on } from "solid-js";
 
 import Key from "./PromptKey.tsx";
-import type { MetaWord } from "../content/Content.ts";
+import type { MetaWord } from "~/typingContent/Content.ts";
 
 export enum WordStatus {
   unstart = "unstart",

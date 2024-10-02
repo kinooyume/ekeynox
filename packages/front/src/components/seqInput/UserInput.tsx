@@ -1,17 +1,19 @@
 import {
   createComputed,
-  createEffect,
-  createSignal,
   on,
   onCleanup,
   onMount,
 } from "solid-js";
+
+import { FocusType, useFocus } from "~/contexts/FocusProvider.tsx";
+
+import useClickOutside from "~/hooks/useClickOutside.ts";
+
 import {
   TypingEventKind,
   type TypingEventType,
 } from "../typing/TypingEvent.ts";
-import { FocusType, useFocus } from "~/contexts/FocusProvider.tsx";
-import useClickOutside from "~/hooks/useClickOutside.ts";
+
 
 export type UserInputRef = {
   focus: () => void;

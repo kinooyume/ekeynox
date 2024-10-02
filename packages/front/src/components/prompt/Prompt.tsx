@@ -11,7 +11,7 @@ import Word from "./PromptWord.tsx";
 import { css } from "solid-styled";
 import anime from "animejs";
 
-import { type Paragraphs } from "../content/Content.ts";
+import { type Paragraphs } from "~/typingContent/Content";
 
 export type PromptProps = {
   paragraphs: Paragraphs;

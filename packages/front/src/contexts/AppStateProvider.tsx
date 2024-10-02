@@ -6,24 +6,19 @@ import {
   useContext,
 } from "solid-js";
 
-import type { Metrics, MetricsResume } from "../components/metrics/Metrics";
+import type { Metrics, MetricsResume } from "~/typingMetrics/Metrics";
+import { type GameOptions, deepCopy } from "~/gameOptions/gameOptions";
+
 import {
-  AppState,
   AppStateKind,
   PendingKind,
-  PendingMode,
-  PendingStatusNew,
-  PendingStatusRedo,
+  type AppState,
+  type PendingMode,
+  type PendingStatusNew,
 } from "../appState/appState";
-import { GameOptions, deepCopy } from "~/gameOptions/gameOptions";
 
-type AppStateProviderProps = {
-  children: JSX.Element | JSX.Element[];
-};
 
-type AppContext = {
-  state: Accessor<AppState>;
-  mutation: {
+type AppMutation = {
     start: (mode: Promise<PendingMode>, options: GameOptions) => void;
     redo: (
       mode: PendingMode,
@@ -34,7 +29,12 @@ type AppContext = {
     menu: () => void;
     login: () => void;
   };
-};
+
+
+type AppContext = {
+  state: Accessor<AppState>;
+  mutation: AppMutation;
+}
 
 const AppStateContext = createContext<AppContext>();
 
@@ -46,13 +46,17 @@ export function useAppState() {
   return appState;
 }
 
-export function AppStateProvider(props: AppStateProviderProps) {
+type Props = {
+  children: JSX.Element | JSX.Element[];
+};
+
+export function AppStateProvider(props: Props) {
   const appState: AppState = { kind: AppStateKind.loading };
 
   const [state, setState] = createSignal<AppState>(appState);
 
-  const mutation = {
-    start: (mode: Promise<PendingMode>, options: GameOptions) => {
+  const mutation : AppMutation = {
+    start: (mode, options) => {
       setState({
         kind: AppStateKind.pending,
         options: options,
@@ -61,7 +65,7 @@ export function AppStateProvider(props: AppStateProviderProps) {
         ),
       });
     },
-    redo: (mode: PendingMode, metrics: MetricsResume, options: GameOptions) => {
+    redo: (mode, metrics, options) => {
       setState({
         kind: AppStateKind.pending,
         options: deepCopy(options),
@@ -69,10 +73,10 @@ export function AppStateProvider(props: AppStateProviderProps) {
           kind: PendingKind.redo,
           mode,
           prev: metrics,
-        } as PendingStatusRedo),
+        }),
       });
     },
-    over: (metrics: Metrics, content: PendingMode) => {
+    over: (metrics, content: PendingMode) => {
       setState({ kind: AppStateKind.resume, metrics, content });
     },
     menu: () => {

@@ -1,18 +1,24 @@
 import { Show } from "solid-js";
 import { css } from "solid-styled";
-import Content from "../content/Content";
-import { makeRedoContent } from "../content/TypingGameSource";
-import type { Metrics, MetricsResume } from "../metrics/Metrics";
-import GameModeDropdown from "../gameMode/GameModeDropdown";
-import {
-  ContentGeneration,
-  GameOptions,
-  deepCopy,
-} from "~/gameOptions/gameOptions";
+
+import { useWindowSize } from "@solid-primitives/resize-observer";
+
 import { PendingMode } from "~/appState/appState";
 import { useI18n } from "~/contexts/i18nProvider";
+
+import type { Metrics, MetricsResume } from "~/typingMetrics/Metrics";
+
+import { makeRedoContent } from "~/typingContent/TypingGameSource";
+import Content from "~/typingContent/Content";
+
+import {
+  type ContentGeneration,
+  type GameOptions,
+  deepCopy,
+} from "~/gameOptions/gameOptions";
+
+import GameModeDropdown from "../gameMode/GameModeDropdown";
 import Ghost from "../svgs/ghost";
-import { useWindowSize } from "@solid-primitives/resize-observer";
 
 type ActionsResumeProps = {
   gameOptions: GameOptions;

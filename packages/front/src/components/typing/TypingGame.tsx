@@ -1,13 +1,13 @@
 import { css } from "solid-styled";
 import { Show, createComputed, createSignal, on } from "solid-js";
 
-import { type Paragraphs } from "../content/Content.ts";
+import { type Paragraphs } from "~/typingContent/Content.ts";
 
 import UserInput, { UserInputRef } from "../seqInput/UserInput";
 import Prompt from "../prompt/Prompt.tsx";
 import Keyboard, { type KeyboardHandler } from "../keyboard/TypingKeyboard.tsx";
 
-import { type KeysProjection } from "../metrics/KeysProjection.ts";
+import { type KeysProjection } from "~/typingMetrics/KeysProjection.ts";
 import { type TypingEventType } from "./TypingEvent.ts";
 import type { JSX } from "solid-js";
 import { Translator } from "~/contexts/i18nProvider.tsx";

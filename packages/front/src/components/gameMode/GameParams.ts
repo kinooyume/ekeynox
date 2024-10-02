@@ -1,9 +1,9 @@
-import type { SetStoreFunction } from "solid-js/store";
 import type { JSXElement } from "solid-js";
-import { GameOptions } from "~/gameOptions/gameOptions";
+import type { SetStoreFunction } from "solid-js/store";
+import type { GameOptions } from "~/gameOptions/gameOptions";
 
 export type GameParams = {
-  gameOptions: GameOptions; 
+  gameOptions: GameOptions;
   setGameOptions: SetStoreFunction<GameOptions>;
   children: JSXElement;
 };
