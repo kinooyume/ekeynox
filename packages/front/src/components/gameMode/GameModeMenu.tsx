@@ -343,6 +343,8 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
         width: 100%;
         justify-content: space-between;
         top: -64px;
+        height: 64px;
+        margin-bottom: 0;
       }
       .cliped,
       .hud {
@@ -371,7 +373,7 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
         background-color: var(--color-surface-100);
       }
       .game-description {
-        margin-left: 32px;
+        margin: 0 32px;
         padding-bottom: 32px;
       }
       a.primary {
@@ -388,7 +390,9 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
 
   onMount(() => {
     const preload = usePreloadRoute();
-    preload(new URL(`${import.meta.env.VITE_BASE_URL}/typing`), { preloadData: true });
+    preload(new URL(`${import.meta.env.VITE_BASE_URL}/typing`), {
+      preloadData: true,
+    });
     //   anime.timeline().add({
     //     targets: ".menu .title-content *",
     //     translateY: [-80, 0],
