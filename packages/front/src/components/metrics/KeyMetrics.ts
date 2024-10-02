@@ -83,17 +83,23 @@ const getAddedKeyMetrics = ({ typed, expected }: KeyMetricsProps): KeyTuple => {
 const getKeyDownMetrics = (typed: string) => {
   switch (typed) {
     case "Backspace":
+      // NOTE: Not sure it's only backspace
+      // case "Process": // Firefox Mobile
       return KeyEventKind.back;
-    case "Enter" || "Tab":
+    case "Enter":
+    case "Tab":
       return KeyEventKind.added;
   }
   return KeyEventKind.ignore;
 };
 
 const getKeyMetrics = ({ typed, expected }: KeyMetricsProps): KeyTuple => {
+  // typed.length === 0, userAgent
+  // NOTE: doesn't weems useful
   if (typed === "Backspace") {
     return [typed, { kind: KeyEventKind.back }];
   } else if (typed.length === 1 || typed === "Enter") {
+    // NOTE: check if really enter needed here ?
     return getAddedKeyMetrics({ typed, expected });
   }
   return [typed, { kind: KeyEventKind.ignore }];

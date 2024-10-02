@@ -22,7 +22,7 @@ import CursorNav from "../cursor/CursorNav";
 import { WordStatus } from "../prompt/PromptWord";
 import { Portal } from "solid-js/web";
 import { KeyFocus } from "../metrics/KeyMetrics";
-import TypingKeypress from "./TypingKeypress";
+import makeKeypressHandler from "./KeypressHandler";
 import KeypressMetrics from "../metrics/KeypressMetrics";
 import {
   createTypingMetrics,
@@ -152,8 +152,9 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
   );
 
   // pour le counter, on veut just enter/leave
+  // NOTE: Peut etre des soucis ici, avec le truc de backspace et tout ça
   const [keypressHandler, setKeypressHandler] = createSignal(
-    TypingKeypress(cursor(), cursorNav()),
+    makeKeypressHandler(cursor(), cursorNav()),
   );
 
   createComputed(
@@ -173,7 +174,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
         }),
       );
 
-      setKeypressHandler(TypingKeypress(untrack(cursor), untrack(cursorNav)));
+      setKeypressHandler(makeKeypressHandler(untrack(cursor), untrack(cursorNav)));
     },
     { defer: true },
   );

@@ -49,6 +49,9 @@ const makeKeypressHandler = (
   /* *** */
 
   const addKey = (typed: string, timestamp: number) => {
+    // Donc, on veut faire ça
+    // User Agent for firefox mobile and chrome mobile
+    // if (typed.length === 0) return backKey(timestamp);
     const keyMetrics = getKeyMetrics({
       typed,
       expected: cursor.get.key().key,
@@ -83,6 +86,7 @@ const makeKeypressHandler = (
     }
   };
 
+  // NOTE: fallback to handle backspace
   const keyDown = (key: string) => {
     switch (getKeyDownMetrics(key)) {
       case KeyEventKind.added:
