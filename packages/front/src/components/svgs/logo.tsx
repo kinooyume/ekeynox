@@ -1,7 +1,7 @@
 import { css } from "solid-styled";
 
 type LogoProps = {
-width?: string;
+  width?: string;
 };
 const Logo = (props: LogoProps) => {
   // <style><![CDATA[.B{fill:none}.C{stroke-width:.16}.D{stroke-linejoin:round}.E{stroke-dashoffset:513.601}.F{stroke:#df9b6a}.G{fill:#df9b6a}.H{stroke:#a4c3b4}.I{fill:#a4c3b4}]]></style>

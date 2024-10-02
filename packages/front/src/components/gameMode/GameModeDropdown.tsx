@@ -115,6 +115,8 @@ const GameModeDropdown = (props: GameModeDropdownProps) => {
     }
     .content {
       display: flex;
+
+      --background-radiogroup: var(--background-radiogroup-compact);
       height: 260px;
       margin-top: 16px;
     }

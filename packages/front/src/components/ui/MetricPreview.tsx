@@ -16,7 +16,7 @@ const MetricPreview = (props: MetricPreviewProps) => {
       padding: 4px;
       height: 24px;
       border-radius: 10px;
-      background-color: var(--color-surface-200);
+      background-color: var(--color-background-metric-preview);
       border: 1px solid var(--background-color);
       transition: all 100ms linear;
     }
