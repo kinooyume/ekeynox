@@ -1,4 +1,3 @@
-import anime from "animejs";
 import {
   Show,
   createComputed,
@@ -7,22 +6,29 @@ import {
   onMount,
   type JSXElement,
 } from "solid-js";
+import { useWindowSize } from "@solid-primitives/resize-observer";
+
 import { css } from "solid-styled";
+import anime from "animejs";
+
 import { useI18n } from "~/contexts/i18nProvider";
-import { HigherKeyboard } from "~/settings/keyboardLayout";
-import GameOptionsTitle from "../gameMode/GameOptionsTitle";
+
+import { type HigherKeyboard } from "~/settings/keyboardLayout";
+
 import {
   createMetricsResume,
   type Metrics,
   type MetricsResume,
-} from "../metrics/Metrics";
+} from "~/typingMetrics/Metrics";
+
 import AccuracyDoughnut from "./charts/AccuracyDoughnut";
 import CharacterChart from "./charts/CharacterChart";
 import SpeedChart from "./charts/SpeedChart";
 import WordMetricsResume from "./charts/WordsChart";
 import Prompt from "./PromptResume";
 import TypingKeyboardResume from "./TypingKeyboardResume";
-import { useWindowSize } from "@solid-primitives/resize-observer";
+
+import GameOptionsTitle from "../gameMode/GameOptionsTitle";
 
 type TypingMetricsProps = {
   kbLayout: HigherKeyboard;

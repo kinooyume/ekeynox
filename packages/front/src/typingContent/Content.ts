@@ -1,5 +1,5 @@
-import { WordStatus } from "../prompt/PromptWord.tsx";
-import { KeyFocus, KeyStatus } from "../metrics/KeyMetrics.ts";
+import { WordStatus } from "../components/prompt/PromptWord.tsx";
+import { KeyFocus, KeyStatus } from "../typingMetrics/KeyMetrics.ts";
 
 type NonEmptyArray<T> = [T, ...T[]];
 

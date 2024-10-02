@@ -1,10 +1,11 @@
-// TODO: should we build it from folder/files ?
 
-import {
-  makeSourceNested,
-} from "~/components/content/TypingGameSource";
+import { makeSourceNested } from "~/typingContent/TypingGameSource";
+// NOTE: Je pense qu'on peut remettre gameModeKind ici non ? 
 import { GameModeKind } from "./gameModeKind";
-import { PendingMode } from "~/appState/appState";
+import { type PendingMode } from "~/appState/appState";
+
+// NOTE:  GameOptions -> PendingMode
+// Des options de jeu, tel que sauvegarder, jusqu'au "PendingMode"; qui est en fait de quoi lancer le jeu
 
 export type Languages = "en" | "fr";
 
@@ -45,6 +46,8 @@ export type WordsCategory =
 
 /* __ */
 
+// NOTE: C'est ici !
+
 export type GameOptions = {
   modeSelected: GameModeKind;
   categorySelected: Category;
@@ -65,6 +68,7 @@ type Selected = {
   category: CategoryKind;
 };
 
+// Default Game Options
 const getDefaultGameOptions = (): GameOptions => ({
   modeSelected: GameModeKind.speed,
   // NOTE: on doit pouvoir avoir que le kind ?
@@ -81,12 +85,14 @@ const getDefaultGameOptions = (): GameOptions => ({
   timer: 10,
 });
 
+// Deep copy
 const deepCopy = (source: GameOptions): GameOptions => ({
   ...source,
   categorySelected: { ...source.categorySelected },
   generation: { ...source.generation },
 });
 
+// Convert to PendingMode
 const optionsToPending = async (
   opts: GameOptions,
   sourceGen: Promise<string[]>,

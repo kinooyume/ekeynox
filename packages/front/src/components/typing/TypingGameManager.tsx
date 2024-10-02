@@ -9,47 +9,60 @@ import {
   onCleanup,
   untrack,
 } from "solid-js";
-import type { Metrics } from "../metrics/Metrics";
-import TypingGame from "./TypingGame";
-import type { ContentHandler } from "../content/TypingGameSource";
 import { createStore } from "solid-js/store";
-import Content, { type Paragraphs } from "../content/Content";
-import makeCursor, { type Cursor, type Position } from "../cursor/Cursor";
-import { TypingEventKind, type TypingEventType } from "./TypingEvent";
-import UserNavHooks from "../cursor/UserNavHooks";
-import type { CursorNavType, ExtraWordHooks } from "../cursor/CursorNav";
-import CursorNav from "../cursor/CursorNav";
-import { WordStatus } from "../prompt/PromptWord";
 import { Portal } from "solid-js/web";
-import { KeyFocus } from "../metrics/KeyMetrics";
-import makeKeypressHandler from "./KeypressHandler";
-import KeypressMetrics from "../metrics/KeypressMetrics";
+
+import type { ContentHandler } from "~/typingContent/TypingGameSource";
+import Content, { type Paragraphs } from "~/typingContent/Content";
+
+import makeCursor, { type Cursor, type Position } from "~/cursor/Cursor";
+import CursorNav, {
+  type CursorNavType,
+  type ExtraWordHooks,
+} from "~/cursor/CursorNav";
+import UserNavHooks from "~/cursor/UserNavHooks";
+
+import type { Metrics } from "~/typingMetrics/Metrics";
+import KeypressMetrics from "~/typingMetrics/KeypressMetrics";
+import { KeyFocus } from "~/typingMetrics/KeyMetrics";
 import {
   createTypingMetrics,
   createTypingMetricsState,
   type TypingMetricsState,
-} from "../metrics/TypingMetrics";
+} from "~/typingMetrics/TypingMetrics";
 import {
   updateKeyProjection,
   type KeysProjection,
-} from "../metrics/KeysProjection";
-import type { KeyboardHandler } from "../keyboard/TypingKeyboard";
-import TypingModeTimer from "./TypingModeTimer";
-import TypingHelp from "./TypingHelp";
-import TypingModeSpeed from "./TypingModeSpeed";
-import TypingHeaderActions from "./TypingHeaderActions";
-import TimerInput from "../seqInput/TimerInput";
-import type { TimerEffectStatus } from "../timer/Timer";
+} from "~/typingMetrics/KeysProjection";
 import {
   createWordMetricsState,
   type WordMetrics,
-} from "../metrics/PromptWordMetrics";
+} from "~/typingMetrics/PromptWordMetrics";
+
+import { WordStatus } from "../prompt/PromptWord";
+import makeKeypressHandler from "./KeypressHandler";
+
+import type { KeyboardHandler } from "../keyboard/TypingKeyboard";
+
+import TimerInput from "../seqInput/TimerInput";
+import type { TimerEffectStatus } from "~/timer/Timer";
+
 import { PendingKind, PendingMode, PendingStatus } from "~/appState/appState";
+
 import { GameOptions } from "~/gameOptions/gameOptions";
-import { HigherKeyboard } from "~/settings/keyboardLayout";
 import { GameModeKind } from "~/gameOptions/gameModeKind";
-import TypingHeaderNav from "./TypingHeaderNav";
+
+import { HigherKeyboard } from "~/settings/keyboardLayout";
+
 import { useI18n } from "~/contexts/i18nProvider";
+
+import TypingModeTimer from "./TypingModeTimer";
+import TypingModeSpeed from "./TypingModeSpeed";
+import TypingHelp from "./TypingHelp";
+import TypingHeaderActions from "./TypingHeaderActions";
+import TypingGame from "./TypingGame";
+import TypingHeaderNav from "./TypingHeaderNav";
+import { TypingEventKind, type TypingEventType } from "./TypingEvent";
 
 type TypingGameManagerProps = {
   status: PendingStatus;
@@ -135,7 +148,6 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
       wordWpmTimer = createWordMetricsState({ word, setWpm })({
         status: WordStatus.pending,
       });
-
     },
     leave: () => {
       if (!wordWpmTimer) return;
@@ -174,7 +186,9 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
         }),
       );
 
-      setKeypressHandler(makeKeypressHandler(untrack(cursor), untrack(cursorNav)));
+      setKeypressHandler(
+        makeKeypressHandler(untrack(cursor), untrack(cursorNav)),
+      );
     },
     { defer: true },
   );

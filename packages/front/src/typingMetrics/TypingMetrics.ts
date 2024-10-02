@@ -1,17 +1,22 @@
 import type { Setter } from "solid-js";
-import KeypressMetrics, {
-  type KeypressMetricsProjection,
-  type StatProjection,
-} from "./KeypressMetrics";
-import type { LinkedList } from "../List";
-import List from "../List";
+
+import List, { type LinkedList } from "~/List";
+import {
+  TypingEventKind,
+  type TypingEventType,
+} from "~/components/typing/TypingEvent";
+
+import type { TypingProjection } from "./TypingProjection";
 import type {
   PausedKeypressMetrics,
   PendingKeypressMetrics,
 } from "./KeypressMetricsSessions";
+import KeypressMetrics, {
+  type KeypressMetricsProjection,
+  type StatProjection,
+} from "./KeypressMetrics";
+
 import KeypressMetricsSessions from "./KeypressMetricsSessions";
-import type { TypingProjection } from "./TypingProjection";
-import { TypingEventKind, type TypingEventType } from "../typing/TypingEvent";
 
 export type TypingMetrics = {
   projection: KeypressMetricsProjection;

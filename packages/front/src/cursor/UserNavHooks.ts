@@ -1,5 +1,5 @@
-import { KeyFocus } from "../metrics/KeyMetrics";
-import { WordStatus } from "../prompt/PromptWord";
+import { KeyFocus } from "~/typingMetrics/KeyMetrics";
+import { WordStatus } from "~/components/prompt/PromptWord";
 import type { CursorNavHooks } from "./CursorNavHooks";
 
 const UserNavHooks: CursorNavHooks = {

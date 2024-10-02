@@ -1,4 +1,4 @@
-import type { KeyTuple } from "../metrics/KeyMetrics";
+import type { KeyTuple } from "~/typingMetrics/KeyMetrics";
 
 export enum TypingWordKind {
   ignore,

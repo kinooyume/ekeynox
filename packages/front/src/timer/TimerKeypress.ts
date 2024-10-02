@@ -1,4 +1,4 @@
-import type { TimedKey } from "../metrics/Metrics";
+import type { TimedKey } from "~/typingMetrics/Metrics";
 import type { CreateNewTimer, TimerPause, TimerPending } from "./Timer";
 
 // NOTE: on a le pattern de:
