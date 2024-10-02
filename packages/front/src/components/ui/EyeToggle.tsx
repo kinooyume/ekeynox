@@ -84,7 +84,7 @@ const EyeToggle: Component<Props> = (props) => {
         id={props.id}
         name={props.id}
         role="checkbox"
-        checked={props.checked}
+        checked={!props.checked}
         onClick={() => props.onChange(!props.checked)}
       />
       <div class="eye-container">
