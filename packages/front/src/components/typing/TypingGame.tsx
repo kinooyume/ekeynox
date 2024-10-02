@@ -43,12 +43,12 @@ const TypingGame = (props: TypingGameProps) => {
   let keyboard: KeyboardHandler;
 
   let onKeyDown = (key: string) => {
-    keyboard!.keyDown(key);
+    keyboard?.keyDown(key);
     props.onKeyDown(key);
   };
 
   let onKeyUp = (key: string) => {
-    keyboard!.keyUp(key);
+    keyboard?.keyUp(key);
     props.onKeyUp(key);
   };
 

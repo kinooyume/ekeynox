@@ -1,4 +1,11 @@
-import { createComputed, on, onCleanup, onMount } from "solid-js";
+import {
+  createComputed,
+  createEffect,
+  createSignal,
+  on,
+  onCleanup,
+  onMount,
+} from "solid-js";
 import {
   TypingEventKind,
   type TypingEventType,
@@ -30,7 +37,6 @@ const UserInput = (props: UserInputProps) => {
           case TypingEventKind.unstart:
             input.value = "";
             input.focus();
-          // props.setWordsCount(0);
           case TypingEventKind.pending:
           // case TypingStatusKind.pause:
 
@@ -43,18 +49,28 @@ const UserInput = (props: UserInputProps) => {
 
   /* Key Handlers */
 
+  // NOTE: composing for accents, could be great to have some visual feedback
   const handleInputEvent = (event: Event) => {
-    // NOTE: composing for accents, could be great to have some visual feedback
     if (event instanceof InputEvent) {
       if (event.isComposing) {
         return;
       }
     }
+
     const timestamp = performance.now();
     const input = event.target as HTMLInputElement;
+    // Multi-platform backspace
+    // if (input.value.length === 0) {
+    //   // backspace !!
+    // }
+    
+    // Was great, but doesn't work properly on chrome when backspace
+    // const value = input.value.slice(-1);
+    // input.value = " ";
+    
     const value = input.value;
-    input.value = "";
-
+     input.value = "";
+    // *** /
     props.onKeyAdd(value, timestamp);
   };
 
@@ -63,6 +79,9 @@ const UserInput = (props: UserInputProps) => {
   };
 
   const handleKeyDown = (event: KeyboardEvent) => {
+    if (event.key === "Tab") {
+      event.preventDefault();
+    }
     props.onKeyDown(event.key);
   };
 
@@ -119,8 +138,9 @@ const UserInput = (props: UserInputProps) => {
         autofocus
         autocorrect="off"
         autocomplete="off"
-        autocapitalize="none"
+        autocapitalize="off"
         spellcheck={false}
+        list="autocompleteOff"
         aria-hidden
         data-gramm="false"
         data-gramm_editor="false"
