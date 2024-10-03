@@ -1,4 +1,4 @@
-import { TypingEventKind, type TypingEventType } from "../components/typing/TypingEvent";
+import { TypingStateKind, type TypingState } from "~/typingState";
 
 import {
   createTypingProjection,
@@ -8,14 +8,14 @@ import {
 
 export type KeysProjection = Record<string, TypingProjection>;
 
-type KeysProjectionProps = { projection: KeysProjection; status: TypingEventType };
+type KeysProjectionProps = { projection: KeysProjection; status: TypingState };
 const updateKeyProjection = ({
   projection,
   status,
 }: KeysProjectionProps): KeysProjection => {
-  if (status.kind === TypingEventKind.unstart) {
+  if (status.kind === TypingStateKind.unstart) {
     return {};
-  } else if (status.kind !== TypingEventKind.pending) {
+  } else if (status.kind !== TypingStateKind.pending) {
     return projection;
   }
   const [key, metrics] = status.key.keyMetrics;

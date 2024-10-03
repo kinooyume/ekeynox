@@ -1,58 +1,58 @@
-import { KeyFocus } from "~/typingMetrics/KeyMetrics";
+import { CharacterFocus } from "~/typingContent/character/types";
 import type { CursorNavHooks } from "./CursorNavHooks";
 
 const TimerNavHooks: CursorNavHooks = {
   paragraph: {
     next: {
       enter: (cursor) => {
-        cursor.set.ghostFocus(KeyFocus.focus);
+        cursor.set.ghostFocus(CharacterFocus.focus);
       },
       leave: (cursor) => {
-        cursor.set.ghostFocus(KeyFocus.unfocus);
+        cursor.set.ghostFocus(CharacterFocus.unfocus);
       },
     },
     prev: {
       enter: (cursor) => {
-        cursor.set.ghostFocus(KeyFocus.focus);
+        cursor.set.ghostFocus(CharacterFocus.focus);
       },
       leave: (cursor) => {
-        cursor.set.ghostFocus(KeyFocus.unfocus);
+        cursor.set.ghostFocus(CharacterFocus.unfocus);
       },
     },
   },
   word: {
     next: {
       enter: (cursor) => {
-        cursor.set.ghostFocus(KeyFocus.focus);
+        cursor.set.ghostFocus(CharacterFocus.focus);
       },
       leave: (cursor) => {
-        cursor.set.ghostFocus(KeyFocus.unfocus);
+        cursor.set.ghostFocus(CharacterFocus.unfocus);
       },
     },
     prev: {
       enter: (cursor) => {
-        cursor.set.ghostFocus(KeyFocus.focus);
+        cursor.set.ghostFocus(CharacterFocus.focus);
       },
       leave: (cursor) => {
-        cursor.set.ghostFocus(KeyFocus.unfocus);
+        cursor.set.ghostFocus(CharacterFocus.unfocus);
       },
     },
   },
   key: {
     next: {
       enter: (cursor) => {
-        cursor.set.ghostFocus(KeyFocus.focus);
+        cursor.set.ghostFocus(CharacterFocus.focus);
       },
       leave: (cursor) => {
-        cursor.set.ghostFocus(KeyFocus.unfocus);
+        cursor.set.ghostFocus(CharacterFocus.unfocus);
       },
     },
     prev: {
       enter: (cursor) => {
-        cursor.set.ghostFocus(KeyFocus.focus);
+        cursor.set.ghostFocus(CharacterFocus.focus);
       },
       leave: (cursor) => {
-        cursor.set.ghostFocus(KeyFocus.unfocus);
+        cursor.set.ghostFocus(CharacterFocus.unfocus);
       },
     },
   },

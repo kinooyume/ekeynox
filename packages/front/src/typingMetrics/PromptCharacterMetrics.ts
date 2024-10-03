@@ -1,10 +1,11 @@
-import type { MetaKey } from "../content/Content";
-import { KeyStatus } from "./KeyMetrics";
+import { CharacterStatus, MetaCharacter } from "~/typingContent/character/types";
 
+// Que du Character
+// NOTE: Timer ?
 // TODO: rename, WordWpmCounter ?
 export type PendingPromptKeypressMetrics = {
   pause: () => PausedPromptKeypressMetrics;
-  getWpm: (keys: Array<MetaKey>) => PromptWpm;
+  getWpm: (keys: Array<MetaCharacter>) => PromptWpm;
 };
 
 export type PausedPromptKeypressMetrics = {
@@ -14,20 +15,22 @@ export type PausedPromptKeypressMetrics = {
 export enum PromptWpmKind {
   done,
   pending,
-  pause
+  pause,
 }
 
 export type PromptWpm =
   | { kind: PromptWpmKind.pause }
-  | { kind: PromptWpmKind.done; wpm: number, duration: number }
+  | { kind: PromptWpmKind.done; wpm: number; duration: number }
   | { kind: PromptWpmKind.pending };
 
-const promptKeypressHandler = (elapsed: number): PausedPromptKeypressMetrics => {
+const promptKeypressHandler = (
+  elapsed: number,
+): PausedPromptKeypressMetrics => {
   const pending = (lastDuration: number) => {
     const start = performance.now();
-    const getWpm = (keys: Array<MetaKey>): PromptWpm => {
+    const getWpm = (keys: Array<MetaCharacter>): PromptWpm => {
       const stop = performance.now();
-      if (!keys.every((key) => key.status === KeyStatus.match))
+      if (!keys.every((key) => key.status === CharacterStatus.match))
         return { kind: PromptWpmKind.pause };
       const duration = stop - start + lastDuration + elapsed;
       const wpm = ((keys.length / duration) * 60000) / 5;

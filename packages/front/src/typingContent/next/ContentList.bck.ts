@@ -1,6 +1,6 @@
 // NOTE: not used yet
 // import { WordStatus } from "../prompt/PromptWord.tsx";
-// import { KeyFocus, KeyStatus } from "../metrics/KeyMetrics.ts";
+// import { CharacterFocus, CharacterStatus } from "../metrics/KeyMetrics.ts";
 // import List, { type DLinkedList } from "../List.ts";
 // import {
 //   type ContentIterator,
@@ -11,9 +11,9 @@
 // } from "./ContentNav.ts";
 // import { wrapParentHooks } from "./ContentIterator.ts";
 //
-// export type MetaKey = {
-//   status: KeyStatus;
-//   focus: KeyFocus;
+// export type MetaCharacter = {
+//   status: CharacterStatus;
+//   focus: CharacterFocus;
 //   key: string;
 // };
 //
@@ -23,15 +23,15 @@
 //   focus: boolean;
 //   wasCorrect: boolean;
 //   wpm: number;
-//   // keys: DLinkedList<NavMeta<MetaKey>>;
+//   // keys: DLinkedList<NavMeta<MetaCharacter>>;
 // };
 //
-// const keyHooks: MakeNavHooks<MetaKey> = (key) => ({
+// const keyHooks: MakeNavHooks<MetaCharacter> = (key) => ({
 //   enter: () => {
-//     key.focus = KeyFocus.focus;
+//     key.focus = CharacterFocus.focus;
 //   },
 //   exit: ({ back }) => {
-//     key.focus = back ? KeyFocus.back : KeyFocus.unfocus;
+//     key.focus = back ? CharacterFocus.back : CharacterFocus.unfocus;
 //   },
 // });
 //
@@ -50,7 +50,7 @@
 //
 // export type ContentData = {
 //   paragraphs: Paragraphs;
-//   iterator: ContentIterator<DLinkedList<NavMeta<MetaKey>>>;
+//   iterator: ContentIterator<DLinkedList<NavMeta<MetaCharacter>>>;
 //   keySet: Set<string>;
 // };
 //
@@ -67,8 +67,8 @@
 //         hookWrapper(
 //           {
 //             key: key,
-//             status: KeyStatus.unstart,
-//             focus: KeyFocus.unset,
+//             status: CharacterStatus.unstart,
+//             focus: CharacterFocus.unset,
 //           },
 //           keyHooks,
 //         ),
@@ -97,8 +97,8 @@
 //         keySet.add(key);
 //         const metaKey = {
 //           key,
-//           status: KeyStatus.unstart,
-//           focus: KeyFocus.unset,
+//           status: CharacterStatus.unstart,
+//           focus: CharacterFocus.unset,
 //         };
 //         return hookWrapper(metaKey, keyHooks);
 //       },

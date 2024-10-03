@@ -1,15 +1,18 @@
-import type { LinkedList } from "../List";
+import type { LinkedList } from "~/List";
+
+
+import type {  Paragraphs } from "~/typingContent";
+import { MetaWord } from "~/typingContent/word/types";
+import { CharacterEventKind } from "~/typingContent/character/types";
 
 import { TypingOptions } from "~/typingOptions/typingOptions";
-import type { MetaWord, Paragraphs } from "~/typingContent/Content";
 
 import type { KeypressMetricsProjection } from "./KeypressMetrics";
 import type { KeysProjection } from "./KeysProjection";
-import { KeyEventKind } from "./KeyMetrics";
 import type { TypingMetrics } from "./TypingMetrics";
 import {
-  diffKeyStatusProjections,
-  type KeyStatusProjection,
+  diffCharacterStatusProjections,
+  type CharacterStatusProjection,
 } from "./TypingProjection";
 
 export type Metrics = {
@@ -32,12 +35,14 @@ export type WordSpeed = {
   wpm: number[];
 };
 
+// NOTE: Donc, en réalité, lié à timerInput et timerKeypress
+// C'est le minimum pour le mode fantome en fait
 export type TimedKey = {
   back: boolean;
   duration: number;
 };
 
-export type KeyResume = Record<string, KeyStatusProjection>;
+export type KeyResume = Record<string, CharacterStatusProjection>;
 
 export type MetricsResume = {
   chart: ChartMetrics;
@@ -57,7 +62,7 @@ const makeKeysResume = (
     value.expected.forEach((e) => {
       expected.set(e, (expected.get(e) || 0) + 1);
     });
-    return { ...acc, [key]: diffKeyStatusProjections(value) };
+    return { ...acc, [key]: diffCharacterStatusProjections(value) };
   }, {});
   return [result, expected];
 };
@@ -102,8 +107,8 @@ const logsToChartMetrics = (
 const averageWordWpm = (words: Array<MetaWord>): Array<WordSpeed> => {
   let result : WordSpeed[] = [];
   words.forEach((word) => {
-    if (word.wpm === 0 || blankCharacters.includes(word.keys[0].key)) return;
-    const keys = word.keys.map((k) => k.key).join("");
+    if (word.wpm === 0 || blankCharacters.includes(word.characters[0].char)) return;
+    const keys = word.characters.map((k) => k.char).join("");
     if (keys.length < 5) return;
 
     const wordResult = result.find((r) => r.word === keys);
@@ -139,7 +144,7 @@ const getSequence = (
       const key = logs.value.keyMetrics;
       const duration = logs.value.timestamp - prevTimestamp;
       localSequence.push({
-        back: key[1].kind === KeyEventKind.deleted,
+        back: key[1].kind === CharacterEventKind.deleted,
         duration,
       });
       prevTimestamp = logs!.value.timestamp;

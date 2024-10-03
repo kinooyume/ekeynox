@@ -1,16 +1,8 @@
 import { css } from "solid-styled";
 import { For, Show, createEffect, createSignal, on } from "solid-js";
 
-import Key from "./PromptKey.tsx";
-import type { MetaWord } from "~/typingContent/Content.ts";
-
-export enum WordStatus {
-  unstart = "unstart",
-  unfocus = "unfocus",
-  pending = "pending",
-  pause = "pause",
-  over = "over",
-}
+import { MetaWord, WordStatus } from "~/typingContent/word/types";
+import PromptCharacter from "./PromptCharacter.tsx";
 
 type WordProps = {
   observer: IntersectionObserver | null;
@@ -80,12 +72,12 @@ const Word = (props: WordProps) => {
   return (
     <div classList={{ animate: toAnimate() }} class="word" ref={createObserver}>
       <div class={`${props.status}  ${props.focus ? "focus" : ""} keys`}>
-        <For each={props.keys}>{(key) => <Key {...key} />}</For>
+        <For each={props.characters}>{(key) => <PromptCharacter {...key} />}</For>
       </div>
       <Show
         when={
           props.wpm > 0 &&
-          props.keys.length > 4 &&
+          props.characters.length > 4 &&
           props.status === WordStatus.over
         }
       >

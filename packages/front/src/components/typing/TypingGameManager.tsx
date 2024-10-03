@@ -13,7 +13,6 @@ import { createStore } from "solid-js/store";
 import { Portal } from "solid-js/web";
 
 import type { ContentHandler } from "~/typingContent/TypingGameSource";
-import Content, { type Paragraphs } from "~/typingContent/Content";
 
 import makeCursor, { type Cursor, type Position } from "~/cursor/Cursor";
 import CursorNav, {
@@ -24,7 +23,6 @@ import UserNavHooks from "~/cursor/UserNavHooks";
 
 import type { Metrics } from "~/typingMetrics/Metrics";
 import KeypressMetrics from "~/typingMetrics/KeypressMetrics";
-import { KeyFocus } from "~/typingMetrics/KeyMetrics";
 import {
   createTypingMetrics,
   createTypingMetricsState,
@@ -39,13 +37,10 @@ import {
   type WordMetrics,
 } from "~/typingMetrics/PromptWordMetrics";
 
-import { WordStatus } from "../prompt/PromptWord";
-import makeKeypressHandler from "./KeypressHandler";
-
 import type { KeyboardHandler } from "../keyboard/TypingKeyboard";
 
 import TimerInput from "../seqInput/TimerInput";
-import type { TimerEffectStatus } from "~/timer/Timer";
+import type { TypingTimer } from "~/timer/Timer";
 
 import { type PendingStatus, PendingKind  } from "~/states";
 
@@ -63,7 +58,12 @@ import TypingHelp from "./TypingHelp";
 import TypingHeaderActions from "./TypingHeaderActions";
 import TypingGame from "./TypingGame";
 import TypingHeaderNav from "./TypingHeaderNav";
-import { TypingEventKind, type TypingEventType } from "./TypingEvent";
+import { TypingStateKind, type TypingState } from "~/typingState";
+import makeKeypressHandler from "~/typingState/userKeypressHandler";
+import { CharacterFocus } from "~/typingContent/character/types";
+import { WordStatus } from "../resume/PromptWordResume";
+import { Paragraphs } from "~/typingContent/paragraphs/types";
+import { deepCloneParagraphs } from "~/typingContent/paragraphs";
 
 type TypingGameManagerProps = {
   status: PendingStatus;
@@ -82,7 +82,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
 
   const t = useI18n();
   const [paraStore, setParaStore] = createStore<Paragraphs>(
-    Content.deepClone(contentHandler().data.paragraphs!),
+    deepCloneParagraphs(contentHandler().data.paragraphs!),
   );
 
   /* Cursor */
@@ -108,7 +108,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
   );
 
   let setWpm = ({ wpm, duration }: { wpm: number; duration: number }) => {
-    const { paragraph, word, key } = cursor().positions.get();
+    const { paragraph, word, character: key } = cursor().positions.get();
     setParaStore(paragraph, word, "wpm", wpm);
     setParaStore(paragraph, word, "spentTime", duration);
   };
@@ -195,8 +195,8 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
   );
 
   /* Typing */
-  const [typingEvent, setTypingEvent] = createSignal<TypingEventType>({
-    kind: TypingEventKind.unstart,
+  const [typingState, setTypingState] = createSignal<TypingState>({
+    kind: TypingStateKind.unstart,
   });
 
   // Can be Signal
@@ -213,7 +213,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
 
     const event = keypressHandler().keyDown(key);
     if (!event) return;
-    setTypingEvent(event);
+    setTypingState(event);
   };
 
   const onKeyUp = (key: string) => {
@@ -223,7 +223,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
   const onAddKey = (key: string, timestamp: number) => {
     const event = keypressHandler().addKey(key, timestamp);
     if (!event) return;
-    setTypingEvent(event);
+    setTypingState(event);
   };
 
   /* Typing Event management */
@@ -231,7 +231,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
   const pause = () => {
     cursor().set.wordStatus(WordStatus.pause, false);
     if (wordWpmTimer) wordWpmTimer = wordWpmTimer({ status: WordStatus.pause });
-    setTypingEvent({ kind: TypingEventKind.pause });
+    setTypingState({ kind: TypingStateKind.pause });
   };
 
   // NOTE: ==> Timer Only
@@ -250,7 +250,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
     //
     cursor().set.wordStatus(WordStatus.over, false);
     if (wordWpmTimer) wordWpmTimer({ status: WordStatus.over });
-    cursor().set.keyFocus(KeyFocus.unfocus);
+    cursor().set.keyFocus(CharacterFocus.unfocus);
     const position = cursor().positions.get();
     props.onOver(
       {
@@ -265,21 +265,21 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
   };
 
   const typingOver = () => {
-    setTypingEvent({ kind: TypingEventKind.over });
+    setTypingState({ kind: TypingStateKind.over });
     headerLeavingAnimate().finished.then(() => {
       over();
     });
   };
 
   createComputed(
-    on(typingEvent, (event) => {
+    on(typingState, (event) => {
       switch (event.kind) {
-        case TypingEventKind.unstart:
+        case TypingStateKind.unstart:
           if (wordWpmTimer) wordWpmTimer({ status: WordStatus.unstart });
           cursor().positions.reset();
-          setPromptKey(cursor().get.key().key);
+          setPromptKey(cursor().get.character().char);
           break;
-        case TypingEventKind.pending:
+        case TypingStateKind.pending:
           if (!wordWpmTimer) {
             newWordWpmTimer();
           } else {
@@ -289,7 +289,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
             overMetrics();
             return typingOver();
           }
-          setPromptKey(cursor().get.key().key);
+          setPromptKey(cursor().get.character().char);
           cursor().focus();
           break;
       }
@@ -303,7 +303,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
     if (!cursor) return;
     cursor.positions.set.paragraph(0);
     cursor.positions.set.word(0);
-    cursor.positions.set.key(0);
+    cursor.positions.set.character(0);
   };
 
   const reset = () => {
@@ -312,8 +312,8 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
     resetGhost();
 
     setWordsCount(0);
-    setParaStore(Content.deepClone(contentHandler().data.paragraphs));
-    setTypingEvent({ kind: TypingEventKind.unstart });
+    setParaStore(deepCloneParagraphs(contentHandler().data.paragraphs));
+    setTypingState({ kind: TypingStateKind.unstart });
   };
 
   /* Metrics */
@@ -331,13 +331,13 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
   );
 
   createComputed((typingMetricsState: TypingMetricsState) => {
-    const metrics = typingMetricsState({ event: typingEvent() });
+    const metrics = typingMetricsState({ event: typingState() });
     return metrics;
   }, updateMetrics);
 
   const keyMetrics = createMemo(
     (projection: KeysProjection) =>
-      updateKeyProjection({ projection, status: typingEvent() }),
+      updateKeyProjection({ projection, status: typingState() }),
     {},
   );
 
@@ -392,13 +392,13 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
         setContentHandler(contentHandler().new());
         appendContent();
         /* *** */
-        setParaStore(Content.deepClone(contentHandler().data.paragraphs));
+        setParaStore(deepCloneParagraphs(contentHandler().data.paragraphs));
         reset();
       };
     }
     return () => {
       setContentHandler(contentHandler().new());
-      setParaStore(Content.deepClone(contentHandler().data.paragraphs));
+      setParaStore(deepCloneParagraphs(contentHandler().data.paragraphs));
       reset();
     };
   };
@@ -430,8 +430,8 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
               sequence: status.prev.getSequence(),
               setCleanup: setCleanupGhost,
             });
-            createEffect((timer: TimerEffectStatus) => {
-              return timer({ status: typingEvent() });
+            createEffect((timer: TypingTimer) => {
+              return timer({ state: typingState() });
             }, ghostInput);
             break;
           case PendingKind.new:
@@ -446,19 +446,19 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
   /* NOTE: REDO: GHOST MODE */
 
   onCleanup(() => {
-    cursor().set.keyFocus(KeyFocus.unfocus);
+    cursor().set.keyFocus(CharacterFocus.unfocus);
     cursor().set.wordStatus(WordStatus.unstart, false);
     wordWpmTimer && wordWpmTimer({ status: WordStatus.unstart });
     cleanupMetrics();
     cleanupGhost();
 
-    setTypingEvent({ kind: TypingEventKind.unstart });
+    setTypingState({ kind: TypingStateKind.unstart });
   });
 
   return (
     <TypingGame
       t={t}
-      typingEvent={typingEvent()}
+      typingState={typingState()}
       showKb={props.showKb}
       kbLayout={props.kbLayout}
       keySet={contentHandler().data.keySet}
@@ -473,7 +473,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
       <Switch>
         <Match when={props.status.mode.kind === TypingModeKind.speed} keyed>
           <TypingModeSpeed
-            typingEvent={typingEvent()}
+            typingState={typingState()}
             stat={stat()}
             wordsCount={wordsCount()}
             totalWords={totalWordsCount()}
@@ -481,14 +481,14 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
             <TypingHelp
               t={t}
               keyboard={(k) => (onKeyboard = k)}
-              isPaused={typingEvent().kind !== TypingEventKind.pending}
+              isPaused={typingState().kind !== TypingStateKind.pending}
               onReset={reset}
             />
           </TypingModeSpeed>
         </Match>
         <Match when={props.status.mode.kind === TypingModeKind.timer} keyed>
           <TypingModeTimer
-            typingEvent={typingEvent()}
+            typingState={typingState()}
             stat={stat()}
             duration={(props.status.mode as any).time}
             onTimerEnd={typingOver}
@@ -496,7 +496,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
             <TypingHelp
               t={t}
               keyboard={(k) => (onKeyboard = k)}
-              isPaused={typingEvent().kind !== TypingEventKind.pending}
+              isPaused={typingState().kind !== TypingStateKind.pending}
               onReset={reset}
             />
           </TypingModeTimer>
@@ -509,7 +509,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
           setLeavingAnimate={(an) => (headerLeavingAnimate = an)}
         >
           <TypingHeaderActions
-            paused={typingEvent().kind !== TypingEventKind.pending}
+            paused={typingState().kind !== TypingStateKind.pending}
             isRedo={(props.status.kind as any) === PendingKind.redo}
             isGenerated={props.status.mode.isGenerated}
             onPause={pause}

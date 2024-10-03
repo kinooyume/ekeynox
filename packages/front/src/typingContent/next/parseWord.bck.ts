@@ -1,7 +1,7 @@
 // NOTE: not used for now
 
 // import { WordStatus } from "../prompt/PromptWord.tsx";
-// import { KeyFocus, KeyStatus } from "../metrics/KeyMetrics.ts";
+// import { CharacterFocus, CharacterStatus } from "../metrics/KeyMetrics.ts";
 // import List from "../List.ts";
 // import { keyHooks } from "./ContentList.ts.bck";
 // import { MetaWord } from "./ContentList.ts.bck";
@@ -13,8 +13,8 @@
 //         return {
 //             value: {
 //                 key,
-//                 status: KeyStatus.unstart,
-//                 focus: KeyFocus.unset,
+//                 status: CharacterStatus.unstart,
+//                 focus: CharacterFocus.unset,
 //             },
 //             hooks: keyHooks,
 //         };

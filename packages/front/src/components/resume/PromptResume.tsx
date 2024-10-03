@@ -1,7 +1,7 @@
 import { For } from "solid-js";
 import { css } from "solid-styled";
 
-import { type Paragraphs } from "~/typingContent/Content.ts";
+import { type Paragraphs } from "~/typingContent/index.ts";
 import Word from "./PromptWordResume.tsx";
 
 export type PromptProps = {

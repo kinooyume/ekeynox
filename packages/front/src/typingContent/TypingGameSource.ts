@@ -1,7 +1,10 @@
 import { CategoryKind, TypingOptions, WordsGenerationCategory } from "~/typingOptions/typingOptions";
-import type { ContentData, Paragraph } from "./Content";
-import Content from "./Content";
+import type { ContentData } from ".";
+import Content from ".";
 import { randomQuote, randomWords } from "./randomContent";
+import { Paragraph } from "./paragraphs/types";
+import { deepCloneParagraphs } from "./paragraphs";
+import { createSpace } from "./word";
 
 // TODO: On a dit, Fixed or Loop
 
@@ -64,14 +67,14 @@ const mergeSource = (
   next: ContentData,
   following: boolean,
 ) => {
-  const nextParagraphs = Content.deepClone(next.paragraphs);
-  const prevParagraphs = Content.deepClone(prev.paragraphs);
+  const nextParagraphs = deepCloneParagraphs(next.paragraphs);
+  const prevParagraphs = deepCloneParagraphs(prev.paragraphs);
   const prevLast: Paragraph = prevParagraphs.pop() || [];
 
   let paragraphs;
   if (following) {
-    const [first, ...rest] = Content.deepClone(nextParagraphs);
-    const newParagraph = prevLast.concat(Content.makeSpace(), first);
+    const [first, ...rest] = deepCloneParagraphs(nextParagraphs);
+    const newParagraph = prevLast.concat(createSpace(), first);
     paragraphs = prevParagraphs.concat([newParagraph, ...rest]);
   } else {
     //  prevLast.push(Content.makeEnter());

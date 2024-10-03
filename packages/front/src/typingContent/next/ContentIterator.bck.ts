@@ -1,7 +1,7 @@
 // NOTE: Not used
 ////
 //import type { DLinkedList, DLinkedListBound } from "../List";
-//import type { MetaKey, MetaWord } from "./ContentList.ts.bck";
+//import type { MetaCharacter, MetaWord } from "./ContentList.ts.bck";
 //import type { NavMeta } from "./ContentNav";
 //
 //type ContentContainer = {};
@@ -9,7 +9,7 @@
 //type ContentIterator = {
 //  paragraph: DLinkedList<MetaWord>;
 //  word: MetaWord;
-//  key: MetaKey;
+//  key: MetaCharacter;
 //  next: () => ContentIterator | null;
 //  prev: () => ContentIterator | null;
 //};

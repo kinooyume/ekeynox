@@ -1,41 +1,11 @@
-export enum KeyStatus {
-  unset = "unset",
-  match = "match",
-  unmatch = "unmatch",
-  extra = "extra",
-  missed = "missed",
-}
+import { CharacterEventKind, CharacterEventTuple, CharacterStatus } from "~/typingContent/character/types";
 
-export enum KeyFocus {
-  unset = "unset",
-  focus = "focus",
-  unfocus = "unfocus",
-  back = "back",
-}
-
-export type KeyAdded =
-  | { kind: KeyStatus.match }
-  | { kind: KeyStatus.extra }
-  | { kind: KeyStatus.missed; typed: string }
-  | { kind: KeyStatus.unmatch; typed: string };
-
-export enum KeyEventKind {
-  added,
-  deleted,
-  back,
-  ignore,
-  // separator - Added/deleted
-}
-
-export type KeyEvent =
-  | { kind: KeyEventKind.added; status: KeyAdded }
-  | { kind: KeyEventKind.deleted; status: KeyStatus }
-  | { kind: KeyEventKind.back }
-  | { kind: KeyEventKind.ignore };
+// NOTE: Tout ça, c'est appelé dans userKeypress
+// ==> CharacterEventTuple, que ça
+// Donc c'est meme pas des metrics
+// C'est lié a l'event typingPending
 
 const blankCharacters = [" ", "Enter"];
-
-export type KeyTuple = [key: string, KeyEvent];
 
 type KeyMetricsProps = {
   typed: string;
@@ -44,38 +14,38 @@ type KeyMetricsProps = {
 
 type KeyDeletedMetricsProps = {
   expected: string;
-  status: KeyStatus;
+  status: CharacterStatus;
 };
 
 const makeDeletedKeyMetrics = ({
   expected,
   status,
-}: KeyDeletedMetricsProps): KeyTuple => [
+}: KeyDeletedMetricsProps): CharacterEventTuple => [
   expected,
-  { kind: KeyEventKind.deleted, status },
+  { kind: CharacterEventKind.deleted, status },
 ];
 
 // TODO: better handling of separators/blankCharacters, as special events.
-const getAddedKeyMetrics = ({ typed, expected }: KeyMetricsProps): KeyTuple => {
+const getAddedKeyMetrics = ({ typed, expected }: KeyMetricsProps): CharacterEventTuple => {
   if (expected === typed) {
     return [
       expected,
-      { kind: KeyEventKind.added, status: { kind: KeyStatus.match } },
+      { kind: CharacterEventKind.added, status: { kind: CharacterStatus.match } },
     ];
   } else if (blankCharacters.includes(expected)) {
     return [
       typed,
-      { kind: KeyEventKind.added, status: { kind: KeyStatus.extra } },
+      { kind: CharacterEventKind.added, status: { kind: CharacterStatus.extra } },
     ];
   } else if (blankCharacters.includes(typed)) {
     return [
       expected,
-      { kind: KeyEventKind.added, status: { kind: KeyStatus.missed, typed } },
+      { kind: CharacterEventKind.added, status: { kind: CharacterStatus.missed, typed } },
     ];
   } else {
     return [
       expected,
-      { kind: KeyEventKind.added, status: { kind: KeyStatus.unmatch, typed } },
+      { kind: CharacterEventKind.added, status: { kind: CharacterStatus.unmatch, typed } },
     ];
   }
 };
@@ -85,24 +55,24 @@ const getKeyDownMetrics = (typed: string) => {
     case "Backspace":
       // NOTE: Not sure it's only backspace
       // case "Process": // Firefox Mobile
-      return KeyEventKind.back;
+      return CharacterEventKind.back;
     case "Enter":
     case "Tab":
-      return KeyEventKind.added;
+      return CharacterEventKind.added;
   }
-  return KeyEventKind.ignore;
+  return CharacterEventKind.ignore;
 };
 
-const getKeyMetrics = ({ typed, expected }: KeyMetricsProps): KeyTuple => {
+const getKeyMetrics = ({ typed, expected }: KeyMetricsProps): CharacterEventTuple => {
   // typed.length === 0, userAgent
-  // NOTE: doesn't weems useful
+  // NOTE: doesn't weems useful 
   if (typed === "Backspace") {
-    return [typed, { kind: KeyEventKind.back }];
+    return [typed, { kind: CharacterEventKind.back }];
   } else if (typed.length === 1 || typed === "Enter") {
     // NOTE: check if really enter needed here ?
     return getAddedKeyMetrics({ typed, expected });
   }
-  return [typed, { kind: KeyEventKind.ignore }];
+  return [typed, { kind: CharacterEventKind.ignore }];
 };
 
 export { getKeyMetrics, getKeyDownMetrics, makeDeletedKeyMetrics };
