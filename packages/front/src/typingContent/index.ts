@@ -1,5 +1,5 @@
 import { Paragraph, Paragraphs } from "./paragraphs/types.ts";
-import { parseWord } from "./word/index.ts";
+import { createEnter, createSpace, parseWord } from "./word/index.ts";
 
 /* ContentData */
 
@@ -37,7 +37,7 @@ export const parse: Parser = (source) => {
   // TODO: use a flatMap
   if (paragraphs.length > 1) {
     for (let i = 0; i < paragraphs.length - 1; i++) {
-      paragraphs[i].push(makeEnter());
+      paragraphs[i].push(createEnter());
     }
   }
   return { paragraphs, keySet, wordsCount };
@@ -53,7 +53,7 @@ const parseWords = (source: Array<string>): ContentData => {
     .flatMap((word, index) => {
       wordsCount++;
       if (index < source.length - 1) {
-        return [wordParser(word), makeSpace()];
+        return [wordParser(word), createSpace()];
       } else {
         return wordParser(word);
       }
@@ -89,11 +89,4 @@ export default {
   contentDataFromParagraphs,
   emptyContentData,
 };
-function makeEnter(): import("./word/types.ts").MetaWord {
-    throw new Error("Function not implemented.");
-}
-
-function makeSpace(): any {
-    throw new Error("Function not implemented.");
-}
 
