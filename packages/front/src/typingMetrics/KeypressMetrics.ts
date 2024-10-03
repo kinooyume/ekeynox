@@ -1,19 +1,25 @@
+import type { LinkedList } from "~/List";
+import List from "~/List";
+
+import { TypingWord } from "~/typingContent/word/types";
+import { type TypingCharacter } from "~/typingContent/character/types";
+
+import type { TypingState  } from "~/typingState";
+
 import {
   createTypingProjection,
   type TypingProjection,
   mergeTypingProjections,
   createTypingProjectionFromPendingList,
-  diffKeyStatusProjections,
+  diffCharacterStatusProjections,
 } from "./TypingProjection";
+
 import {
   createWordProjection,
   createWordProjectionFromList,
   mergeWordProjections,
   type WordProjection,
 } from "./KpWordMetrics";
-import type { LinkedList } from "../List";
-import List from "../List";
-import type { TypingEvent, TypingKey, TypingWord } from "../typing/TypingEvent";
 
 export type CoreProjection = {
   projection: TypingProjection;
@@ -28,7 +34,7 @@ const createCoreProjection = (): CoreProjection => ({
 });
 
 export type MetaProjection = {
-  logs: LinkedList<TypingKey>;
+  logs: LinkedList<TypingCharacter>;
   wordsLogs: LinkedList<TypingWord>;
   sectionProjection: TypingProjection;
   sectionWordProjection: WordProjection;
@@ -36,7 +42,7 @@ export type MetaProjection = {
   stop: number;
 };
 
-const createMetaKeypressProjection = (): MetaProjection => ({
+const createMetaCharacterpressProjection = (): MetaProjection => ({
   logs: null,
   wordsLogs: null,
   sectionProjection: createTypingProjection(),
@@ -75,7 +81,7 @@ export type KeypressMetricsProjection = {
 
 const createKeypressProjection = (): KeypressMetricsProjection => ({
   core: createCoreProjection(),
-  meta: createMetaKeypressProjection(),
+  meta: createMetaCharacterpressProjection(),
   stats: createStatProjection(),
 });
 
@@ -85,12 +91,12 @@ export type KeypressMetricsProps = {
 
 const keypressProjectionHandler = (props: KeypressMetricsProps) => {
   let projection = Object.assign({}, props.part.projection);
-  let logs: LinkedList<TypingKey> = null;
+  let logs: LinkedList<TypingCharacter> = null;
 
   let wordProjection = Object.assign({}, props.part.wordProjection);
   let wordsLogs: LinkedList<TypingWord> = null;
 
-  const event = ({ key, word }: TypingEvent) => {
+  const event = ({ key, word }: TypingState) => {
     logs = List.make(logs, key);
     wordsLogs = List.make(wordsLogs, word);
   };
@@ -114,7 +120,7 @@ const keypressProjectionHandler = (props: KeypressMetricsProps) => {
     mergeWordProjections(wordProjection, sectionWordProjection);
     /* *** */
 
-    const projectionResult = diffKeyStatusProjections(projection);
+    const projectionResult = diffCharacterStatusProjections(projection);
 
     const correct = projectionResult.match;
 

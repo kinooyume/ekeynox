@@ -2,21 +2,22 @@ import { type JSX, createEffect, createSignal, onCleanup } from "solid-js";
 import { css } from "solid-styled";
 
 import TimerOver from "~/timer/TimerStopwatch.ts";
-import Timer, { type TimerEffectStatus } from "~/timer/Timer.ts";
+import Timer, { type TypingTimer } from "~/timer/Timer.ts";
 
 import type { StatProjection } from "~/typingMetrics/KeypressMetrics.ts";
 
-import { type TypingEventType } from "./TypingEvent.ts";
 import TypingInfo from "./TypingInfo.tsx";
 
 import MetricPreview from "../ui/MetricPreview.tsx";
 import Stopwatch from "~/svgs/stopwatch.tsx";
+import { TypingState } from "~/typingState/index.ts";
 
 type TypingModeTimerProps = {
-  typingEvent: TypingEventType;
+  // Common
+  typingState: TypingState;
   stat: StatProjection;
   children: JSX.Element;
-
+  //
   duration: number;
   onTimerEnd: () => void;
 };
@@ -40,8 +41,8 @@ const TypingModeTimer = (props: TypingModeTimerProps) => {
 
   const timerEffect = Timer(timerOver);
 
-  createEffect((timer: TimerEffectStatus) => {
-    return timer({ status: props.typingEvent });
+  createEffect((timer: TypingTimer) => {
+    return timer({ state: props.typingState });
   }, timerEffect);
 
   onCleanup(() => {

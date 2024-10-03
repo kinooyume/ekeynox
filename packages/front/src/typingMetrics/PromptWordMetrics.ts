@@ -1,12 +1,11 @@
-import { type MetaWord } from "~/typingContent/Content.ts";
-import { WordStatus } from "../components/prompt/PromptWord";
+import { MetaWord, WordStatus } from "~/typingContent/word/types.ts";
 
 import {
   promptKeypressHandler,
   type PendingPromptKeypressMetrics,
   type PausedPromptKeypressMetrics,
   PromptWpmKind,
-} from "./PromptKeypressMetrics.ts";
+} from "./PromptCharacterMetrics.ts";
 
 // TODO: Redo all of it
 // TODO: make a proper pause management
@@ -35,7 +34,7 @@ const createWordMetricsState = ({
         return paused({ metrics: metrics.pause() });
 
       if (!(status === WordStatus.over)) return pending({ metrics });
-      const wpm = metrics.getWpm(word.keys);
+      const wpm = metrics.getWpm(word.characters);
       switch (wpm.kind) {
         case PromptWpmKind.done:
           setWpm(wpm);

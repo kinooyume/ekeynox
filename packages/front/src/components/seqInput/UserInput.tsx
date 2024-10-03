@@ -10,9 +10,9 @@ import { FocusType, useFocus } from "~/contexts/FocusProvider.tsx";
 import useClickOutside from "~/primitives/useClickOutside.ts";
 
 import {
-  TypingEventKind,
-  type TypingEventType,
-} from "../typing/TypingEvent.ts";
+  TypingStateKind,
+  type TypingState,
+} from "~/typingState";
 
 
 export type UserInputRef = {
@@ -20,7 +20,7 @@ export type UserInputRef = {
 };
 
 type UserInputProps = {
-  typingEvent: TypingEventType;
+  typingState: TypingState;
   onKeyDown: (key: string) => void;
   onKeyUp: (key: string) => void;
   onKeyAdd: (key: string, timestamp: number) => void;
@@ -33,16 +33,16 @@ const UserInput = (props: UserInputProps) => {
   // PendingStatus change
   createComputed(
     on(
-      () => props.typingEvent,
+      () => props.typingState,
       () => {
-        switch (props.typingEvent.kind) {
-          case TypingEventKind.unstart:
+        switch (props.typingState.kind) {
+          case TypingStateKind.unstart:
             input.value = "";
             input.focus();
-          case TypingEventKind.pending:
+          case TypingStateKind.pending:
           // case TypingStatusKind.pause:
 
-          case TypingEventKind.over:
+          case TypingStateKind.over:
         }
       },
       { defer: true },

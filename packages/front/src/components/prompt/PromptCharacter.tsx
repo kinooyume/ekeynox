@@ -1,14 +1,14 @@
 import { css } from "solid-styled";
 import { createSignal, createComputed } from "solid-js";
-import { KeyFocus, KeyStatus } from "~/typingMetrics/KeyMetrics";
-import { type MetaKey } from "~/typingContent/Content.ts";
+import { CharacterFocus, CharacterStatus } from "~/typingContent/character/types";
+import { type MetaCharacter } from "~/typingContent/character/types";
 
 const transformDict = [
   ["Enter", "↵"],
   ["\t", "⇥"],
 ];
 
-const Key = (props: MetaKey) => {
+const PromptCharacter = (props: MetaCharacter) => {
   const [wasInvalid, setWasInvalid] = createSignal(false);
 
   // const special = props.key === "Enter" ? "special" : "";
@@ -19,8 +19,8 @@ const Key = (props: MetaKey) => {
   createComputed(
     () => {
       if (
-        props.status !== KeyStatus.match &&
-        props.status !== KeyStatus.unset
+        props.status !== CharacterStatus.match &&
+        props.status !== CharacterStatus.unset
       ) {
         setWasInvalid(true);
       }
@@ -94,12 +94,12 @@ const Key = (props: MetaKey) => {
     <span
       class={`prompt-key ${props.focus} ${wasInvalid() ? "wasInvalid" : ""} ${props.status}`}
       classList={{
-        ["ghost-focus"]: props.ghostFocus === KeyFocus.focus,
+        ["ghost-focus"]: props.ghostFocus === CharacterFocus.focus,
       }}
     >
-      {transform(props.key)}
+      {transform(props.char)}
     </span>
   );
 };
 
-export default Key;
+export default PromptCharacter;

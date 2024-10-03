@@ -1,8 +1,8 @@
 import { css } from "solid-styled";
 import { For, Show } from "solid-js";
 
-import Key from "../prompt/PromptKey.tsx";
-import type { MetaWord } from "~/typingContent/Content.ts";
+import PromptCharacter from "../prompt/PromptCharacter.tsx";
+import { MetaWord } from "~/typingContent/word/types.ts";
 
 export enum WordStatus {
   unstart = "unstart",
@@ -48,12 +48,12 @@ const Word = (props: MetaWord) => {
   return (
     <div class="word">
       <div class={`${props.status}  ${props.focus ? "focus" : ""} keys`}>
-        <For each={props.keys}>{(key) => <Key {...key} />}</For>
+        <For each={props.characters}>{(key) => <PromptCharacter {...key} />}</For>
       </div>
       <Show
         when={
           props.wpm > 0 &&
-          props.keys.length > 4 &&
+          props.characters.length > 4 &&
           props.status === WordStatus.over
         }
       >

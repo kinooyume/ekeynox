@@ -1,11 +1,12 @@
+import { Match, Show, Switch, createResource, onMount } from "solid-js";
 import { clientOnly } from "@solidjs/start";
+import { useNavigate } from "@solidjs/router";
 
 import { useGameOptions } from "~/contexts/GameOptionsProvider";
 import { useSettings } from "~/contexts/SettingsProvider";
-import { Match, Show, Switch, createResource, onMount } from "solid-js";
-import { useNavigate } from "@solidjs/router";
+import { useAppState } from "~/contexts/AppStateProvider.tsx";
 
-import KeyboardLayout from "../settings/keyboardLayout.ts";
+import KeyboardLayout from "~/settings/keyboardLayout.ts";
 import { AppStateKind, PendingState, ResumeState } from "~/states";
 
 import {
@@ -15,7 +16,6 @@ import {
 } from "~/typingOptions/typingOptions.ts";
 
 import TypingGameManager from "~/components/typing/TypingGameManager";
-import { useAppState } from "~/contexts/AppStateProvider.tsx";
 
 const ClientResume = clientOnly(
   () => import("~/components/resume/TypingMetricsResume"),
@@ -44,6 +44,7 @@ export default function Typing() {
   };
 
   onMount(() => {
+    console.log("Typing mounted");
     if (!(state().kind === AppStateKind.pending)) {
       start(persistedGameOptions);
     }

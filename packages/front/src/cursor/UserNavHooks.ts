@@ -1,5 +1,6 @@
-import { KeyFocus } from "~/typingMetrics/KeyMetrics";
-import { WordStatus } from "~/components/prompt/PromptWord";
+import { WordStatus } from "~/typingContent/word/types";
+import { CharacterFocus } from "~/typingContent/character/types";
+
 import type { CursorNavHooks } from "./CursorNavHooks";
 
 const UserNavHooks: CursorNavHooks = {
@@ -7,21 +8,21 @@ const UserNavHooks: CursorNavHooks = {
     next: {
       enter: (cursor) => {
         cursor.set.wordStatus(WordStatus.pending, true);
-        cursor.set.keyFocus(KeyFocus.focus);
+        cursor.set.keyFocus(CharacterFocus.focus);
       },
       leave: (cursor) => {
         cursor.set.wordStatus(WordStatus.over, false);
-        cursor.set.keyFocus(KeyFocus.unfocus);
+        cursor.set.keyFocus(CharacterFocus.unfocus);
       },
     },
     prev: {
       enter: (cursor) => {
         cursor.set.wordStatus(WordStatus.pending, true);
-        cursor.set.keyFocus(KeyFocus.focus);
+        cursor.set.keyFocus(CharacterFocus.focus);
       },
       leave: (cursor) => {
         cursor.set.wordStatus(WordStatus.unfocus, false);
-        cursor.set.keyFocus(KeyFocus.back);
+        cursor.set.keyFocus(CharacterFocus.back);
       },
     },
   },
@@ -29,39 +30,39 @@ const UserNavHooks: CursorNavHooks = {
     next: {
       enter: (cursor) => {
         cursor.set.wordStatus(WordStatus.pending, true);
-        cursor.set.keyFocus(KeyFocus.focus);
+        cursor.set.keyFocus(CharacterFocus.focus);
       },
       leave: (cursor) => {
         cursor.set.wordStatus(WordStatus.over, false);
-        cursor.set.keyFocus(KeyFocus.unfocus);
+        cursor.set.keyFocus(CharacterFocus.unfocus);
       },
     },
     prev: {
       enter: (cursor) => {
         cursor.set.wordStatus(WordStatus.pending, true);
-        cursor.set.keyFocus(KeyFocus.focus);
+        cursor.set.keyFocus(CharacterFocus.focus);
       },
       leave: (cursor) => {
         cursor.set.wordStatus(WordStatus.unfocus, false);
-        cursor.set.keyFocus(KeyFocus.back);
+        cursor.set.keyFocus(CharacterFocus.back);
       },
     },
   },
   key: {
     next: {
       enter: (cursor) => {
-        cursor.set.keyFocus(KeyFocus.focus);
+        cursor.set.keyFocus(CharacterFocus.focus);
       },
       leave: (cursor) => {
-        cursor.set.keyFocus(KeyFocus.unfocus);
+        cursor.set.keyFocus(CharacterFocus.unfocus);
       },
     },
     prev: {
       enter: (cursor) => {
-        cursor.set.keyFocus(KeyFocus.focus);
+        cursor.set.keyFocus(CharacterFocus.focus);
       },
       leave: (cursor) => {
-        cursor.set.keyFocus(KeyFocus.back);
+        cursor.set.keyFocus(CharacterFocus.back);
       },
     },
   },

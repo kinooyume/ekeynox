@@ -5,7 +5,7 @@ import "balloon-css";
 
 import {
   createTypingProjection,
-  diffKeyStatusProjections,
+  diffCharacterStatusProjections,
   mergeTypingProjections,
   type TypingProjection,
 } from "~/typingMetrics/TypingProjection";
@@ -160,7 +160,7 @@ const KeyboardKeyResume = (props: KeyboardKeyResumeProps) => {
             if (cur) mergeTypingProjections(acc, cur);
             return acc;
           }, createTypingProjection());
-    return [diffKeyStatusProjections(info), info.total];
+    return [diffCharacterStatusProjections(info), info.total];
   };
 
   // show accuracy
@@ -179,7 +179,7 @@ const KeyboardKeyResume = (props: KeyboardKeyResumeProps) => {
             if (cur) mergeTypingProjections(acc, cur);
             return acc;
           }, createTypingProjection());
-    const result = diffKeyStatusProjections(info);
+    const result = diffCharacterStatusProjections(info);
 
     const incorrect = result.unmatch + result.missed + result.extra;
     const wasIncorrect =

@@ -1,22 +1,23 @@
-import { css } from "solid-styled";
+import type { JSX } from "solid-js";
 import { Show, createComputed, createSignal, on } from "solid-js";
+import { css } from "solid-styled";
 
-import { type Paragraphs } from "~/typingContent/Content.ts";
+import { Translator } from "~/contexts/i18nProvider.tsx";
+import { FocusType, useFocus } from "~/contexts/FocusProvider.tsx";
 
-import UserInput, { UserInputRef } from "../seqInput/UserInput";
-import Prompt from "../prompt/Prompt.tsx";
-import Keyboard, { type KeyboardHandler } from "../keyboard/TypingKeyboard.tsx";
+import { type TypingState } from "~/typingState";
 
 import { type KeysProjection } from "~/typingMetrics/KeysProjection.ts";
-import { type TypingEventType } from "./TypingEvent.ts";
-import type { JSX } from "solid-js";
-import { Translator } from "~/contexts/i18nProvider.tsx";
 import { HigherKeyboard } from "~/settings/keyboardLayout.ts";
-import { FocusType, useFocus } from "~/contexts/FocusProvider.tsx";
+
+import UserInput from "../seqInput/UserInput";
+import Prompt from "../prompt/Prompt.tsx";
+import Keyboard, { type KeyboardHandler } from "../keyboard/TypingKeyboard.tsx";
+import { Paragraphs } from "~/typingContent/paragraphs/types.ts";
 
 type TypingGameProps = {
   t: Translator;
-  typingEvent: TypingEventType;
+  typingState: TypingState;
 
   kbLayout: HigherKeyboard;
   keySet: Set<string>;
@@ -91,7 +92,7 @@ const TypingGame = (props: TypingGameProps) => {
   return (
     <div class="typing-game">
       <UserInput
-        typingEvent={props.typingEvent}
+        typingState={props.typingState}
         onKeyDown={props.showKb ? onKeyDown : props.onKeyDown}
         onKeyUp={props.showKb ? onKeyUp : props.onKeyUp}
         onKeyAdd={props.onAddKey}

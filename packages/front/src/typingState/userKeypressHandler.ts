@@ -1,28 +1,32 @@
+import { type TypingState, typingStatePending } from ".";
+
+import { TypingWordKind, WordStatus } from "~/typingContent/word/types";
+import { CharacterEventKind } from "~/typingContent/character/types";
+
 import type { Cursor } from "~/cursor/Cursor";
 import type { CursorNavType } from "~/cursor/CursorNav";
+
 import {
-  KeyEventKind,
-  KeyFocus,
   getKeyDownMetrics,
   getKeyMetrics,
   makeDeletedKeyMetrics,
 } from "~/typingMetrics/KeyMetrics";
-import { WordStatus } from "../prompt/PromptWord";
-import TypingEvent, {
-  TypingWordKind,
-  type TypingEventType,
-} from "./TypingEvent";
+
+
+
+// NOTE: A priori, uniquement pour userInput
+// Donc, a virer de typingGameManager
 
 /* In a nutshell
  * 3 responsabilities:
  *  - bouger le curseur
  *  - information sur le mot d'apres (on verra si toujours le cas)
- *  - [ return] TypingEvent
+ *  - [ return] TypingState
  */
 
 type KeypressHandler = {
-  addKey: (typed: string, timestamp: number) => TypingEventType | undefined;
-  keyDown: (key: string) => TypingEventType | undefined;
+  addKey: (typed: string, timestamp: number) => TypingState | undefined;
+  keyDown: (key: string) => TypingState | undefined;
 };
 
 const makeKeypressHandler = (
@@ -32,11 +36,11 @@ const makeKeypressHandler = (
   const backKey = (timestamp: number) => {
     if (!cursorNav.prev()) return;
     const deletedKeyMetrics = makeDeletedKeyMetrics({
-      expected: cursor.get.key().key,
-      status: cursor.get.key().status,
+      expected: cursor.get.character().char,
+      status: cursor.get.character().status,
     });
 
-    return TypingEvent.make({
+    return typingStatePending({
       key: {
         keyMetrics: deletedKeyMetrics,
         timestamp,
@@ -54,24 +58,21 @@ const makeKeypressHandler = (
     // if (typed.length === 0) return backKey(timestamp);
     const keyMetrics = getKeyMetrics({
       typed,
-      expected: cursor.get.key().key,
+      expected: cursor.get.character().char,
     });
-    if (keyMetrics[1].kind === KeyEventKind.ignore) {
+    if (keyMetrics[1].kind === CharacterEventKind.ignore) {
       return;
     } else {
       if (cursor.get.word().status !== WordStatus.pending) {
         cursor.set.wordStatus(WordStatus.pending, true);
       }
-      if (keyMetrics[1].kind === KeyEventKind.added) {
+      if (keyMetrics[1].kind === CharacterEventKind.added) {
         cursor.set.keyStatus(keyMetrics[1].status.kind);
       }
-      /* Tout ca on sait pas trop, surement pas ici */
 
-      /* ca pourrait reagir a TypingStatus */
-      // Donc en fait, si on reagis au typingStatus plutot pour faire next
+      /* Tout ca on sait pas trop, surement pas ici */
       let [hasNext, typingWord] = cursorNav.next();
 
-      /* Typing Status */
       const event = {
         key: {
           keyMetrics,
@@ -82,16 +83,16 @@ const makeKeypressHandler = (
         next: hasNext,
       };
 
-      return TypingEvent.make(event);
+      return typingStatePending(event);
     }
   };
 
   // NOTE: fallback to handle backspace
   const keyDown = (key: string) => {
     switch (getKeyDownMetrics(key)) {
-      case KeyEventKind.added:
+      case CharacterEventKind.added:
         return addKey(key, performance.now());
-      case KeyEventKind.back:
+      case CharacterEventKind.back:
         return backKey(performance.now());
     }
   };

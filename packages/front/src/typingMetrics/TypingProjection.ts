@@ -1,13 +1,16 @@
-import {
-  KeyEventKind,
-  type KeyEvent,
-  KeyStatus,
-  type KeyAdded,
-} from "./KeyMetrics";
-import List, { type LinkedList } from "../List";
-import { TypingKey } from "../typing/TypingEvent";
+import List, { type LinkedList } from "~/List";
 
-export type KeyStatusProjection = {
+import {
+  CharacterEventKind,
+  type CharacterEvent,
+  CharacterStatus,
+  type CharacterAdded,
+  TypingCharacter,
+} from "~/typingContent/character/types";
+
+// NOTE: C'est vraiment du Character
+
+export type CharacterStatusProjection = {
   match: number;
   unmatch: number;
   extra: number;
@@ -15,7 +18,7 @@ export type KeyStatusProjection = {
   total: number;
 };
 
-const createKeyStatusProjection = (): KeyStatusProjection => ({
+const createCharacterStatusProjection = (): CharacterStatusProjection => ({
   match: 0,
   unmatch: 0,
   extra: 0,
@@ -24,42 +27,42 @@ const createKeyStatusProjection = (): KeyStatusProjection => ({
 });
 
 export type TypingProjection = {
-  added: KeyStatusProjection;
-  deleted: KeyStatusProjection;
+  added: CharacterStatusProjection;
+  deleted: CharacterStatusProjection;
   total: number;
   expected: Array<string>;
 };
 
 const createTypingProjection = (): TypingProjection => ({
-  added: createKeyStatusProjection(),
-  deleted: createKeyStatusProjection(),
+  added: createCharacterStatusProjection(),
+  deleted: createCharacterStatusProjection(),
   total: 0,
   expected: [],
 });
 
 export type UpdateAddedKeyProps = {
-  target: KeyStatusProjection;
-  source: KeyAdded;
+  target: CharacterStatusProjection;
+  source: CharacterAdded;
   expected: Array<string>;
 };
 /* Side Effect */
-const updateAddedKeyStatus = ({
+const updateAddedCharacterStatus = ({
   target,
   source,
   expected,
 }: UpdateAddedKeyProps) => {
   switch (source.kind) {
-    case KeyStatus.match:
+    case CharacterStatus.match:
       target.match++;
       break;
-    case KeyStatus.unmatch:
+    case CharacterStatus.unmatch:
       target.unmatch++;
       expected.push(source.typed);
       break;
-    case KeyStatus.extra:
+    case CharacterStatus.extra:
       target.extra++;
       break;
-    case KeyStatus.missed:
+    case CharacterStatus.missed:
       target.missed++;
       expected.push(source.typed);
       break;
@@ -68,22 +71,22 @@ const updateAddedKeyStatus = ({
 };
 
 type KeyDeletedMetricsProps = {
-  target: KeyStatusProjection;
-  source: KeyStatus;
+  target: CharacterStatusProjection;
+  source: CharacterStatus;
 };
 
-const updateDeletedKeyStatus = ({ target, source }: KeyDeletedMetricsProps) => {
+const updateDeletedCharacterStatus = ({ target, source }: KeyDeletedMetricsProps) => {
   switch (source) {
-    case KeyStatus.match:
+    case CharacterStatus.match:
       target.match++;
       break;
-    case KeyStatus.unmatch:
+    case CharacterStatus.unmatch:
       target.unmatch++;
       break;
-    case KeyStatus.extra:
+    case CharacterStatus.extra:
       target.extra++;
       break;
-    case KeyStatus.missed:
+    case CharacterStatus.missed:
       target.missed++;
       break;
   }
@@ -92,19 +95,19 @@ const updateDeletedKeyStatus = ({ target, source }: KeyDeletedMetricsProps) => {
 
 /* Side Effect */
 const updateTypingProjection =
-  (target: TypingProjection) => (source: KeyEvent) => {
+  (target: TypingProjection) => (source: CharacterEvent) => {
     switch (source.kind) {
-      case KeyEventKind.back || KeyEventKind.ignore:
+      case CharacterEventKind.back || CharacterEventKind.ignore:
         return;
-      case KeyEventKind.added:
-        updateAddedKeyStatus({
+      case CharacterEventKind.added:
+        updateAddedCharacterStatus({
           target: target.added,
           source: source.status,
           expected: target.expected,
         });
         break;
-      case KeyEventKind.deleted:
-        updateDeletedKeyStatus({
+      case CharacterEventKind.deleted:
+        updateDeletedCharacterStatus({
           target: target.deleted,
           source: source.status,
         });
@@ -114,9 +117,9 @@ const updateTypingProjection =
   };
 
 /* Side effect */
-const mergeKeyStatusProjections = (
-  target: KeyStatusProjection,
-  source: KeyStatusProjection,
+const mergeCharacterStatusProjections = (
+  target: CharacterStatusProjection,
+  source: CharacterStatusProjection,
 ) => {
   target.match += source.match;
   target.unmatch += source.unmatch;
@@ -125,7 +128,7 @@ const mergeKeyStatusProjections = (
   target.total += source.total;
 };
 
-const diffKeyStatusProjections = ({ added, deleted }: TypingProjection) => ({
+const diffCharacterStatusProjections = ({ added, deleted }: TypingProjection) => ({
   match: added.match - deleted.match,
   unmatch: added.unmatch - deleted.unmatch,
   extra: added.extra - deleted.extra,
@@ -138,15 +141,15 @@ const mergeTypingProjections = (
   target: TypingProjection,
   source: TypingProjection,
 ) => {
-  mergeKeyStatusProjections(target.added, source.added);
-  mergeKeyStatusProjections(target.deleted, source.deleted);
+  mergeCharacterStatusProjections(target.added, source.added);
+  mergeCharacterStatusProjections(target.deleted, source.deleted);
   target.total += source.total;
   target.expected = target.expected.concat(source.expected);
 };
 
 const createTypingProjectionFromPendingList = (
-  list: LinkedList<TypingKey>,
-): [TypingProjection, LinkedList<TypingKey>] => {
+  list: LinkedList<TypingCharacter>,
+): [TypingProjection, LinkedList<TypingCharacter>] => {
   const projection = createTypingProjection();
   const updater = updateTypingProjection(projection);
   let node = list;
@@ -164,5 +167,5 @@ export {
   updateTypingProjection,
   mergeTypingProjections,
   createTypingProjectionFromPendingList,
-  diffKeyStatusProjections,
+  diffCharacterStatusProjections,
 };

@@ -3,7 +3,7 @@ import { css } from "solid-styled";
 
 import {
   createTypingProjection,
-  diffKeyStatusProjections,
+  diffCharacterStatusProjections,
   mergeTypingProjections,
   type TypingProjection,
 } from "~/typingMetrics/TypingProjection";
@@ -172,7 +172,7 @@ const KeyboardKey = (props: KeyboardKeyProps) => {
             if (cur) mergeTypingProjections(acc, cur);
             return acc;
           }, createTypingProjection());
-    const result = diffKeyStatusProjections(info);
+    const result = diffCharacterStatusProjections(info);
 
     const incorrect = result.unmatch + result.missed + result.extra;
     const wasIncorrect =

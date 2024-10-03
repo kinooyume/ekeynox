@@ -3,12 +3,12 @@ import type { SetStoreFunction } from "solid-js/store";
 import type { Paragraphs } from "../content/Content";
 import type { Accessor, JSX } from "solid-js";
 import type { PendingMode } from "../AppState";
-import type { TypingEventType } from "./TypingEvent";
+import type { TypingState } from "./TypingState";
 
 export type TypingPluginProps<T> = {
   paragraphs: Paragraphs;
   setParagraphs: SetStoreFunction<Paragraphs>;
-  event: Accessor<TypingEventType>;
+  event: Accessor<TypingState>;
   keys: Array<T>;
   onNew: (content: PendingMode) => void;
 };

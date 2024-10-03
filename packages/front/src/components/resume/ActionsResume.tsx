@@ -13,7 +13,7 @@ import {
 import { TypingGameOptions } from "~/typingOptions/typingGameOptions";
 
 import { makeRedoContent } from "~/typingContent/TypingGameSource";
-import Content from "~/typingContent/Content";
+import Content from "~/typingContent";
 
 import type { Metrics, MetricsResume } from "~/typingMetrics/Metrics";
 

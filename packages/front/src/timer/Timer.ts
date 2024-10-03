@@ -1,4 +1,4 @@
-import { TypingEventKind, type TypingEventType } from "~/components/typing/TypingEvent";
+import { TypingStateKind, type TypingState } from "~/typingState";
 
 export type TimerPause = { resume: () => TimerPending };
 export type TimerPending = { pause: () => TimerPause };
@@ -9,33 +9,38 @@ export type CreateNewTimer<T> = (t: T) => NewTimer;
 export type CreateTimerEffect<U> = (newTimer: NewTimer) => TimerEffect<U>;
 export type TimerEffect<U> = (u: U) => TimerEffect<U>;
 
-type Props = {
-  status: TypingEventType;
+export type TypingTimerProps = {
+  state: TypingState;
 };
 
-export type TimerEffectStatus = TimerEffect<Props>
+export type TypingTimer = TimerEffect<TypingTimerProps>
 
-const createTimer: CreateTimerEffect<Props> = (
+// NOTE: C'est pas un timer en fait, c'est un switch play/pause
+
+// NOTE: maybe call it typingTimer ? As it react to TypingState
+// Après, c'est generique.. De base
+
+const createTypingTimer: CreateTimerEffect<TypingTimerProps> = (
   newTimer: NewTimer,
 ) => {
   const paused =
-    (timer: TimerPause): TimerEffect<Props> =>
-    ({ status }: Props) => {
+    (timer: TimerPause): TimerEffect<TypingTimerProps> =>
+    ({ state: status }: TypingTimerProps) => {
       switch (status.kind) {
-        case TypingEventKind.pending:
+        case TypingStateKind.pending:
           return pending(timer.resume());
-        case TypingEventKind.unstart:
+        case TypingStateKind.unstart:
           return paused(newTimer());
       }
       return paused(timer);
     };
   const pending =
-    (timer: TimerPending): TimerEffect<Props> =>
-    ({ status }: Props) => {
+    (timer: TimerPending): TimerEffect<TypingTimerProps> =>
+    ({ state: status }: TypingTimerProps) => {
       switch (status.kind) {
-        case TypingEventKind.pause:
+        case TypingStateKind.pause:
           return paused(timer.pause());
-        case TypingEventKind.unstart:
+        case TypingStateKind.unstart:
           timer.pause();
           return paused(newTimer());
       }
@@ -44,7 +49,7 @@ const createTimer: CreateTimerEffect<Props> = (
   return paused(newTimer());
 };
 
-export default createTimer;
+export default createTypingTimer;
 
 // Correct proto stopwatch !
 // https://codingtorque.com/simple-stopwatch-using-javascript/

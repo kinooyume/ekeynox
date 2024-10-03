@@ -1,6 +1,5 @@
-import type { LinkedList } from "~/List";
-import List from "~/List";
-import { TypingWordKind, type TypingWord } from "~/components/typing/TypingEvent";
+import List, { type LinkedList } from "~/List";
+import { TypingWord, TypingWordKind } from "~/typingContent/word/types";
 
 export type WordProjection = {
   correct: number;
