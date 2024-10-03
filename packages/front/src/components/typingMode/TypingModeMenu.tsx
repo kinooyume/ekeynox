@@ -32,6 +32,9 @@ import CustomInput, { type CustomInputRef } from "../ui/CustomInput";
 import Bunny from "~/svgs/bunny";
 import Monkey from "~/svgs/monkey";
 
+// SELECTION de Personnage: ABSOLUMENT PARFAIT
+// MOBILE:  https://www.linkedin.com/posts/hammadx02_flutter-appdevelopment-activity-7241460889885851648-eW69?utm_source=share&utm_medium=member_android
+
 // Le gars a fait pleins de menu de selection stylax
 // https://in.pinterest.com/pin/12525705207244555/
 //

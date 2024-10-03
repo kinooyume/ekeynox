@@ -10,7 +10,7 @@ import {
   getKeyDownMetrics,
   getKeyMetrics,
   makeDeletedKeyMetrics,
-} from "~/typingMetrics/KeyMetrics";
+} from "~/typingStatistics/KeyMetrics";
 
 
 

@@ -4,7 +4,7 @@ import { css } from "solid-styled";
 import TimerOver from "~/timer/TimerStopwatch.ts";
 import Timer, { type TypingTimer } from "~/timer/Timer.ts";
 
-import type { StatProjection } from "~/typingMetrics/KeypressMetrics.ts";
+import type { StatProjection } from "~/typingStatistics/KeypressMetrics.ts";
 
 import TypingInfo from "./TypingInfo.tsx";
 

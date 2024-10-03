@@ -2,10 +2,7 @@ import type { Setter } from "solid-js";
 
 import List, { type LinkedList } from "~/List";
 
-import {
-  TypingStateKind,
-  type TypingState,
-} from "~/typingState";
+import { TypingStateKind, type TypingState } from "~/typingState";
 
 import type { TypingProjection } from "./TypingProjection";
 
@@ -40,7 +37,7 @@ export type TypingMetricsState = (
 ) => TypingMetricsState;
 
 type Interval = {
-  timer: NodeJS.Timer | NodeJS.Timeout;
+  timer: NodeJS.Timeout;
 };
 
 const createTypingMetricsState = (
@@ -141,7 +138,7 @@ const createTypingMetricsState = (
             keypressMetrics.resume();
           pendingKeypressMetrics.event(event);
 
-          const interval: Interval = { timer: 0 as unknown as NodeJS.Timer };
+          const interval: Interval = { timer: 0 as unknown as NodeJS.Timeout };
           const update = () => {
             updateStat(pendingKeypressMetrics.getProjection(false), metrics);
           };

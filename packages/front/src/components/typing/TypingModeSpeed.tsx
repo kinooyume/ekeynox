@@ -1,6 +1,6 @@
 import { type JSX, createComputed, createSignal } from "solid-js";
 import type { TypingState } from "~/typingState";
-import type { StatProjection } from "~/typingMetrics/KeypressMetrics";
+import type { StatProjection } from "~/typingStatistics/KeypressMetrics";
 import TypingInfo from "./TypingInfo";
 import MetricPreview from "../ui/MetricPreview";
 import Word from "~/svgs/word";

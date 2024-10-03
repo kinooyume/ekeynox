@@ -1,5 +1,4 @@
-export const keyboardLayoutName = ["qwerty", "azerty"];
-export type KeyboardLayoutName = (typeof keyboardLayoutName)[number];
+import { KeyboardLayoutName } from "~/typingKeyboard/keyboardLayout";
 
 export const locales = ["en", "fr"];
 export type Locale = (typeof locales)[number];

@@ -8,6 +8,7 @@ import {
   TypingCharacter,
 } from "~/typingContent/character/types";
 
+// NOTE: vraiment du key
 // NOTE: C'est vraiment du Character
 
 export type CharacterStatusProjection = {

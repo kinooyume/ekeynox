@@ -6,7 +6,6 @@ import { useGameOptions } from "~/contexts/GameOptionsProvider";
 import { useSettings } from "~/contexts/SettingsProvider";
 import { useAppState } from "~/contexts/AppStateProvider.tsx";
 
-import KeyboardLayout from "~/settings/keyboardLayout.ts";
 import { AppStateKind, PendingState, ResumeState } from "~/states";
 
 import {
@@ -16,6 +15,7 @@ import {
 } from "~/typingOptions/typingOptions.ts";
 
 import TypingGameManager from "~/components/typing/TypingGameManager";
+import keyboardLayout from "~/typingKeyboard/keyboardLayout";
 
 const ClientResume = clientOnly(
   () => import("~/components/resume/TypingMetricsResume"),
@@ -44,7 +44,6 @@ export default function Typing() {
   };
 
   onMount(() => {
-    console.log("Typing mounted");
     if (!(state().kind === AppStateKind.pending)) {
       start(persistedGameOptions);
     }
@@ -62,7 +61,7 @@ export default function Typing() {
               start={start}
               gameOptions={(state() as PendingState).options}
               showKb={settings.showKb}
-              kbLayout={KeyboardLayout.create(settings.kb.value)}
+              kbLayout={keyboardLayout(settings.kb.value)}
               onExit={() => {
                 mutation.menu();
                 navigate("/");
@@ -74,7 +73,7 @@ export default function Typing() {
       </Match>
       <Match when={state().kind === AppStateKind.resume} keyed>
         <ClientResume
-          kbLayout={KeyboardLayout.create(settings.kb.value)}
+          kbLayout={keyboardLayout(settings.kb.value)}
           metrics={(state() as ResumeState).metrics}
         >
           {(metricsResume) => (

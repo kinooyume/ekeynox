@@ -1,9 +1,7 @@
 import { Match, Switch, createEffect, createSignal, onMount } from "solid-js";
-import type { Translator } from "../App";
-import type { KeyboardHandler } from "../keyboard/TypingKeyboard";
+import type { KeyboardHandler } from "../virtualKeyboard/TypingKeyboard";
 import { css } from "solid-styled";
-import HeaderNavAction from "./HeaderTypingAction";
-import Resume from "~/svgs/Resume";
+import { Translator } from "~/contexts/i18nProvider";
 
 type TypingHelpProps = {
   t: Translator;

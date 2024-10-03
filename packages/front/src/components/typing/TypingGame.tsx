@@ -5,15 +5,16 @@ import { css } from "solid-styled";
 import { Translator } from "~/contexts/i18nProvider.tsx";
 import { FocusType, useFocus } from "~/contexts/FocusProvider.tsx";
 
+import { type Paragraphs } from "~/typingContent/paragraphs/types";
+import { type HigherKeyboard } from "~/typingKeyboard/keyboardLayout";
+
 import { type TypingState } from "~/typingState";
 
-import { type KeysProjection } from "~/typingMetrics/KeysProjection.ts";
-import { HigherKeyboard } from "~/settings/keyboardLayout.ts";
+import { type KeysProjection } from "~/typingStatistics/KeysProjection.ts";
 
 import UserInput from "../seqInput/UserInput";
 import Prompt from "../prompt/Prompt.tsx";
-import Keyboard, { type KeyboardHandler } from "../keyboard/TypingKeyboard.tsx";
-import { Paragraphs } from "~/typingContent/paragraphs/types.ts";
+import Keyboard, { type KeyboardHandler } from "../virtualKeyboard/TypingKeyboard.tsx";
 
 type TypingGameProps = {
   t: Translator;
@@ -101,8 +102,8 @@ const TypingGame = (props: TypingGameProps) => {
       <Prompt paragraphs={props.paragraphs} />
       <Show when={props.showKb}>
         <Keyboard
-          metrics={props.keyMetrics}
-          currentKey={props.promptKey}
+          metrics={props.keyMetrics} // keyProjections, typingProjections
+          currentKey={props.promptKey} // peut etre lu
           layout={kbLayout()}
           ref={(k) => (keyboard = k)}
         />

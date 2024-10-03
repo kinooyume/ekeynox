@@ -6,7 +6,7 @@ import {
   useContext,
 } from "solid-js";
 
-import type { Metrics, MetricsResume } from "~/typingMetrics/Metrics";
+import type { Metrics, MetricsResume } from "~/typingStatistics/Metrics";
 import { type TypingOptions, deepCopy } from "~/typingOptions/typingOptions";
 import { type TypingGameOptions } from "~/typingOptions/typingGameOptions";
 
