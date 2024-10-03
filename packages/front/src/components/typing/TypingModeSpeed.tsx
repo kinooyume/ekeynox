@@ -3,7 +3,7 @@ import type { TypingEventType } from "./TypingEvent";
 import type { StatProjection } from "../metrics/KeypressMetrics";
 import TypingInfo from "./TypingInfo";
 import MetricPreview from "../ui/MetricPreview";
-import Word from "../svgs/word";
+import Word from "~/svgs/word";
 import { css } from "solid-styled";
 
 type TypingModeSpeedProps = {

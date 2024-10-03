@@ -1,5 +1,5 @@
-import KeyboardIcon from "../svgs/keyboardIcon.tsx";
-import GlobeIcon from "../svgs/globe.tsx";
+import KeyboardIcon from "~/svgs/keyboardIcon.tsx";
+import GlobeIcon from "~/svgs/globe.tsx";
 import { css } from "solid-styled";
 import {
   SettingsOriginType,

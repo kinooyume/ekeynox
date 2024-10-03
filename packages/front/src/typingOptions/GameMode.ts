@@ -1,17 +1,18 @@
 import type { JSXElement } from "solid-js";
-import Bunny from "../svgs/bunny";
-import Monkey from "../svgs/monkey";
-import BunnyHead from "../svgs/bunnyHead";
-import MonkeyHead from "../svgs/monkeyHead";
-import type { GameParams } from "./GameParams";
-import SpeedParams from "./SpeedParams";
-import SpeedParamsCompact from "./SpeedParamsCompact";
-import TimerParams from "./TimerParams";
-import TimerParamsCompact from "./TimerParamsCompact";
-import MonkeySmile from "../svgs/monkeySmile";
-import BunnySmile from "../svgs/bunnySmile";
-import { GameModeKind } from "~/gameOptions/gameModeKind";
 
+import type { GameParams } from "./GameParams";
+import SpeedParams from "~/components/gameMode/SpeedParams";
+import SpeedParamsCompact from "~/components/gameMode/SpeedParamsCompact";
+import TimerParams from "~/components/gameMode/TimerParams";
+import TimerParamsCompact from "~/components/gameMode/TimerParamsCompact";
+
+import MonkeySmile from "~/svgs/monkeySmile";
+import BunnySmile from "~/svgs/bunnySmile";
+import Bunny from "~/svgs/bunny";
+import Monkey from "~/svgs/monkey";
+import BunnyHead from "~/svgs/bunnyHead";
+import MonkeyHead from "~/svgs/monkeyHead";
+import { GameModeKind } from "~/typingOptions/gameModeKind";
 
 export type GameModeData = {
   picto: () => JSXElement;

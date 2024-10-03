@@ -1,11 +1,11 @@
 import { css } from "solid-styled";
 
-import Logo from "../svgs/logo.tsx";
+import Logo from "~/svgs/logo.tsx";
 import HeaderSettings from "./HeaderSettings.tsx";
 import { onMount, Show } from "solid-js";
 import anime from "animejs";
 import { useWindowSize } from "@solid-primitives/resize-observer";
-import LogoTiny from "../svgs/logoTiny.tsx";
+import LogoTiny from "~/svgs/logoTiny.tsx";
 
 const Header = () => {
   css`

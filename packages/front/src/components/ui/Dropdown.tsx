@@ -11,8 +11,8 @@ import {
   createAnimationComp,
   isInitialAnimation,
 } from "~/animations/animation";
-import Cross from "../svgs/cross";
-import useAnimateModal from "~/hooks/useAnimateModal";
+import Cross from "~/svgs/cross";
+import useAnimateModal from "~/primitives/useAnimateModal";
 
 // Dropdown like animation with anime.js
 // https://codepen.io/NielsVoogt/pen/dyGpNOx

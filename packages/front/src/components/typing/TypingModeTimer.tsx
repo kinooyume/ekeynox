@@ -10,7 +10,7 @@ import { type TypingEventType } from "./TypingEvent.ts";
 import TypingInfo from "./TypingInfo.tsx";
 
 import MetricPreview from "../ui/MetricPreview.tsx";
-import Stopwatch from "../svgs/stopwatch.tsx";
+import Stopwatch from "~/svgs/stopwatch.tsx";
 
 type TypingModeTimerProps = {
   typingEvent: TypingEventType;
@@ -38,7 +38,7 @@ const TypingModeTimer = (props: TypingModeTimerProps) => {
     },
   });
 
-  const timerEffect = Timer.createEffect(timerOver);
+  const timerEffect = Timer(timerOver);
 
   createEffect((timer: TimerEffectStatus) => {
     return timer({ status: props.typingEvent });

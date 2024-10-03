@@ -1,11 +1,7 @@
 import type { TimedKey } from "~/typingMetrics/Metrics";
 import type { CreateNewTimer, TimerPause, TimerPending } from "./Timer";
 
-// NOTE: on a le pattern de:
-// - resumeProps
-// - pauseProps: timeout(s) + resumeProps
-//
-
+// NOTE: il me semble qu'on veut jarter ça
 export type SetCleanup = (cleanup: () => void) => void;
 
 type TimerKeypressProps<T> = {

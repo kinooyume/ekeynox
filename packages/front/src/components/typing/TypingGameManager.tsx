@@ -47,10 +47,10 @@ import type { KeyboardHandler } from "../keyboard/TypingKeyboard";
 import TimerInput from "../seqInput/TimerInput";
 import type { TimerEffectStatus } from "~/timer/Timer";
 
-import { PendingKind, PendingMode, PendingStatus } from "~/appState/appState";
+import { PendingKind, PendingMode, PendingStatus } from "~/states";
 
-import { GameOptions } from "~/gameOptions/gameOptions";
-import { GameModeKind } from "~/gameOptions/gameModeKind";
+import { GameOptions } from "~/typingOptions/gameOptions";
+import { GameModeKind } from "~/typingOptions/gameModeKind";
 
 import { HigherKeyboard } from "~/settings/keyboardLayout";
 

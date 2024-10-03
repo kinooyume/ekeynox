@@ -1,4 +1,4 @@
-import { GameOptions } from "~/gameOptions/gameOptions";
+import { GameOptions } from "~/typingOptions/gameOptions";
 import type { LinkedList } from "../List";
 import type { MetaWord, Paragraphs } from "../content/Content";
 import { KeyEventKind } from "./KeyMetrics";

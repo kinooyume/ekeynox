@@ -3,7 +3,7 @@ import type { Translator } from "../App";
 import type { KeyboardHandler } from "../keyboard/TypingKeyboard";
 import { css } from "solid-styled";
 import HeaderNavAction from "./HeaderTypingAction";
-import Resume from "../svgs/Resume";
+import Resume from "~/svgs/Resume";
 
 type TypingHelpProps = {
   t: Translator;

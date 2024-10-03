@@ -2,7 +2,7 @@ import { css } from "solid-styled";
 import { For, Show } from "solid-js";
 
 import Key from "../prompt/PromptKey.tsx";
-import type { MetaWord } from "../content/Content.ts";
+import type { MetaWord } from "~/typingContent/Content.ts";
 
 export enum WordStatus {
   unstart = "unstart",

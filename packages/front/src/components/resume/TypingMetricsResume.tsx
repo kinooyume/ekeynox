@@ -36,18 +36,6 @@ type TypingMetricsProps = {
   children: (n: MetricsResume) => JSXElement;
 };
 
-// Cool mobile version
-// https://x.com/slavakornilov/status/1787408908069515499
-//
-// Awesome animate mobile
-// https://in.pinterest.com/pin/730568370831216958/?ref=usepanda.com
-//
-// Cool bento.. to check
-// https://codepen.io/EaterUsr/pen/yLZgxBE
-//
-// Really cool tailwind dashboard
-//https://cruip.com/demos/mosaic/
-
 const TypingMetricsResume = (props: TypingMetricsProps) => {
   const t = useI18n();
   const keysSet = new Set(Object.keys(props.metrics.keys));
@@ -478,3 +466,16 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
 };
 
 export default TypingMetricsResume;
+
+// Cool mobile version
+// https://x.com/slavakornilov/status/1787408908069515499
+//
+// Awesome animate mobile
+// https://in.pinterest.com/pin/730568370831216958/?ref=usepanda.com
+//
+// Cool bento.. to check
+// https://codepen.io/EaterUsr/pen/yLZgxBE
+//
+// Really cool tailwind dashboard
+//https://cruip.com/demos/mosaic/
+

@@ -1,9 +1,11 @@
-import { css } from "solid-styled";
-import GameModeDropdown from "../gameMode/GameModeDropdown";
-import GameOptionsRecap from "../gameMode/GameOptionsRecap";
 import { Show } from "solid-js";
-import { GameOptions } from "~/gameOptions/gameOptions";
+import { css } from "solid-styled";
+
 import { useI18n } from "~/contexts/i18nProvider";
+import { GameOptions } from "~/typingOptions/gameOptions";
+
+import GameOptionsRecap from "../gameMode/GameOptionsRecap";
+import GameModeDropdown from "../gameMode/GameModeDropdown";
 
 type HeaderNavLeftProps = {
   start: (opts: GameOptions) => void;

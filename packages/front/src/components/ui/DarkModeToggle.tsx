@@ -1,5 +1,5 @@
-import Sun from "../svgs/sun.tsx";
-import Moon from "../svgs/moon.tsx";
+import Sun from "~/svgs/sun.tsx";
+import Moon from "~/svgs/moon.tsx";
 import "./DarkModeToggle.css";
 import { Match, Switch } from "solid-js";
 import { Transition } from "solid-transition-group";

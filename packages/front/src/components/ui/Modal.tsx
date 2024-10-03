@@ -2,7 +2,7 @@ import { Accessor, JSX, Show, createSignal } from "solid-js";
 import { Portal } from "solid-js/web";
 import { css } from "solid-styled";
 
-import Cross from "../svgs/cross";
+import Cross from "~/svgs/cross";
 import {
   type AnimationChildren,
   createAnimationComp,
@@ -12,7 +12,7 @@ import {
 } from "~/animations/animation";
 import useAnimateModalMorphing, {
   AnimateModalHooks,
-} from "~/hooks/useAnimateModalMorphing";
+} from "~/primitives/useAnimateModalMorphing";
 
 type ModalProps = {
   button: (toggle: () => void) => JSX.Element;

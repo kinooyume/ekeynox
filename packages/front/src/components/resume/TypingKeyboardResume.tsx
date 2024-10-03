@@ -1,8 +1,8 @@
 import { For, createSignal, onMount } from "solid-js";
 import { css } from "solid-styled";
 import KeyboardKeyResume from "./KeyboardKeyResume";
-import type { KeysProjection } from "../metrics/KeysProjection";
-import type { KeyboardLayout } from "../keyboard/KeyboardLayout";
+import type { KeysProjection } from "~/typingMetrics/KeysProjection";
+import { KeyboardLayout } from "~/settings/keyboardLayout";
 
 type KeyboardProps = {
   metrics: KeysProjection;
