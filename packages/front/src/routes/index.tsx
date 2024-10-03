@@ -1,12 +1,10 @@
-import { usePreloadRoute } from "@solidjs/router";
-import { onMount } from "solid-js";
 import { Portal } from "solid-js/web";
-import About from "~/components/about/About";
-import GameModeMenu from "~/components/gameMode/GameModeMenu";
 import { useAppState } from "~/contexts/AppStateProvider";
 import { useGameOptions } from "~/contexts/GameOptionsProvider";
 
-import { GameOptions, optionsToPending } from "~/gameOptions/gameOptions";
+import { GameOptions, optionsToPending } from "~/typingOptions/gameOptions";
+import GameModeMenu from "~/components/gameMode/GameModeMenu";
+import About from "~/components/about/About";
 
 export default function Menu() {
   const { persistedGameOptions, setPersistedGameOptions, fetchSourcesGen } =

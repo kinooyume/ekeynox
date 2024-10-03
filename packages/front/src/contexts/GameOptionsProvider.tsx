@@ -12,7 +12,7 @@ import { isServer } from "solid-js/web";
 import {
   GameOptions,
   getDefaultGameOptions,
-} from "~/gameOptions/gameOptions";
+} from "~/typingOptions/gameOptions";
 
 import SourcesGen, {
   SourcesGenFetch,

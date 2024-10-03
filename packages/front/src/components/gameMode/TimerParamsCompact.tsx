@@ -5,14 +5,14 @@ import {
   WordsGenerationCategory,
   type Category,
   type Languages,
-} from "../../gameOptions/gameOptions";
+} from "../../typingOptions/gameOptions";
 import RadioGroup from "../ui/RadioGroup";
 
-import Lang from "../svgs/lang";
-import Quote from "../svgs/quote";
-import Text from "../svgs/text";
-import Customizer from "../svgs/customizer";
-import Stopwatch from "../svgs/stopwatch";
+import Lang from "~/svgs/lang";
+import Quote from "~/svgs/quote";
+import Text from "~/svgs/text";
+import Customizer from "~/svgs/customizer";
+import Stopwatch from "~/svgs/stopwatch";
 import type { GameParams } from "./GameParams";
 import { useI18n } from "~/contexts/i18nProvider";
 

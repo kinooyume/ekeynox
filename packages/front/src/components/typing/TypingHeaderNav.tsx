@@ -2,7 +2,7 @@ import TypingHeaderMenu from "./TypingHeaderMenu";
 import { css } from "solid-styled";
 import { JSX, onCleanup, onMount, Show } from "solid-js";
 import anime from "animejs";
-import { GameOptions } from "~/gameOptions/gameOptions";
+import { GameOptions } from "~/typingOptions/gameOptions";
 import { useWindowSize } from "@solid-primitives/resize-observer";
 
 export type LeavingFn = (fn: () => void) => void;

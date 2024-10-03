@@ -9,19 +9,18 @@ export type CreateNewTimer<T> = (t: T) => NewTimer;
 export type CreateTimerEffect<U> = (newTimer: NewTimer) => TimerEffect<U>;
 export type TimerEffect<U> = (u: U) => TimerEffect<U>;
 
-// TODO: rename
-type CreateEffectProps = {
+type Props = {
   status: TypingEventType;
 };
 
-export type TimerEffectStatus = TimerEffect<CreateEffectProps>
+export type TimerEffectStatus = TimerEffect<Props>
 
-const createEffect: CreateTimerEffect<CreateEffectProps> = (
+const createTimer: CreateTimerEffect<Props> = (
   newTimer: NewTimer,
 ) => {
   const paused =
-    (timer: TimerPause): TimerEffect<CreateEffectProps> =>
-    ({ status }: CreateEffectProps) => {
+    (timer: TimerPause): TimerEffect<Props> =>
+    ({ status }: Props) => {
       switch (status.kind) {
         case TypingEventKind.pending:
           return pending(timer.resume());
@@ -31,8 +30,8 @@ const createEffect: CreateTimerEffect<CreateEffectProps> = (
       return paused(timer);
     };
   const pending =
-    (timer: TimerPending): TimerEffect<CreateEffectProps> =>
-    ({ status }: CreateEffectProps) => {
+    (timer: TimerPending): TimerEffect<Props> =>
+    ({ status }: Props) => {
       switch (status.kind) {
         case TypingEventKind.pause:
           return paused(timer.pause());
@@ -45,7 +44,7 @@ const createEffect: CreateTimerEffect<CreateEffectProps> = (
   return paused(newTimer());
 };
 
-export default { createEffect };
+export default createTimer;
 
 // Correct proto stopwatch !
 // https://codingtorque.com/simple-stopwatch-using-javascript/

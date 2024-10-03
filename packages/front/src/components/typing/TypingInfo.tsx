@@ -8,11 +8,11 @@ import {
   onCleanup,
   createEffect,
 } from "solid-js";
-import Nav from "../svgs/nav-abs.tsx";
-import Gauge from "../svgs/gauge.tsx";
-import Accuracy from "../svgs/accuracy.tsx";
+import Nav from "~/svgs/nav-abs.tsx";
+import Gauge from "~/svgs/gauge.tsx";
+import Accuracy from "~/svgs/accuracy.tsx";
 import anime from "animejs";
-import ProgressBar from "../svgs/progressBar.tsx";
+import ProgressBar from "~/svgs/progressBar.tsx";
 import MetricPreview from "../ui/MetricPreview.tsx";
 import { useWindowSize } from "@solid-primitives/resize-observer";
 

@@ -1,11 +1,11 @@
 import { css } from "solid-styled";
 import HeaderNavAction from "./HeaderTypingAction";
-import Resume from "../svgs/Resume";
-import Reset from "../svgs/reset";
-import Cross from "../svgs/cross";
-import Shuffle from "../svgs/shuffle";
+import Resume from "~/svgs/Resume";
+import Reset from "~/svgs/reset";
+import Cross from "~/svgs/cross";
+import Shuffle from "~/svgs/shuffle";
 import { Show } from "solid-js";
-import Ghost from "../svgs/ghost";
+import Ghost from "~/svgs/ghost";
 
 type TypingHeaderActionsProps = {
   paused: boolean;

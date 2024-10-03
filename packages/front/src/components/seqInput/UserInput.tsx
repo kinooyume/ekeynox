@@ -7,7 +7,7 @@ import {
 
 import { FocusType, useFocus } from "~/contexts/FocusProvider.tsx";
 
-import useClickOutside from "~/hooks/useClickOutside.ts";
+import useClickOutside from "~/primitives/useClickOutside.ts";
 
 import {
   TypingEventKind,

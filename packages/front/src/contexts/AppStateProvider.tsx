@@ -7,7 +7,7 @@ import {
 } from "solid-js";
 
 import type { Metrics, MetricsResume } from "~/typingMetrics/Metrics";
-import { type GameOptions, deepCopy } from "~/gameOptions/gameOptions";
+import { type GameOptions, deepCopy } from "~/typingOptions/gameOptions";
 
 import {
   AppStateKind,
@@ -15,7 +15,7 @@ import {
   type AppState,
   type PendingMode,
   type PendingStatusNew,
-} from "../appState/appState";
+} from "~/states";
 
 
 type AppMutation = {

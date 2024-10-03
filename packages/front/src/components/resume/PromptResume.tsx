@@ -1,8 +1,8 @@
-import { For, createSignal, onCleanup, onMount } from "solid-js";
+import { For } from "solid-js";
 import { css } from "solid-styled";
-import Word from "./PromptWordResume.tsx";
 
-import { type Paragraphs } from "../content/Content.ts";
+import { type Paragraphs } from "~/typingContent/Content.ts";
+import Word from "./PromptWordResume.tsx";
 
 export type PromptProps = {
   paragraphs: Paragraphs;

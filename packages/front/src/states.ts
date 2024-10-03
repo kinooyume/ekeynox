@@ -1,5 +1,5 @@
-import { GameModeKind } from "~/gameOptions/gameModeKind";
-import { GameOptions } from "~/gameOptions/gameOptions";
+import { GameModeKind } from "~/typingOptions/gameModeKind";
+import { GameOptions } from "~/typingOptions/gameOptions";
 import { GetContent } from "~/typingContent/TypingGameSource";
 import { Metrics, MetricsResume } from "~/typingMetrics/Metrics";
 

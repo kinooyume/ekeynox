@@ -1,6 +1,6 @@
 import { Component, Match, Switch } from "solid-js";
 import { css } from "solid-styled";
-import Profile from "../svgs/profile";
+import Profile from "~/svgs/profile";
 
 type Props = {
   logged: boolean;

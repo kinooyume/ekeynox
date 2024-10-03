@@ -4,9 +4,9 @@ import {
   CategoryKind,
   GameOptions,
   WordsGenerationCategory,
-} from "~/gameOptions/gameOptions";
+} from "~/typingOptions/gameOptions";
 import { useI18n } from "~/contexts/i18nProvider";
-import { GameModeKind } from "~/gameOptions/gameModeKind";
+import { GameModeKind } from "~/typingOptions/gameModeKind";
 
 // NOTE: make a data to link title + icons + params full/compact
 //

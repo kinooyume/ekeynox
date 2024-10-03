@@ -23,7 +23,7 @@ const TimerInput = ({
     key.back ? cursorNav.prev() : cursorNav.next();
   };
 
-  return Timer.createEffect(
+  return Timer(
     TimerKeypress.create({
       sequence,
       apply,

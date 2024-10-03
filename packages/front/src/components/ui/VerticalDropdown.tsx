@@ -7,13 +7,13 @@ import {
   onMount,
 } from "solid-js";
 import { css } from "solid-styled";
-import Cross from "../svgs/cross";
+import Cross from "~/svgs/cross";
 import {
   AnimateState,
   createAnimationComp,
   isInitialAnimation,
 } from "~/animations/animation";
-import useAnimateModal from "~/hooks/useAnimateModal";
+import useAnimateModal from "~/primitives/useAnimateModal";
 
 type VerticalPopoverProps = {
   id: string;

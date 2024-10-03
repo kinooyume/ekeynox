@@ -1,17 +1,17 @@
 import { Match, Show, Switch, type JSXElement } from "solid-js";
 import { css } from "solid-styled";
-import Lang from "../svgs/lang";
-import Word from "../svgs/word";
+import Lang from "~/svgs/lang";
+import Word from "~/svgs/word";
 import {
   CategoryKind,
   WordsGenerationCategory,
   type Category,
   type Languages,
-} from "../../gameOptions/gameOptions";
+} from "../../typingOptions/gameOptions";
 import RadioGroup from "../ui/RadioGroup";
-import Quote from "../svgs/quote";
-import Text from "../svgs/text";
-import Customizer from "../svgs/customizer";
+import Quote from "~/svgs/quote";
+import Text from "~/svgs/text";
+import Customizer from "~/svgs/customizer";
 import type { GameParams } from "./GameParams";
 import { useI18n } from "~/contexts/i18nProvider";
 

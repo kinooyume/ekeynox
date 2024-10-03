@@ -3,22 +3,22 @@ import { css } from "solid-styled";
 
 import { useWindowSize } from "@solid-primitives/resize-observer";
 
-import { PendingMode } from "~/appState/appState";
+import { PendingMode } from "~/states";
 import { useI18n } from "~/contexts/i18nProvider";
-
-import type { Metrics, MetricsResume } from "~/typingMetrics/Metrics";
-
-import { makeRedoContent } from "~/typingContent/TypingGameSource";
-import Content from "~/typingContent/Content";
 
 import {
   type ContentGeneration,
   type GameOptions,
   deepCopy,
-} from "~/gameOptions/gameOptions";
+} from "~/typingOptions/gameOptions";
 
+import { makeRedoContent } from "~/typingContent/TypingGameSource";
+import Content from "~/typingContent/Content";
+
+import type { Metrics, MetricsResume } from "~/typingMetrics/Metrics";
+
+import Ghost from "~/svgs/ghost";
 import GameModeDropdown from "../gameMode/GameModeDropdown";
-import Ghost from "../svgs/ghost";
 
 type ActionsResumeProps = {
   gameOptions: GameOptions;

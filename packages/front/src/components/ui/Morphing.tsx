@@ -10,7 +10,7 @@ import {
   AnimateState,
   isInitialAnimation,
 } from "~/animations/animation";
-import useAnimateSwitch from "~/hooks/useAnimateSwitch";
+import useAnimateSwitch from "~/primitives/useAnimateSwitch";
 
 type TransitionSize = {
   height: number;

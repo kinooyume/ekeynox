@@ -5,19 +5,19 @@ import {
 } from "./HeaderSettingsGlobal";
 import Drawer from "@corvu/drawer";
 
-import { Component, createSignal, onCleanup } from "solid-js";
+import { Component, onCleanup } from "solid-js";
 import "./Drawer.css";
-import Kebab from "../svgs/kebab";
+import Kebab from "~/svgs/kebab";
 import { css } from "solid-styled";
 import { useI18n } from "~/contexts/i18nProvider";
 import VerticalRadioBox from "../ui/VerticalRadioBox";
 import TinyRadioLabel from "../ui/TinyRadioLabel";
-import Moon from "../svgs/moon";
-import Sun from "../svgs/sun";
-import Cross from "../svgs/cross";
+import Moon from "~/svgs/moon";
+import Sun from "~/svgs/sun";
+import Cross from "~/svgs/cross";
 import { FocusType, useFocus } from "~/contexts/FocusProvider";
 import { useAppState } from "~/contexts/AppStateProvider";
-import { AppStateKind } from "~/appState/appState";
+import { AppStateKind } from "~/states";
 
 const ListSettingsMobile: Component<ListSettings> = (props) => {
   css`

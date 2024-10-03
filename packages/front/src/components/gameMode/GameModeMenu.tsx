@@ -6,24 +6,31 @@ import {
   on,
   onMount,
 } from "solid-js";
+
 import { createStore } from "solid-js/store";
+import { useBeforeLeave, usePreloadRoute } from "@solidjs/router";
 import { css } from "solid-styled";
 
-import { GameModeKind } from "../../gameOptions/gameModeKind.ts";
+import { useI18n } from "~/contexts/i18nProvider";
+
+import { GameModeKind } from "~/typingOptions/gameModeKind.ts";
+
 import {
   CategoryKind,
   deepCopy,
   type ContentGeneration,
   type GameOptions,
-} from "../../gameOptions/gameOptions";
-import { useI18n } from "../../contexts/i18nProvider";
-import Bunny from "../svgs/bunny";
-import Monkey from "../svgs/monkey";
-import CustomInput, { type CustomInputRef } from "../ui/CustomInput";
+} from "~/typingOptions/gameOptions";
+
+
 import GameModeSelection from "./GameModeSelection";
 import SpeedParams from "./SpeedParams";
 import TimerParams from "./TimerParams";
-import { useBeforeLeave, usePreloadRoute } from "@solidjs/router";
+
+import CustomInput, { type CustomInputRef } from "../ui/CustomInput";
+
+import Bunny from "~/svgs/bunny";
+import Monkey from "~/svgs/monkey";
 
 // Le gars a fait pleins de menu de selection stylax
 // https://in.pinterest.com/pin/12525705207244555/

@@ -1,8 +1,7 @@
-
 import { makeSourceNested } from "~/typingContent/TypingGameSource";
 // NOTE: Je pense qu'on peut remettre gameModeKind ici non ? 
 import { GameModeKind } from "./gameModeKind";
-import { type PendingMode } from "~/appState/appState";
+import { type PendingMode } from "~/states";
 
 // NOTE:  GameOptions -> PendingMode
 // Des options de jeu, tel que sauvegarder, jusqu'au "PendingMode"; qui est en fait de quoi lancer le jeu

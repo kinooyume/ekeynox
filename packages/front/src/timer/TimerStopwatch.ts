@@ -1,7 +1,5 @@
 import type { CreateNewTimer, TimerPause, TimerPending } from "./Timer";
 
-// NOTE: CounterTimer
-
 type CreateProps = {
   duration: number;
   onOver: () => void;

@@ -1,10 +1,10 @@
 import { For, onCleanup, createSignal, Show } from "solid-js";
 import { css } from "solid-styled";
-import ChooseClip from "../svgs/choose-clip";
+import ChooseClip from "~/svgs/choose-clip";
 import { TransitionGroup } from "solid-transition-group";
-import { gameModesArray } from "./GameMode";
+import { gameModesArray } from "~/typingOptions/GameMode";
 import { useI18n } from "~/contexts/i18nProvider";
-import { GameModeKind } from "~/gameOptions/gameModeKind";
+import { GameModeKind } from "~/typingOptions/gameModeKind";
 
 type GameModeSelectionProps = {
   selected: GameModeKind;
