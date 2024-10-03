@@ -10,26 +10,30 @@ import { createStore } from "solid-js/store";
 import type { CustomInputRef } from "../ui/CustomInput";
 import CustomInput from "../ui/CustomInput";
 import Dropdown from "../ui/Dropdown";
-import { gameModesArray } from "~/typingOptions/GameMode";
+import { typingModesArray } from "~/typingOptions/typingMode";
 import SpeedParamsMedium from "./SpeedParamsMedium";
 import TimerParamsMedium from "./TimerParamsMedium";
 import { css } from "solid-styled";
-import { CategoryKind, GameOptions, deepCopy } from "~/typingOptions/gameOptions";
-import { GameModeKind } from "~/typingOptions/gameModeKind";
+import {
+  CategoryKind,
+  TypingOptions,
+  deepCopy,
+} from "~/typingOptions/typingOptions";
+import { TypingModeKind } from "~/typingOptions/typingModeKind";
 import VerticalRadioBox from "../ui/VerticalRadioBox";
 import HugeRadioLabel from "../ui/HugeRadioLabel";
 import { useI18n } from "~/contexts/i18nProvider";
 import { useGameOptions } from "~/contexts/GameOptionsProvider";
 
-type GameModeDropdownProps = {
+type TypingModeDropdownProps = {
   reverse?: boolean;
-  gameOptions: GameOptions;
-  start: (opts: GameOptions) => void;
+  gameOptions: TypingOptions;
+  start: (opts: TypingOptions) => void;
 
   children: (isOpen: () => boolean, hover: () => boolean) => JSX.Element;
 };
 
-const GameModeDropdown = (props: GameModeDropdownProps) => {
+const TypingModeDropdown = (props: TypingModeDropdownProps) => {
   const t = useI18n();
 
   const { fetchSourcesGen } = useGameOptions();
@@ -121,7 +125,7 @@ const GameModeDropdown = (props: GameModeDropdownProps) => {
       margin-top: 16px;
     }
   `;
-  const [gameOptions, setGameOptions] = createStore<GameOptions>(
+  const [gameOptions, setGameOptions] = createStore<TypingOptions>(
     deepCopy(props.gameOptions),
   );
 
@@ -175,24 +179,28 @@ const GameModeDropdown = (props: GameModeDropdownProps) => {
           <div class="modes">
             <VerticalRadioBox
               name="game-mode-dropdown"
-              each={gameModesArray}
+              each={typingModesArray}
               onChange={([modeKind]) => {
                 setGameOptions("modeSelected", modeKind);
               }}
               selected={
-                gameModesArray.find(
+                typingModesArray.find(
                   ([modeKind]) => modeKind === gameOptions.modeSelected,
-                ) || gameModesArray[0]
+                ) || typingModesArray[0]
               }
             >
-              {(id, checked, [modeKind, gameMode]) => (
+              {(id, checked, [modeKind, typingMode]) => (
                 <HugeRadioLabel id={id} checked={checked}>
                   {(checked) => (
                     <div classList={{ checked }} class="mode-radio">
-                      <div class="mode-picto">{gameMode.head()}</div>
+                      <div class="mode-picto">{typingMode.head()}</div>
                       <div class="mode-description">
-                        <p class="title">{t("gameMode")[modeKind].subtitle}</p>
-                        <p class="subtitle">{t("gameMode")[modeKind].title}</p>
+                        <p class="title">
+                          {t("typingMode")[modeKind].subtitle}
+                        </p>
+                        <p class="subtitle">
+                          {t("typingMode")[modeKind].title}
+                        </p>
                       </div>
                     </div>
                   )}
@@ -203,9 +211,9 @@ const GameModeDropdown = (props: GameModeDropdownProps) => {
           <div class="options-wrapper">
             <div class="elem options">
               <Switch>
-                <Match when={gameOptions.modeSelected === GameModeKind.speed}>
+                <Match when={gameOptions.modeSelected === TypingModeKind.speed}>
                   <SpeedParamsMedium
-                    gameOptions={gameOptions}
+                    typingOptions={gameOptions}
                     setGameOptions={setGameOptions}
                   >
                     <CustomInput
@@ -215,9 +223,9 @@ const GameModeDropdown = (props: GameModeDropdownProps) => {
                     />
                   </SpeedParamsMedium>
                 </Match>
-                <Match when={gameOptions.modeSelected === GameModeKind.timer}>
+                <Match when={gameOptions.modeSelected === TypingModeKind.timer}>
                   <TimerParamsMedium
-                    gameOptions={gameOptions}
+                    typingOptions={gameOptions}
                     setGameOptions={setGameOptions}
                   >
                     <CustomInput
@@ -245,4 +253,4 @@ const GameModeDropdown = (props: GameModeDropdownProps) => {
   );
 };
 
-export default GameModeDropdown;
+export default TypingModeDropdown;

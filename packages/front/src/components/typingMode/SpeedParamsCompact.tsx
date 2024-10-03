@@ -7,13 +7,13 @@ import {
   WordsGenerationCategory,
   type Category,
   type Languages,
-} from "../../typingOptions/gameOptions";
+} from "../../typingOptions/typingOptions";
 import RadioGroup from "../ui/RadioGroup";
 import Quote from "~/svgs/quote";
 import Text from "~/svgs/text";
 import Customizer from "~/svgs/customizer";
-import type { GameParams } from "./GameParams";
 import { useI18n } from "~/contexts/i18nProvider";
+import { GameParams } from "~/typingOptions/GameParams";
 
 const SpeedParamsCompact = (props: GameParams) => {
   const t = useI18n();
@@ -54,13 +54,13 @@ const SpeedParamsCompact = (props: GameParams) => {
           },
         ]}
         compare={(v) => {
-          switch (props.gameOptions.categorySelected.kind) {
+          switch (props.typingOptions.categorySelected.kind) {
             case CategoryKind.custom:
               return v.kind === CategoryKind.custom;
             case CategoryKind.generation:
               return (
                 v.kind === CategoryKind.generation &&
-                v.category === props.gameOptions.categorySelected.category
+                v.category === props.typingOptions.categorySelected.category
               );
           }
         }}
@@ -72,7 +72,7 @@ const SpeedParamsCompact = (props: GameParams) => {
         }}
       />
       <Show
-        when={props.gameOptions.categorySelected.kind !== CategoryKind.custom}
+        when={props.typingOptions.categorySelected.kind !== CategoryKind.custom}
       >
         <RadioGroup
           name="languages"
@@ -80,7 +80,7 @@ const SpeedParamsCompact = (props: GameParams) => {
             { label: t("en"), value: "en" as Languages },
             { label: t("fr"), value: "fr" as Languages },
           ]}
-          compare={(v) => v === props.gameOptions.generation.language}
+          compare={(v) => v === props.typingOptions.generation.language}
           setChecked={(l) => props.setGameOptions("generation", "language", l)}
         >
           <Lang />
@@ -88,15 +88,15 @@ const SpeedParamsCompact = (props: GameParams) => {
       </Show>
       <Switch>
         <Match
-          when={props.gameOptions.categorySelected.kind === CategoryKind.custom}
+          when={props.typingOptions.categorySelected.kind === CategoryKind.custom}
         >
           {props.children}
         </Match>
         <Match
           when={
-            props.gameOptions.categorySelected.kind ===
+            props.typingOptions.categorySelected.kind ===
               CategoryKind.generation &&
-            props.gameOptions.categorySelected.category ===
+            props.typingOptions.categorySelected.category ===
               WordsGenerationCategory.words1k
           }
         >
@@ -108,7 +108,7 @@ const SpeedParamsCompact = (props: GameParams) => {
               { label: "50", value: 50 },
               { label: "100", value: 100 },
             ]}
-            compare={(v) => v === props.gameOptions.random}
+            compare={(v) => v === props.typingOptions.random}
             setChecked={(v) => props.setGameOptions("random", v)}
           >
             <Word />

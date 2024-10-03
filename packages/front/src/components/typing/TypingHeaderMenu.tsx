@@ -2,14 +2,14 @@ import { Show } from "solid-js";
 import { css } from "solid-styled";
 
 import { useI18n } from "~/contexts/i18nProvider";
-import { GameOptions } from "~/typingOptions/gameOptions";
+import { TypingOptions } from "~/typingOptions/typingOptions";
 
-import GameOptionsRecap from "../gameMode/GameOptionsRecap";
-import GameModeDropdown from "../gameMode/GameModeDropdown";
+import GameOptionsRecap from "../typingMode/TypingOptionsRecap";
+import TypingModeDropdown from "../typingMode/TypingModeDropdown";
 
 type HeaderNavLeftProps = {
-  start: (opts: GameOptions) => void;
-  gameOptions: GameOptions;
+  start: (opts: TypingOptions) => void;
+  gameOptions: TypingOptions;
 };
 
 const HeaderNavLeft = (props: HeaderNavLeftProps) => {
@@ -114,14 +114,14 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
 
   return (
     <div class="header-mode animate">
-      <GameModeDropdown {...props}>
+      <TypingModeDropdown {...props}>
         {(isOpen, hover) => (
           <button
             aria-expanded={isOpen()}
             aria-haspopup="dialog"
             class="reset menu-title"
             classList={{ open: isOpen(), hover: hover() }}
-            data-passive={`${t("gameMode")[props.gameOptions.modeSelected].subtitle}`}
+            data-passive={`${t("typingMode")[props.gameOptions.modeSelected].subtitle}`}
             data-active={`${t("newGame.one")} ${t("newGame.two")}`}
           >
             <Show when={!isOpen()}>
@@ -129,7 +129,7 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
             </Show>
           </button>
         )}
-      </GameModeDropdown>
+      </TypingModeDropdown>
       <div class="options-recap">
         <GameOptionsRecap gameOptions={props.gameOptions} />
       </div>

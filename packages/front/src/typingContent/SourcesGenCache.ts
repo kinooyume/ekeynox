@@ -1,4 +1,4 @@
-import { ContentGeneration } from "~/typingOptions/gameOptions";
+import { ContentGeneration } from "~/typingOptions/typingOptions";
 
 type Cached = Record<string, Record<string, Promise<string[]>>>;
 

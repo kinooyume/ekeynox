@@ -13,17 +13,17 @@ import { css } from "solid-styled";
 
 import { useI18n } from "~/contexts/i18nProvider";
 
-import { GameModeKind } from "~/typingOptions/gameModeKind.ts";
+import { TypingModeKind } from "~/typingOptions/typingModeKind";
 
 import {
   CategoryKind,
   deepCopy,
   type ContentGeneration,
-  type GameOptions,
-} from "~/typingOptions/gameOptions";
+  type TypingOptions,
+} from "~/typingOptions/typingOptions";
 
 
-import GameModeSelection from "./GameModeSelection";
+import TypingModeSelection from "./TypingModeSelection";
 import SpeedParams from "./SpeedParams";
 import TimerParams from "./TimerParams";
 
@@ -58,17 +58,17 @@ import Monkey from "~/svgs/monkey";
 //
 // take a list and make cards
 
-type GameModeKindMenuProps = {
-  gameOptions: GameOptions;
+type TypingModeKindMenuProps = {
+  gameOptions: TypingOptions;
   fetchSourcesGen: (opts: ContentGeneration) => Promise<Array<string>>;
-  start: (opts: GameOptions) => void;
+  start: (opts: TypingOptions) => void;
 };
 
 const customRef: CustomInputRef = {
   ref: undefined,
 };
 
-const GameModeKindMenu = (props: GameModeKindMenuProps) => {
+const TypingModeKindMenu = (props: TypingModeKindMenuProps) => {
   const t = useI18n();
 
   // NOTE: ???
@@ -88,7 +88,7 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
     ),
   );
 
-  const [gameOptions, setGameOptions] = createStore<GameOptions>(
+  const [gameOptions, setGameOptions] = createStore<TypingOptions>(
     deepCopy(props.gameOptions),
   );
 
@@ -422,9 +422,9 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
             </div>
           </div>
           <div class="selection">
-            <GameModeSelection
+            <TypingModeSelection
               selected={gameOptions.modeSelected}
-              setSelected={(mode: GameModeKind) =>
+              setSelected={(mode: TypingModeKind) =>
                 setGameOptions("modeSelected", mode)
               }
             />
@@ -434,10 +434,10 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
           <div class="illustration">
             <div class="illustration-container">
               <Switch>
-                <Match when={gameOptions.modeSelected === GameModeKind.speed}>
+                <Match when={gameOptions.modeSelected === TypingModeKind.speed}>
                   <Monkey />
                 </Match>
-                <Match when={gameOptions.modeSelected === GameModeKind.timer}>
+                <Match when={gameOptions.modeSelected === TypingModeKind.timer}>
                   <Bunny />
                 </Match>
               </Switch>
@@ -446,21 +446,21 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
           <div class="game-description">
             <Switch>
               <Match
-                when={gameOptions.modeSelected === GameModeKind.speed}
+                when={gameOptions.modeSelected === TypingModeKind.speed}
                 keyed
               >
                 <div class="text">
-                  <h2 class="title-mode">{t("gameMode.speed.subtitle")}</h2>
-                  <h3>{t("gameMode.speed.title")}</h3>
+                  <h2 class="title-mode">{t("typingMode.speed.subtitle")}</h2>
+                  <h3>{t("typingMode.speed.title")}</h3>
                   <p class="description">
-                    {t("gameMode.speed.hugeDescription")}
+                    {t("typingMode.speed.hugeDescription")}
                   </p>
                 </div>
 
                 <div class="options">
                   {/* <h2 class="options-title">{t("options")}</h2> */}
                   <SpeedParams
-                    gameOptions={gameOptions}
+                    typingOptions={gameOptions}
                     setGameOptions={setGameOptions}
                   >
                     <CustomInput
@@ -472,20 +472,20 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
                 </div>
               </Match>
               <Match
-                when={gameOptions.modeSelected === GameModeKind.timer}
+                when={gameOptions.modeSelected === TypingModeKind.timer}
                 keyed
               >
                 <div class="text">
-                  <h2 class="title-mode">{t("gameMode.timer.subtitle")}</h2>
-                  <h3>{t("gameMode.timer.title")}</h3>
+                  <h2 class="title-mode">{t("typingMode.timer.subtitle")}</h2>
+                  <h3>{t("typingMode.timer.title")}</h3>
                   <p class="description">
-                    {t("gameMode.timer.hugeDescription")}
+                    {t("typingMode.timer.hugeDescription")}
                   </p>
                 </div>
                 <div class="options">
                   {/* <h2 class="options-title">{t("options")}</h2> */}
                   <TimerParams
-                    gameOptions={gameOptions}
+                    typingOptions={gameOptions}
                     setGameOptions={setGameOptions}
                   >
                     <CustomInput
@@ -513,4 +513,4 @@ const GameModeKindMenu = (props: GameModeKindMenuProps) => {
   );
 };
 
-export default GameModeKindMenu;
+export default TypingModeKindMenu;

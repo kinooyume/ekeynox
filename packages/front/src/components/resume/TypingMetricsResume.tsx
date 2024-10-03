@@ -28,7 +28,7 @@ import WordMetricsResume from "./charts/WordsChart";
 import Prompt from "./PromptResume";
 import TypingKeyboardResume from "./TypingKeyboardResume";
 
-import GameOptionsTitle from "../gameMode/GameOptionsTitle";
+import GameOptionsTitle from "../typingMode/TypingOptionsTitle";
 
 type TypingMetricsProps = {
   kbLayout: HigherKeyboard;
@@ -478,4 +478,3 @@ export default TypingMetricsResume;
 //
 // Really cool tailwind dashboard
 //https://cruip.com/demos/mosaic/
-

@@ -1,5 +1,11 @@
 import { Match, Show, Switch } from "solid-js";
 import { css } from "solid-styled";
+import {
+  CategoryKind,
+  WordsGenerationCategory,
+  type Category,
+  type Languages,
+} from "../../typingOptions/typingOptions";
 import RadioGroup from "../ui/RadioGroup";
 
 import Lang from "~/svgs/lang";
@@ -7,27 +13,20 @@ import Quote from "~/svgs/quote";
 import Text from "~/svgs/text";
 import Customizer from "~/svgs/customizer";
 import Stopwatch from "~/svgs/stopwatch";
-import type { GameParams } from "./GameParams";
 import { useI18n } from "~/contexts/i18nProvider";
-import {
-  Category,
-  CategoryKind,
-  Languages,
-  WordsGenerationCategory,
-} from "~/typingOptions/gameOptions";
+import { GameParams } from "~/typingOptions/GameParams";
 
-const TimerParams = (props: GameParams) => {
+const TimerParamsMedium = (props: GameParams) => {
   const t = useI18n();
   css`
     .time-params {
       display: flex;
       flex-direction: column;
-      gap: 1rem;
       align-items: flex-start;
     }
     p {
       margin: 0;
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 400;
       color: var(--text-secondary-color);
       text-transform: capitalize;
@@ -35,20 +34,15 @@ const TimerParams = (props: GameParams) => {
     }
     .option {
       display: flex;
+      border-radius: 12px;
       justify-content: space-between;
       align-items: center;
       width: 100%;
-      transition: opacity 0.15s ease-in-out;
+      padding: 8px;
+      transition: all 0.2s ease-in-out;
     }
-    @media screen and (max-width: 860px) {
-      .option {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 4px;
-      }
-      p {
-        font-size: 14px;
-      }
+    .option:hover {
+      background-color: var(--background-color);
     }
   `;
 
@@ -82,13 +76,13 @@ const TimerParams = (props: GameParams) => {
             },
           ]}
           compare={(v) => {
-            switch (props.gameOptions.categorySelected.kind) {
+            switch (props.typingOptions.categorySelected.kind) {
               case CategoryKind.custom:
                 return v.kind === CategoryKind.custom;
               case CategoryKind.generation:
                 return (
                   v.kind === CategoryKind.generation &&
-                  v.category === props.gameOptions.categorySelected.category
+                  v.category === props.typingOptions.categorySelected.category
                 );
             }
           }}
@@ -101,7 +95,7 @@ const TimerParams = (props: GameParams) => {
         />
       </div>
       <Show
-        when={props.gameOptions.categorySelected.kind !== CategoryKind.custom}
+        when={props.typingOptions.categorySelected.kind !== CategoryKind.custom}
       >
         <div class="option">
           <p> {t("language")} </p>
@@ -111,7 +105,7 @@ const TimerParams = (props: GameParams) => {
               { label: t("en"), value: "en" as Languages },
               { label: t("fr"), value: "fr" as Languages },
             ]}
-            compare={(v) => v === props.gameOptions.generation.language}
+            compare={(v) => v === props.typingOptions.generation.language}
             setChecked={(l) =>
               props.setGameOptions("generation", "language", l)
             }
@@ -122,7 +116,7 @@ const TimerParams = (props: GameParams) => {
       </Show>
       <Switch>
         <Match
-          when={props.gameOptions.categorySelected.kind === CategoryKind.custom}
+          when={props.typingOptions.categorySelected.kind === CategoryKind.custom}
         >
           {props.children}
         </Match>
@@ -137,8 +131,10 @@ const TimerParams = (props: GameParams) => {
             { label: "1m", value: 60 },
             { label: "2m", value: 120 },
           ]}
-          compare={(v) => v === props.gameOptions.timer}
-          setChecked={(time) => props.setGameOptions("timer", time)}
+          compare={(v) => v === props.typingOptions.timer}
+          setChecked={(time) =>
+            props.setGameOptions("timer", time)
+          }
         >
           <Stopwatch />
         </RadioGroup>
@@ -147,4 +143,4 @@ const TimerParams = (props: GameParams) => {
   );
 };
 
-export default TimerParams;
+export default TimerParamsMedium;

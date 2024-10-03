@@ -10,9 +10,9 @@ import { createStore } from "solid-js/store";
 import { isServer } from "solid-js/web";
 
 import {
-  GameOptions,
+  TypingOptions,
   getDefaultGameOptions,
-} from "~/typingOptions/gameOptions";
+} from "~/typingOptions/typingOptions";
 
 import SourcesGen, {
   SourcesGenFetch,
@@ -23,8 +23,8 @@ type GameOptionsProviderProps = {
 };
 
 type GameOptionsContext = {
-  persistedGameOptions: GameOptions;
-  setPersistedGameOptions: (opts: GameOptions) => void;
+  persistedGameOptions: TypingOptions;
+  setPersistedGameOptions: (opts: TypingOptions) => void;
   fetchSourcesGen: SourcesGenFetch;
 };
 
@@ -37,12 +37,12 @@ export function useGameOptions() {
 }
 
 export function GameOptionsProvider(props: GameOptionsProviderProps) {
-  const [gameOptions, setGameOptions] = createStore<GameOptions>(
+  const [gameOptions, setGameOptions] = createStore<TypingOptions>(
     getDefaultGameOptions(),
   );
 
   const [persistedOptions, setPersistedOptions] = makePersisted(
-    createStore<GameOptions>(getDefaultGameOptions()),
+    createStore<TypingOptions>(getDefaultGameOptions()),
     { name: "gameOptions" },
   );
 

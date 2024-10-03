@@ -1,10 +1,9 @@
 import { makeSourceNested } from "~/typingContent/TypingGameSource";
-// NOTE: Je pense qu'on peut remettre gameModeKind ici non ? 
-import { GameModeKind } from "./gameModeKind";
-import { type PendingMode } from "~/states";
+// NOTE: Je pense qu'on peut remettre typingModeKind ici non ? 
+import { TypingModeKind } from "./typingModeKind";
+import { TypingGameOptions } from "./typingGameOptions";
 
-// NOTE:  GameOptions -> PendingMode
-// Des options de jeu, tel que sauvegarder, jusqu'au "PendingMode"; qui est en fait de quoi lancer le jeu
+// NOTE:  TypingOptions -> TypingGameOptions
 
 export type Languages = "en" | "fr";
 
@@ -32,44 +31,20 @@ export enum WordsCategoryKind {
   quotes = "quotes",
   custom = "custom",
 }
-/* *** */
-// NOTE: Do we need this ?
-//
-export type WordsCategory =
-  | {
-      kind: WordsCategoryKind.words1k;
-      data: string[];
-    }
-  | { kind: WordsCategoryKind.quotes; data: string[] }
-  | { kind: WordsCategoryKind.custom; data: string };
-
-/* __ */
 
 // NOTE: C'est ici !
 
-export type GameOptions = {
-  modeSelected: GameModeKind;
+export type TypingOptions = {
+  modeSelected: TypingModeKind;
   categorySelected: Category;
   generation: ContentGeneration;
   custom: string;
   random: number;
   timer: number;
 };
-
-/*
- * NOTE: shoulwe merge contentType/generation ?
- * ==> We want to keep last generation config
- *
- */
-
-type Selected = {
-  mode: GameModeKind;
-  category: CategoryKind;
-};
-
 // Default Game Options
-const getDefaultGameOptions = (): GameOptions => ({
-  modeSelected: GameModeKind.speed,
+const getDefaultGameOptions = (): TypingOptions => ({
+  modeSelected: TypingModeKind.speed,
   // NOTE: on doit pouvoir avoir que le kind ?
   categorySelected: {
     kind: CategoryKind.generation,
@@ -85,7 +60,7 @@ const getDefaultGameOptions = (): GameOptions => ({
 });
 
 // Deep copy
-const deepCopy = (source: GameOptions): GameOptions => ({
+const deepCopy = (source: TypingOptions): TypingOptions => ({
   ...source,
   categorySelected: { ...source.categorySelected },
   generation: { ...source.generation },
@@ -93,13 +68,13 @@ const deepCopy = (source: GameOptions): GameOptions => ({
 
 // Convert to PendingMode
 const optionsToPending = async (
-  opts: GameOptions,
+  opts: TypingOptions,
   sourceGen: Promise<string[]>,
-): Promise<PendingMode> => {
+): Promise<TypingGameOptions> => {
   switch (opts.modeSelected) {
-    case GameModeKind.speed:
+    case TypingModeKind.speed:
       return sourceGen.then((source) => ({
-        kind: GameModeKind.speed,
+        kind: TypingModeKind.speed,
         isGenerated: opts.categorySelected.kind === CategoryKind.generation,
         getContent: makeSourceNested({
           opts,
@@ -107,9 +82,9 @@ const optionsToPending = async (
           wordsCount: opts.random,
         }),
       }));
-    case GameModeKind.timer:
+    case TypingModeKind.timer:
       return sourceGen.then((source) => ({
-        kind: GameModeKind.timer,
+        kind: TypingModeKind.timer,
         isGenerated: opts.categorySelected.kind === CategoryKind.generation,
         time: opts.timer * 1000,
         getContent: makeSourceNested({
@@ -122,3 +97,28 @@ const optionsToPending = async (
 };
 
 export { getDefaultGameOptions, deepCopy, optionsToPending };
+
+/* *** */
+// NOTE: Do we need this ?
+//
+// export type WordsCategory =
+//   | {
+//       kind: WordsCategoryKind.words1k;
+//       data: string[];
+//     }
+//   | { kind: WordsCategoryKind.quotes; data: string[] }
+//   | { kind: WordsCategoryKind.custom; data: string };
+//
+/* __ */
+
+
+/*
+ * NOTE: shoulwe merge contentType/generation ?
+ * ==> We want to keep last generation config
+ *
+ */
+
+// type Selected = {
+//   mode: TypingModeKind;
+//   category: CategoryKind;
+// };
