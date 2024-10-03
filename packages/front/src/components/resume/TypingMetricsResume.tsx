@@ -13,13 +13,11 @@ import anime from "animejs";
 
 import { useI18n } from "~/contexts/i18nProvider";
 
-import { type HigherKeyboard } from "~/settings/keyboardLayout";
-
 import {
   createMetricsResume,
-  type Metrics,
+  type TypingStatistics,
   type MetricsResume,
-} from "~/typingMetrics/Metrics";
+} from "~/typingStatistics";
 
 import AccuracyDoughnut from "./charts/AccuracyDoughnut";
 import CharacterChart from "./charts/CharacterChart";
@@ -29,10 +27,11 @@ import Prompt from "./PromptResume";
 import TypingKeyboardResume from "./TypingKeyboardResume";
 
 import GameOptionsTitle from "../typingMode/TypingOptionsTitle";
+import { HigherKeyboard } from "~/typingKeyboard/keyboardLayout";
 
 type TypingMetricsProps = {
   kbLayout: HigherKeyboard;
-  metrics: Metrics;
+  metrics: TypingStatistics;
   children: (n: MetricsResume) => JSXElement;
 };
 
@@ -370,7 +369,7 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
       </div>
       <div class="sticky">
         <div ref={resumeMenu!} class="resume-menu">
-          <GameOptionsTitle t={t} gameOptions={props.metrics.gameOptions} />
+          <GameOptionsTitle t={t} gameOptions={props.metrics.typingOptions} />
           <div class="actions">{props.children(metricsResume)}</div>
         </div>
       </div>

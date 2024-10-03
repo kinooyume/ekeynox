@@ -1,9 +1,9 @@
 import { For, Show, createEffect, createSignal, onMount } from "solid-js";
 import { useWindowSize } from "@solid-primitives/resize-observer";
 import { css } from "solid-styled";
-import type { KeysProjection } from "../metrics/KeysProjection";
 import KeyboardKey from "./KeyboardKey";
-import { KeyboardLayout } from "~/settings/keyboardLayout";
+import { KeysProjection } from "~/typingStatistics/KeysProjection";
+import { KeyboardLayout } from "~/typingKeyboard/keyboardLayout";
 
 export type KeyboardHandler = {
   keyUp: (key: string) => void;

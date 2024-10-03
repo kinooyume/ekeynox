@@ -15,15 +15,16 @@ import { TypingGameOptions } from "~/typingOptions/typingGameOptions";
 import { makeRedoContent } from "~/typingContent/TypingGameSource";
 import Content from "~/typingContent";
 
-import type { Metrics, MetricsResume } from "~/typingMetrics/Metrics";
+import type { TypingStatistics, MetricsResume } from "~/typingStatistics";
 
 import Ghost from "~/svgs/ghost";
 import GameModeDropdown from "../typingMode/TypingModeDropdown";
+import { clearParagraphs } from "~/typingContent/paragraphs";
 
 type ActionsResumeProps = {
   gameOptions: TypingOptions;
   content: TypingGameOptions;
-  metrics: Metrics;
+  metrics: TypingStatistics;
   metricsResume: MetricsResume;
   fetchSourcesGen: (opts: ContentGeneration) => Promise<Array<string>>;
   start: (opts: TypingOptions) => void;
@@ -42,7 +43,7 @@ const ActionsResume = (props: ActionsResumeProps) => {
       ...props.content,
       getContent: makeRedoContent(
         Content.contentDataFromParagraphs(
-          Content.deepCloneReset(props.metrics.paragraphs),
+          clearParagraphs(props.metrics.paragraphs),
           props.metrics.wordsCount,
         ),
         props.content.getContent,

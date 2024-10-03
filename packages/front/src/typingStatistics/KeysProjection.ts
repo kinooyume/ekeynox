@@ -6,9 +6,11 @@ import {
   type TypingProjection,
 } from "./TypingProjection";
 
+// Si je me trompe pas, c'est bien Key ici
 export type KeysProjection = Record<string, TypingProjection>;
 
 type KeysProjectionProps = { projection: KeysProjection; status: TypingState };
+
 const updateKeyProjection = ({
   projection,
   status,

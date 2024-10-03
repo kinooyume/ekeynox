@@ -1,4 +1,4 @@
-import { Metrics, MetricsResume } from "~/typingMetrics/Metrics";
+import { Metrics, MetricsResume } from "~/typingStatistics/Metrics";
 
 import { TypingOptions } from "~/typingOptions/typingOptions";
 import { TypingGameOptions } from "~/typingOptions/typingGameOptions";

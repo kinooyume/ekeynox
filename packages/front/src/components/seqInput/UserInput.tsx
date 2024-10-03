@@ -1,19 +1,10 @@
-import {
-  createComputed,
-  on,
-  onCleanup,
-  onMount,
-} from "solid-js";
+import { createComputed, on, onCleanup, onMount } from "solid-js";
 
 import { FocusType, useFocus } from "~/contexts/FocusProvider.tsx";
 
 import useClickOutside from "~/primitives/useClickOutside.ts";
 
-import {
-  TypingStateKind,
-  type TypingState,
-} from "~/typingState";
-
+import { TypingStateKind, type TypingState } from "~/typingState";
 
 export type UserInputRef = {
   focus: () => void;
@@ -65,13 +56,17 @@ const UserInput = (props: UserInputProps) => {
     // if (input.value.length === 0) {
     //   // backspace !!
     // }
-    
+
     // Was great, but doesn't work properly on chrome when backspace
     // const value = input.value.slice(-1);
     // input.value = " ";
-    
+
+    // NOTE: Je peux peut etre ne pas remplacer le value plutot
+    // En fait, j'ai peur que ça devienne de plus en plus lent
+    // Mais a voir, en vrai y'en aura pas beaucoup
+    // Mais, peut etre que c'est la manière universelle de faire
     const value = input.value;
-     input.value = "";
+    input.value = "";
     // *** /
     props.onKeyAdd(value, timestamp);
   };

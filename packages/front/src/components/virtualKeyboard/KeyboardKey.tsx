@@ -6,7 +6,7 @@ import {
   diffCharacterStatusProjections,
   mergeTypingProjections,
   type TypingProjection,
-} from "~/typingMetrics/TypingProjection";
+} from "~/typingStatistics/TypingProjection";
 
 type transform = Array<[string, string]>;
 

@@ -21,34 +21,34 @@ import CursorNav, {
 } from "~/cursor/CursorNav";
 import UserNavHooks from "~/cursor/UserNavHooks";
 
-import type { Metrics } from "~/typingMetrics/Metrics";
-import KeypressMetrics from "~/typingMetrics/KeypressMetrics";
+import { getTimedKeySequence, type TypingStatistics } from "~/typingStatistics";
+import KeypressMetrics from "~/typingStatistics/KeypressMetrics";
 import {
   createTypingMetrics,
   createTypingMetricsState,
   type TypingMetricsState,
-} from "~/typingMetrics/TypingMetrics";
+} from "~/typingStatistics/TypingMetrics";
 import {
   updateKeyProjection,
   type KeysProjection,
-} from "~/typingMetrics/KeysProjection";
+} from "~/typingStatistics/KeysProjection";
 import {
   createWordMetricsState,
   type WordMetrics,
-} from "~/typingMetrics/PromptWordMetrics";
+} from "~/typingStatistics/PromptWordMetrics";
 
-import type { KeyboardHandler } from "../keyboard/TypingKeyboard";
+import type { KeyboardHandler } from "../virtualKeyboard/TypingKeyboard";
 
 import TimerInput from "../seqInput/TimerInput";
 import type { TypingTimer } from "~/timer/Timer";
 
-import { type PendingStatus, PendingKind  } from "~/states";
+import { type PendingStatus, PendingKind } from "~/states";
 
 import { TypingModeKind } from "~/typingOptions/typingModeKind";
 import { TypingOptions } from "~/typingOptions/typingOptions";
 import { TypingGameOptions } from "~/typingOptions/typingGameOptions";
 
-import { HigherKeyboard } from "~/settings/keyboardLayout";
+import { type HigherKeyboard } from "~/typingKeyboard/keyboardLayout";
 
 import { useI18n } from "~/contexts/i18nProvider";
 
@@ -71,16 +71,17 @@ type TypingGameManagerProps = {
   start: (options: TypingOptions) => void;
   kbLayout: HigherKeyboard;
   showKb: boolean;
-  onOver: (metrics: Metrics, mode: TypingGameOptions) => void;
+  onOver: (metrics: TypingStatistics, mode: TypingGameOptions) => void;
   onExit: () => void;
 };
 
 const TypingGameManager = (props: TypingGameManagerProps) => {
+  const t = useI18n();
+
   const [contentHandler, setContentHandler] = createSignal<ContentHandler>(
     props.status.mode.getContent(),
   );
 
-  const t = useI18n();
   const [paraStore, setParaStore] = createStore<Paragraphs>(
     deepCloneParagraphs(contentHandler().data.paragraphs!),
   );
@@ -256,7 +257,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
       {
         paragraphs: cleanParagraphs(paraStore, position),
         wordsCount: wordsCount(),
-        gameOptions: props.gameOptions,
+        typingOptions: props.gameOptions,
         typing: typingMetrics(),
         keys: keyMetrics(),
       },
@@ -427,7 +428,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
             setGhostCursor(ghostCursor);
             const ghostInput = TimerInput({
               cursor: ghostCursor,
-              sequence: status.prev.getSequence(),
+              sequence: getTimedKeySequence(status.prev.typingLogs),
               setCleanup: setCleanupGhost,
             });
             createEffect((timer: TypingTimer) => {

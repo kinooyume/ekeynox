@@ -4,7 +4,6 @@ import { css } from "solid-styled";
 import {
   SettingsOriginType,
   Theme,
-  keyboardLayoutName,
   locales,
 } from "~/settings/settings.ts";
 import VerticalRadioBox from "../ui/VerticalRadioBox.tsx";
@@ -17,6 +16,7 @@ import { ListSettings, SettingsUI } from "./HeaderSettingsGlobal.tsx";
 import HeaderSettingsDesktop from "./HeaderSettingsDesktop.tsx";
 import HeaderSettingsMobile from "./HeaderSettingsMobile.tsx";
 import EyeToggle from "../ui/EyeToggle.tsx";
+import { keyboardLayoutName } from "~/typingKeyboard/keyboardLayout.ts";
 
 const HeaderSettings = () => {
   const t = useI18n();

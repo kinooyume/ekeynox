@@ -6,7 +6,7 @@ import type { TypingTimer } from "~/timer/Timer";
 import TimerKeypress, { type SetCleanup } from "~/timer/TimerKeypress";
 import Timer from "~/timer/Timer";
 
-import type { TimedKey } from "~/typingMetrics/Metrics";
+import type { TimedKey } from "~/typingStatistics/Metrics";
 
 type TimerInputProps = {
   cursor: Cursor;
