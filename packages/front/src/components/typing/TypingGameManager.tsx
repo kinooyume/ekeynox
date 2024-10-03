@@ -47,10 +47,11 @@ import type { KeyboardHandler } from "../keyboard/TypingKeyboard";
 import TimerInput from "../seqInput/TimerInput";
 import type { TimerEffectStatus } from "~/timer/Timer";
 
-import { PendingKind, PendingMode, PendingStatus } from "~/states";
+import { type PendingStatus, PendingKind  } from "~/states";
 
-import { GameOptions } from "~/typingOptions/gameOptions";
-import { GameModeKind } from "~/typingOptions/gameModeKind";
+import { TypingModeKind } from "~/typingOptions/typingModeKind";
+import { TypingOptions } from "~/typingOptions/typingOptions";
+import { TypingGameOptions } from "~/typingOptions/typingGameOptions";
 
 import { HigherKeyboard } from "~/settings/keyboardLayout";
 
@@ -66,11 +67,11 @@ import { TypingEventKind, type TypingEventType } from "./TypingEvent";
 
 type TypingGameManagerProps = {
   status: PendingStatus;
-  gameOptions: GameOptions;
-  start: (options: GameOptions) => void;
+  gameOptions: TypingOptions;
+  start: (options: TypingOptions) => void;
   kbLayout: HigherKeyboard;
   showKb: boolean;
-  onOver: (metrics: Metrics, mode: PendingMode) => void;
+  onOver: (metrics: Metrics, mode: TypingGameOptions) => void;
   onExit: () => void;
 };
 
@@ -359,8 +360,8 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
   createComputed(
     on(
       () => props.status.mode.kind,
-      (gameMode) => {
-        if (gameMode === GameModeKind.timer) {
+      (typingMode) => {
+        if (typingMode === TypingModeKind.timer) {
           appendContent();
         }
       },
@@ -372,7 +373,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
   createComputed(
     on(wordsCount, () => {
       if (
-        props.status.mode.kind === GameModeKind.timer &&
+        props.status.mode.kind === TypingModeKind.timer &&
         wordsCount() >= totalWordsCount() / 2
       ) {
         appendContent();
@@ -470,7 +471,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
       keyMetrics={keyMetrics()}
     >
       <Switch>
-        <Match when={props.status.mode.kind === GameModeKind.speed} keyed>
+        <Match when={props.status.mode.kind === TypingModeKind.speed} keyed>
           <TypingModeSpeed
             typingEvent={typingEvent()}
             stat={stat()}
@@ -485,7 +486,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
             />
           </TypingModeSpeed>
         </Match>
-        <Match when={props.status.mode.kind === GameModeKind.timer} keyed>
+        <Match when={props.status.mode.kind === TypingModeKind.timer} keyed>
           <TypingModeTimer
             typingEvent={typingEvent()}
             stat={stat()}
@@ -513,7 +514,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
             isGenerated={props.status.mode.isGenerated}
             onPause={pause}
             onReset={reset}
-            onShuffle={shuffle(props.status.mode.kind === GameModeKind.timer)}
+            onShuffle={shuffle(props.status.mode.kind === TypingModeKind.timer)}
             onExit={props.onExit}
           />
         </TypingHeaderNav>

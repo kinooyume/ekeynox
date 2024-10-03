@@ -9,10 +9,10 @@ import KeyboardLayout from "../settings/keyboardLayout.ts";
 import { AppStateKind, PendingState, ResumeState } from "~/states";
 
 import {
-  GameOptions,
+  TypingOptions,
   deepCopy,
   optionsToPending,
-} from "~/typingOptions/gameOptions.ts";
+} from "~/typingOptions/typingOptions.ts";
 
 import TypingGameManager from "~/components/typing/TypingGameManager";
 import { useAppState } from "~/contexts/AppStateProvider.tsx";
@@ -34,7 +34,7 @@ export default function Typing() {
     return s.kind === AppStateKind.pending ? s.status : undefined;
   });
 
-  const start = (opts: GameOptions) => {
+  const start = (opts: TypingOptions) => {
     setPersistedGameOptions(opts);
 
     const sourcesGen = fetchSourcesGen(opts.generation);

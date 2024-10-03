@@ -1,10 +1,10 @@
 import type { JSXElement } from "solid-js";
 
 import type { GameParams } from "./GameParams";
-import SpeedParams from "~/components/gameMode/SpeedParams";
-import SpeedParamsCompact from "~/components/gameMode/SpeedParamsCompact";
-import TimerParams from "~/components/gameMode/TimerParams";
-import TimerParamsCompact from "~/components/gameMode/TimerParamsCompact";
+import SpeedParams from "~/components/typingMode/SpeedParams";
+import SpeedParamsCompact from "~/components/typingMode/SpeedParamsCompact";
+import TimerParams from "~/components/typingMode/TimerParams";
+import TimerParamsCompact from "~/components/typingMode/TimerParamsCompact";
 
 import MonkeySmile from "~/svgs/monkeySmile";
 import BunnySmile from "~/svgs/bunnySmile";
@@ -12,9 +12,9 @@ import Bunny from "~/svgs/bunny";
 import Monkey from "~/svgs/monkey";
 import BunnyHead from "~/svgs/bunnyHead";
 import MonkeyHead from "~/svgs/monkeyHead";
-import { GameModeKind } from "~/typingOptions/gameModeKind";
+import { TypingModeKind } from "./typingModeKind";
 
-export type GameModeData = {
+export type TypingModeData = {
   picto: () => JSXElement;
   head: () => JSXElement;
   smile: () => JSXElement;
@@ -22,17 +22,17 @@ export type GameModeData = {
   compact: (props: GameParams) => JSXElement;
 };
 
-export type GameMode = Record<GameModeKind, GameModeData>;
+export type TypingMode = Record<TypingModeKind, TypingModeData>;
 
-const gameModes: GameMode = {
-  [GameModeKind.speed]: {
+const typingModes: TypingMode = {
+  [TypingModeKind.speed]: {
     picto: Monkey,
     head: MonkeyHead,
     smile: MonkeySmile,
     params: SpeedParams,
     compact: SpeedParamsCompact,
   },
-  [GameModeKind.timer]: {
+  [TypingModeKind.timer]: {
     picto: Bunny,
     head: BunnyHead,
     smile: BunnySmile,
@@ -41,8 +41,8 @@ const gameModes: GameMode = {
   },
 };
 
-const gameModesArray: Array<[GameModeKind, GameModeData]> = Object.entries(
-  gameModes,
-) as Array<[GameModeKind, GameModeData]>;
+const typingModesArray: Array<[TypingModeKind, TypingModeData]> = Object.entries(
+  typingModes,
+) as Array<[TypingModeKind, TypingModeData]>;
 
-export { gameModes, gameModesArray };
+export { typingModes, typingModesArray };

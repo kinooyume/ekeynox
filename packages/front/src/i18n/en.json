@@ -45,7 +45,7 @@
     "charactersTyped": "Accuracy per character",
     "gameReport": "Game report"
   },
-  "gameMode": {
+  "typingMode": {
     "speed": {
       "title": "monkey mode",
       "subtitle": "Words sprint",

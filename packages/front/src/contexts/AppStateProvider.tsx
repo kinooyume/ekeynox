@@ -7,25 +7,25 @@ import {
 } from "solid-js";
 
 import type { Metrics, MetricsResume } from "~/typingMetrics/Metrics";
-import { type GameOptions, deepCopy } from "~/typingOptions/gameOptions";
+import { type TypingOptions, deepCopy } from "~/typingOptions/typingOptions";
+import { type TypingGameOptions } from "~/typingOptions/typingGameOptions";
 
 import {
   AppStateKind,
   PendingKind,
   type AppState,
-  type PendingMode,
   type PendingStatusNew,
 } from "~/states";
 
 
 type AppMutation = {
-    start: (mode: Promise<PendingMode>, options: GameOptions) => void;
+    start: (mode: Promise<TypingGameOptions>, options: TypingOptions) => void;
     redo: (
-      mode: PendingMode,
+      mode: TypingGameOptions,
       metrics: MetricsResume,
-      options: GameOptions,
+      options: TypingOptions,
     ) => void;
-    over: (metrics: Metrics, content: PendingMode) => void;
+    over: (metrics: Metrics, content: TypingGameOptions) => void;
     menu: () => void;
     login: () => void;
   };
@@ -76,7 +76,7 @@ export function AppStateProvider(props: Props) {
         }),
       });
     },
-    over: (metrics, content: PendingMode) => {
+    over: (metrics, content: TypingGameOptions) => {
       setState({ kind: AppStateKind.resume, metrics, content });
     },
     menu: () => {

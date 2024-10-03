@@ -1,38 +1,7 @@
-import { GameModeKind } from "~/typingOptions/gameModeKind";
-import { GameOptions } from "~/typingOptions/gameOptions";
-import { GetContent } from "~/typingContent/TypingGameSource";
 import { Metrics, MetricsResume } from "~/typingMetrics/Metrics";
 
-// NOTE: Ca doit pas etre ici; je pense pas
-export type PendingMode =
-  | {
-      kind: GameModeKind.speed;
-      isGenerated: boolean;
-      getContent: GetContent;
-    }
-  | {
-      kind: GameModeKind.timer;
-      isGenerated: boolean;
-      time: number;
-      getContent: GetContent;
-    };
-
-export function deepCopyMode(source: PendingMode): PendingMode {
-  if (source.kind === GameModeKind.speed) {
-    return {
-      kind: GameModeKind.speed,
-      isGenerated: source.isGenerated,
-      getContent: source.getContent,
-    };
-  } else {
-    return {
-      kind: GameModeKind.timer,
-      isGenerated: source.isGenerated,
-      time: source.time,
-      getContent: source.getContent,
-    };
-  }
-}
+import { TypingOptions } from "~/typingOptions/typingOptions";
+import { TypingGameOptions } from "~/typingOptions/typingGameOptions";
 
 export enum PendingKind {
   new,
@@ -41,12 +10,12 @@ export enum PendingKind {
 
 export type PendingStatusNew = {
   kind: PendingKind.new;
-  mode: PendingMode;
+  mode: TypingGameOptions;
 };
 
 export type PendingStatusRedo = {
   kind: PendingKind.redo;
-  mode: PendingMode;
+  mode: TypingGameOptions;
   prev: MetricsResume;
 };
 
@@ -64,13 +33,13 @@ export enum AppStateKind {
 export type PendingState = {
   kind: AppStateKind.pending;
   status: Promise<PendingStatus>;
-  options: GameOptions;
+  options: TypingOptions;
 };
 
 export type ResumeState = {
   kind: AppStateKind.resume;
   metrics: Metrics;
-  content: PendingMode;
+  content: TypingGameOptions;
 };
 
 export type AppState =

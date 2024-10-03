@@ -1,9 +1,11 @@
-import { GameOptions } from "~/typingOptions/gameOptions";
 import type { LinkedList } from "../List";
-import type { MetaWord, Paragraphs } from "../content/Content";
-import { KeyEventKind } from "./KeyMetrics";
+
+import { TypingOptions } from "~/typingOptions/typingOptions";
+import type { MetaWord, Paragraphs } from "~/typingContent/Content";
+
 import type { KeypressMetricsProjection } from "./KeypressMetrics";
 import type { KeysProjection } from "./KeysProjection";
+import { KeyEventKind } from "./KeyMetrics";
 import type { TypingMetrics } from "./TypingMetrics";
 import {
   diffKeyStatusProjections,
@@ -13,7 +15,7 @@ import {
 export type Metrics = {
   paragraphs: Paragraphs;
   wordsCount: number;
-  gameOptions: GameOptions;
+  gameOptions: TypingOptions;
   typing: TypingMetrics;
   keys: KeysProjection;
 };

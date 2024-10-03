@@ -1,4 +1,4 @@
-import { CategoryKind, GameOptions, WordsGenerationCategory } from "~/typingOptions/gameOptions";
+import { CategoryKind, TypingOptions, WordsGenerationCategory } from "~/typingOptions/typingOptions";
 import type { ContentData, Paragraph } from "./Content";
 import Content from "./Content";
 import { randomQuote, randomWords } from "./randomContent";
@@ -12,7 +12,7 @@ export type SourceProps = {
 };
 
 type GetSourceProps = {
-  opts: GameOptions;
+  opts: TypingOptions;
   sources: SourceProps;
   wordsCount: number;
 };

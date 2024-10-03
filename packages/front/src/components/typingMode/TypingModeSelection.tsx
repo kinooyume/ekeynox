@@ -2,16 +2,16 @@ import { For, onCleanup, createSignal, Show } from "solid-js";
 import { css } from "solid-styled";
 import ChooseClip from "~/svgs/choose-clip";
 import { TransitionGroup } from "solid-transition-group";
-import { gameModesArray } from "~/typingOptions/GameMode";
+import { typingModesArray } from "~/typingOptions/typingMode";
 import { useI18n } from "~/contexts/i18nProvider";
-import { GameModeKind } from "~/typingOptions/gameModeKind";
+import { TypingModeKind } from "~/typingOptions/typingModeKind";
 
-type GameModeSelectionProps = {
-  selected: GameModeKind;
-  setSelected: (mode: GameModeKind) => void;
+type TypingModeSelectionProps = {
+  selected: TypingModeKind;
+  setSelected: (mode: TypingModeKind) => void;
 };
 
-const GameModeSelection = (props: GameModeSelectionProps) => {
+const TypingModeSelection = (props: TypingModeSelectionProps) => {
   const t = useI18n();
   css`
     .mode-selection {
@@ -119,7 +119,7 @@ const GameModeSelection = (props: GameModeSelectionProps) => {
   );
 
   let labelRef: Array<HTMLLabelElement> = [];
-  const [labelHovered, setLabelHovered] = createSignal<GameModeKind | null>(
+  const [labelHovered, setLabelHovered] = createSignal<TypingModeKind | null>(
     null,
   );
 
@@ -142,16 +142,16 @@ const GameModeSelection = (props: GameModeSelectionProps) => {
         >
           <Show when={labelHovered() !== null}>
             <p class="title">
-              {t("gameMode")[labelHovered() as GameModeKind].subtitle}
+              {t("typingMode")[labelHovered() as TypingModeKind].subtitle}
             </p>
             <p class="description">
-              {t("gameMode")[labelHovered() as GameModeKind].title}
+              {t("typingMode")[labelHovered() as TypingModeKind].title}
             </p>
           </Show>
         </TransitionGroup>
       </div>
       <fieldset class="modes" aria-label="Game mode selection" role="group">
-        <For each={gameModesArray}>
+        <For each={typingModesArray}>
           {([modeKind, mode]) => (
             <div class={`radio ${modeKind}`}>
               <input
@@ -185,4 +185,4 @@ const GameModeSelection = (props: GameModeSelectionProps) => {
   );
 };
 
-export default GameModeSelection;
+export default TypingModeSelection;

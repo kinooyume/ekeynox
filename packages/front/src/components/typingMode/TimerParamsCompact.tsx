@@ -5,7 +5,7 @@ import {
   WordsGenerationCategory,
   type Category,
   type Languages,
-} from "../../typingOptions/gameOptions";
+} from "../../typingOptions/typingOptions";
 import RadioGroup from "../ui/RadioGroup";
 
 import Lang from "~/svgs/lang";
@@ -13,8 +13,8 @@ import Quote from "~/svgs/quote";
 import Text from "~/svgs/text";
 import Customizer from "~/svgs/customizer";
 import Stopwatch from "~/svgs/stopwatch";
-import type { GameParams } from "./GameParams";
 import { useI18n } from "~/contexts/i18nProvider";
+import { GameParams } from "~/typingOptions/GameParams";
 
 const TimerParamsCompact = (props: GameParams) => {
   const t = useI18n();
@@ -55,13 +55,13 @@ const TimerParamsCompact = (props: GameParams) => {
           },
         ]}
         compare={(v) => {
-          switch (props.gameOptions.categorySelected.kind) {
+          switch (props.typingOptions.categorySelected.kind) {
             case CategoryKind.custom:
               return v.kind === CategoryKind.custom;
             case CategoryKind.generation:
               return (
                 v.kind === CategoryKind.generation &&
-                v.category === props.gameOptions.categorySelected.category
+                v.category === props.typingOptions.categorySelected.category
               );
           }
         }}
@@ -73,7 +73,7 @@ const TimerParamsCompact = (props: GameParams) => {
         }}
       />
       <Show
-        when={props.gameOptions.categorySelected.kind !== CategoryKind.custom}
+        when={props.typingOptions.categorySelected.kind !== CategoryKind.custom}
       >
         <RadioGroup
           name="languages-timer"
@@ -81,7 +81,7 @@ const TimerParamsCompact = (props: GameParams) => {
             { label: t("en"), value: "en" as Languages },
             { label: t("fr"), value: "fr" as Languages },
           ]}
-          compare={(v) => v === props.gameOptions.generation.language}
+          compare={(v) => v === props.typingOptions.generation.language}
           setChecked={(l) => props.setGameOptions("generation", "language", l)}
         >
           <Lang />
@@ -89,7 +89,7 @@ const TimerParamsCompact = (props: GameParams) => {
       </Show>
       <Switch>
         <Match
-          when={props.gameOptions.categorySelected.kind === CategoryKind.custom}
+          when={props.typingOptions.categorySelected.kind === CategoryKind.custom}
         >
           {props.children}
         </Match>
@@ -102,7 +102,7 @@ const TimerParamsCompact = (props: GameParams) => {
           { label: "1m", value: 60 },
           { label: "2m", value: 120 },
         ]}
-        compare={(v) => v === props.gameOptions.timer}
+        compare={(v) => v === props.typingOptions.timer}
         setChecked={(time) =>
           props.setGameOptions("timer", time)
         }

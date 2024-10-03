@@ -2,46 +2,52 @@ import { Match, Show, Switch, type JSXElement } from "solid-js";
 import { css } from "solid-styled";
 import Lang from "~/svgs/lang";
 import Word from "~/svgs/word";
-import {
-  CategoryKind,
-  WordsGenerationCategory,
-  type Category,
-  type Languages,
-} from "../../typingOptions/gameOptions";
 import RadioGroup from "../ui/RadioGroup";
 import Quote from "~/svgs/quote";
 import Text from "~/svgs/text";
 import Customizer from "~/svgs/customizer";
-import type { GameParams } from "./GameParams";
 import { useI18n } from "~/contexts/i18nProvider";
+import {
+  Category,
+  CategoryKind,
+  Languages,
+  WordsGenerationCategory,
+} from "~/typingOptions/typingOptions";
+import { GameParams } from "~/typingOptions/GameParams";
 
-const SpeedParamsMedium = (props: GameParams) => {
+const SpeedParams = (props: GameParams) => {
   const t = useI18n();
   css`
-    .time-params {
+    .random-params {
       display: flex;
       flex-direction: column;
+      gap: 1rem;
       align-items: flex-start;
     }
     p {
       margin: 0;
-      font-size: 16px;
       font-weight: 400;
       color: var(--text-secondary-color);
-      text-transform: capitalize;
+      font-size: 18px;
       cursor: default;
+      text-transform: capitalize;
     }
     .option {
       display: flex;
-      border-radius: 12px;
       justify-content: space-between;
       align-items: center;
       width: 100%;
-      padding: 8px;
-      transition: all 0.2s ease-in-out;
+      transition: all 0.15s ease-in-out;
     }
-    .option:hover {
-      background-color: var(--background-color);
+    @media screen and (max-width: 860px) {
+      .option {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+      }
+      p {
+        font-size: 14px;
+      }
     }
   `;
 
@@ -75,13 +81,13 @@ const SpeedParamsMedium = (props: GameParams) => {
             },
           ]}
           compare={(v) => {
-            switch (props.gameOptions.categorySelected.kind) {
+            switch (props.typingOptions.categorySelected.kind) {
               case CategoryKind.custom:
                 return v.kind === CategoryKind.custom;
               case CategoryKind.generation:
                 return (
                   v.kind === CategoryKind.generation &&
-                  v.category === props.gameOptions.categorySelected.category
+                  v.category === props.typingOptions.categorySelected.category
                 );
             }
           }}
@@ -94,7 +100,7 @@ const SpeedParamsMedium = (props: GameParams) => {
         />
       </div>
       <Show
-        when={props.gameOptions.categorySelected.kind !== CategoryKind.custom}
+        when={props.typingOptions.categorySelected.kind !== CategoryKind.custom}
       >
         <div class="option">
           <p> {t("language")} </p>
@@ -104,7 +110,7 @@ const SpeedParamsMedium = (props: GameParams) => {
               { label: t("en"), value: "en" as Languages },
               { label: t("fr"), value: "fr" as Languages },
             ]}
-            compare={(v) => v === props.gameOptions.generation.language}
+            compare={(v) => v === props.typingOptions.generation.language}
             setChecked={(l) =>
               props.setGameOptions("generation", "language", l)
             }
@@ -115,14 +121,15 @@ const SpeedParamsMedium = (props: GameParams) => {
       </Show>
       <Switch>
         <Match
-          when={props.gameOptions.categorySelected.kind === CategoryKind.custom}
+          when={props.typingOptions.categorySelected.kind === CategoryKind.custom}
         >
           {props.children}
         </Match>
         <Match
           when={
-            props.gameOptions.categorySelected.kind === CategoryKind.generation &&
-            props.gameOptions.categorySelected.category ===
+            props.typingOptions.categorySelected.kind ===
+              CategoryKind.generation &&
+            props.typingOptions.categorySelected.category ===
               WordsGenerationCategory.words1k
           }
         >
@@ -136,12 +143,10 @@ const SpeedParamsMedium = (props: GameParams) => {
                 { label: "50", value: 50 },
                 { label: "100", value: 100 },
               ]}
-              compare={(v) => v === props.gameOptions.random}
-              setChecked={(v) =>
-                props.setGameOptions("random", v)
-              }
+              compare={(v) => v === props.typingOptions.random}
+              setChecked={(v) => props.setGameOptions("random", v)}
             >
-              <Word />
+              <div></div>
             </RadioGroup>
           </div>
         </Match>
@@ -150,4 +155,4 @@ const SpeedParamsMedium = (props: GameParams) => {
   );
 };
 
-export default SpeedParamsMedium;
+export default SpeedParams;

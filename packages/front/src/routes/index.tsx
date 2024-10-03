@@ -2,8 +2,8 @@ import { Portal } from "solid-js/web";
 import { useAppState } from "~/contexts/AppStateProvider";
 import { useGameOptions } from "~/contexts/GameOptionsProvider";
 
-import { GameOptions, optionsToPending } from "~/typingOptions/gameOptions";
-import GameModeMenu from "~/components/gameMode/GameModeMenu";
+import { TypingOptions, optionsToPending } from "~/typingOptions/typingOptions";
+import GameModeMenu from "~/components/typingMode/TypingModeMenu";
 import About from "~/components/about/About";
 
 export default function Menu() {
@@ -12,7 +12,7 @@ export default function Menu() {
 
   const { mutation: navigation } = useAppState();
 
-  const start = (opts: GameOptions) => {
+  const start = (opts: TypingOptions) => {
     setPersistedGameOptions(opts);
 
     const sourcesGen = fetchSourcesGen(opts.generation);

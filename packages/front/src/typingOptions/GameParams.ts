@@ -1,11 +1,11 @@
 import type { JSXElement } from "solid-js";
 import type { SetStoreFunction } from "solid-js/store";
 
-import type { GameOptions } from "~/typingOptions/gameOptions";
+import type { TypingOptions } from "~/typingOptions/typingOptions";
 
 // Props
 export type GameParams = {
-  gameOptions: GameOptions;
-  setGameOptions: SetStoreFunction<GameOptions>;
+  typingOptions: TypingOptions;
+  setGameOptions: SetStoreFunction<TypingOptions>;
   children: JSXElement;
 };

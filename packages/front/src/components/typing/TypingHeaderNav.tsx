@@ -2,14 +2,14 @@ import TypingHeaderMenu from "./TypingHeaderMenu";
 import { css } from "solid-styled";
 import { JSX, onCleanup, onMount, Show } from "solid-js";
 import anime from "animejs";
-import { GameOptions } from "~/typingOptions/gameOptions";
+import { TypingOptions } from "~/typingOptions/typingOptions";
 import { useWindowSize } from "@solid-primitives/resize-observer";
 
 export type LeavingFn = (fn: () => void) => void;
 
 type TypingHeaderNavProps = {
-  start: (opts: GameOptions) => void;
-  gameOptions: GameOptions;
+  start: (opts: TypingOptions) => void;
+  gameOptions: TypingOptions;
   setLeavingAnimate: (anim: () => anime.AnimeTimelineInstance) => void;
   children: JSX.Element | JSX.Element[];
 };

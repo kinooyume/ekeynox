@@ -45,7 +45,7 @@
     "charactersTyped": "Précision par caractère",
     "gameReport": "Rapport"
   },
-  "gameMode": {
+  "typingMode": {
     "speed": {
       "title": "mode singe",
       "subtitle": "Course de mots",

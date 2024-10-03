@@ -3,14 +3,14 @@ import { css } from "solid-styled";
 
 import { useWindowSize } from "@solid-primitives/resize-observer";
 
-import { PendingMode } from "~/states";
 import { useI18n } from "~/contexts/i18nProvider";
 
 import {
   type ContentGeneration,
-  type GameOptions,
+  type TypingOptions,
   deepCopy,
-} from "~/typingOptions/gameOptions";
+} from "~/typingOptions/typingOptions";
+import { TypingGameOptions } from "~/typingOptions/typingGameOptions";
 
 import { makeRedoContent } from "~/typingContent/TypingGameSource";
 import Content from "~/typingContent/Content";
@@ -18,26 +18,26 @@ import Content from "~/typingContent/Content";
 import type { Metrics, MetricsResume } from "~/typingMetrics/Metrics";
 
 import Ghost from "~/svgs/ghost";
-import GameModeDropdown from "../gameMode/GameModeDropdown";
+import GameModeDropdown from "../typingMode/TypingModeDropdown";
 
 type ActionsResumeProps = {
-  gameOptions: GameOptions;
-  content: PendingMode;
+  gameOptions: TypingOptions;
+  content: TypingGameOptions;
   metrics: Metrics;
   metricsResume: MetricsResume;
   fetchSourcesGen: (opts: ContentGeneration) => Promise<Array<string>>;
-  start: (opts: GameOptions) => void;
+  start: (opts: TypingOptions) => void;
   redo: (
-    mode: PendingMode,
+    mode: TypingGameOptions,
     metrics: MetricsResume,
-    options: GameOptions,
+    options: TypingOptions,
   ) => void;
 };
 
 const ActionsResume = (props: ActionsResumeProps) => {
   const t = useI18n();
 
-  const restart = (opts: GameOptions) => {
+  const restart = (opts: TypingOptions) => {
     const redoContent = {
       ...props.content,
       getContent: makeRedoContent(
@@ -51,7 +51,7 @@ const ActionsResume = (props: ActionsResumeProps) => {
     props.redo(redoContent, props.metricsResume, deepCopy(opts));
   };
 
-  const start = (opts: GameOptions) => {
+  const start = (opts: TypingOptions) => {
     props.start(deepCopy(opts));
   };
 

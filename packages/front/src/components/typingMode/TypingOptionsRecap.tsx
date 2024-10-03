@@ -2,16 +2,16 @@ import { css } from "solid-styled";
 import { Switch, type JSXElement, Show, Match } from "solid-js";
 import {
   CategoryKind,
-  GameOptions,
+  TypingOptions,
   WordsGenerationCategory,
-} from "~/typingOptions/gameOptions";
+} from "~/typingOptions/typingOptions";
 import { useI18n } from "~/contexts/i18nProvider";
-import { GameModeKind } from "~/typingOptions/gameModeKind";
+import { TypingModeKind } from "~/typingOptions/typingModeKind";
 
 // NOTE: make a data to link title + icons + params full/compact
 //
 type GameOptionsRecapProps = {
-  gameOptions: GameOptions;
+  gameOptions: TypingOptions;
 };
 
 const GameOptionsRecap = (props: GameOptionsRecapProps) => {
@@ -40,7 +40,7 @@ const GameOptionsRecap = (props: GameOptionsRecapProps) => {
   `;
   return (
     <div class="options-recap">
-      <Show when={props.gameOptions.modeSelected === GameModeKind.timer}>
+      <Show when={props.gameOptions.modeSelected === TypingModeKind.timer}>
         <div class="tag animate">
           <span>{props.gameOptions.timer}s</span>
         </div>
@@ -72,7 +72,7 @@ const GameOptionsRecap = (props: GameOptionsRecapProps) => {
               when={
                 (props.gameOptions.categorySelected as any).category ===
                   WordsGenerationCategory.words1k &&
-                props.gameOptions.modeSelected !== GameModeKind.timer
+                props.gameOptions.modeSelected !== TypingModeKind.timer
               }
             >
               <div class="tag animate">
