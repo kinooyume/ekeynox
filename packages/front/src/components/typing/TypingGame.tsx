@@ -10,7 +10,7 @@ import { type HigherKeyboard } from "~/typingKeyboard/keyboardLayout";
 
 import { type TypingState } from "~/typingState";
 
-import { type KeysProjection } from "~/typingStatistics/KeysProjection.ts";
+import { type CharacterStats } from "~/typingStatistics/CharacterStats.ts";
 
 import UserInput from "../seqInput/UserInput";
 import Prompt from "../prompt/Prompt.tsx";
@@ -26,7 +26,7 @@ type TypingGameProps = {
 
   paragraphs: Paragraphs;
 
-  keyMetrics: KeysProjection;
+  keyMetrics: CharacterStats;
 
   onKeyDown: (key: string) => void;
   onKeyUp: (key: string) => void;

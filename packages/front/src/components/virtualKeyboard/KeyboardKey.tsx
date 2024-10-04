@@ -1,12 +1,11 @@
 import { Show } from "solid-js";
 import { css } from "solid-styled";
-
 import {
-  createTypingProjection,
-  diffCharacterStatusProjections,
-  mergeTypingProjections,
-  type TypingProjection,
-} from "~/typingStatistics/TypingProjection";
+  CharacterMetrics,
+  createCharacterMetrics,
+  pushCharacterMetrics,
+} from "~/typingContent/character/stats/metrics";
+import { diffCharacterScore } from "~/typingContent/character/stats/score";
 
 type transform = Array<[string, string]>;
 
@@ -38,7 +37,7 @@ export type KeyboardKeyProps = {
   current: boolean;
   size: string;
   used: boolean;
-  data: Array<TypingProjection>;
+  data: Array<CharacterMetrics>;
   pressed: boolean;
 };
 
@@ -163,16 +162,16 @@ const KeyboardKey = (props: KeyboardKeyProps) => {
   `;
 
   // PERF: lot of stuff at each keypress
-  const status = (data: Array<TypingProjection>) => {
+  const status = (data: Array<CharacterMetrics>) => {
     if (data.length === 0) return "";
     const info =
       data.length === 1
         ? data[0]
         : data.reduce((acc, cur) => {
-            if (cur) mergeTypingProjections(acc, cur);
+            if (cur) pushCharacterMetrics(acc, cur);
             return acc;
-          }, createTypingProjection());
-    const result = diffCharacterStatusProjections(info);
+          }, createCharacterMetrics());
+    const result = diffCharacterScore(info);
 
     const incorrect = result.unmatch + result.missed + result.extra;
     const wasIncorrect =

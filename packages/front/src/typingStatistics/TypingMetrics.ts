@@ -4,8 +4,6 @@ import List, { type LinkedList } from "~/List";
 
 import { TypingStateKind, type TypingState } from "~/typingState";
 
-import type { TypingProjection } from "./TypingProjection";
-
 import KeypressMetrics, {
   type KeypressMetricsProjection,
   type StatProjection,
@@ -15,16 +13,17 @@ import KeypressMetricsSessions, {
   type PausedKeypressMetrics,
   type PendingKeypressMetrics,
 } from "./KeypressMetricsSessions";
+import { CharacterMetrics } from "~/typingContent/character/stats/metrics";
 
 export type TypingMetrics = {
   projection: KeypressMetricsProjection;
-  sessions: LinkedList<TypingProjection>;
+  sessions: LinkedList<CharacterMetrics>;
   logs: LinkedList<KeypressMetricsProjection>;
 };
 
 const createTypingMetrics = (): TypingMetrics => ({
   projection: KeypressMetrics.createKeypressProjection(),
-  sessions: List.make(null, KeypressMetrics.createTypingProjection()),
+  sessions: List.make(null, KeypressMetrics.createCharacterMetrics()),
   logs: null,
 });
 
@@ -67,21 +66,21 @@ const createTypingMetricsState = (
   // NOTE: Doesnt't work
   // don't care for now
   //
-  const cleanLogs = (logs: LinkedList<KeypressMetricsProjection>) => {
-    if (!logs) return null;
-    let log: LinkedList<KeypressMetricsProjection> = logs;
-    let prevLog = log;
-    while (log) {
-      if (!log.value.meta.logs) {
-        prevLog.next = log.next;
-      } else {
-        prevLog = log;
-      }
-      log = log.next;
-    }
-    return log;
-  };
-
+  // const cleanLogs = (logs: LinkedList<KeypressMetricsProjection>) => {
+  //   if (!logs) return null;
+  //   let log: LinkedList<KeypressMetricsProjection> = logs;
+  //   let prevLog = log;
+  //   while (log) {
+  //     if (!log.value.meta.logs) {
+  //       prevLog.next = log.next;
+  //     } else {
+  //       prevLog = log;
+  //     }
+  //     log = log.next;
+  //   }
+  //   return log;
+  // };
+  //
   const pending =
     (props: PendingMetricsProps) =>
     ({ event }: TypingMetricsProps): TypingMetricsState => {

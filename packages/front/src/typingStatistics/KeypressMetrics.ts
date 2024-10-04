@@ -11,56 +11,34 @@ import {
 
 import { type TypingCharacter } from "~/typingContent/character/types";
 
-import type { TypingState  } from "~/typingState";
-
+import type { TypingState } from "~/typingState";
 import {
-  createTypingProjection,
-  type TypingProjection,
-  mergeTypingProjections,
-  createTypingProjectionFromPendingList,
-  diffCharacterStatusProjections,
-} from "./TypingProjection";
-
+  CharacterMetrics,
+  createCharacterMetrics,
+  createCharacterMetricsFromPendingList,
+  pushCharacterMetrics,
+} from "~/typingContent/character/stats/metrics";
+import { diffCharacterScore } from "~/typingContent/character/stats/score";
 
 export type CoreProjection = {
-  projection: TypingProjection;
+  projection: CharacterMetrics;
   wordStat: WordStat;
   duration: number;
 };
 
-const createCoreProjection = (): CoreProjection => ({
-  projection: createTypingProjection(),
-  wordStat: createWordStat(),
-  duration: 0,
-});
-
 export type MetaProjection = {
   logs: LinkedList<TypingCharacter>;
   wordsLogs: LinkedList<TypingWord>;
-  sectionProjection: TypingProjection;
+  sectionProjection: CharacterMetrics;
   sectionWordStat: WordStat;
   start: number;
   stop: number;
 };
 
-const createMetaCharacterpressProjection = (): MetaProjection => ({
-  logs: null,
-  wordsLogs: null,
-  sectionProjection: createTypingProjection(),
-  sectionWordStat: createWordStat(),
-  start: 0,
-  stop: 0,
-});
-
 export type SpeedProjection = {
   byKeypress: [valid: number, all: number];
   byWord: [valid: number, all: number];
 };
-
-const createSpeedProjection = (): SpeedProjection => ({
-  byKeypress: [0, 0],
-  byWord: [0, 0],
-});
 
 export type StatProjection = {
   speed: SpeedProjection;
@@ -68,17 +46,37 @@ export type StatProjection = {
   consistency: number;
 };
 
-const createStatProjection = (): StatProjection => ({
-  speed: createSpeedProjection(),
-  accuracies: [0, 0],
-  consistency: 0,
-});
-
 export type KeypressMetricsProjection = {
   core: CoreProjection;
   meta: MetaProjection;
   stats: StatProjection;
 };
+
+const createCoreProjection = (): CoreProjection => ({
+  projection: createCharacterMetrics(),
+  wordStat: createWordStat(),
+  duration: 0,
+});
+
+const createMetaCharacterpressProjection = (): MetaProjection => ({
+  logs: null,
+  wordsLogs: null,
+  sectionProjection: createCharacterMetrics(),
+  sectionWordStat: createWordStat(),
+  start: 0,
+  stop: 0,
+});
+
+const createSpeedProjection = (): SpeedProjection => ({
+  byKeypress: [0, 0],
+  byWord: [0, 0],
+});
+
+const createStatProjection = (): StatProjection => ({
+  speed: createSpeedProjection(),
+  accuracies: [0, 0],
+  consistency: 0,
+});
 
 const createKeypressProjection = (): KeypressMetricsProjection => ({
   core: createCoreProjection(),
@@ -113,15 +111,14 @@ const keypressProjectionHandler = (props: KeypressMetricsProps) => {
     wordsLogs = null;
     const duration = stop - start + props.part.duration;
     const [sectionProjection, sortedLogs] =
-      createTypingProjectionFromPendingList(node);
-    const [sectionWordStat, sortedWordLogs] =
-      createWordStatFromList(wordNode);
+      createCharacterMetricsFromPendingList(node);
+    const [sectionWordStat, sortedWordLogs] = createWordStatFromList(wordNode);
     /*  Side effect */
-    mergeTypingProjections(projection, sectionProjection);
+    pushCharacterMetrics(projection, sectionProjection);
     mergeWordStats(wordProjection, sectionWordStat);
     /* *** */
 
-    const projectionResult = diffCharacterStatusProjections(projection);
+    const projectionResult = diffCharacterScore(projection);
 
     const correct = projectionResult.match;
 
@@ -179,7 +176,7 @@ const keypressProjectionHandler = (props: KeypressMetricsProps) => {
 
 export default {
   keypressProjectionHandler,
-  createTypingProjection,
+  createCharacterMetrics,
   createKeypressProjection,
   createCoreProjection,
   createStatProjection,

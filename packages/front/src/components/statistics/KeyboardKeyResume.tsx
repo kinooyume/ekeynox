@@ -2,13 +2,8 @@ import { Show } from "solid-js";
 
 import { css } from "solid-styled";
 import "balloon-css";
-
-import {
-  createTypingProjection,
-  diffCharacterStatusProjections,
-  mergeTypingProjections,
-  type TypingProjection,
-} from "~/typingStatistics/TypingProjection";
+import { createCharacterMetrics, pushCharacterMetrics, CharacterMetrics } from "~/typingContent/character/stats/metrics";
+import { diffCharacterScore } from "~/typingContent/character/stats/score";
 
 type transform = Array<[string, string]>;
 
@@ -39,7 +34,7 @@ export type KeyboardKeyResumeProps = {
   key: Array<string>;
   size: string;
   used: boolean;
-  data: Array<TypingProjection>;
+  data: Array<CharacterMetrics>;
 };
 
 /* faire le truc correct, incorrect, was incorrect */
@@ -152,34 +147,34 @@ const KeyboardKeyResume = (props: KeyboardKeyResumeProps) => {
   `;
 
   // duplicate getInfo
-  const getInfo = (data: Array<TypingProjection>) => {
+  const getInfo = (data: Array<CharacterMetrics>) => {
     const info =
       data.length === 1
         ? data[0]
         : data.reduce((acc, cur) => {
-            if (cur) mergeTypingProjections(acc, cur);
+            if (cur) pushCharacterMetrics(acc, cur);
             return acc;
-          }, createTypingProjection());
-    return [diffCharacterStatusProjections(info), info.total];
+          }, createCharacterMetrics());
+    return [diffCharacterScore(info), info.total];
   };
 
   // show accuracy
-  const infoToString = (data: Array<TypingProjection>) => {
+  const infoToString = (data: Array<CharacterMetrics>) => {
     const [info, total] = getInfo(data);
     return info ? ` ${info.match} / ${total}` : "";
   };
 
   // PERF: lot of stuff at each keypress
-  const status = (data: Array<TypingProjection>) => {
+  const status = (data: Array<CharacterMetrics>) => {
     if (data.length === 0) return "";
     const info =
       data.length === 1
         ? data[0]
         : data.reduce((acc, cur) => {
-            if (cur) mergeTypingProjections(acc, cur);
+            if (cur) pushCharacterMetrics(acc, cur);
             return acc;
-          }, createTypingProjection());
-    const result = diffCharacterStatusProjections(info);
+          }, createCharacterMetrics());
+    const result = diffCharacterScore(info);
 
     const incorrect = result.unmatch + result.missed + result.extra;
     const wasIncorrect =

@@ -1,4 +1,4 @@
-import { Metrics, MetricsResume } from "~/typingStatistics/Metrics";
+import { Metrics, TypingStatisticsResult } from "~/typingStatistics/Metrics";
 
 import { TypingOptions } from "~/typingOptions/typingOptions";
 import { TypingGameOptions } from "~/typingOptions/typingGameOptions";
@@ -16,7 +16,7 @@ export type PendingStatusNew = {
 export type PendingStatusRedo = {
   kind: PendingKind.redo;
   mode: TypingGameOptions;
-  prev: MetricsResume;
+  prev: TypingStatisticsResult;
 };
 
 export type PendingStatus = PendingStatusNew | PendingStatusRedo;

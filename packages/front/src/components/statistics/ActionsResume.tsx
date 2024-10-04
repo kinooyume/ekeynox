@@ -15,7 +15,7 @@ import { TypingGameOptions } from "~/typingOptions/typingGameOptions";
 import { makeRedoContent } from "~/typingContent/TypingGameSource";
 import Content from "~/typingContent";
 
-import type { TypingStatistics, MetricsResume } from "~/typingStatistics";
+import type { TypingStatistics, TypingStatisticsResult } from "~/typingStatistics";
 
 import Ghost from "~/svgs/ghost";
 import GameModeDropdown from "../typingMode/TypingModeDropdown";
@@ -25,12 +25,12 @@ type ActionsResumeProps = {
   gameOptions: TypingOptions;
   content: TypingGameOptions;
   metrics: TypingStatistics;
-  metricsResume: MetricsResume;
+  metricsResume: TypingStatisticsResult;
   fetchSourcesGen: (opts: ContentGeneration) => Promise<Array<string>>;
   start: (opts: TypingOptions) => void;
   redo: (
     mode: TypingGameOptions,
-    metrics: MetricsResume,
+    metrics: TypingStatisticsResult,
     options: TypingOptions,
   ) => void;
 };

@@ -21,17 +21,13 @@ import CursorNav, {
 } from "~/cursor/CursorNav";
 import UserNavHooks from "~/cursor/UserNavHooks";
 
-import { getTimedKeySequence, type TypingStatistics } from "~/typingStatistics";
+import { type TypingStatistics } from "~/typingStatistics";
 import KeypressMetrics from "~/typingStatistics/KeypressMetrics";
 import {
   createTypingMetrics,
   createTypingMetricsState,
   type TypingMetricsState,
 } from "~/typingStatistics/TypingMetrics";
-import {
-  updateKeyProjection,
-  type KeysProjection,
-} from "~/typingStatistics/KeysProjection";
 import {
   createWordMetricsState,
   type WordMetrics,
@@ -61,9 +57,11 @@ import TypingHeaderNav from "./TypingHeaderNav";
 import { TypingStateKind, type TypingState } from "~/typingState";
 import makeKeypressHandler from "~/typingState/userKeypressHandler";
 import { CharacterFocus } from "~/typingContent/character/types";
-import { WordStatus } from "../resume/PromptWordResume";
+import { WordStatus } from "../statistics/PromptWordResume";
 import { Paragraphs } from "~/typingContent/paragraphs/types";
 import { deepCloneParagraphs } from "~/typingContent/paragraphs";
+import { CharacterStats, updateCharacterStats } from "~/typingContent/character/stats";
+import { getTimedKeySequence } from "~/typingStatistics/timedKey";
 
 type TypingGameManagerProps = {
   status: PendingStatus;
@@ -259,7 +257,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
         wordsCount: wordsCount(),
         typingOptions: props.gameOptions,
         typing: typingMetrics(),
-        keys: keyMetrics(),
+        characters: keyMetrics(),
       },
       props.status.mode,
     );
@@ -337,8 +335,8 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
   }, updateMetrics);
 
   const keyMetrics = createMemo(
-    (projection: KeysProjection) =>
-      updateKeyProjection({ projection, status: typingState() }),
+    (projection: CharacterStats) =>
+      updateCharacterStats({ projection, status: typingState() }),
     {},
   );
 
