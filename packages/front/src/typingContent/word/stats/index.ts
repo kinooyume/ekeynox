@@ -1,5 +1,5 @@
 import List, { type LinkedList } from "~/List";
-import { TypingWord, TypingWordKind } from "./types";
+import { TypingWord, TypingWordKind } from "../types";
 
 export type WordStat = {
   correct: number;
@@ -25,11 +25,11 @@ const mergeWordStats = (target: WordStat, source: WordStat) => {
 };
 
 const createWordStatFromList = (
-  logs: LinkedList<TypingWord>,
+  list: LinkedList<TypingWord>,
 ): [WordStat, LinkedList<TypingWord>] => {
   const projection = { correct: 0 };
   const updater = updateWordStat(projection);
-  let node = logs;
+  let node = list;
   let sortedLogs = null;
   while (node !== null) {
     updater(node.value);
