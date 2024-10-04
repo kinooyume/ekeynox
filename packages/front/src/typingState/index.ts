@@ -9,15 +9,17 @@ export enum TypingStateKind {
   over,
 }
 
+export type TypingStatePending = {
+  kind: TypingStateKind.pending;
+  key: TypingCharacter;
+  word: TypingWord;
+  next: boolean;
+};
+
 export type TypingState =
   | { kind: TypingStateKind.unstart }
-  | {
-      kind: TypingStateKind.pending;
-      key: TypingCharacter;
-      word: TypingWord;
-      next: boolean;
-    }
   | { kind: TypingStateKind.pause }
+  | TypingStatePending
   | { kind: TypingStateKind.over };
 
 /* *** */

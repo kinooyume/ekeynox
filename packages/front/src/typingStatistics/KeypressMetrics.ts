@@ -11,7 +11,8 @@ import {
 
 import { type TypingCharacter } from "~/typingContent/character/types";
 
-import type { TypingState } from "~/typingState";
+import type { TypingStatePending } from "~/typingState";
+
 import {
   CharacterMetrics,
   createCharacterMetrics,
@@ -95,7 +96,7 @@ const keypressProjectionHandler = (props: KeypressMetricsProps) => {
   let wordProjection = Object.assign({}, props.part.wordStat);
   let wordsLogs: LinkedList<TypingWord> = null;
 
-  const event = ({ key, word }: TypingState) => {
+  const event = ({ key, word }: TypingStatePending) => {
     logs = List.make(logs, key);
     wordsLogs = List.make(wordsLogs, word);
   };
