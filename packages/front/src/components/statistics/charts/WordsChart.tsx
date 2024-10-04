@@ -17,11 +17,11 @@ import { css } from "solid-styled";
 import type { WordSpeed } from "../../metrics/Metrics";
 import { onMount } from "solid-js";
 
-type WordMetricsResumeProps = {
+type WordTypingStatisticsResultProps = {
   words: WordSpeed[];
 };
 
-const WordsChart = (props: WordMetricsResumeProps) => {
+const WordsChart = (props: WordTypingStatisticsResultProps) => {
   // get the first 10 words
   const words = props.words.slice(0, 10);
   const [labels, speeds] = words.reduce(

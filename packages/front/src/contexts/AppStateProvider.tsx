@@ -6,7 +6,7 @@ import {
   useContext,
 } from "solid-js";
 
-import type { Metrics, MetricsResume } from "~/typingStatistics/Metrics";
+import type { Metrics, TypingStatisticsResult } from "~/typingStatistics/Metrics";
 import { type TypingOptions, deepCopy } from "~/typingOptions/typingOptions";
 import { type TypingGameOptions } from "~/typingOptions/typingGameOptions";
 
@@ -22,7 +22,7 @@ type AppMutation = {
     start: (mode: Promise<TypingGameOptions>, options: TypingOptions) => void;
     redo: (
       mode: TypingGameOptions,
-      metrics: MetricsResume,
+      metrics: TypingStatisticsResult,
       options: TypingOptions,
     ) => void;
     over: (metrics: Metrics, content: TypingGameOptions) => void;

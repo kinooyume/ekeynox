@@ -2,7 +2,7 @@ import { For, Show, createEffect, createSignal, onMount } from "solid-js";
 import { useWindowSize } from "@solid-primitives/resize-observer";
 import { css } from "solid-styled";
 import KeyboardKey from "./KeyboardKey";
-import { KeysProjection } from "~/typingStatistics/KeysProjection";
+import { CharacterStats } from "~/typingStatistics/CharacterStats";
 import { KeyboardLayout } from "~/typingKeyboard/keyboardLayout";
 
 export type KeyboardHandler = {
@@ -12,7 +12,7 @@ export type KeyboardHandler = {
 
 type KeyboardProps = {
   ref?: (ref: KeyboardHandler) => void;
-  metrics: KeysProjection;
+  metrics: CharacterStats;
   layout: KeyboardLayout;
   // children: (props: KeyboardKeyProps) => JSX.Element;
   currentKey: string;

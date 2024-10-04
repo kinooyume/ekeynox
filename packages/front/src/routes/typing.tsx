@@ -18,10 +18,10 @@ import TypingGameManager from "~/components/typing/TypingGameManager";
 import keyboardLayout from "~/typingKeyboard/keyboardLayout";
 
 const ClientResume = clientOnly(
-  () => import("~/components/resume/TypingMetricsResume"),
+  () => import("~/components/statistics/TypingStatisticsResume"),
 );
 const ClientActionsResume = clientOnly(
-  () => import("~/components/resume/ActionsResume"),
+  () => import("~/components/statistics/ActionsResume"),
 );
 
 export default function Typing() {

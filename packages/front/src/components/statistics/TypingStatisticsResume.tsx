@@ -14,15 +14,15 @@ import anime from "animejs";
 import { useI18n } from "~/contexts/i18nProvider";
 
 import {
-  createMetricsResume,
+  createTypingStatisticsResult,
   type TypingStatistics,
-  type MetricsResume,
+  type TypingStatisticsResult,
 } from "~/typingStatistics";
 
 import AccuracyDoughnut from "./charts/AccuracyDoughnut";
 import CharacterChart from "./charts/CharacterChart";
 import SpeedChart from "./charts/SpeedChart";
-import WordMetricsResume from "./charts/WordsChart";
+import WordTypingStatisticsResult from "./charts/WordsChart";
 import Prompt from "./PromptResume";
 import TypingKeyboardResume from "./TypingKeyboardResume";
 
@@ -32,15 +32,15 @@ import { HigherKeyboard } from "~/typingKeyboard/keyboardLayout";
 type TypingMetricsProps = {
   kbLayout: HigherKeyboard;
   metrics: TypingStatistics;
-  children: (n: MetricsResume) => JSXElement;
+  children: (n: TypingStatisticsResult) => JSXElement;
 };
 
-const TypingMetricsResume = (props: TypingMetricsProps) => {
+const TypingStatisticsResult = (props: TypingMetricsProps) => {
   const t = useI18n();
-  const keysSet = new Set(Object.keys(props.metrics.keys));
+  const keysSet = new Set(Object.keys(props.metrics.characters));
   const [kbLayout, setKbLayout] = createSignal(props.kbLayout(keysSet));
 
-  const metricsResume = createMetricsResume(props.metrics);
+  const typingStatisticsResult = createTypingStatisticsResult(props.metrics);
 
   const getTime = (duration: number) => {
     // from miliseconds to minutes and seconds
@@ -361,16 +361,16 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
   return (
     <div class="metrics full-bleed">
       <div class="resume-header" ref={resumeHeader!}>
-        <Show when={metricsResume.chart.wpm.length > 1}>
+        <Show when={typingStatisticsResult.chart.wpm.length > 1}>
           <div class="chart">
-            <SpeedChart metrics={metricsResume.chart} />
+            <SpeedChart metrics={typingStatisticsResult.chart} />
           </div>
         </Show>
       </div>
       <div class="sticky">
         <div ref={resumeMenu!} class="resume-menu">
           <GameOptionsTitle t={t} gameOptions={props.metrics.typingOptions} />
-          <div class="actions">{props.children(metricsResume)}</div>
+          <div class="actions">{props.children(typingStatisticsResult)}</div>
         </div>
       </div>
       <div class="sidebar-wrapper">
@@ -438,7 +438,7 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
                 </div>
                 <TypingKeyboardResume
                   layout={kbLayout()}
-                  metrics={props.metrics.keys}
+                  metrics={props.metrics.characters}
                 />
               </div>
             </Show>
@@ -446,15 +446,15 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
               <div class="stat-title-wrapper">
                 <h3>{t("statistics.charactersTyped")}</h3>
               </div>
-              <CharacterChart keys={metricsResume.keys} />
+              <CharacterChart keys={typingStatisticsResult.characters} />
             </div>
-            <Show when={metricsResume.words.length > 1}>
+            <Show when={typingStatisticsResult.words.length > 1}>
               <div class="stat-card">
                 <div class="stat-title-wrapper">
                   <h3>{t("statistics.wordsSpeedTitle")}</h3>
                   <span>{t("statistics.wordsSpeedSubtitle")}</span>
                 </div>
-                <WordMetricsResume words={metricsResume.words} />
+                <WordTypingStatisticsResult words={typingStatisticsResult.words} />
               </div>
             </Show>
           </div>
@@ -464,7 +464,7 @@ const TypingMetricsResume = (props: TypingMetricsProps) => {
   );
 };
 
-export default TypingMetricsResume;
+export default TypingStatisticsResult;
 
 // Cool mobile version
 // https://x.com/slavakornilov/status/1787408908069515499
