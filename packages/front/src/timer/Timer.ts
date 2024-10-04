@@ -50,6 +50,3 @@ const createTypingTimer: CreateTimerEffect<TypingTimerProps> = (
 };
 
 export default createTypingTimer;
-
-// Correct proto stopwatch !
-// https://codingtorque.com/simple-stopwatch-using-javascript/

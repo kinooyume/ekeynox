@@ -28,10 +28,6 @@ import {
   createTypingMetricsState,
   type TypingMetricsState,
 } from "~/typingStatistics/TypingMetrics";
-import {
-  createWordMetricsState,
-  type WordMetrics,
-} from "~/typingStatistics/PromptWordMetrics";
 
 import type { KeyboardHandler } from "../virtualKeyboard/TypingKeyboard";
 
@@ -62,6 +58,7 @@ import { Paragraphs } from "~/typingContent/paragraphs/types";
 import { deepCloneParagraphs } from "~/typingContent/paragraphs";
 import { CharacterStats, updateCharacterStats } from "~/typingContent/character/stats";
 import { getTimedKeySequence } from "~/typingStatistics/timedKey";
+import { createWordWpmCounterReactive, WordStatusReactive } from "~/typingContent/word/stats/wpm/WordWpmCounterReactive";
 
 type TypingGameManagerProps = {
   status: PendingStatus;
@@ -113,10 +110,10 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
   };
 
   // By Word WPM
-  let wordWpmTimer: undefined | WordMetrics = undefined;
+  let wordWpmTimer: undefined | WordStatusReactive = undefined;
 
   const newWordWpmTimer = () => {
-    wordWpmTimer = createWordMetricsState({
+    wordWpmTimer = createWordWpmCounterReactive({
       word: cursor().get.word(),
       setWpm,
     })({
@@ -128,7 +125,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
   const nextWordHooks: ExtraWordHooks = {
     enter: (word) => {
       if (!wordWpmTimer) return;
-      wordWpmTimer = createWordMetricsState({ word, setWpm })({
+      wordWpmTimer = createWordWpmCounterReactive({ word, setWpm })({
         status: WordStatus.pending,
       });
     },
@@ -145,7 +142,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
       if (!word.isSeparator) setWordsCount(wordsCount() - 1);
 
       if (!wordWpmTimer) return;
-      wordWpmTimer = createWordMetricsState({ word, setWpm })({
+      wordWpmTimer = createWordWpmCounterReactive({ word, setWpm })({
         status: WordStatus.pending,
       });
     },
