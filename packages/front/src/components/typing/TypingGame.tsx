@@ -1,41 +1,34 @@
-import type { JSX } from "solid-js";
+import type { JSXElement } from "solid-js";
 import { Show, createComputed, createSignal, on } from "solid-js";
 import { css } from "solid-styled";
 
-import { Translator } from "~/contexts/i18nProvider.tsx";
 import { FocusType, useFocus } from "~/contexts/FocusProvider.tsx";
 
 import { type Paragraphs } from "~/typingContent/paragraphs/types";
 import { type HigherKeyboard } from "~/typingKeyboard/keyboardLayout";
+import { type CharacterStats } from "~/typingContent/character/stats";
+import { type UserInputExtends } from "../seqInput/UserInput";
 
-import { type TypingState } from "~/typingState";
-
-import { type CharacterStats } from "~/typingStatistics/CharacterStats.ts";
-
-import UserInput from "../seqInput/UserInput";
 import Prompt from "../prompt/Prompt.tsx";
-import Keyboard, { type KeyboardHandler } from "../virtualKeyboard/TypingKeyboard.tsx";
+import Keyboard, {
+  type KeyboardHandler,
+} from "../virtualKeyboard/TypingKeyboard.tsx";
 
 type TypingGameProps = {
-  t: Translator;
-  typingState: TypingState;
-
   kbLayout: HigherKeyboard;
   keySet: Set<string>;
   showKb: boolean;
 
   paragraphs: Paragraphs;
-
   keyMetrics: CharacterStats;
 
-  onKeyDown: (key: string) => void;
-  onKeyUp: (key: string) => void;
-  onAddKey: (key: string, timestamp: number) => void;
+  // TODO: can be remove
   onPause: () => void;
 
+  Input: (props: UserInputExtends) => JSXElement;
   promptKey: string;
 
-  children: JSX.Element;
+  children: JSXElement;
 };
 
 // TODO: better handle no keyboard on keyDown/UP
@@ -46,12 +39,10 @@ const TypingGame = (props: TypingGameProps) => {
 
   let onKeyDown = (key: string) => {
     keyboard?.keyDown(key);
-    props.onKeyDown(key);
   };
 
   let onKeyUp = (key: string) => {
     keyboard?.keyUp(key);
-    props.onKeyUp(key);
   };
 
   const [kbLayout, setKbLayout] = createSignal(props.kbLayout(props.keySet));
@@ -74,6 +65,7 @@ const TypingGame = (props: TypingGameProps) => {
 
   const { focus: globalFocus } = useFocus();
 
+  // TODO: Go back to Manager
   createComputed(
     on(
       globalFocus,
@@ -92,11 +84,9 @@ const TypingGame = (props: TypingGameProps) => {
   );
   return (
     <div class="typing-game">
-      <UserInput
-        typingState={props.typingState}
-        onKeyDown={props.showKb ? onKeyDown : props.onKeyDown}
-        onKeyUp={props.showKb ? onKeyUp : props.onKeyUp}
-        onKeyAdd={props.onAddKey}
+      <props.Input
+        onKeyDown={props.showKb ? onKeyDown : () => {}}
+        onKeyUp={props.showKb ? onKeyUp : () => {}}
         ref={setInputRef}
       />
       <Prompt paragraphs={props.paragraphs} />

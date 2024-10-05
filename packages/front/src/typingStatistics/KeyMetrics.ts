@@ -18,17 +18,18 @@ type KeyMetricsProps = {
 };
 
 type KeyDeletedMetricsProps = {
-  expected: string;
   status: CharacterStatus;
+  expected: string;
 };
 
 const makeDeletedKeyMetrics = ({
-  expected,
   status,
+  expected,
 }: KeyDeletedMetricsProps): CharacterEventTuple => [
   expected,
   { kind: CharacterEventKind.deleted, status },
 ];
+
 
 // TODO: better handling of separators/blankCharacters, as special events.
 const getAddedKeyMetrics = ({

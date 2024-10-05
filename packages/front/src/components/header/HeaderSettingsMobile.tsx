@@ -5,7 +5,9 @@ import {
 } from "./HeaderSettingsGlobal";
 import Drawer from "@corvu/drawer";
 
-import { Component, onCleanup } from "solid-js";
+// createComponent(Comp, props)
+
+import { Component, createComponent, onCleanup } from "solid-js";
 import "./Drawer.css";
 import Kebab from "~/svgs/kebab";
 import { css } from "solid-styled";

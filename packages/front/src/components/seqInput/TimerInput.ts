@@ -5,8 +5,7 @@ import TimerNavHooks from "~/cursor/TimerNavHooks";
 import type { TypingTimer } from "~/timer/Timer";
 import TimerKeypress, { type SetCleanup } from "~/timer/TimerKeypress";
 import Timer from "~/timer/Timer";
-
-import type { TimedKey } from "~/typingStatistics/Metrics";
+import { TimedKey } from "~/typingStatistics/timedKey";
 
 type TimerInputProps = {
   cursor: Cursor;
@@ -14,22 +13,26 @@ type TimerInputProps = {
   setCleanup: SetCleanup;
 };
 
-const TimerInput = ({
-  cursor,
-  sequence,
-  setCleanup,
-}: TimerInputProps): TypingTimer => {
-  const cursorNav = CursorNav({ cursor, hooks: TimerNavHooks });
+const TimerInput = (props: TimerInputProps): TypingTimer => {
+  const cursorNav = CursorNav({ cursor: props.cursor, hooks: TimerNavHooks });
 
   const apply = (key: TimedKey) => {
     key.back ? cursorNav.prev() : cursorNav.next();
   };
 
+  const init = () => {
+    if (!props.cursor) return;
+    props.cursor.positions.set.paragraph(0);
+    props.cursor.positions.set.word(0);
+    props.cursor.positions.set.character(0);
+  };
+
   return Timer(
     TimerKeypress.create({
-      sequence,
+      sequence: props.sequence,
       apply,
-      setCleanup,
+      init,
+      setCleanup: props.setCleanup,
     }),
   );
 };

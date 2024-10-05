@@ -56,6 +56,9 @@ export type CharacterEventTuple = [key: string, CharacterEvent];
 /* TypingState */
 /* *** */
 
+// TODO: remoé focusIsSeparator
+// Hum.. focusIsSeparator c'est not good ça,
+// vue que ça se retrouve dans les metrics
 export type TypingCharacter = {
   keyMetrics: CharacterEventTuple; // event
   timestamp: number;

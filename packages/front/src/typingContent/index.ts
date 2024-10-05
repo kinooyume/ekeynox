@@ -1,5 +1,5 @@
-import { Paragraph, Paragraphs } from "./paragraphs/types.ts";
-import { createEnter, createSpace, parseWord } from "./word/index.ts";
+import { Paragraph, Paragraphs } from "./paragraphs/types";
+import { createEnter, createSpace, parseWord } from "./word";
 
 /* ContentData */
 

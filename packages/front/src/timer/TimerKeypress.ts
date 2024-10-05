@@ -5,9 +5,10 @@ import type { CreateNewTimer, TimerPause, TimerPending } from "./Timer";
 export type SetCleanup = (cleanup: () => void) => void;
 
 type TimerKeypressProps<T> = {
+  init: () => void;
   sequence: Array<T>;
-  setCleanup: SetCleanup;
   apply: (key: T) => void;
+  setCleanup: SetCleanup;
 };
 
 type PendingProps<T> = {
@@ -21,7 +22,7 @@ type PauseProps<T> = {
 };
 
 const create: CreateNewTimer<TimerKeypressProps<TimedKey>> =
-  ({ sequence, apply, setCleanup }) =>
+  ({ sequence, apply, setCleanup, init }) =>
   () => {
     let index = 0;
     let lastPress = 0;
@@ -61,7 +62,10 @@ const create: CreateNewTimer<TimerKeypressProps<TimedKey>> =
     };
 
     return {
-      resume: () => resume({ sequence, timeLeft: 0 }),
+      resume: () => {
+        init();
+        return resume({ sequence, timeLeft: 0 });
+      },
     };
   };
 

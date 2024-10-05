@@ -2,7 +2,6 @@ import {
   Match,
   Switch,
   createComputed,
-  createEffect,
   createMemo,
   createSignal,
   on,
@@ -31,9 +30,6 @@ import {
 
 import type { KeyboardHandler } from "../virtualKeyboard/TypingKeyboard";
 
-import TimerInput from "../seqInput/TimerInput";
-import type { TypingTimer } from "~/timer/Timer";
-
 import { type PendingStatus, PendingKind } from "~/states";
 
 import { TypingModeKind } from "~/typingOptions/typingModeKind";
@@ -55,10 +51,18 @@ import makeKeypressHandler from "~/typingState/userKeypressHandler";
 import { CharacterFocus } from "~/typingContent/character/types";
 import { WordStatus } from "../statistics/PromptWordResume";
 import { Paragraphs } from "~/typingContent/paragraphs/types";
-import { deepCloneParagraphs } from "~/typingContent/paragraphs";
-import { CharacterStats, updateCharacterStats } from "~/typingContent/character/stats";
-import { getTimedKeySequence } from "~/typingStatistics/timedKey";
-import { createWordWpmCounterReactive, WordStatusReactive } from "~/typingContent/word/stats/wpm/WordWpmCounterReactive";
+import { clearParagraphs, deepCloneParagraphs } from "~/typingContent/paragraphs";
+import {
+  CharacterStats,
+  updateCharacterStats,
+} from "~/typingContent/character/stats";
+import {
+  createWordWpmCounterReactive,
+  WordStatusReactive,
+} from "~/typingContent/word/stats/wpm/WordWpmCounterReactive";
+import UserInput from "../seqInput/UserInput";
+import { TypingGameProvider } from "./TypingGameProvider";
+import typingGameRedo from "./primitives/typingGameRedo";
 
 type TypingGameManagerProps = {
   status: PendingStatus;
@@ -195,6 +199,15 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
     kind: TypingStateKind.unstart,
   });
 
+  /* Redo */
+  if (props.status.kind === PendingKind.redo)
+    typingGameRedo({
+      paragraphs: paraStore,
+      setParagraphs: setParaStore,
+      status: props.status,
+      typingState,
+    });
+
   // Can be Signal
   let onKeyboard: KeyboardHandler = {
     keyDown: () => {},
@@ -216,8 +229,8 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
     onKeyboard.keyUp(key);
   };
 
-  const onAddKey = (key: string, timestamp: number) => {
-    const event = keypressHandler().addKey(key, timestamp);
+  const onKeyAdd = (key: string) => {
+    const event = keypressHandler().addKey(key);
     if (!event) return;
     setTypingState(event);
   };
@@ -294,21 +307,13 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
 
   /* Typing Actions (Header) */
 
-  const resetGhost = () => {
-    const cursor = ghostCursor();
-    if (!cursor) return;
-    cursor.positions.set.paragraph(0);
-    cursor.positions.set.word(0);
-    cursor.positions.set.character(0);
-  };
-
   const reset = () => {
+    console.log("RESET")
     wordWpmTimer && wordWpmTimer({ status: WordStatus.over });
     wordWpmTimer = undefined;
-    resetGhost();
 
     setWordsCount(0);
-    setParaStore(deepCloneParagraphs(contentHandler().data.paragraphs));
+    setParaStore(clearParagraphs(contentHandler().data.paragraphs));
     setTypingState({ kind: TypingStateKind.unstart });
   };
 
@@ -398,73 +403,40 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
       reset();
     };
   };
-  /* **** */
-
-  /* NOTE: REDO: GHOST MODE */
-
-  // TODO: not good at all, should not be call when no redo needed
-  // Donc on pourrait bien avoir une stratification, qui donne tout ça a un component en argument
-  //
-  const [ghostCursor, setGhostCursor] = createSignal<Cursor | undefined>(
-    undefined,
-  );
-  const [cleanupGhost, setCleanupGhost] = createSignal(() => {});
-
-  createComputed(
-    on(
-      () => props.status,
-      (status) => {
-        switch (status.kind) {
-          case PendingKind.redo:
-            const ghostCursor = makeCursor({
-              paragraphs: paraStore,
-              setParagraphs: setParaStore,
-            });
-            setGhostCursor(ghostCursor);
-            const ghostInput = TimerInput({
-              cursor: ghostCursor,
-              sequence: getTimedKeySequence(status.prev.typingLogs),
-              setCleanup: setCleanupGhost,
-            });
-            createEffect((timer: TypingTimer) => {
-              return timer({ state: typingState() });
-            }, ghostInput);
-            break;
-          case PendingKind.new:
-            cleanupGhost();
-            setGhostCursor(undefined);
-            break;
-        }
-      },
-    ),
-  );
-
-  /* NOTE: REDO: GHOST MODE */
 
   onCleanup(() => {
     cursor().set.keyFocus(CharacterFocus.unfocus);
     cursor().set.wordStatus(WordStatus.unstart, false);
     wordWpmTimer && wordWpmTimer({ status: WordStatus.unstart });
     cleanupMetrics();
-    cleanupGhost();
 
     setTypingState({ kind: TypingStateKind.unstart });
   });
 
   return (
     <TypingGame
-      t={t}
-      typingState={typingState()}
       showKb={props.showKb}
       kbLayout={props.kbLayout}
       keySet={contentHandler().data.keySet}
-      onKeyDown={onKeyDown}
-      onKeyUp={onKeyUp}
       onPause={pause}
-      onAddKey={onAddKey}
       promptKey={promptKey()}
       paragraphs={paraStore}
       keyMetrics={keyMetrics()}
+      Input={(extendProps) => (
+        <UserInput
+          ref={extendProps.ref}
+          typingState={typingState()}
+          onKeyDown={(key) => {
+            onKeyDown(key);
+            extendProps.onKeyDown(key);
+          }}
+          onKeyUp={(key) => {
+            onKeyUp(key);
+            extendProps.onKeyUp(key);
+          }}
+          onKeyAdd={onKeyAdd}
+        />
+      )}
     >
       <Switch>
         <Match when={props.status.mode.kind === TypingModeKind.speed} keyed>

@@ -1,7 +1,11 @@
-import { Metrics, TypingStatisticsResult } from "~/typingStatistics/Metrics";
 
 import { TypingOptions } from "~/typingOptions/typingOptions";
 import { TypingGameOptions } from "~/typingOptions/typingGameOptions";
+import { TypingStatistics, TypingStatisticsResult } from "./typingStatistics";
+
+/* *** */
+/* Ca, ca va bouger */
+/* *** */
 
 export enum PendingKind {
   new,
@@ -22,6 +26,7 @@ export type PendingStatusRedo = {
 export type PendingStatus = PendingStatusNew | PendingStatusRedo;
 
 /* ***  */
+
 export enum AppStateKind {
   loading,
   menu,
@@ -38,7 +43,7 @@ export type PendingState = {
 
 export type ResumeState = {
   kind: AppStateKind.resume;
-  metrics: Metrics;
+  statistics: TypingStatistics;
   content: TypingGameOptions;
 };
 

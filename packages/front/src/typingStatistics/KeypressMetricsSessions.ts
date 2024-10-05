@@ -1,4 +1,4 @@
-import type { TypingState } from "~/typingState";
+import type { TypingState, TypingStatePending } from "~/typingState";
 
 import KeypressMetrics, {
   type KeypressMetricsProjection,
@@ -6,7 +6,7 @@ import KeypressMetrics, {
 } from "./KeypressMetrics";
 
 export type PendingKeypressMetrics = {
-  event: (event: TypingState) => void;
+  event: (event: TypingStatePending) => void;
   getProjection: (isOver: boolean) => KeypressMetricsProjection;
   pause: (
     isOver: boolean,

@@ -10,15 +10,19 @@ export type UserInputRef = {
   focus: () => void;
 };
 
-type UserInputProps = {
-  typingState: TypingState;
+export type UserInputExtends = {
   onKeyDown: (key: string) => void;
   onKeyUp: (key: string) => void;
-  onKeyAdd: (key: string, timestamp: number) => void;
   ref?: (ref: UserInputRef) => void;
-};
+}
 
-const UserInput = (props: UserInputProps) => {
+type Props = {
+  typingState: TypingState;
+
+  onKeyAdd: (key: string) => void;
+} & UserInputExtends;
+
+const UserInput = (props: Props) => {
   let input: HTMLInputElement;
 
   // PendingStatus change
@@ -50,7 +54,6 @@ const UserInput = (props: UserInputProps) => {
       }
     }
 
-    const timestamp = performance.now();
     const input = event.target as HTMLInputElement;
     // Multi-platform backspace
     // if (input.value.length === 0) {
@@ -68,7 +71,10 @@ const UserInput = (props: UserInputProps) => {
     const value = input.value;
     input.value = "";
     // *** /
-    props.onKeyAdd(value, timestamp);
+
+    // const ev = keypressHandler().addKey(value, timestamp);
+    // if (!ev) return;
+    props.onKeyAdd(value);
   };
 
   const handleKeyUp = (event: KeyboardEvent) => {
