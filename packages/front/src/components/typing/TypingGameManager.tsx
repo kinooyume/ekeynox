@@ -61,8 +61,7 @@ import {
   WordStatusReactive,
 } from "~/typingContent/word/stats/wpm/WordWpmCounterReactive";
 import UserInput from "../seqInput/UserInput";
-import { TypingGameProvider } from "./TypingGameProvider";
-import typingGameRedo from "./primitives/typingGameRedo";
+import typingGameRedo from "~/typingGame/typingGameRedo";
 
 type TypingGameManagerProps = {
   status: PendingStatus;
