@@ -1,7 +1,7 @@
 import { type JSX, createEffect, createSignal, onCleanup } from "solid-js";
 import { css } from "solid-styled";
 
-import TimerOver from "~/timer/TimerStopwatch.ts";
+import TimerStopwatch from "~/timer/TimerStopwatch.ts";
 import Timer, { type TypingTimer } from "~/timer/Timer.ts";
 
 import type { StatProjection } from "~/typingStatistics/KeypressMetrics.ts";
@@ -28,7 +28,7 @@ const TypingModeTimer = (props: TypingModeTimerProps) => {
 
   let cleanupTimer = () => {};
 
-  const timerOver = TimerOver.create({
+  const timerOver = TimerStopwatch({
     duration: props.duration,
     onOver: props.onTimerEnd,
     setCleanup: (cleanup) => (cleanupTimer = cleanup),

@@ -1,9 +1,19 @@
 import { TypingStateKind, type TypingState } from "~/typingState";
 
-export type TimerPause = { resume: () => TimerPending };
-export type TimerPending = { pause: () => TimerPause };
+interface Timer {
+  over: () => void;
+}
+
+export interface TimerPause extends Timer {
+  resume: () => TimerPending;
+}
+
+export interface TimerPending extends Timer {
+  pause: () => TimerPause;
+}
 
 export type NewTimer = () => TimerPause;
+
 export type CreateNewTimer<T> = (t: T) => NewTimer;
 
 export type CreateTimerEffect<U> = (newTimer: NewTimer) => TimerEffect<U>;
@@ -13,7 +23,7 @@ export type TypingTimerProps = {
   state: TypingState;
 };
 
-export type TypingTimer = TimerEffect<TypingTimerProps>
+export type TypingTimer = TimerEffect<TypingTimerProps>;
 
 // NOTE: C'est pas un timer en fait, c'est un switch play/pause
 
@@ -31,6 +41,9 @@ const createTypingTimer: CreateTimerEffect<TypingTimerProps> = (
           return pending(timer.resume());
         case TypingStateKind.unstart:
           return paused(newTimer());
+        case TypingStateKind.over:
+          timer.over();
+          break;
       }
       return paused(timer);
     };
@@ -43,6 +56,9 @@ const createTypingTimer: CreateTimerEffect<TypingTimerProps> = (
         case TypingStateKind.unstart:
           timer.pause();
           return paused(newTimer());
+        case TypingStateKind.over:
+          timer.over();
+          break;
       }
       return pending(timer);
     };

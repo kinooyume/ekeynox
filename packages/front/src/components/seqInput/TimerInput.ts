@@ -28,7 +28,7 @@ const TimerInput = (props: TimerInputProps): TypingTimer => {
   };
 
   return Timer(
-    TimerKeypress.create({
+    TimerKeypress({
       sequence: props.sequence,
       apply,
       init,

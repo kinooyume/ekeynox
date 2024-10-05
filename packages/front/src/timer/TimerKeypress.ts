@@ -50,6 +50,7 @@ const create: CreateNewTimer<TimerKeypressProps<TimedKey>> =
 
       return {
         pause: () => pause(pauseProps),
+        over: () => {},
       };
     };
     const pause = (props: PauseProps<TimedKey>): TimerPause => {
@@ -58,7 +59,7 @@ const create: CreateNewTimer<TimerKeypressProps<TimedKey>> =
         ? props.sequence[index].duration - (pause - lastPress)
         : 0;
       props.timeout && clearTimeout(props.timeout);
-      return { resume: () => resume({ ...props, timeLeft }) };
+      return { resume: () => resume({ ...props, timeLeft }), over: () => {} };
     };
 
     return {
@@ -66,7 +67,8 @@ const create: CreateNewTimer<TimerKeypressProps<TimedKey>> =
         init();
         return resume({ sequence, timeLeft: 0 });
       },
+      over: () => {},
     };
   };
 
-export default { create };
+export default create;
