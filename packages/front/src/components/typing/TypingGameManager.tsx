@@ -51,7 +51,10 @@ import makeKeypressHandler from "~/typingState/userKeypressHandler";
 import { CharacterFocus } from "~/typingContent/character/types";
 import { WordStatus } from "../statistics/PromptWordResume";
 import { Paragraphs } from "~/typingContent/paragraphs/types";
-import { clearParagraphs, deepCloneParagraphs } from "~/typingContent/paragraphs";
+import {
+  clearParagraphs,
+  deepCloneParagraphs,
+} from "~/typingContent/paragraphs";
 import {
   CharacterStats,
   updateCharacterStats,
@@ -253,7 +256,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
   };
 
   let headerLeavingAnimate: () => anime.AnimeTimelineInstance;
-  const over = () => {
+  const over = (mode: TypingGameOptions) => {
     // NOTE: peut etre le faire en mode "leave"
     //
     cursor().set.wordStatus(WordStatus.over, false);
@@ -268,14 +271,15 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
         typing: typingMetrics(),
         characters: keyMetrics(),
       },
-      props.status.mode,
+      mode,
     );
   };
 
   const typingOver = () => {
+    const mode = props.status.mode;
     setTypingState({ kind: TypingStateKind.over });
     headerLeavingAnimate().finished.then(() => {
-      over();
+      over(mode);
     });
   };
 
@@ -307,7 +311,6 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
   /* Typing Actions (Header) */
 
   const reset = () => {
-    console.log("RESET")
     wordWpmTimer && wordWpmTimer({ status: WordStatus.over });
     wordWpmTimer = undefined;
 
