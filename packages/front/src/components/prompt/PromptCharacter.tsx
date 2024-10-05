@@ -1,8 +1,6 @@
 import { css } from "solid-styled";
-import { createSignal, createComputed } from "solid-js";
 import {
   CharacterFocus,
-  CharacterStatus,
 } from "~/typingContent/character/types";
 import { type MetaCharacter } from "~/typingContent/character/types";
 
@@ -16,24 +14,10 @@ type Props = {
 } & MetaCharacter;
 
 const PromptCharacter = (props: Props) => {
-  const [wasInvalid, setWasInvalid] = createSignal(false);
-
   // const special = props.key === "Enter" ? "special" : "";
 
   const transform = (char: string) =>
     transformDict.find(([key]) => key === char)?.[1] || char;
-
-  createComputed(
-    () => {
-      if (
-        props.status !== CharacterStatus.match &&
-        props.status !== CharacterStatus.unset
-      ) {
-        setWasInvalid(true);
-      }
-    },
-    { defer: true },
-  );
 
   css`
     .prompt-key {
@@ -97,16 +81,14 @@ const PromptCharacter = (props: Props) => {
       width: 100%;
     }
   `;
+
   return (
     <span
-      class={`prompt-key ${props.focus} ${wasInvalid() ? "wasInvalid" : ""} ${props.status}`}
-      classList={
-        props.showGhost
-          ? {
-              ["ghost-focus"]: props.ghostFocus === CharacterFocus.focus,
-            }
-          : {}
-      }
+      class={`prompt-key ${props.focus} ${props.wasInvalid ? "wasInvalid" : ""} ${props.status}`}
+      classList={{
+        "ghost-focus":
+          props.showGhost && props.ghostFocus === CharacterFocus.focus,
+      }}
     >
       {transform(props.char)}
     </span>

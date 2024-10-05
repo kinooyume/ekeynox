@@ -54,6 +54,7 @@ export type Cursor = {
 
     /* Key */
     keyStatus: (status: CharacterStatus) => void;
+    keyWasInvalid: () => void;
     keyFocus: (focus: CharacterFocus) => void;
     ghostFocus: (focus: CharacterFocus) => void;
   };
@@ -160,6 +161,16 @@ const makeCursor = (props: CursorProps) => {
           positions.character(),
           "status",
           status,
+        );
+      },
+      keyWasInvalid: () => {
+        props.setParagraphs(
+          positions.paragraph(),
+          positions.word(),
+          "characters",
+          positions.character(),
+          "wasInvalid",
+          true,
         );
       },
       keyFocus: (focus: CharacterFocus) => {
