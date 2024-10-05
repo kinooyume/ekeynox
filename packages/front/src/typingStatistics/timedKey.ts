@@ -2,7 +2,6 @@ import { LinkedList } from "~/List";
 import { CharacterEventKind } from "~/typingContent/character/types";
 import { KeypressMetricsProjection } from "./KeypressMetrics";
 
-
 export type TimedKey = {
   back: boolean;
   duration: number;
@@ -34,6 +33,5 @@ const getTimedKeySequence = (
   }
   return keysSequences.flat();
 };
-
 
 export { getTimedKeySequence };

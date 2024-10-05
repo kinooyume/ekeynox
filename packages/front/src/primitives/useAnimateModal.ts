@@ -1,10 +1,10 @@
 import { Accessor } from "solid-js";
 import { FocusType, useFocus } from "~/contexts/FocusProvider";
-import useAnimateSwitch, { AnimateSwitchProps } from "./useAnimateSwitch";
+import useAnimateSwitch, { AnimateSwitchMiniProps, AnimateSwitchProps } from "./useAnimateSwitch";
 import useClickOutside from "./useClickOutside";
 import { AnimateState } from "~/animations/animation";
 
-export interface AnimateModalProps extends AnimateSwitchProps {
+export interface AnimateModalProps extends AnimateSwitchMiniProps {
   element: Accessor<HTMLElement | undefined>;
 }
 

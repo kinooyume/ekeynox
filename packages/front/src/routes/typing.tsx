@@ -74,14 +74,14 @@ export default function Typing() {
       <Match when={state().kind === AppStateKind.resume} keyed>
         <ClientResume
           kbLayout={keyboardLayout(settings.kb.value)}
-          metrics={(state() as ResumeState).metrics}
+          metrics={(state() as ResumeState).statistics}
         >
           {(metricsResume) => (
             <ClientActionsResume
               gameOptions={deepCopy(persistedGameOptions)}
               content={(state() as ResumeState).content}
               fetchSourcesGen={fetchSourcesGen}
-              metrics={(state() as ResumeState).metrics}
+              metrics={(state() as ResumeState).statistics}
               metricsResume={metricsResume}
               start={start}
               redo={mutation.redo}

@@ -6,7 +6,6 @@ import {
   useContext,
 } from "solid-js";
 
-import type { Metrics, TypingStatisticsResult } from "~/typingStatistics/Metrics";
 import { type TypingOptions, deepCopy } from "~/typingOptions/typingOptions";
 import { type TypingGameOptions } from "~/typingOptions/typingGameOptions";
 
@@ -16,25 +15,24 @@ import {
   type AppState,
   type PendingStatusNew,
 } from "~/states";
-
+import { TypingStatistics, TypingStatisticsResult } from "~/typingStatistics";
 
 type AppMutation = {
-    start: (mode: Promise<TypingGameOptions>, options: TypingOptions) => void;
-    redo: (
-      mode: TypingGameOptions,
-      metrics: TypingStatisticsResult,
-      options: TypingOptions,
-    ) => void;
-    over: (metrics: Metrics, content: TypingGameOptions) => void;
-    menu: () => void;
-    login: () => void;
-  };
+  start: (mode: Promise<TypingGameOptions>, options: TypingOptions) => void;
+  redo: (
+    mode: TypingGameOptions,
+    statisticsResult: TypingStatisticsResult,
+    options: TypingOptions,
 
-
+  ) => void;
+  over: (statistics: TypingStatistics, content: TypingGameOptions) => void;
+  menu: () => void;
+  login: () => void;
+};
 type AppContext = {
   state: Accessor<AppState>;
   mutation: AppMutation;
-}
+};
 
 const AppStateContext = createContext<AppContext>();
 
@@ -55,7 +53,7 @@ export function AppStateProvider(props: Props) {
 
   const [state, setState] = createSignal<AppState>(appState);
 
-  const mutation : AppMutation = {
+  const mutation: AppMutation = {
     start: (mode, options) => {
       setState({
         kind: AppStateKind.pending,
@@ -76,8 +74,8 @@ export function AppStateProvider(props: Props) {
         }),
       });
     },
-    over: (metrics, content: TypingGameOptions) => {
-      setState({ kind: AppStateKind.resume, metrics, content });
+    over: (statistics, content: TypingGameOptions) => {
+      setState({ kind: AppStateKind.resume, statistics, content });
     },
     menu: () => {
       setState({ kind: AppStateKind.menu });

@@ -11,16 +11,19 @@ type AnimationSwitchCallbacks = {
   toTarget?: () => void;
 };
 
-export interface AnimateSwitchProps {
+export interface AnimateSwitchMiniProps {
   animation: AnimationComp;
   state: Accessor<AnimateState>;
   setState: (value: AnimateState) => void;
+}
+export interface AnimateSwitchProps extends AnimateSwitchMiniProps {
   locked: () => boolean;
   setLocked: (value: boolean) => void;
   on?: AnimationSwitchCallbacks;
 }
 
 function useAnimateSwitch(props: AnimateSwitchProps) {
+
   type AnimationHandlerProps = {
     getAnimation: () => MinimalAnimationInstance;
     after: () => void;

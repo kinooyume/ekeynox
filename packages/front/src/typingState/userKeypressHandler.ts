@@ -25,7 +25,7 @@ import {
  */
 
 type KeypressHandler = {
-  addKey: (typed: string, timestamp: number) => TypingState | undefined;
+  addKey: (typed: string) => TypingState | undefined;
   keyDown: (key: string) => TypingState | undefined;
 };
 
@@ -33,7 +33,7 @@ const makeKeypressHandler = (
   cursor: Cursor,
   cursorNav: CursorNavType,
 ): KeypressHandler => {
-  const backKey = (timestamp: number) => {
+  const backKey = () => {
     if (!cursorNav.prev()) return;
     const deletedKeyMetrics = makeDeletedKeyMetrics({
       expected: cursor.get.character().char,
@@ -43,7 +43,7 @@ const makeKeypressHandler = (
     return typingStatePending({
       key: {
         keyMetrics: deletedKeyMetrics,
-        timestamp,
+        timestamp: performance.now(),
         focusIsSeparator: cursor.get.isSeparator(),
       },
       next: true,
@@ -52,7 +52,7 @@ const makeKeypressHandler = (
 
   /* *** */
 
-  const addKey = (typed: string, timestamp: number) => {
+  const addKey = (typed: string) => {
     // Donc, on veut faire ça
     // User Agent for firefox mobile and chrome mobile
     // if (typed.length === 0) return backKey(timestamp);
@@ -76,7 +76,7 @@ const makeKeypressHandler = (
       const event = {
         key: {
           keyMetrics,
-          timestamp,
+          timestamp: performance.now(),
           focusIsSeparator: cursor.get.isSeparator(),
         },
         word: typingWord || { kind: TypingWordKind.ignore },
@@ -91,9 +91,9 @@ const makeKeypressHandler = (
   const keyDown = (key: string) => {
     switch (getKeyDownMetrics(key)) {
       case CharacterEventKind.added:
-        return addKey(key, performance.now());
+        return addKey(key);
       case CharacterEventKind.back:
-        return backKey(performance.now());
+        return backKey();
     }
   };
 
