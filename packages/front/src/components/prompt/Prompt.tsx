@@ -13,16 +13,23 @@ import anime from "animejs";
 
 import { type Paragraphs } from "~/typingContent/paragraphs/types";
 
-export type PromptProps = {
+type Props = {
   paragraphs: Paragraphs;
+  showGhost?: boolean;
+  fixedHeight?: boolean;
 };
 
-const prompt = (props: PromptProps) => {
+const prompt = (props: Props) => {
   css`
     .prompt {
-      height: 180px;
+      --height: 180px;
       margin-bottom: auto;
+      max-height: var(--height);
       max-width: 900px;
+      overflow: scroll;
+    }
+    .prompt.fixedHeight {
+      height: var(--height);
       overflow: hidden;
     }
     .paragraph {
@@ -41,7 +48,9 @@ const prompt = (props: PromptProps) => {
 
     @media screen and (max-width: 860px) {
       .prompt {
-        height: 160px;
+        --height: 160px;
+      }
+      .prompt.fixedHeight {
         margin: 0 16px auto 16px;
         margin-left: 32px;
       }
@@ -114,14 +123,24 @@ const prompt = (props: PromptProps) => {
   });
 
   return (
-    <div class="prompt" ref={setPromptElem}>
+    <div
+      class="prompt"
+      classList={{ fixedHeight: props.fixedHeight }}
+      ref={setPromptElem}
+    >
       <div class="board">
         <Show when={props.paragraphs} keyed>
           <For each={props.paragraphs}>
             {(paragraphs) => (
               <div class="paragraph">
                 <For each={paragraphs}>
-                  {(word) => <Word {...word} observer={observer()} />}
+                  {(word) => (
+                    <Word
+                      {...word}
+                      showGhost={props.showGhost}
+                      observer={observer()}
+                    />
+                  )}
                 </For>
               </div>
             )}

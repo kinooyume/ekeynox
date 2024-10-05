@@ -23,7 +23,7 @@ import AccuracyDoughnut from "./charts/AccuracyDoughnut";
 import CharacterChart from "./charts/CharacterChart";
 import SpeedChart from "./charts/SpeedChart";
 import WordTypingStatisticsResult from "./charts/WordsChart";
-import Prompt from "./PromptResume";
+import Prompt from "../prompt/Prompt";
 import TypingKeyboardResume from "./TypingKeyboardResume";
 
 import GameOptionsTitle from "../typingMode/TypingOptionsTitle";

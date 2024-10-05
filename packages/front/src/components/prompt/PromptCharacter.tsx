@@ -1,6 +1,9 @@
 import { css } from "solid-styled";
 import { createSignal, createComputed } from "solid-js";
-import { CharacterFocus, CharacterStatus } from "~/typingContent/character/types";
+import {
+  CharacterFocus,
+  CharacterStatus,
+} from "~/typingContent/character/types";
 import { type MetaCharacter } from "~/typingContent/character/types";
 
 const transformDict = [
@@ -8,7 +11,11 @@ const transformDict = [
   ["\t", "⇥"],
 ];
 
-const PromptCharacter = (props: MetaCharacter) => {
+type Props = {
+  showGhost?: boolean;
+} & MetaCharacter;
+
+const PromptCharacter = (props: Props) => {
   const [wasInvalid, setWasInvalid] = createSignal(false);
 
   // const special = props.key === "Enter" ? "special" : "";
@@ -93,9 +100,13 @@ const PromptCharacter = (props: MetaCharacter) => {
   return (
     <span
       class={`prompt-key ${props.focus} ${wasInvalid() ? "wasInvalid" : ""} ${props.status}`}
-      classList={{
-        ["ghost-focus"]: props.ghostFocus === CharacterFocus.focus,
-      }}
+      classList={
+        props.showGhost
+          ? {
+              ["ghost-focus"]: props.ghostFocus === CharacterFocus.focus,
+            }
+          : {}
+      }
     >
       {transform(props.char)}
     </span>

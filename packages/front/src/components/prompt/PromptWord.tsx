@@ -6,6 +6,7 @@ import PromptCharacter from "./PromptCharacter.tsx";
 
 type WordProps = {
   observer: IntersectionObserver | null;
+  showGhost?: boolean;
 } & MetaWord;
 
 const Word = (props: WordProps) => {
@@ -72,7 +73,7 @@ const Word = (props: WordProps) => {
   return (
     <div classList={{ animate: toAnimate() }} class="word" ref={createObserver}>
       <div class={`${props.status}  ${props.focus ? "focus" : ""} keys`}>
-        <For each={props.characters}>{(key) => <PromptCharacter {...key} />}</For>
+        <For each={props.characters}>{(key) => <PromptCharacter {...key} showGhost={props.showGhost} />}</For>
       </div>
       <Show
         when={
