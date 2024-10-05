@@ -1,15 +1,15 @@
-import { For, createSignal, onMount } from "solid-js";
+import { For } from "solid-js";
 import { css } from "solid-styled";
-import KeyboardKeyResume from "./KeyboardKeyResume";
-import type { CharacterStats } from "~/typingStatistics/CharacterStats";
-import { KeyboardLayout } from "~/settings/keyboardLayout";
+import { CharacterStats } from "~/typingContent/character/stats";
+import { KeyboardLayout } from "~/typingKeyboard/keyboardLayout";
+import KeyboardKeyResume from "./StatisticsKeyboardKey";
 
 type KeyboardProps = {
   metrics: CharacterStats;
   layout: KeyboardLayout;
 };
 
-const KeyboardResume = (props: KeyboardProps) => {
+const StatisticsKeyboard = (props: KeyboardProps) => {
   css`
     .kb {
       display: flex;
@@ -72,4 +72,4 @@ const KeyboardResume = (props: KeyboardProps) => {
   );
 };
 
-export default KeyboardResume;
+export default StatisticsKeyboard;

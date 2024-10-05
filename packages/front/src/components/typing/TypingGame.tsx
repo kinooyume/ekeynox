@@ -1,5 +1,5 @@
 import type { JSXElement } from "solid-js";
-import { Show, createComputed, createSignal, on } from "solid-js";
+import { Show, createComputed, createEffect, createSignal, on } from "solid-js";
 import { css } from "solid-styled";
 
 import { FocusType, useFocus } from "~/contexts/FocusProvider.tsx";
@@ -13,6 +13,7 @@ import Prompt from "../prompt/Prompt.tsx";
 import Keyboard, {
   type KeyboardHandler,
 } from "../virtualKeyboard/TypingKeyboard.tsx";
+import { useWindowSize } from "@solid-primitives/resize-observer";
 
 type TypingGameProps = {
   kbLayout: HigherKeyboard;
@@ -82,15 +83,29 @@ const TypingGame = (props: TypingGameProps) => {
       { defer: true },
     ),
   );
+
+  const [desktopMode, setDesktopMode] = createSignal(false);
+  const size = useWindowSize();
+  createComputed(() => {
+    if (size.width < 1120 || size.height < 700) {
+      setDesktopMode(false);
+    } else {
+      setDesktopMode(true);
+    }
+  });
   return (
     <div class="typing-game">
       <props.Input
-        onKeyDown={props.showKb ? onKeyDown : () => {}}
-        onKeyUp={props.showKb ? onKeyUp : () => {}}
+        onKeyDown={desktopMode() && props.showKb ? onKeyDown : () => {}}
+        onKeyUp={desktopMode() && props.showKb ? onKeyUp : () => {}}
         ref={setInputRef}
       />
-      <Prompt paragraphs={props.paragraphs} fixedHeight={true} showGhost={true} />
-      <Show when={props.showKb}>
+      <Prompt
+        paragraphs={props.paragraphs}
+        fixedHeight={true}
+        showGhost={true}
+      />
+      <Show when={desktopMode() && props.showKb}>
         <Keyboard
           metrics={props.keyMetrics} // keyProjections, typingProjections
           currentKey={props.promptKey} // peut etre lu

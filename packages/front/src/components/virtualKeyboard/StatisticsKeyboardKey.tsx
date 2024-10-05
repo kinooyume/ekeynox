@@ -2,7 +2,11 @@ import { Show } from "solid-js";
 
 import { css } from "solid-styled";
 import "balloon-css";
-import { createCharacterMetrics, pushCharacterMetrics, CharacterMetrics } from "~/typingContent/character/stats/metrics";
+import {
+  createCharacterMetrics,
+  pushCharacterMetrics,
+  CharacterMetrics,
+} from "~/typingContent/character/stats/metrics";
 import { diffCharacterScore } from "~/typingContent/character/stats/score";
 
 type transform = Array<[string, string]>;
@@ -39,7 +43,7 @@ export type KeyboardKeyResumeProps = {
 
 /* faire le truc correct, incorrect, was incorrect */
 
-const KeyboardKeyResume = (props: KeyboardKeyResumeProps) => {
+const StatisticsKeyboardKey = (props: KeyboardKeyResumeProps) => {
   css`
     .key,
     .flat {
@@ -87,11 +91,11 @@ const KeyboardKeyResume = (props: KeyboardKeyResumeProps) => {
     }
 
     .primary {
-      font-size: 0.9em;
+      font-size: 15px;
     }
     .secondary {
-      font-size: 0.6em;
-      opacity: 0.5;
+      font-size: 11px;
+      opacity: 0.65;
       position: absolute;
       top: 9px;
       right: 16px;
@@ -198,4 +202,4 @@ const KeyboardKeyResume = (props: KeyboardKeyResumeProps) => {
   );
 };
 
-export default KeyboardKeyResume;
+export default StatisticsKeyboardKey;

@@ -24,10 +24,10 @@ import CharacterChart from "./charts/CharacterChart";
 import SpeedChart from "./charts/SpeedChart";
 import WordTypingStatisticsResult from "./charts/WordsChart";
 import Prompt from "../prompt/Prompt";
-import TypingKeyboardResume from "./TypingKeyboardResume";
 
 import GameOptionsTitle from "../typingMode/TypingOptionsTitle";
 import { HigherKeyboard } from "~/typingKeyboard/keyboardLayout";
+import StatisticsKeyboard from "../virtualKeyboard/StatisticsKeyboard";
 
 type TypingMetricsProps = {
   kbLayout: HigherKeyboard;
@@ -436,7 +436,7 @@ const TypingStatisticsResult = (props: TypingMetricsProps) => {
                 <div class="stat-title-wrapper">
                   <h3>{t("statistics.keysResumeTitle")}</h3>
                 </div>
-                <TypingKeyboardResume
+                <StatisticsKeyboard
                   layout={kbLayout()}
                   metrics={props.metrics.characters}
                 />
