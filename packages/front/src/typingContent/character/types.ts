@@ -17,6 +17,7 @@ export enum CharacterFocus {
 export type MetaCharacter = {
   // index: number;
   status: CharacterStatus;
+  wasInvalid: boolean;
   focus: CharacterFocus;
   ghostFocus: CharacterFocus;
   // wasInvalid: boolean;
