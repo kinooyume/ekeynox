@@ -15,13 +15,8 @@ type CreateTimerPause = (props: {
   interval: NodeJS.Timeout;
 }) => TimerPause;
 
-const create : CreateNewTimer<CreateProps> =
-  ({
-    duration,
-    onOver,
-    updateCounter,
-    setCleanup,
-  }) =>
+const create: CreateNewTimer<CreateProps> =
+  ({ duration, onOver, updateCounter, setCleanup }) =>
   () => {
     const resume: CreateTimerPending = (timeLeft) => {
       const start = performance.now();
@@ -42,19 +37,21 @@ const create : CreateNewTimer<CreateProps> =
       });
       return {
         pause: () => pause({ timeLeft: remainingTime, timer, interval }),
+        over: () => {},
       };
     };
 
     const pause: CreateTimerPause = ({ timeLeft, timer, interval }) => {
       clearTimeout(timer);
       clearInterval(interval);
-      return { resume: () => resume(timeLeft) };
+      return { resume: () => resume(timeLeft), over: () => {} };
     };
 
     updateCounter(duration);
     return {
       resume: () => resume(duration),
+      over: () => {},
     };
   };
 
-export default { create };
+export default create;

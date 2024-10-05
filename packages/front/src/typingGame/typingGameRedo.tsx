@@ -6,8 +6,8 @@ import {
   on,
   onCleanup,
 } from "solid-js";
-import makeCursor, { Cursor } from "~/cursor/Cursor";
-import { PendingKind, PendingStatus, PendingStatusRedo } from "~/states";
+import makeCursor from "~/cursor/Cursor";
+import { PendingKind, PendingStatusRedo } from "~/states";
 import { TypingTimer } from "~/timer/Timer";
 import { getTimedKeySequence } from "~/typingStatistics/timedKey";
 import { SetStoreFunction } from "solid-js/store";
