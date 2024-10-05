@@ -1,15 +1,15 @@
 import { css } from "solid-styled";
 import GameOptionsRecap from "./TypingOptionsRecap";
 import { typingModes } from "~/typingOptions/typingMode";
-import { Translator } from "~/contexts/i18nProvider";
+import { Translator, useI18n } from "~/contexts/i18nProvider";
 import { TypingOptions } from "~/typingOptions/typingOptions";
 
 type GameOptionsTitleProps = {
-  t: Translator;
-  gameOptions: TypingOptions;
+  typingOptions: TypingOptions;
 };
 
 const GameOptionsTitle = (props: GameOptionsTitleProps) => {
+  const t = useI18n();
   css`
     .picto {
       width: 130px;
@@ -34,11 +34,11 @@ const GameOptionsTitle = (props: GameOptionsTitleProps) => {
   return (
     <div class="game-title">
       <div class="picto">
-        {typingModes[props.gameOptions.modeSelected].smile()}
+        {typingModes[props.typingOptions.modeSelected].smile()}
       </div>
       <div class="title">
-        <h1>{`${props.t("typingMode")[props.gameOptions.modeSelected].subtitle}`}</h1>
-        <GameOptionsRecap {...props} />
+        <h1>{`${t("typingMode")[props.typingOptions.modeSelected].subtitle}`}</h1>
+        <GameOptionsRecap typingOptions={props.typingOptions} />
       </div>
     </div>
   );

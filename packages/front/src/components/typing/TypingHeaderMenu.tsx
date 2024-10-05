@@ -131,7 +131,7 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
         )}
       </TypingModeDropdown>
       <div class="options-recap">
-        <GameOptionsRecap gameOptions={props.gameOptions} />
+        <GameOptionsRecap typingOptions={props.gameOptions} />
       </div>
     </div>
   );
