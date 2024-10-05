@@ -102,14 +102,14 @@ const KeyboardKey = (props: KeyboardKeyProps) => {
     }
 
     .primary {
-      font-size: 0.9em;
+      font-size: 15px;
     }
     .secondary {
-      font-size: 0.6em;
-      opacity: 0.5;
+      font-size: 11px;
+      opacity: 0.65;
       position: absolute;
       top: 9px;
-      right: 16px;
+      right: 13px;
       float: right;
     }
     .correct {
