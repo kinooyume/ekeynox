@@ -89,7 +89,7 @@ const TypingGame = (props: TypingGameProps) => {
         onKeyUp={props.showKb ? onKeyUp : () => {}}
         ref={setInputRef}
       />
-      <Prompt paragraphs={props.paragraphs} />
+      <Prompt paragraphs={props.paragraphs} fixedHeight={true} showGhost={true} />
       <Show when={props.showKb}>
         <Keyboard
           metrics={props.keyMetrics} // keyProjections, typingProjections

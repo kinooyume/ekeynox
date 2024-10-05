@@ -49,7 +49,6 @@ import TypingHeaderNav from "./TypingHeaderNav";
 import { TypingStateKind, type TypingState } from "~/typingState";
 import makeKeypressHandler from "~/typingState/userKeypressHandler";
 import { CharacterFocus } from "~/typingContent/character/types";
-import { WordStatus } from "../statistics/PromptWordResume";
 import { Paragraphs } from "~/typingContent/paragraphs/types";
 import {
   clearParagraphs,
@@ -65,6 +64,7 @@ import {
 } from "~/typingContent/word/stats/wpm/WordWpmCounterReactive";
 import UserInput from "../seqInput/UserInput";
 import typingGameRedo from "~/typingGame/typingGameRedo";
+import { WordStatus } from "~/typingContent/word/types";
 
 type TypingGameManagerProps = {
   status: PendingStatus;
