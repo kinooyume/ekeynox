@@ -37,6 +37,7 @@ type TypingMetricsProps = {
 
 const TypingStatisticsResult = (props: TypingMetricsProps) => {
   const t = useI18n();
+  console.log(props.metrics)
   const keysSet = new Set(Object.keys(props.metrics.characters));
   const [kbLayout, setKbLayout] = createSignal(props.kbLayout(keysSet));
 
@@ -369,7 +370,7 @@ const TypingStatisticsResult = (props: TypingMetricsProps) => {
       </div>
       <div class="sticky">
         <div ref={resumeMenu!} class="resume-menu">
-          <GameOptionsTitle t={t} gameOptions={props.metrics.typingOptions} />
+          <GameOptionsTitle typingOptions={props.metrics.typingOptions} />
           <div class="actions">{props.children(typingStatisticsResult)}</div>
         </div>
       </div>

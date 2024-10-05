@@ -11,7 +11,7 @@ import { TypingModeKind } from "~/typingOptions/typingModeKind";
 // NOTE: make a data to link title + icons + params full/compact
 //
 type GameOptionsRecapProps = {
-  gameOptions: TypingOptions;
+  typingOptions: TypingOptions;
 };
 
 const GameOptionsRecap = (props: GameOptionsRecapProps) => {
@@ -40,9 +40,9 @@ const GameOptionsRecap = (props: GameOptionsRecapProps) => {
   `;
   return (
     <div class="options-recap">
-      <Show when={props.gameOptions.modeSelected === TypingModeKind.timer}>
+      <Show when={props.typingOptions.modeSelected === TypingModeKind.timer}>
         <div class="tag animate">
-          <span>{props.gameOptions.timer}s</span>
+          <span>{props.typingOptions.timer}s</span>
         </div>
       </Show>
       <Switch
@@ -54,13 +54,13 @@ const GameOptionsRecap = (props: GameOptionsRecapProps) => {
       >
         <Match
           when={
-            props.gameOptions.categorySelected.kind === CategoryKind.generation
+            props.typingOptions.categorySelected.kind === CategoryKind.generation
           }
         >
           <Switch>
             <Match
               when={
-                (props.gameOptions.categorySelected as any).category ===
+                (props.typingOptions.categorySelected as any).category ===
                 WordsGenerationCategory.quotes
               }
             >
@@ -70,19 +70,19 @@ const GameOptionsRecap = (props: GameOptionsRecapProps) => {
             </Match>
             <Match
               when={
-                (props.gameOptions.categorySelected as any).category ===
+                (props.typingOptions.categorySelected as any).category ===
                   WordsGenerationCategory.words1k &&
-                props.gameOptions.modeSelected !== TypingModeKind.timer
+                props.typingOptions.modeSelected !== TypingModeKind.timer
               }
             >
               <div class="tag animate">
-                <span>{`${props.gameOptions.random} ${t("words")}`}</span>
+                <span>{`${props.typingOptions.random} ${t("words")}`}</span>
               </div>
             </Match>
           </Switch>
 
           <div class="tag animate">
-            <span>{t(props.gameOptions.generation.language)}</span>
+            <span>{t(props.typingOptions.generation.language)}</span>
           </div>
         </Match>
       </Switch>

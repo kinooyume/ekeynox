@@ -190,7 +190,7 @@ const StatisticsKeyboardKey = (props: KeyboardKeyResumeProps) => {
 
   return (
     <div
-      aria-label={infoToString(props.data)}
+      // aria-label={infoToString(props.data)}
       data-balloon-pos="up"
       class={`key ${props.used ? "used" : ""} ${status(props.data)} ${props.size}`}
     >

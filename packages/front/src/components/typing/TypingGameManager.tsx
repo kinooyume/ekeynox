@@ -1,11 +1,11 @@
 import {
-  Match,
-  Switch,
   createComputed,
   createMemo,
   createSignal,
+  Match,
   on,
   onCleanup,
+  Switch,
   untrack,
 } from "solid-js";
 import { createStore } from "solid-js/store";
@@ -30,41 +30,41 @@ import {
 
 import type { KeyboardHandler } from "../virtualKeyboard/TypingKeyboard";
 
-import { type PendingStatus, PendingKind } from "~/states";
+import { PendingKind, type PendingStatus } from "~/states";
 
+import { TypingGameOptions } from "~/typingOptions/typingGameOptions";
 import { TypingModeKind } from "~/typingOptions/typingModeKind";
 import { TypingOptions } from "~/typingOptions/typingOptions";
-import { TypingGameOptions } from "~/typingOptions/typingGameOptions";
 
 import { type HigherKeyboard } from "~/typingKeyboard/keyboardLayout";
 
 import { useI18n } from "~/contexts/i18nProvider";
 
-import TypingModeTimer from "./TypingModeTimer";
-import TypingModeSpeed from "./TypingModeSpeed";
-import TypingHelp from "./TypingHelp";
-import TypingHeaderActions from "./TypingHeaderActions";
-import TypingGame from "./TypingGame";
-import TypingHeaderNav from "./TypingHeaderNav";
-import { TypingStateKind, type TypingState } from "~/typingState";
-import makeKeypressHandler from "~/typingState/userKeypressHandler";
-import { CharacterFocus } from "~/typingContent/character/types";
-import { Paragraphs } from "~/typingContent/paragraphs/types";
-import {
-  clearParagraphs,
-  deepCloneParagraphs,
-} from "~/typingContent/paragraphs";
 import {
   CharacterStats,
   updateCharacterStats,
 } from "~/typingContent/character/stats";
+import { CharacterFocus } from "~/typingContent/character/types";
+import {
+  clearParagraphs,
+  deepCloneParagraphs,
+} from "~/typingContent/paragraphs";
+import { Paragraphs } from "~/typingContent/paragraphs/types";
 import {
   createWordWpmCounterReactive,
   WordStatusReactive,
 } from "~/typingContent/word/stats/wpm/WordWpmCounterReactive";
-import UserInput from "../seqInput/UserInput";
-import typingGameRedo from "~/typingGame/typingGameRedo";
 import { WordStatus } from "~/typingContent/word/types";
+import typingGameRedo from "~/typingGame/typingGameRedo";
+import { TypingStateKind, type TypingState } from "~/typingState";
+import makeKeypressHandler from "~/typingState/userKeypressHandler";
+import UserInput from "../seqInput/UserInput";
+import TypingGame from "./TypingGame";
+import TypingHeaderActions from "./TypingHeaderActions";
+import TypingHeaderNav from "./TypingHeaderNav";
+import TypingHelp from "./TypingHelp";
+import TypingModeSpeed from "./TypingModeSpeed";
+import TypingModeTimer from "./TypingModeTimer";
 
 type TypingGameManagerProps = {
   status: PendingStatus;
@@ -78,6 +78,10 @@ type TypingGameManagerProps = {
 
 const TypingGameManager = (props: TypingGameManagerProps) => {
   const t = useI18n();
+
+  // NOTE: keep the signal as it can cause error if we give it to the next state
+  const [gameOptions, setGameOptions] = createSignal<TypingOptions>(props.gameOptions);
+  // setGameOptions(props.gameOptions);
 
   const [contentHandler, setContentHandler] = createSignal<ContentHandler>(
     props.status.mode.getContent(),
@@ -263,11 +267,12 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
     if (wordWpmTimer) wordWpmTimer({ status: WordStatus.over });
     cursor().set.keyFocus(CharacterFocus.unfocus);
     const position = cursor().positions.get();
+
     props.onOver(
       {
         paragraphs: cleanParagraphs(paraStore, position),
         wordsCount: wordsCount(),
-        typingOptions: props.gameOptions,
+        typingOptions: gameOptions(),
         typing: typingMetrics(),
         characters: keyMetrics(),
       },

@@ -2,7 +2,7 @@ import { For } from "solid-js";
 import { css } from "solid-styled";
 import { CharacterStats } from "~/typingContent/character/stats";
 import { KeyboardLayout } from "~/typingKeyboard/keyboardLayout";
-import KeyboardKeyResume from "./StatisticsKeyboardKey";
+import StatisticsKeyboardKey from "./StatisticsKeyboardKey";
 
 type KeyboardProps = {
   metrics: CharacterStats;
@@ -41,7 +41,7 @@ const StatisticsKeyboard = (props: KeyboardProps) => {
           <div class="row">
             <For each={row}>
               {(lKey) => (
-                <KeyboardKeyResume
+                <StatisticsKeyboardKey
                   key={lKey.all}
                   used={lKey.used}
                   data={
@@ -59,7 +59,7 @@ const StatisticsKeyboard = (props: KeyboardProps) => {
       <div class="extraKeys">
         <For each={props.layout.extra}>
           {(lKey) => (
-            <KeyboardKeyResume
+            <StatisticsKeyboardKey
               key={lKey.all}
               used={lKey.used}
               data={lKey.all.map((c) => props.metrics[c]).filter((c) => c)}
