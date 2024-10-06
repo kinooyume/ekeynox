@@ -15,7 +15,7 @@ import "./styles/fonts.css";
 import "./styles/global.css";
 
 import { AppStateProvider } from "./contexts/AppStateProvider";
-import { GameOptionsProvider } from "./contexts/GameOptionsProvider";
+import { TypingOptionsProvider } from "./contexts/TypingOptionsProvider";
 import { SettingsProvider } from "./contexts/SettingsProvider";
 import { FocusProvider } from "./contexts/FocusProvider";
 
@@ -71,7 +71,7 @@ export default function App() {
         <MetaProvider>
           <StyleRegistry styles={sheets}>
             <SettingsProvider>
-              <GameOptionsProvider>
+              <TypingOptionsProvider>
                 <AppStateProvider>
                   <FocusProvider>
                     <Header />
@@ -143,7 +143,7 @@ export default function App() {
                     </main>
                   </FocusProvider>
                 </AppStateProvider>
-              </GameOptionsProvider>
+              </TypingOptionsProvider>
             </SettingsProvider>
           </StyleRegistry>
         </MetaProvider>

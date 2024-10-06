@@ -10,11 +10,11 @@ import { TypingModeKind } from "~/typingOptions/typingModeKind";
 
 // NOTE: make a data to link title + icons + params full/compact
 //
-type GameOptionsRecapProps = {
+type TypingOptionsRecapProps = {
   typingOptions: TypingOptions;
 };
 
-const GameOptionsRecap = (props: GameOptionsRecapProps) => {
+const TypingOptionsRecap = (props: TypingOptionsRecapProps) => {
   const t = useI18n();
   css`
     .options-recap {
@@ -90,4 +90,4 @@ const GameOptionsRecap = (props: GameOptionsRecapProps) => {
   );
 };
 
-export default GameOptionsRecap;
+export default TypingOptionsRecap;

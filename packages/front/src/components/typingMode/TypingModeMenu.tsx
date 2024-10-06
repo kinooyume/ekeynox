@@ -6,9 +6,9 @@ import {
   on,
   onMount,
 } from "solid-js";
-
+import { makeEventListener } from "@solid-primitives/event-listener";
 import { createStore } from "solid-js/store";
-import { useBeforeLeave, usePreloadRoute } from "@solidjs/router";
+import { useNavigate, usePreloadRoute } from "@solidjs/router";
 import { css } from "solid-styled";
 
 import { useI18n } from "~/contexts/i18nProvider";
@@ -21,7 +21,6 @@ import {
   type ContentGeneration,
   type TypingOptions,
 } from "~/typingOptions/typingOptions";
-
 
 import TypingModeSelection from "./TypingModeSelection";
 import SpeedParams from "./SpeedParams";
@@ -62,7 +61,7 @@ import Monkey from "~/svgs/monkey";
 // take a list and make cards
 
 type TypingModeKindMenuProps = {
-  gameOptions: TypingOptions;
+  typingOptions: TypingOptions;
   fetchSourcesGen: (opts: ContentGeneration) => Promise<Array<string>>;
   start: (opts: TypingOptions) => void;
 };
@@ -74,43 +73,44 @@ const customRef: CustomInputRef = {
 const TypingModeKindMenu = (props: TypingModeKindMenuProps) => {
   const t = useI18n();
 
-  // NOTE: ???
-  useBeforeLeave((e) => {
-    start();
-  });
+  const navigate = useNavigate();
+
+  // useBeforeLeave((e) => {
+  //   start();
+  // });
 
   const [isReady, setIsReady] = createSignal(false);
   const [customValue, setCustomValue] = createSignal("");
 
   createComputed(
     on(
-      () => props.gameOptions,
+      () => props.typingOptions,
       () => {
-        setCustomValue(props.gameOptions.custom);
+        setCustomValue(props.typingOptions.custom);
       },
     ),
   );
 
-  const [gameOptions, setGameOptions] = createStore<TypingOptions>(
-    deepCopy(props.gameOptions),
+  const [typingOptions, setTypingOptions] = createStore<TypingOptions>(
+    deepCopy(props.typingOptions),
   );
 
   createComputed(
     () => {
-      setGameOptions(deepCopy(props.gameOptions));
+      setTypingOptions(deepCopy(props.typingOptions));
     },
     { defer: true },
   );
 
   createComputed(() => {
     props.fetchSourcesGen({
-      language: gameOptions.generation.language,
-      category: gameOptions.generation.category,
+      language: typingOptions.generation.language,
+      category: typingOptions.generation.category,
     });
   });
 
   createComputed(() => {
-    if (gameOptions.categorySelected.kind !== CategoryKind.custom)
+    if (typingOptions.categorySelected.kind !== CategoryKind.custom)
       setIsReady(true);
     else {
       setIsReady(customValue().length > 1);
@@ -118,25 +118,20 @@ const TypingModeKindMenu = (props: TypingModeKindMenuProps) => {
   });
 
   const start = () => {
-    if (gameOptions.categorySelected.kind === CategoryKind.custom) {
-      setGameOptions("custom", customRef.ref ? customRef.ref.value : "");
+    if (typingOptions.categorySelected.kind === CategoryKind.custom) {
+      setTypingOptions("custom", customRef.ref ? customRef.ref.value : "");
     }
-    props.start(gameOptions);
+    props.start(typingOptions);
+    navigate("/typing");
   };
 
+  const [vh, setVh] = createSignal<string>("1vh");
   css`
     .main-view {
       position: relative;
+      --vh: ${vh()};
     }
 
-    /* .main-view:before { */
-    /*   display: block; */
-    /*   content: ""; */
-    /*   width: 100%; */
-    /*   height: 100%; */
-    /*   padding-top: calc(106/203 * 100%); */
-    /**/
-    /* } */
     .cliped {
       clip-path: url(#choose-clip);
       object-fit: cover;
@@ -346,6 +341,7 @@ const TypingModeKindMenu = (props: TypingModeKindMenuProps) => {
         margin: 0 12px;
         margin-top: 64px;
         padding: 32px 0;
+        height: calc(var(--vh) * 100 - 284px);
       }
       .hud {
         flex-direction: row !important;
@@ -368,8 +364,8 @@ const TypingModeKindMenu = (props: TypingModeKindMenuProps) => {
       }
 
       .illustration-container {
-        width: 180px;
-        height: unset;
+        width: calc(var(--vh) * 55 - 284px);
+        height: auto;
       }
 
       .button-wrapper {
@@ -382,15 +378,33 @@ const TypingModeKindMenu = (props: TypingModeKindMenuProps) => {
         left: 0;
         background-color: var(--color-surface-100);
       }
+      .title-mode {
+        margin-top: 16px;
+      }
+
       .game-description {
         margin: 0 32px;
-        padding-bottom: 32px;
+        height: unset;
       }
-      a.primary {
+      .primary {
         margin-right: unset;
       }
     }
 
+    @media screen and (max-width: 860px) and (max-height: 680px) {
+      .illustration-container {
+        display: none;
+      }
+      .title h1 {
+        font-size: 1.4rem;
+      }
+      .title-mode {
+        margin-top: 0;
+      }
+      .cliped {
+        overflow: scroll;
+      }
+    }
     @media screen and (max-width: 370px) {
       .title h1 {
         font-size: 1.4rem;
@@ -398,8 +412,16 @@ const TypingModeKindMenu = (props: TypingModeKindMenuProps) => {
     }
   `;
 
+  const appHeight = () => {
+    const vh = window.innerHeight * 0.01;
+    setVh(`${vh}px`);
+  };
+
   onMount(() => {
     const preload = usePreloadRoute();
+    appHeight();
+    const clearWindowEvent = makeEventListener(window, "resize", appHeight);
+    // document?.addEventListener("resize", appHeight);
     preload(new URL(`${import.meta.env.VITE_BASE_URL}/typing`), {
       preloadData: true,
     });
@@ -413,7 +435,6 @@ const TypingModeKindMenu = (props: TypingModeKindMenuProps) => {
     //   });
     //
   });
-
   return (
     <div class="menu">
       <form class="main-view">
@@ -426,9 +447,9 @@ const TypingModeKindMenu = (props: TypingModeKindMenuProps) => {
           </div>
           <div class="selection">
             <TypingModeSelection
-              selected={gameOptions.modeSelected}
+              selected={typingOptions.modeSelected}
               setSelected={(mode: TypingModeKind) =>
-                setGameOptions("modeSelected", mode)
+                setTypingOptions("modeSelected", mode)
               }
             />
           </div>
@@ -437,10 +458,14 @@ const TypingModeKindMenu = (props: TypingModeKindMenuProps) => {
           <div class="illustration">
             <div class="illustration-container">
               <Switch>
-                <Match when={gameOptions.modeSelected === TypingModeKind.speed}>
+                <Match
+                  when={typingOptions.modeSelected === TypingModeKind.speed}
+                >
                   <Monkey />
                 </Match>
-                <Match when={gameOptions.modeSelected === TypingModeKind.timer}>
+                <Match
+                  when={typingOptions.modeSelected === TypingModeKind.timer}
+                >
                   <Bunny />
                 </Match>
               </Switch>
@@ -449,7 +474,7 @@ const TypingModeKindMenu = (props: TypingModeKindMenuProps) => {
           <div class="game-description">
             <Switch>
               <Match
-                when={gameOptions.modeSelected === TypingModeKind.speed}
+                when={typingOptions.modeSelected === TypingModeKind.speed}
                 keyed
               >
                 <div class="text">
@@ -463,8 +488,8 @@ const TypingModeKindMenu = (props: TypingModeKindMenuProps) => {
                 <div class="options">
                   {/* <h2 class="options-title">{t("options")}</h2> */}
                   <SpeedParams
-                    typingOptions={gameOptions}
-                    setGameOptions={setGameOptions}
+                    typingOptions={typingOptions}
+                    setTypingOptions={setTypingOptions}
                   >
                     <CustomInput
                       value={customValue()}
@@ -475,7 +500,7 @@ const TypingModeKindMenu = (props: TypingModeKindMenuProps) => {
                 </div>
               </Match>
               <Match
-                when={gameOptions.modeSelected === TypingModeKind.timer}
+                when={typingOptions.modeSelected === TypingModeKind.timer}
                 keyed
               >
                 <div class="text">
@@ -488,8 +513,8 @@ const TypingModeKindMenu = (props: TypingModeKindMenuProps) => {
                 <div class="options">
                   {/* <h2 class="options-title">{t("options")}</h2> */}
                   <TimerParams
-                    typingOptions={gameOptions}
-                    setGameOptions={setGameOptions}
+                    typingOptions={typingOptions}
+                    setTypingOptions={setTypingOptions}
                   >
                     <CustomInput
                       value={customValue()}
@@ -501,13 +526,17 @@ const TypingModeKindMenu = (props: TypingModeKindMenuProps) => {
               </Match>
             </Switch>
             <div class="button-wrapper">
-              <a
+              <button
                 class="primary"
+                type="submit"
                 classList={{ locked: !isReady() }}
-                href="/typing"
+                onClick={(e) => {
+                  e.preventDefault();
+                  start();
+                }}
               >
                 {t("letsGo")}
-              </a>
+              </button>
             </div>
           </div>
         </div>

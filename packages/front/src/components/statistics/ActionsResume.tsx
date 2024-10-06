@@ -10,7 +10,7 @@ import {
   type TypingOptions,
   deepCopy,
 } from "~/typingOptions/typingOptions";
-import { TypingGameOptions } from "~/typingOptions/typingGameOptions";
+import { TypingTypingOptions } from "~/typingOptions/typingTypingOptions";
 
 import { makeRedoContent } from "~/typingContent/TypingGameSource";
 import Content from "~/typingContent";
@@ -22,14 +22,14 @@ import GameModeDropdown from "../typingMode/TypingModeDropdown";
 import { clearParagraphs } from "~/typingContent/paragraphs";
 
 type ActionsResumeProps = {
-  gameOptions: TypingOptions;
-  content: TypingGameOptions;
+  typingOptions: TypingOptions;
+  content: TypingTypingOptions;
   metrics: TypingStatistics;
   metricsResume: TypingStatisticsResult;
   fetchSourcesGen: (opts: ContentGeneration) => Promise<Array<string>>;
   start: (opts: TypingOptions) => void;
   redo: (
-    mode: TypingGameOptions,
+    mode: TypingTypingOptions,
     metrics: TypingStatisticsResult,
     options: TypingOptions,
   ) => void;
@@ -134,10 +134,10 @@ const ActionsResume = (props: ActionsResumeProps) => {
           )}
         </GameModeDropdown>
       </Show>
-      <button class="secondary" onClick={() => restart(props.gameOptions)}>
+      <button class="secondary" onClick={() => restart(props.typingOptions)}>
         <Ghost /> <span>{t("playAgain")}</span>
       </button>
-      <button class="primary" onClick={() => start(props.gameOptions)}>
+      <button class="primary" onClick={() => start(props.typingOptions)}>
         {t("next")}
       </button>
     </div>

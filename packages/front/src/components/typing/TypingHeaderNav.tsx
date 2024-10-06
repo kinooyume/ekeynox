@@ -9,7 +9,7 @@ export type LeavingFn = (fn: () => void) => void;
 
 type TypingHeaderNavProps = {
   start: (opts: TypingOptions) => void;
-  gameOptions: TypingOptions;
+  typingOptions: TypingOptions;
   setLeavingAnimate: (anim: () => anime.AnimeTimelineInstance) => void;
   children: JSX.Element | JSX.Element[];
 };

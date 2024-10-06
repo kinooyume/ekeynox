@@ -1,3 +1,4 @@
+import { isAndroid, isFirefox } from "@solid-primitives/platform";
 import { type TypingState, typingStatePending } from ".";
 
 import { TypingWordKind, WordStatus } from "~/typingContent/word/types";
@@ -11,8 +12,6 @@ import {
   getKeyMetrics,
   makeDeletedKeyMetrics,
 } from "~/typingStatistics/KeyMetrics";
-
-
 
 // NOTE: A priori, uniquement pour userInput
 // Donc, a virer de typingGameManager
@@ -34,6 +33,10 @@ const makeKeypressHandler = (
   cursorNav: CursorNavType,
 ): KeypressHandler => {
   const backKey = () => {
+    if (isAndroid) {
+      if (isFirefox) {
+      }
+    }
     if (!cursorNav.prev()) return;
     const deletedKeyMetrics = makeDeletedKeyMetrics({
       expected: cursor.get.character().char,

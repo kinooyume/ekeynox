@@ -7,7 +7,7 @@ import {
 } from "solid-js";
 
 import { type TypingOptions, deepCopy } from "~/typingOptions/typingOptions";
-import { type TypingGameOptions } from "~/typingOptions/typingGameOptions";
+import { type TypingTypingOptions } from "~/typingOptions/typingTypingOptions";
 
 import {
   AppStateKind,
@@ -18,14 +18,14 @@ import {
 import { TypingStatistics, TypingStatisticsResult } from "~/typingStatistics";
 
 type AppMutation = {
-  start: (mode: Promise<TypingGameOptions>, options: TypingOptions) => void;
+  start: (mode: Promise<TypingTypingOptions>, options: TypingOptions) => void;
   redo: (
-    mode: TypingGameOptions,
+    mode: TypingTypingOptions,
     statisticsResult: TypingStatisticsResult,
     options: TypingOptions,
 
   ) => void;
-  over: (statistics: TypingStatistics, content: TypingGameOptions) => void;
+  over: (statistics: TypingStatistics, content: TypingTypingOptions) => void;
   menu: () => void;
   login: () => void;
 };
@@ -74,7 +74,7 @@ export function AppStateProvider(props: Props) {
         }),
       });
     },
-    over: (statistics, content: TypingGameOptions) => {
+    over: (statistics, content: TypingTypingOptions) => {
       setState({ kind: AppStateKind.resume, statistics, content });
     },
     menu: () => {

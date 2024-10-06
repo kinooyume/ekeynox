@@ -1,9 +1,9 @@
 import { makeSourceNested } from "~/typingContent/TypingGameSource";
 // NOTE: Je pense qu'on peut remettre typingModeKind ici non ? 
 import { TypingModeKind } from "./typingModeKind";
-import { TypingGameOptions } from "./typingGameOptions";
+import {  TypingGameOptions } from "./typingGameOptions";
 
-// NOTE:  TypingOptions -> TypingGameOptions
+// NOTE:  TypingOptions -> TypingGameOptionsOptions
 
 export type Languages = "en" | "fr";
 
@@ -43,7 +43,7 @@ export type TypingOptions = {
   timer: number;
 };
 // Default Game Options
-const getDefaultGameOptions = (): TypingOptions => ({
+const getDefaultTypingOptions = (): TypingOptions => ({
   modeSelected: TypingModeKind.speed,
   // NOTE: on doit pouvoir avoir que le kind ?
   categorySelected: {
@@ -96,7 +96,7 @@ const optionsToPending = async (
   }
 };
 
-export { getDefaultGameOptions, deepCopy, optionsToPending };
+export { getDefaultTypingOptions, deepCopy, optionsToPending };
 
 /* *** */
 // NOTE: Do we need this ?

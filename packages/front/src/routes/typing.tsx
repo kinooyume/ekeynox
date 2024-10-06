@@ -2,7 +2,7 @@ import { Match, Show, Switch, createResource, onMount } from "solid-js";
 import { clientOnly } from "@solidjs/start";
 import { useNavigate } from "@solidjs/router";
 
-import { useGameOptions } from "~/contexts/GameOptionsProvider";
+import { useTypingOptions } from "~/contexts/TypingOptionsProvider";
 import { useSettings } from "~/contexts/SettingsProvider";
 import { useAppState } from "~/contexts/AppStateProvider.tsx";
 
@@ -27,15 +27,15 @@ const ClientActionsResume = clientOnly(
 export default function Typing() {
   const { state, mutation } = useAppState();
   const navigate = useNavigate();
-  const { persistedGameOptions, setPersistedGameOptions, fetchSourcesGen } =
-    useGameOptions();
+  const { persistedTypingOptions: persistedTypingOptions, setPersistedTypingOptions, fetchSourcesGen } =
+    useTypingOptions();
 
   const [pendingStatus] = createResource(state, (s) => {
     return s.kind === AppStateKind.pending ? s.status : undefined;
   });
 
   const start = (opts: TypingOptions) => {
-    setPersistedGameOptions(opts);
+    setPersistedTypingOptions(opts);
 
     const sourcesGen = fetchSourcesGen(opts.generation);
     const pendingMode = optionsToPending(opts, sourcesGen);
@@ -45,7 +45,7 @@ export default function Typing() {
 
   onMount(() => {
     if (!(state().kind === AppStateKind.pending)) {
-      start(persistedGameOptions);
+      start(persistedTypingOptions);
     }
   });
 
@@ -59,7 +59,7 @@ export default function Typing() {
             <TypingGameManager
               status={pendingStatus()!}
               start={start}
-              gameOptions={(state() as PendingState).options}
+              typingOptions={(state() as PendingState).options}
               showKb={settings.showKb}
               kbLayout={keyboardLayout(settings.kb.value)}
               onExit={() => {
@@ -78,7 +78,7 @@ export default function Typing() {
         >
           {(metricsResume) => (
             <ClientActionsResume
-              gameOptions={deepCopy(persistedGameOptions)}
+              typingOptions={deepCopy(persistedTypingOptions)}
               content={(state() as ResumeState).content}
               fetchSourcesGen={fetchSourcesGen}
               metrics={(state() as ResumeState).statistics}

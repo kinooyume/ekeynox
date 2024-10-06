@@ -15,39 +15,28 @@ import {
 import { DefaultChart } from "solid-chartjs";
 import { css } from "solid-styled";
 
-import type { KeyResume } from "../../metrics/Metrics";
 import { onMount } from "solid-js";
+import { CharacterStatsResult } from "~/typingContent/character/stats";
 
 type CharacterCharProps = {
-  keys: [KeyResume, Map<string, number>];
+  keys: CharacterStatsResult;
 };
 
 const CharacterChart = (props: CharacterCharProps) => {
-  // get the first 10 words
-  // const words = props.words.slice(0, 10);
-  // const [labels, speeds] = words.reduce(
-  //   ([labels, speeds], word) => {
-  //     labels.push(word.word);
-  //     speeds.push(Math.floor(word.averageWpm));
-  //     return [labels, speeds];
-  //   },
-  //   [[] as string[], [] as number[]],
-  // );
-
   let labels: string[] = [];
   let matches: number[] = [];
   let unmatches: number[] = [];
+  let corrected: number[] = [];
   let extras: number[] = [];
   let misses: number[] = [];
-  let expected: number[] = [];
 
-  Object.entries(props.keys[0]).forEach(([key, projection]) => {
+  Object.entries(props.keys[0]).forEach(([key, score]) => {
     labels.push(key);
-    matches.push(projection.match);
-    unmatches.push(projection.unmatch);
-    extras.push(projection.extra);
-    misses.push(projection.missed);
-    expected.push(-(props.keys[1].get(key) || 0));
+    console.log(labels);
+    matches.push(score.match);
+    unmatches.push(score.unmatch);
+    extras.push(score.extra);
+    misses.push(score.missed);
   });
 
   const data = {
@@ -57,33 +46,33 @@ const CharacterChart = (props: CharacterCharProps) => {
         label: "Matches",
         data: matches,
         backgroundColor: "#107b65",
+        borderRadius: 10,
       },
       {
         label: "Unmatches",
         data: unmatches,
         backgroundColor: "#a83f3f",
+        borderRadius: 10,
       },
       {
         label: "extras",
         data: extras,
         backgroundColor: "#2b5e7a",
+        borderRadius: 10,
       },
       {
         label: "misses",
         data: misses,
         backgroundColor: "#978679",
-      },
-      {
-        label: "expected",
-        data: expected,
-        backgroundColor: "purple",
+        borderRadius: 10,
       },
     ],
   };
   const options = {
     responsive: true,
     maintainAspectRatio: false,
-    indexAxis: "y",
+    indexAxis: "x",
+    labels: labels,
     plugins: {
       legend: {
         position: "bottom",
@@ -111,41 +100,36 @@ const CharacterChart = (props: CharacterCharProps) => {
         grid: {
           display: false,
         },
-        ticks: {
-          callback: (value: number) => Math.abs(value),
-        },
       },
       y: {
         stacked: true,
         grid: {
           display: false,
         },
-      },
-      y2: {
-        axis: "y",
-        position: "right",
-        stacked: true,
-        grid: {
-          display: false,
+        ticks: {
+          callback: (value: number) => Math.abs(value),
         },
       },
+      // y2: {
+      //   axis: "y",
+      //   position: "right",
+      //   stacked: true,
+      //   grid: {
+      //     display: false,
+      //   },
+      // },
     },
   };
   css`
+    .chart-wrapper {
+      position: relative;
+      display: block;
+      width: 90%;
+      overflow: hidden;
+    }
     .chart {
       position: relative;
-      width: 90%;
-    }
-    .center {
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 100%;
       width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
     }
   `;
 
@@ -164,23 +148,25 @@ const CharacterChart = (props: CharacterCharProps) => {
     );
   });
   return (
-    <div class="chart">
-      <DefaultChart
-        type="bar"
-        data={data}
-        plugins={[
-          CategoryScale,
-          PointElement,
-          Title,
-          Tooltip,
-          Legend,
-          Colors,
-          ArcElement,
-          BarController,
-          BarElement,
-        ]}
-        options={options}
-      />
+    <div class="chart-wrapper">
+      <div class="chart">
+        <DefaultChart
+          type="bar"
+          data={data}
+          plugins={[
+            CategoryScale,
+            PointElement,
+            Title,
+            Tooltip,
+            Legend,
+            Colors,
+            ArcElement,
+            BarController,
+            BarElement,
+          ]}
+          options={options}
+        />
+      </div>
     </div>
   );
 };

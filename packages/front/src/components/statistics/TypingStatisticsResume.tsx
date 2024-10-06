@@ -25,7 +25,7 @@ import SpeedChart from "./charts/SpeedChart";
 import WordTypingStatisticsResult from "./charts/WordsChart";
 import Prompt from "../prompt/Prompt";
 
-import GameOptionsTitle from "../typingMode/TypingOptionsTitle";
+import TypingOptionsTitle from "../typingMode/TypingOptionsTitle";
 import { HigherKeyboard } from "~/typingKeyboard/keyboardLayout";
 import StatisticsKeyboard from "../virtualKeyboard/StatisticsKeyboard";
 
@@ -370,7 +370,7 @@ const TypingStatisticsResult = (props: TypingMetricsProps) => {
       </div>
       <div class="sticky">
         <div ref={resumeMenu!} class="resume-menu">
-          <GameOptionsTitle typingOptions={props.metrics.typingOptions} />
+          <TypingOptionsTitle typingOptions={props.metrics.typingOptions} />
           <div class="actions">{props.children(typingStatisticsResult)}</div>
         </div>
       </div>

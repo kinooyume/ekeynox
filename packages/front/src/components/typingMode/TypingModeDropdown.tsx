@@ -23,11 +23,11 @@ import { TypingModeKind } from "~/typingOptions/typingModeKind";
 import VerticalRadioBox from "../ui/VerticalRadioBox";
 import HugeRadioLabel from "../ui/HugeRadioLabel";
 import { useI18n } from "~/contexts/i18nProvider";
-import { useGameOptions } from "~/contexts/GameOptionsProvider";
+import { useTypingOptions } from "~/contexts/TypingOptionsProvider";
 
 type TypingModeDropdownProps = {
   reverse?: boolean;
-  gameOptions: TypingOptions;
+  typingOptions: TypingOptions;
   start: (opts: TypingOptions) => void;
 
   children: (isOpen: () => boolean, hover: () => boolean) => JSX.Element;
@@ -36,7 +36,7 @@ type TypingModeDropdownProps = {
 const TypingModeDropdown = (props: TypingModeDropdownProps) => {
   const t = useI18n();
 
-  const { fetchSourcesGen } = useGameOptions();
+  const { fetchSourcesGen } = useTypingOptions();
   const [isReady, setIsReady] = createSignal(false);
   const [customValue, setCustomValue] = createSignal("");
 
@@ -125,15 +125,15 @@ const TypingModeDropdown = (props: TypingModeDropdownProps) => {
       margin-top: 16px;
     }
   `;
-  const [gameOptions, setGameOptions] = createStore<TypingOptions>(
-    deepCopy(props.gameOptions),
+  const [typingOptions, setTypingOptions] = createStore<TypingOptions>(
+    deepCopy(props.typingOptions),
   );
 
   createComputed(
     () => {
       fetchSourcesGen({
-        language: gameOptions.generation.language,
-        category: gameOptions.generation.category,
+        language: typingOptions.generation.language,
+        category: typingOptions.generation.category,
       });
     },
     { defer: true },
@@ -147,14 +147,14 @@ const TypingModeDropdown = (props: TypingModeDropdownProps) => {
 
   createComputed(
     on(
-      () => props.gameOptions,
+      () => props.typingOptions,
       () => {
-        setCustomValue(props.gameOptions.custom);
+        setCustomValue(props.typingOptions.custom);
       },
     ),
   );
   createComputed(() => {
-    if (gameOptions.categorySelected.kind !== CategoryKind.custom)
+    if (typingOptions.categorySelected.kind !== CategoryKind.custom)
       setIsReady(true);
     else {
       setIsReady(customValue().length > 0);
@@ -162,10 +162,10 @@ const TypingModeDropdown = (props: TypingModeDropdownProps) => {
   });
   const start = (setIsOpen: (o: boolean) => void) => {
     setIsOpen(false);
-    if (gameOptions.categorySelected.kind === CategoryKind.custom) {
-      setGameOptions("custom", customRef.ref ? customRef.ref.value : "");
+    if (typingOptions.categorySelected.kind === CategoryKind.custom) {
+      setTypingOptions("custom", customRef.ref ? customRef.ref.value : "");
     }
-    props.start(gameOptions);
+    props.start(typingOptions);
   };
 
   return (
@@ -181,11 +181,11 @@ const TypingModeDropdown = (props: TypingModeDropdownProps) => {
               name="game-mode-dropdown"
               each={typingModesArray}
               onChange={([modeKind]) => {
-                setGameOptions("modeSelected", modeKind);
+                setTypingOptions("modeSelected", modeKind);
               }}
               selected={
                 typingModesArray.find(
-                  ([modeKind]) => modeKind === gameOptions.modeSelected,
+                  ([modeKind]) => modeKind === typingOptions.modeSelected,
                 ) || typingModesArray[0]
               }
             >
@@ -211,10 +211,10 @@ const TypingModeDropdown = (props: TypingModeDropdownProps) => {
           <div class="options-wrapper">
             <div class="elem options">
               <Switch>
-                <Match when={gameOptions.modeSelected === TypingModeKind.speed}>
+                <Match when={typingOptions.modeSelected === TypingModeKind.speed}>
                   <SpeedParamsMedium
-                    typingOptions={gameOptions}
-                    setGameOptions={setGameOptions}
+                    typingOptions={typingOptions}
+                    setTypingOptions={setTypingOptions}
                   >
                     <CustomInput
                       value={customValue()}
@@ -223,10 +223,10 @@ const TypingModeDropdown = (props: TypingModeDropdownProps) => {
                     />
                   </SpeedParamsMedium>
                 </Match>
-                <Match when={gameOptions.modeSelected === TypingModeKind.timer}>
+                <Match when={typingOptions.modeSelected === TypingModeKind.timer}>
                   <TimerParamsMedium
-                    typingOptions={gameOptions}
-                    setGameOptions={setGameOptions}
+                    typingOptions={typingOptions}
+                    setTypingOptions={setTypingOptions}
                   >
                     <CustomInput
                       value={customValue()}
