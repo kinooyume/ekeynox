@@ -1,11 +1,4 @@
 import { Component } from "solid-js";
-import { emptyAnimationChildren } from "~/animations/animation";
-import Modal from "../ui/Modal";
-import Morphing from "../ui/Morphing";
-import QuestionMark from "../ui/QuestionMark";
-import ContactForm from "./AboutContactForm";
-import AboutInfo from "./AboutInfo";
-import AboutContact from "./AboutContact";
 
 type AboutProps = {};
 
@@ -25,7 +18,7 @@ const About: Component<AboutProps> = (props) => {
           color: "var(--text-secondary-color)",
         }}
       >
-        Alpha 0.15.2
+        Alpha 0.16
       </span>
       {/* <Modal */}
       {/*   portalId="modal-portal" */}

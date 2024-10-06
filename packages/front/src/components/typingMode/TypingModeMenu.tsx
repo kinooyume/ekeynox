@@ -355,6 +355,7 @@ const TypingModeKindMenu = (props: TypingModeKindMenuProps) => {
         border-radius: 20px;
         margin: 0 12px;
         margin-top: 64px;
+        margin-bottom: 0;
         padding: 32px 0;
         height: calc(var(--vh) * 100 - 284px);
       }
@@ -372,7 +373,6 @@ const TypingModeKindMenu = (props: TypingModeKindMenuProps) => {
         display: flex;
         flex-direction: column;
         aspect-ratio: unset;
-        margin-bottom: 82px;
       }
       .selection {
         align-items: flex-start;

@@ -17,6 +17,10 @@ import { css } from "solid-styled";
 
 import { onMount } from "solid-js";
 import { CharacterStatsResult } from "~/typingContent/character/stats";
+import {
+  mergeCharacterScore,
+  pushCharacterScore,
+} from "~/typingContent/character/stats/score";
 
 type CharacterCharProps = {
   keys: CharacterStatsResult;
@@ -30,9 +34,10 @@ const CharacterChart = (props: CharacterCharProps) => {
   let extras: number[] = [];
   let misses: number[] = [];
 
-  Object.entries(props.keys[0]).forEach(([key, score]) => {
+  Object.entries(props.keys[0]).forEach(([key, scoreFull]) => {
     labels.push(key);
-    console.log(labels);
+    const score = mergeCharacterScore(scoreFull);
+
     matches.push(score.match);
     unmatches.push(score.unmatch);
     extras.push(score.extra);
@@ -60,12 +65,12 @@ const CharacterChart = (props: CharacterCharProps) => {
         backgroundColor: "#2b5e7a",
         borderRadius: 10,
       },
-      {
-        label: "misses",
-        data: misses,
-        backgroundColor: "#978679",
-        borderRadius: 10,
-      },
+      // {
+      //   label: "misses",
+      //   data: misses,
+      //   backgroundColor: "#978679",
+      //   borderRadius: 10,
+      // },
     ],
   };
   const options = {

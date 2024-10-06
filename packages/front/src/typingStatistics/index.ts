@@ -13,7 +13,7 @@ import {
   CharacterStats,
   CharacterStatsResult,
   createCharacterStatsResult,
-  sortKeys,
+  sortKeysAlpha,
 } from "~/typingContent/character/stats";
 
 export type TypingStatistics = {
@@ -38,7 +38,7 @@ const createTypingStatisticsResult = (metrics: TypingStatistics): TypingStatisti
   words: averageWordWpm(metrics.paragraphs.flat()).sort(
     (a, b) => b.averageWpm - a.averageWpm,
   ),
-  characters: createCharacterStatsResult(sortKeys(metrics.characters)),
+  characters: createCharacterStatsResult(sortKeysAlpha(metrics.characters)),
 });
 
 export { createTypingStatisticsResult };
