@@ -8,7 +8,13 @@ export type CharacterScore = {
   total: number;
 };
 
-export type CharacterScores = Record<string, CharacterScore>;
+export type CharacterScoreFull = {
+  added: CharacterScore;
+  deleted: CharacterScore;
+  cool: string;
+};
+
+export type CharacterScores = Record<string, CharacterScoreFull>;
 
 const createCharacterScore = (): CharacterScore => ({
   match: 0,
@@ -59,7 +65,10 @@ const updateCharacterScore = (score: CharacterScore) => ({
 });
 
 /* Side effect */
-const pushCharacterScore = (target: CharacterScore, source: CharacterScore) => {
+const pushCharacterScore = (
+  target: CharacterScore,
+  source: CharacterScore,
+) => {
   target.match += source.match;
   target.unmatch += source.unmatch;
   target.extra += source.extra;
@@ -72,12 +81,20 @@ type diffCharracterScoreProps = {
   deleted: CharacterScore;
 };
 
-const diffCharacterScore = ({ added, deleted }: diffCharracterScoreProps) => ({
+const diffCharacterScore = ({ added, deleted }: diffCharracterScoreProps) : CharacterScore => ({
   match: added.match - deleted.match,
   unmatch: added.unmatch - deleted.unmatch,
   extra: added.extra - deleted.extra,
   missed: added.missed - deleted.missed,
   total: added.total - deleted.total,
+});
+
+const mergeCharacterScore = ({ added, deleted }: diffCharracterScoreProps) : CharacterScore => ({
+  match: added.match + deleted.match,
+  unmatch: added.unmatch + deleted.unmatch,
+  extra: added.extra + deleted.extra,
+  missed: added.missed + deleted.missed,
+  total: added.total + deleted.total,
 });
 
 // Event back
@@ -86,4 +103,5 @@ export {
   updateCharacterScore,
   pushCharacterScore,
   diffCharacterScore,
+  mergeCharacterScore,
 };
