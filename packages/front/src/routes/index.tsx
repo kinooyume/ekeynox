@@ -22,7 +22,7 @@ export default function Menu() {
   };
 
   return (
-    <div>
+    <div class="index-wrapper">
       <TypingModeMenu
         typingOptions={persistedGameOptions}
         fetchSourcesGen={fetchSourcesGen}

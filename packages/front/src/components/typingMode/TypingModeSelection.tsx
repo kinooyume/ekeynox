@@ -17,28 +17,47 @@ const TypingModeSelection = (props: TypingModeSelectionProps) => {
     .mode-selection {
       display: flex;
       flex-direction: row;
-      justify-content: flex-end;
+      justify-content: center;
       align-items: center;
       max-width: 400px;
       max-height: 100px;
       height: 100%;
       width: 100%;
+      --label-size: 74px;
+      --label-scale-hover: 1.2;
+      --label-icon-size: 62px;
+      --label-icon-size-hover: 90px;
+      --label-icon-top: 14px;
+      --label-icon-left: 6px;
+      --label-icon-transform-hover: -24px;
+      --label-icon-left-hover: -9px;
+      --label-gap: 1.4rem;
+
+      --info-padding-top: 18px;
+      --info-margin-left: 1rem;
+      --info-title-font-size: 1.4rem;
+      --info-description-font-size: 1rem;
     }
 
     .info {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      height: 100%;
       margin-right: auto;
-      margin-left: 1rem;
+      margin-left: var(--info-margin-left);
+      padding-top: var(--info-padding-top);
     }
 
     .info .title {
-      font-size: 1.4rem;
+      font-size: var(--info-title-font-size);
       font-weight: 200;
       margin: 0;
     }
 
     .info .description {
       margin-top: 4px;
-      font-size: 1rem;
+      font-size: var(--info-description-font-size);
       text-transform: capitalize;
       color: var(--text-secondary-color);
     }
@@ -48,7 +67,7 @@ const TypingModeSelection = (props: TypingModeSelectionProps) => {
 
     .modes {
       display: flex;
-      gap: 1rem;
+      gap: var(--label-gap);
       flex-direction: row;
       align-items: flex-end;
       justify-content: center;
@@ -58,9 +77,9 @@ const TypingModeSelection = (props: TypingModeSelectionProps) => {
       position: relative;
       filter: grayscale(50%);
       display: block;
-      border-radius: 50%;
-      height: 54px;
-      width: 54px;
+      border-radius: 30%;
+      height: var(--label-size);
+      width: var(--label-size);
       cursor: pointer;
       background-color: var(--text-secondary-color);
       overflow: hidden;
@@ -69,10 +88,10 @@ const TypingModeSelection = (props: TypingModeSelectionProps) => {
 
     label .icon {
       position: absolute;
-      left: -4px;
-      top: 6px;
-      width: 62px;
-      height: 62px;
+      left: var(--label-icon-left);
+      top: var(--label-icon-top);
+      height: var(--label-icon-size);
+      width: var(--label-icon-size);
       transition: all 100ms linear;
     }
 
@@ -84,15 +103,15 @@ const TypingModeSelection = (props: TypingModeSelectionProps) => {
       input + label:hover {
         filter: none;
         background-color: var(--color-primary-100);
-        transform: scale(1.3);
+        transform: scale(var(--label-scale-hover));
         overflow: visible;
       }
 
       label:hover .icon {
-        transform: translateY(-6px);
-        left: -5px;
-        height: 64px;
-        width: 64px;
+        transform: translateY(var(--label-icon-transform-hover));
+        left: var(--label-icon-left-hover);
+        height: var(--label-icon-size-hover);
+        width: var(--label-icon-size-hover);
       }
     }
     .radio {
@@ -100,12 +119,59 @@ const TypingModeSelection = (props: TypingModeSelectionProps) => {
     .select {
       display: none;
     }
-    @media screen and (max-width: 860px) {
+
+    @media screen and (max-width: 1280px) {
       .mode-selection {
-        align-items: flex-start;
+        --info-margin-left: 2.2rem;
+      }
+    }
+
+    @media screen and (max-width: 1210px) {
+      .mode-selection {
+        --label-size: 54px;
+        --label-scale-hover: 1.3;
+        --label-icon-size: 62px;
+        --label-icon-size-hover: 64px;
+        --label-icon-top: 6px;
+        --label-icon-left: -4px;
+        --label-icon-transform-hover: -6px;
+        --label-icon-left-hover: -5px;
+        --label-gap: 1rem;
+        --info-padding-top: 18px;
+        --info-title-font-size: 1.2rem;
+        --info-description-font-size: 0.8rem;
+      }
+    }
+
+    @media screen and (max-width: 990px) {
+      .mode-selection {
+        justify-content: flex-end;
       }
       .info {
         display: none;
+      }
+    }
+
+    @media screen and (max-width: 860px) {
+      .mode-selection {
+        align-items: flex-start;
+        --label-size: 48px;
+        --label-icon-size: 48px;
+        --label-icon-top: 8px;
+        --label-icon-left: 0px;
+        --label-gap: 0.9rem;
+      }
+      .info {
+        display: none;
+      }
+    }
+
+    @media screen and (max-width: 860px) and (max-height: 680px) {
+      .mode-selection {
+        --label-size: 42px;
+        --label-icon-size: 42px;
+        --label-icon-top: 6px;
+        --label-icon-left: 0px;
       }
     }
   `;

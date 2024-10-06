@@ -92,7 +92,6 @@
   --key-focus-color-alt: #a4e6fa;
 }
 html[data-theme="dark"] {
-
   --logo-color: rgb(246, 245, 250, 0.9);
   --color-primary-100: #e7af5c;
   --color-primary-200: #ebb86e;
@@ -210,7 +209,9 @@ button.reset {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
-a, label, button {
+a,
+label,
+button {
   -webkit-tap-highlight-color: transparent;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
@@ -280,12 +281,13 @@ button.secondary:hover {
   opacity: 1;
 }
 
-  @media screen and (max-width: 600px) {
-  a.primary, button.primary, button.secondary {
+@media screen and (max-width: 600px) {
+  a.primary,
+  button.primary,
+  button.secondary {
     height: 36px;
     padding: 0 24px;
   }
-
 }
 
 input {
@@ -344,6 +346,10 @@ a,
 p,
 span {
   color: var(--text-color);
+}
+
+.index-wrapper {
+  height: 100%;
 }
 
 #app {
