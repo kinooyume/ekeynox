@@ -1,6 +1,6 @@
 
 import { TypingOptions } from "~/typingOptions/typingOptions";
-import { TypingGameOptions } from "~/typingOptions/typingGameOptions";
+import { TypingGameOptionsOptions } from "~/typingOptions/typingTypingOptions";
 import { TypingStatistics, TypingStatisticsResult } from "./typingStatistics";
 
 /* *** */
@@ -14,12 +14,12 @@ export enum PendingKind {
 
 export type PendingStatusNew = {
   kind: PendingKind.new;
-  mode: TypingGameOptions;
+  mode: TypingGameOptionsOptions;
 };
 
 export type PendingStatusRedo = {
   kind: PendingKind.redo;
-  mode: TypingGameOptions;
+  mode: TypingGameOptionsOptions;
   prev: TypingStatisticsResult;
 };
 
@@ -44,7 +44,7 @@ export type PendingState = {
 export type ResumeState = {
   kind: AppStateKind.resume;
   statistics: TypingStatistics;
-  content: TypingGameOptions;
+  content: TypingGameOptionsOptions;
 };
 
 export type AppState =

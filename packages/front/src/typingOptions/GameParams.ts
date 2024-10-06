@@ -6,6 +6,6 @@ import type { TypingOptions } from "~/typingOptions/typingOptions";
 // Props
 export type GameParams = {
   typingOptions: TypingOptions;
-  setGameOptions: SetStoreFunction<TypingOptions>;
+  setTypingOptions: SetStoreFunction<TypingOptions>;
   children: JSXElement;
 };

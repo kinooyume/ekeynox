@@ -68,7 +68,7 @@ import TypingModeTimer from "./TypingModeTimer";
 
 type TypingGameManagerProps = {
   status: PendingStatus;
-  gameOptions: TypingOptions;
+  typingOptions: TypingOptions;
   start: (options: TypingOptions) => void;
   kbLayout: HigherKeyboard;
   showKb: boolean;
@@ -80,8 +80,8 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
   const t = useI18n();
 
   // NOTE: keep the signal as it can cause error if we give it to the next state
-  const [gameOptions, setGameOptions] = createSignal<TypingOptions>(props.gameOptions);
-  // setGameOptions(props.gameOptions);
+  const [typingOptions, setTypingOptions] = createSignal<TypingOptions>(props.typingOptions);
+  setTypingOptions(props.typingOptions);
 
   const [contentHandler, setContentHandler] = createSignal<ContentHandler>(
     props.status.mode.getContent(),
@@ -272,7 +272,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
       {
         paragraphs: cleanParagraphs(paraStore, position),
         wordsCount: wordsCount(),
-        typingOptions: gameOptions(),
+        typingOptions: typingOptions(),
         typing: typingMetrics(),
         characters: keyMetrics(),
       },
@@ -480,7 +480,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
       <Portal mount={document.getElementById("header-nav-actions-portal")!}>
         <TypingHeaderNav
           start={props.start}
-          gameOptions={props.gameOptions}
+          typingOptions={props.typingOptions}
           setLeavingAnimate={(an) => (headerLeavingAnimate = an)}
         >
           <TypingHeaderActions

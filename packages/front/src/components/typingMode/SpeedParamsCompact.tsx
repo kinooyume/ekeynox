@@ -66,9 +66,9 @@ const SpeedParamsCompact = (props: GameParams) => {
         }}
         setChecked={(value) => {
           if (value.kind === CategoryKind.generation) {
-            props.setGameOptions("generation", "category", value.category);
+            props.setTypingOptions("generation", "category", value.category);
           }
-          props.setGameOptions("categorySelected", value);
+          props.setTypingOptions("categorySelected", value);
         }}
       />
       <Show
@@ -81,7 +81,7 @@ const SpeedParamsCompact = (props: GameParams) => {
             { label: t("fr"), value: "fr" as Languages },
           ]}
           compare={(v) => v === props.typingOptions.generation.language}
-          setChecked={(l) => props.setGameOptions("generation", "language", l)}
+          setChecked={(l) => props.setTypingOptions("generation", "language", l)}
         >
           <Lang />
         </RadioGroup>
@@ -109,7 +109,7 @@ const SpeedParamsCompact = (props: GameParams) => {
               { label: "100", value: 100 },
             ]}
             compare={(v) => v === props.typingOptions.random}
-            setChecked={(v) => props.setGameOptions("random", v)}
+            setChecked={(v) => props.setTypingOptions("random", v)}
           >
             <Word />
           </RadioGroup>

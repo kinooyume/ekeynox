@@ -4,12 +4,12 @@ import { css } from "solid-styled";
 import { useI18n } from "~/contexts/i18nProvider";
 import { TypingOptions } from "~/typingOptions/typingOptions";
 
-import GameOptionsRecap from "../typingMode/TypingOptionsRecap";
+import TypingOptionsRecap from "../typingMode/TypingOptionsRecap";
 import TypingModeDropdown from "../typingMode/TypingModeDropdown";
 
 type HeaderNavLeftProps = {
   start: (opts: TypingOptions) => void;
-  gameOptions: TypingOptions;
+  typingOptions: TypingOptions;
 };
 
 const HeaderNavLeft = (props: HeaderNavLeftProps) => {
@@ -121,7 +121,7 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
             aria-haspopup="dialog"
             class="reset menu-title"
             classList={{ open: isOpen(), hover: hover() }}
-            data-passive={`${t("typingMode")[props.gameOptions.modeSelected].subtitle}`}
+            data-passive={`${t("typingMode")[props.typingOptions.modeSelected].subtitle}`}
             data-active={`${t("newGame.one")} ${t("newGame.two")}`}
           >
             <Show when={!isOpen()}>
@@ -131,7 +131,7 @@ const HeaderNavLeft = (props: HeaderNavLeftProps) => {
         )}
       </TypingModeDropdown>
       <div class="options-recap">
-        <GameOptionsRecap typingOptions={props.gameOptions} />
+        <TypingOptionsRecap typingOptions={props.typingOptions} />
       </div>
     </div>
   );

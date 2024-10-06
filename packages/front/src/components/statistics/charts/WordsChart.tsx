@@ -14,8 +14,8 @@ import {
 import { DefaultChart } from "solid-chartjs";
 import { css } from "solid-styled";
 
-import type { WordSpeed } from "../../metrics/Metrics";
 import { onMount } from "solid-js";
+import { WordSpeed } from "~/typingStatistics/averageWordWpm";
 
 type WordTypingStatisticsResultProps = {
   words: WordSpeed[];

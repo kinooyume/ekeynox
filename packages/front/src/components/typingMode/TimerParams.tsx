@@ -94,9 +94,9 @@ const TimerParams = (props: GameParams) => {
           }}
           setChecked={(value) => {
             if (value.kind === CategoryKind.generation) {
-              props.setGameOptions("generation", "category", value.category);
+              props.setTypingOptions("generation", "category", value.category);
             }
-            props.setGameOptions("categorySelected", value);
+            props.setTypingOptions("categorySelected", value);
           }}
         />
       </div>
@@ -113,7 +113,7 @@ const TimerParams = (props: GameParams) => {
             ]}
             compare={(v) => v === props.typingOptions.generation.language}
             setChecked={(l) =>
-              props.setGameOptions("generation", "language", l)
+              props.setTypingOptions("generation", "language", l)
             }
           >
             <Lang />
@@ -138,7 +138,7 @@ const TimerParams = (props: GameParams) => {
             { label: "2m", value: 120 },
           ]}
           compare={(v) => v === props.typingOptions.timer}
-          setChecked={(time) => props.setGameOptions("timer", time)}
+          setChecked={(time) => props.setTypingOptions("timer", time)}
         >
           <Stopwatch />
         </RadioGroup>
