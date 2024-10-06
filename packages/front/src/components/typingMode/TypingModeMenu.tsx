@@ -255,6 +255,21 @@ const TypingModeKindMenu = (props: TypingModeKindMenuProps) => {
       display: flex;
       margin-top: auto;
     }
+    /*
+* Some experiment to center the menu
+    @media screen and (min-width: 900px) {
+      .menu {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: calc(100% - 72px);
+      }
+    }
+    @media screen and (max-width: 1400px) and (min-width: 900px) {
+      .main-view {
+      }
+    }
+*/
     @media screen and (max-width: 1400px) {
       .illustration-container {
         height: 280px;
@@ -403,11 +418,6 @@ const TypingModeKindMenu = (props: TypingModeKindMenuProps) => {
       }
       .cliped {
         overflow: scroll;
-      }
-    }
-    @media screen and (max-width: 370px) {
-      .title h1 {
-        font-size: 1.4rem;
       }
     }
   `;
