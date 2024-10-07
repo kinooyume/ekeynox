@@ -540,6 +540,7 @@ const TypingModeKindMenu = (props: TypingModeKindMenuProps) => {
                 class="primary"
                 type="submit"
                 classList={{ locked: !isReady() }}
+                disabled={!isReady()}
                 onClick={(e) => {
                   e.preventDefault();
                   start();
