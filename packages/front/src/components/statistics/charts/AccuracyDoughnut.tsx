@@ -26,22 +26,26 @@ const AccuracyDoughnut = (props: MyChartProps) => {
   const correct = props.stats.accuracies[1];
   const corrected = props.stats.accuracies[0] - props.stats.accuracies[1];
   const incorrect = 100 - props.stats.accuracies[0];
+
+  const seriesData = [
+    Math.round(correct * 100) / 100,
+    Math.round(corrected * 100) / 100,
+    Math.round(incorrect * 100) / 100,
+  ];
+  const total = seriesData.reduce((a, v) => a + v);
+  const inPercent = seriesData.map((v) =>
+    v ? Math.max((v / total) * 100, 2) : v,
+  );
+
   const data = {
     datasets: [
       {
-        data: [correct, corrected, incorrect],
+        data: inPercent,
         backgroundColor: ["#107b65", "#b16f4c", "#a83f3f"],
       },
     ],
+    labels: ["Correct", "Corrected", "Incorrect"],
   } as ChartData;
-
-  type OverlapSegment = {
-    radius: number;
-    color: string;
-    coordinates: { x: number; y: number }[];
-  };
-
-  // https://stackoverflow.com/questions/54670302/small-value-in-doughnut-chart-is-not-visible-chartjs/54692344#54692344
 
   const options = {
     responsive: true,
@@ -50,16 +54,29 @@ const AccuracyDoughnut = (props: MyChartProps) => {
     rotation: -95,
     circumference: 190,
     plugins: {
-      tooltip: {
+      legend: {
+        position: "bottom",
+        title: {
+          display: true,
+          padding: 1,
         },
+      },
+      tooltip: {
+        callbacks: {
+          label: (tooltipItem) => {
+            var value = seriesData[tooltipItem.dataIndex];
+            return `${value}`;
+          },
+        },
+      },
     },
   } as ChartOptions;
 
   css`
     .chart {
       position: relative;
-      width: 280px;
-      height: 160px;
+      width: 380px;
+      height: 200px;
     }
     .center {
       position: absolute;
