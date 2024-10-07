@@ -45,14 +45,22 @@ function RadioGroup<Value>(props: RadioGroupProps<Value>) {
       border: 1px solid var(--background-color);
       transition: all 100ms linear;
     }
-    .radio-group:hover {
-    }
 
     .radio-group input:not(:checked) + label:hover {
       color: var(--color-primary-100);
-      fill: var(--color-primary-100);
     }
 
+    .radio-group input:not(:checked) + label:hover {
+      background-color: var(--color-primary-600);
+      fill: var(--text-color-black);
+    }
+    .radio-group input:not(:checked) + label:hover span {
+      color: var(--text-color-black);
+}
+
+    .input + .input {
+      margin-left: 6px;
+    }
     .radio-group input {
       display: none;
     }
@@ -79,8 +87,8 @@ function RadioGroup<Value>(props: RadioGroupProps<Value>) {
 
     .radio-group input:checked + label {
       background-color: var(--color-primary-400);
-      color: black;
-      fill: black;
+      color: var(--text-color-black);
+      fill: var(--text-color-black);
       animation: rubberBand 0.6s both;
     }
 
@@ -147,7 +155,10 @@ function RadioGroup<Value>(props: RadioGroupProps<Value>) {
               value={value.value as string}
               checked={props.compare(value.value)}
             />
-            <label for={value.label} onClick={(_) => props.setChecked(value.value)}>
+            <label
+              for={value.label}
+              onClick={(_) => props.setChecked(value.value)}
+            >
               <Show when={value.icon}>{value.icon}</Show>
               <span class="label-text">{value.label}</span>
             </label>
