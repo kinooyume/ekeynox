@@ -3,6 +3,7 @@
 }
 :root {
   --text-color-black: rgb(0, 31, 63);
+  --text-color-reverse: #f6f5f7;
   font-family: Larsseit, system-ui, sans-serif;
   --logo-color: #343450;
   --background-color: #e0e0e0;
@@ -137,6 +138,7 @@ html[data-theme="dark"] {
   --background-color: #1f2233;
   --text-secondary-color: #f8dbb6;
   --text-color: #f6f5f7;
+  --text-color-reverse: rgb(0, 31, 63);
 
   --ui-primary-color: #f8dbb6;
   --ui-secondary-color: grey;

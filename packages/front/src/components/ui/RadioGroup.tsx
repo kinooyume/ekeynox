@@ -56,7 +56,7 @@ function RadioGroup<Value>(props: RadioGroupProps<Value>) {
     }
     .radio-group input:not(:checked) + label:hover span {
       color: var(--text-color-black);
-}
+    }
 
     .input + .input {
       margin-left: 6px;
