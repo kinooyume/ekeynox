@@ -75,19 +75,30 @@ const TypingModeSelection = (props: TypingModeSelectionProps) => {
 
     label {
       position: relative;
-      filter: grayscale(50%);
       display: block;
       border-radius: 30%;
       height: var(--label-size);
       width: var(--label-size);
       cursor: pointer;
-      background-color: var(--text-secondary-color);
+      background-color: var(--background-radiogroup);
+      border: 1px solid var(--background-color);
       overflow: hidden;
       transition: all 100ms linear;
     }
 
+    label .overlay {
+      display: none;
+      position: absolute;
+      background-color: var(--background-radiogroup);
+      opacity: 0.2;
+      height: var(--label-size);
+      width: var(--label-size);
+    }
     label .icon {
       position: absolute;
+      filter: sepia(100%) hue-rotate(4deg) saturate(157.7%) contrast(75.2%);
+      filter: sepia(100%) hue-rotate(30deg) saturate(76%) brightness(62%);
+      filter: sepia(100%) grayscale(20%);
       left: var(--label-icon-left);
       top: var(--label-icon-top);
       height: var(--label-icon-size);
@@ -97,17 +108,20 @@ const TypingModeSelection = (props: TypingModeSelectionProps) => {
 
     input:checked + label {
       background-color: var(--color-primary-400);
+    }
+    input:checked + label .icon {
       filter: none;
     }
+
     @media screen and (min-width: 860px) {
       input + label:hover {
-        filter: none;
-        background-color: var(--color-primary-100);
+        background-color: var(--color-primary-600) !important;
         transform: scale(var(--label-scale-hover));
         overflow: visible;
       }
 
       label:hover .icon {
+        filter: none;
         transform: translateY(var(--label-icon-transform-hover));
         left: var(--label-icon-left-hover);
         height: var(--label-icon-size-hover);
@@ -241,6 +255,7 @@ const TypingModeSelection = (props: TypingModeSelectionProps) => {
                 for={modeKind}
               >
                 <div class="icon"> {mode.head()}</div>
+                <div class="overlay"></div>
               </label>
             </div>
           )}
