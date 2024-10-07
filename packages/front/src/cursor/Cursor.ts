@@ -34,23 +34,31 @@ export type Cursor = {
   focus: () => void;
   // NOTE: Signal or store
   get: {
-    paragraph: () => Paragraph; // MetaWord[], [Ref]
-    nbrParagraphs: () => number; // paragraphs.length
-
-    word: () => MetaWord; // current word  [Ref]
-    typingWord: () => TypingWord | null; // TypingWord | null
-    nbrWords: () => number; // words.length
-    wordValid: () => boolean; // MetaWord - wasCorrect  *
-    isSeparator: () => boolean; // MetaWord *
-    wordIsValid: () => boolean; // valid keys === word valid #fn#
+    paragraph: () => Paragraph;
+    nbrParagraphs: () => number;
+    word: () => MetaWord;
+    typingWord: () => TypingWord | null;
+    nbrWords: () => number;
+    isSeparator: () => boolean;
+    // TODO: just make an undefined
+    hasWpm: () => boolean;
+    wordIsCorrect: () => boolean;
+    wordIsValid: () => boolean;
+    wordLastEnterTimestamp: () => number;
+    wordSpentTime: () => number;
 
     character: () => MetaCharacter;
-    nbrKeys: () => number; // keys length
+    nbrKeys: () => number;
   };
   set: {
     /* Word */
     wordStatus: (status: WordStatus, focus: boolean) => void;
-    wordValid: (valid: boolean) => void;
+
+    wordIsCorrect: (correct: boolean) => void;
+    wordLastEnterTimestamp: (timestamp: number) => void;
+    wordLastLeaveTimestamp: (timestamp: number) => void;
+    wordSpentTime: (time: number) => void;
+    wordWpm: (wpm: number) => void;
 
     /* Key */
     keyStatus: (status: CharacterStatus) => void;
@@ -119,13 +127,15 @@ const makeCursor = (props: CursorProps) => {
       nbrParagraphs: () => props.paragraphs.length - 1,
       nbrWords: () => props.paragraphs[positions.paragraph()].length - 1,
       typingWord: () => {
-        if (!cursor.get.wordValid() && cursor.get.wordIsValid()) {
-          cursor.set.wordValid(true);
+        // NOTE: vraiment pas sur de ça 
+        if (cursor.get.wordIsValid()) {
+          cursor.set.wordIsCorrect(true);
           return {
             kind: TypingWordKind.correct,
             length: cursor.get.word().characters.length,
           };
         } else {
+          cursor.set.wordIsCorrect(false);
           return null;
         }
       },
@@ -136,8 +146,19 @@ const makeCursor = (props: CursorProps) => {
           (key) => key.status === CharacterStatus.match,
         );
       },
-      wordValid: () =>
-        props.paragraphs[positions.paragraph()][positions.word()].wasCorrect,
+      wordIsCorrect: () => {
+        return props.paragraphs[positions.paragraph()][positions.word()]
+          .isCorrect;
+      },
+      hasWpm: () => !cursor.get.isSeparator() && cursor.get.nbrKeys() > 3,
+      wordLastEnterTimestamp: () => {
+        return props.paragraphs[positions.paragraph()][positions.word()]
+          .lastEnterTimestamp;
+      },
+      wordSpentTime: () => {
+        return props.paragraphs[positions.paragraph()][positions.word()]
+          .spentTime;
+      },
       nbrKeys: () =>
         props.paragraphs[positions.paragraph()][positions.word()].characters
           .length - 1,
@@ -208,12 +229,44 @@ const makeCursor = (props: CursorProps) => {
           focus,
         );
       },
-      wordValid: (valid: boolean) => {
+      wordIsCorrect: (correct: boolean) => {
         props.setParagraphs(
           positions.paragraph(),
           positions.word(),
-          "wasCorrect",
-          valid,
+          "isCorrect",
+          correct,
+        );
+      },
+      wordLastEnterTimestamp: (timestamp: number) => {
+        props.setParagraphs(
+          positions.paragraph(),
+          positions.word(),
+          "lastEnterTimestamp",
+          timestamp,
+        );
+      },
+      wordLastLeaveTimestamp: (timestamp: number) => {
+        props.setParagraphs(
+          positions.paragraph(),
+          positions.word(),
+          "lastLeaveTimestamp",
+          timestamp,
+        );
+      },
+      wordSpentTime: (time: number) => {
+        props.setParagraphs(
+          positions.paragraph(),
+          positions.word(),
+          "spentTime",
+          time,
+        );
+      },
+      wordWpm: (wpm: number) => {
+        props.setParagraphs(
+          positions.paragraph(),
+          positions.word(),
+          "wpm",
+          wpm,
         );
       },
     },

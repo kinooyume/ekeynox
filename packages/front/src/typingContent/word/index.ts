@@ -10,7 +10,9 @@ const createWordFromKeys = (
   isSeparator,
   status: WordStatus.unstart,
   focus: false,
-  wasCorrect: false,
+  isCorrect: false,
+  lastEnterTimestamp: 0,
+  lastLeaveTimestamp: 0,
   spentTime: 0,
   wpm: 0,
 });

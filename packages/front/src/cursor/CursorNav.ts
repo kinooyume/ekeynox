@@ -30,7 +30,7 @@ let makeCursorNav = ({
 }: CursorNavProps): CursorNavType => {
   const nextWord = () => {
     let typingWord = null;
-    if (!cursor.get.wordValid() && cursor.get.wordIsValid()) {
+    if (!cursor.get.wordIsCorrect() && cursor.get.wordIsValid()) {
       typingWord = cursor.get.typingWord();
     }
     hooks.word.next.leave(cursor);
@@ -75,9 +75,9 @@ let makeCursorNav = ({
     next: (nextWordHook) => {
       let typingWord = null;
       if (cursor.positions.character() < cursor.get.nbrKeys()) {
-        hooks.key.next.leave(cursor);
+        hooks.character.next.leave(cursor);
         cursor.positions.set.character(cursor.positions.character() + 1);
-        hooks.key.next.enter(cursor);
+        hooks.character.next.enter(cursor);
       } else if (cursor.positions.word() < cursor.get.nbrWords()) {
         typingWord = nextWord();
       } else if (cursor.positions.paragraph() < cursor.get.nbrParagraphs()) {
@@ -90,9 +90,9 @@ let makeCursorNav = ({
 
     prev: (prevWordHook): boolean => {
       if (cursor.positions.character() > 0) {
-        hooks.key.prev.leave(cursor);
+        hooks.character.prev.leave(cursor);
         cursor.positions.set.character(cursor.positions.character() - 1);
-        hooks.key.prev.enter(cursor);
+        hooks.character.prev.enter(cursor);
       } else if (cursor.positions.word() > 0) {
         prevWord();
       } else if (cursor.positions.paragraph() > 0) {

@@ -18,9 +18,13 @@ export type MetaWord = {
   /* --- */
   status: WordStatus;
   focus: boolean;
-  wasCorrect: boolean;
+  /* Wpm */
+  isCorrect: boolean;
+  lastEnterTimestamp: number;
+  lastLeaveTimestamp: number;
   spentTime: number;
   wpm: number;
+  /* --- */
 };
 
 

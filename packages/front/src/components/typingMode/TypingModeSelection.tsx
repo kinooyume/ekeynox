@@ -24,13 +24,13 @@ const TypingModeSelection = (props: TypingModeSelectionProps) => {
       height: 100%;
       width: 100%;
       --label-size: 74px;
-      --label-scale-hover: 1.2;
+      --label-scale-hover: 1.1;
       --label-icon-size: 62px;
-      --label-icon-size-hover: 90px;
+      --label-icon-size-hover: 74px;
       --label-icon-top: 14px;
       --label-icon-left: 6px;
-      --label-icon-transform-hover: -24px;
-      --label-icon-left-hover: -9px;
+      --label-icon-transform-hover: -8px;
+      --label-icon-left-hover: 0px;
       --label-gap: 1.4rem;
 
       --info-padding-top: 18px;

@@ -36,7 +36,7 @@ const create: CreateNewTimer<TimerKeypressProps<TimedKey>> =
       const nodeTimeout = () => {
         lastPress = performance.now();
         pauseProps.timeout = setTimeout(() => {
-          if (!props.sequence[index]) return;
+          if (props.sequence[index] === undefined) return;
           apply(props.sequence[index]);
           index++;
           if (index < props.sequence.length) nodeTimeout();

@@ -1,7 +1,8 @@
-const random = (length: number) =>
-  Math.floor(
+const random = (length: number) => {
+  return Math.floor(
     (crypto.getRandomValues(new Uint32Array(1))[0] / 4294967296) * length,
   );
+};
 
 const randomQuote = (data: Array<string>) => data[random(data.length)];
 
@@ -15,4 +16,4 @@ const randomWords =
     return words;
   };
 
-export { randomWords, randomQuote }
+export { randomWords, randomQuote };
