@@ -49,6 +49,7 @@ const prompt = (props: Props) => {
     @media screen and (max-width: 860px) {
       .prompt {
         --height: 160px;
+        height: var(--height);
       }
       .prompt.fixedHeight {
         margin: 0 16px auto 16px;
