@@ -117,14 +117,16 @@ const HeaderSettingsContent: Component<SettingsUI> = (props) => {
       margin-top: 18px;
     }
     h3 {
-      font-size: 24px;
+      font-size: 20px;
       margin: 0;
+      margin-top: 2px;
       color: var(--text-secondary-color);
-      font-weight: 300;
+      font-weight: 400;
       text-transform: capitalize;
     }
     .title {
-      margin: 24px 0;
+      margin-top: 12px;
+      margin-bottom: 24px;
       display: flex;
       justify-content: space-between;
     }
@@ -166,7 +168,7 @@ const HeaderSettingsMobile: Component<SettingsUI> = (props) => {
     setFocus(FocusType.View);
   });
 
-  // TODO: focus first input 
+  // TODO: focus first input
   return (
     <Drawer
       side="right"
