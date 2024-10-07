@@ -98,7 +98,7 @@ const TypingModeSelection = (props: TypingModeSelectionProps) => {
       position: absolute;
       filter: sepia(100%) hue-rotate(4deg) saturate(157.7%) contrast(75.2%);
       filter: sepia(100%) hue-rotate(30deg) saturate(76%) brightness(62%);
-      filter: sepia(100%) grayscale(20%);
+      filter: var(--icon-filter);
       left: var(--label-icon-left);
       top: var(--label-icon-top);
       height: var(--label-icon-size);
