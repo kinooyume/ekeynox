@@ -359,11 +359,12 @@ span {
   background-color: var(--color-surface-100);
 }
 
-/* @media screen and (max-width: 860px) { */
-/* #app { */
-/*     min-height: unset; */
-/*   } */
-/* } */
+@media screen and (max-width: 860px) {
+#app {
+    min-height: unset;
+    height: 100%;
+  }
+}
 
 @keyframes stretch-animate {
   0% {
