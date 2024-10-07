@@ -12,8 +12,8 @@ import {
 
 import { DefaultChart } from "solid-chartjs";
 import { css } from "solid-styled";
-import type { ChartMetrics } from "../../metrics/Metrics";
 import { onMount } from "solid-js";
+import { ChartMetrics } from "~/typingStatistics/charts";
 
 type MyChartProps = {
   metrics: ChartMetrics;

@@ -37,7 +37,6 @@ type TypingMetricsProps = {
 
 const TypingStatisticsResult = (props: TypingMetricsProps) => {
   const t = useI18n();
-  console.log(props.metrics)
   const keysSet = new Set(Object.keys(props.metrics.characters));
   const [kbLayout, setKbLayout] = createSignal(props.kbLayout(keysSet));
 
@@ -186,7 +185,7 @@ const TypingStatisticsResult = (props: TypingMetricsProps) => {
     }
 
     .stat-card p.main-data {
-      font-size: 3em;
+      font-size: 2em;
       margin: 0;
     }
     .stat-card p.main-data-tiny {
@@ -209,6 +208,9 @@ const TypingStatisticsResult = (props: TypingMetricsProps) => {
       justify-content: center;
     }
 
+    .report .raw-data {
+      margin: 0;
+    }
     .report .raw-data span {
       margin-left: 4px;
     }
@@ -455,7 +457,9 @@ const TypingStatisticsResult = (props: TypingMetricsProps) => {
                   <h3>{t("statistics.wordsSpeedTitle")}</h3>
                   <span>{t("statistics.wordsSpeedSubtitle")}</span>
                 </div>
-                <WordTypingStatisticsResult words={typingStatisticsResult.words} />
+                <WordTypingStatisticsResult
+                  words={typingStatisticsResult.words}
+                />
               </div>
             </Show>
           </div>

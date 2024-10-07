@@ -17,5 +17,5 @@ export type NavHooks = {
 export type CursorNavHooks = {
   paragraph: NavHooks;
   word: NavHooks;
-  key: NavHooks;
+  character: NavHooks;
 };

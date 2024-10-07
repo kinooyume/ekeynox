@@ -12,7 +12,7 @@ const blankCharacters = [" ", "Enter"];
 export default (words: Array<MetaWord>): Array<WordSpeed> => {
   let result: WordSpeed[] = [];
   words.forEach((word) => {
-    if (word.wpm === 0 || blankCharacters.includes(word.characters[0].char))
+    if (!word.isCorrect || word.wpm === 0 || blankCharacters.includes(word.characters[0].char))
       return;
     const keys = word.characters.map((k) => k.char).join("");
     if (keys.length < 5) return;

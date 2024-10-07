@@ -14,8 +14,8 @@ import {
 
 import { DefaultChart } from "solid-chartjs";
 import { css } from "solid-styled";
-import type { StatProjection } from "../../metrics/KeypressMetrics";
 import { onMount, type JSXElement } from "solid-js";
+import { StatProjection } from "~/typingStatistics/KeypressMetrics";
 
 type MyChartProps = {
   stats: StatProjection;
@@ -41,69 +41,32 @@ const AccuracyDoughnut = (props: MyChartProps) => {
     coordinates: { x: number; y: number }[];
   };
 
-  const makeOverlapSegment = (value: any, color: string): OverlapSegment => {
-    const { innerRadius, outerRadius, endAngle } = value;
-    const radius = (outerRadius - innerRadius) / 2;
-    const coordinates = [];
-
-    for (let i = -0.01; i < 0.01; i += 0.01) {
-      const xCoor = (innerRadius + radius) * Math.cos(endAngle + Math.PI + i);
-      const yCoor = (innerRadius + radius) * Math.sin(endAngle + i);
-      coordinates.push({ x: xCoor, y: yCoor });
-    }
-    return { radius, color, coordinates };
-  };
-
-  const overlappingSegments = {
-    id: "overlappingSegments",
-    afterDatasetsDraw(chart: Chart) {
-      const { ctx } = chart;
-      const x = chart.getDatasetMeta(0).data[0].x;
-      const y = chart.getDatasetMeta(0).data[0].y;
-      const angle = Math.PI / 180;
-
-      const overlaps = chart
-        .getDatasetMeta(0)
-        .data.filter((_, index) => chart.getDataVisibility(index))
-        .map((value, index) => {
-          return makeOverlapSegment(
-            value,
-            data!.datasets[0]!.backgroundColor![index]!,
-          );
-        });
-      overlaps.reverse().forEach(({ radius, color, coordinates }) => {
-        ctx.save();
-        ctx.translate(x, y);
-        ctx.fillStyle = color;
-        ctx.beginPath();
-        coordinates.forEach(({ x, y }) => {
-          ctx.arc(-x, y, radius - 1, 0, angle * 360, false);
-        });
-        ctx.fill();
-
-        ctx.restore();
-      });
-    },
-  };
+  // https://stackoverflow.com/questions/54670302/small-value-in-doughnut-chart-is-not-visible-chartjs/54692344#54692344
 
   const options = {
     responsive: true,
     maintainAspectRatio: false,
     cutout: "80%",
-    // plugins: [overlappingSegments],
+    rotation: -95,
+    circumference: 190,
+    plugins: {
+      tooltip: {
+        },
+    },
   } as ChartOptions;
 
   css`
     .chart {
       position: relative;
-      width: 260px;
-      height: 260px;
+      width: 280px;
+      height: 160px;
     }
     .center {
       position: absolute;
       top: 0;
       left: 0;
-      height: 100%;
+      height: 60px;
+      margin-top: 70px;
       width: 100%;
       display: flex;
       flex-direction: column;
@@ -127,6 +90,7 @@ const AccuracyDoughnut = (props: MyChartProps) => {
   });
   return (
     <div class="chart">
+      <div class="center">{props.children}</div>
       <DefaultChart
         type="doughnut"
         data={data}
@@ -143,7 +107,6 @@ const AccuracyDoughnut = (props: MyChartProps) => {
         ]}
         options={options}
       />
-      <div class="center">{props.children}</div>
     </div>
   );
 };

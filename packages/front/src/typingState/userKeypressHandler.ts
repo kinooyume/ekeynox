@@ -37,6 +37,7 @@ const makeKeypressHandler = (
       if (isFirefox) {
       }
     }
+    // NOTE: est-ce qu'on ne veut pas quand meme reset le timer pour le word du coup ?
     if (!cursorNav.prev()) return;
     const deletedKeyMetrics = makeDeletedKeyMetrics({
       expected: cursor.get.character().char,
@@ -63,9 +64,17 @@ const makeKeypressHandler = (
       typed,
       expected: cursor.get.character().char,
     });
+
     if (keyMetrics[1].kind === CharacterEventKind.ignore) {
       return;
     } else {
+      const status = cursor.get.word().status
+
+
+      if (status === WordStatus.pause || status === WordStatus.unstart) {
+        // NOTE: word Wpm performancenow ici
+          cursor.set.wordLastEnterTimestamp(performance.now());
+      }
       if (cursor.get.word().status !== WordStatus.pending) {
         cursor.set.wordStatus(WordStatus.pending, true);
       }
@@ -73,7 +82,9 @@ const makeKeypressHandler = (
         cursor.set.keyStatus(keyMetrics[1].status.kind);
       }
 
+      // NOTE: en fait, ici on bouge le curseur avant d'envoyer l'evenement
       /* Tout ca on sait pas trop, surement pas ici */
+      // NOTE: en fait, on veut chainer keypress->metrics->cursor.next
       let [hasNext, typingWord] = cursorNav.next();
 
       const event = {

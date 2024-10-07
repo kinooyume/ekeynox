@@ -38,7 +38,7 @@ const TimerNavHooks: CursorNavHooks = {
       },
     },
   },
-  key: {
+  character: {
     next: {
       enter: (cursor) => {
         cursor.set.ghostFocus(CharacterFocus.focus);

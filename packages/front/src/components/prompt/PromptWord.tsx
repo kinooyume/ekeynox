@@ -73,14 +73,12 @@ const Word = (props: WordProps) => {
   return (
     <div classList={{ animate: toAnimate() }} class="word" ref={createObserver}>
       <div class={`${props.status}  ${props.focus ? "focus" : ""} keys`}>
-        <For each={props.characters}>{(key) => <PromptCharacter {...key} showGhost={props.showGhost} />}</For>
+        <For each={props.characters}>
+          {(key) => <PromptCharacter {...key} showGhost={props.showGhost} />}
+        </For>
       </div>
       <Show
-        when={
-          props.wpm > 0 &&
-          props.characters.length > 4 &&
-          props.status === WordStatus.over
-        }
+        when={props.isCorrect && props.characters.length > 4 && props.wpm > 0 }
       >
         <span class="wpm">{Math.trunc(props.wpm)}</span>
       </Show>

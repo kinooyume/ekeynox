@@ -20,7 +20,6 @@ export type MetaCharacter = {
   wasInvalid: boolean;
   focus: CharacterFocus;
   ghostFocus: CharacterFocus;
-  // wasInvalid: boolean;
   char: string;
 };
 

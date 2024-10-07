@@ -71,8 +71,13 @@ const sortKeys = (keys: CharacterStats): CharacterStats => {
 };
 
 const sortKeysAlpha = (keys: CharacterStats): CharacterStats => {
-const sorted = Object.entries(keys).sort(([a], [b]) => a.localeCompare(b));
-return Object.fromEntries(sorted);
-}
+  const sorted = Object.entries(keys).sort(([a], [b]) => a.localeCompare(b));
+  return Object.fromEntries(sorted);
+};
 
-export { sortKeys, sortKeysAlpha, updateCharacterStats, createCharacterStatsResult };
+export {
+  sortKeys,
+  sortKeysAlpha,
+  updateCharacterStats,
+  createCharacterStatsResult,
+};

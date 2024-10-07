@@ -80,7 +80,9 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
   const t = useI18n();
 
   // NOTE: keep the signal as it can cause error if we give it to the next state
-  const [typingOptions, setTypingOptions] = createSignal<TypingOptions>(props.typingOptions);
+  const [typingOptions, setTypingOptions] = createSignal<TypingOptions>(
+    props.typingOptions,
+  );
   setTypingOptions(props.typingOptions);
 
   const [contentHandler, setContentHandler] = createSignal<ContentHandler>(
@@ -113,54 +115,21 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
     contentHandler().data.wordsCount,
   );
 
-  let setWpm = ({ wpm, duration }: { wpm: number; duration: number }) => {
-    const { paragraph, word, character: key } = cursor().positions.get();
-    setParaStore(paragraph, word, "wpm", wpm);
-    setParaStore(paragraph, word, "spentTime", duration);
-  };
-
-  // By Word WPM
-  let wordWpmTimer: undefined | WordStatusReactive = undefined;
-
-  const newWordWpmTimer = () => {
-    wordWpmTimer = createWordWpmCounterReactive({
-      word: cursor().get.word(),
-      setWpm,
-    })({
-      status: WordStatus.pending,
-    });
-  };
-
-  // NOTE: On peut surement faire mieux, réagir au mot actuel
+  // TODO: better handler isSeparator
   const nextWordHooks: ExtraWordHooks = {
-    enter: (word) => {
-      if (!wordWpmTimer) return;
-      wordWpmTimer = createWordWpmCounterReactive({ word, setWpm })({
-        status: WordStatus.pending,
-      });
-    },
+    enter: (word) => {},
     leave: (word) => {
       if (!word.isSeparator) setWordsCount(wordsCount() + 1);
-
-      if (!wordWpmTimer) return;
-      wordWpmTimer = wordWpmTimer({ status: WordStatus.over });
     },
   };
 
   const prevWordHooks: ExtraWordHooks = {
     enter: (word) => {
       if (!word.isSeparator) setWordsCount(wordsCount() - 1);
-
-      if (!wordWpmTimer) return;
-      wordWpmTimer = createWordWpmCounterReactive({ word, setWpm })({
-        status: WordStatus.pending,
-      });
     },
-    leave: () => {
-      if (!wordWpmTimer) return;
-      wordWpmTimer = wordWpmTimer({ status: WordStatus.over });
-    },
+    leave: () => {},
   };
+
   const [cursorNav, setCursorNav] = createSignal<CursorNavType>(
     CursorNav({
       cursor: cursor(),
@@ -172,6 +141,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
 
   // pour le counter, on veut just enter/leave
   // NOTE: Peut etre des soucis ici, avec le truc de backspace et tout ça
+  // TODO: ici, on a le liens userKeypress <-> cursor/nav
   const [keypressHandler, setKeypressHandler] = createSignal(
     makeKeypressHandler(cursor(), cursorNav()),
   );
@@ -221,6 +191,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
   };
 
   /* Keyboard Listener */
+  // NOTE: Set TypingState from userKeypress
 
   /* *** */
   const onKeyDown = (key: string) => {
@@ -243,9 +214,30 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
 
   /* Typing Event management */
 
+  // TODO: remoé, wordWPM
+  const setWordWpm = (cursor: Cursor) => {
+    if (cursor.get.hasWpm()) {
+      const timestamp = performance.now();
+      //cursor.set.wordLastLeaveTimestamp(timestamp);
+      const spentTime = timestamp - cursor.get.wordLastEnterTimestamp();
+      const totalSpentTime = cursor.get.wordSpentTime() + spentTime;
+      cursor.set.wordSpentTime(totalSpentTime);
+      if (cursor.get.wordIsValid()) {
+        const wpm = ((cursor.get.nbrKeys() / totalSpentTime) * 60000) / 5;
+        cursor.set.wordWpm(wpm);
+        cursor.set.wordIsCorrect(true);
+      } else {
+        cursor.set.wordIsCorrect(false);
+      }
+    }
+  };
+
   const pause = () => {
+    setWordWpm(cursor());
     cursor().set.wordStatus(WordStatus.pause, false);
-    if (wordWpmTimer) wordWpmTimer = wordWpmTimer({ status: WordStatus.pause });
+
+    // TODO: stop le counter
+    // if (wordWpmTimer) wordWpmTimer = wordWpmTimer({ status: WordStatus.pause });
     setTypingState({ kind: TypingStateKind.pause });
   };
 
@@ -264,7 +256,8 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
     // NOTE: peut etre le faire en mode "leave"
     //
     cursor().set.wordStatus(WordStatus.over, false);
-    if (wordWpmTimer) wordWpmTimer({ status: WordStatus.over });
+    // TODO: stop le counter/leave
+    // if (wordWpmTimer) wordWpmTimer({ status: WordStatus.over });
     cursor().set.keyFocus(CharacterFocus.unfocus);
     const position = cursor().positions.get();
 
@@ -281,6 +274,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
   };
 
   const typingOver = () => {
+    setWordWpm(cursor());
     const mode = props.status.mode;
     setTypingState({ kind: TypingStateKind.over });
     headerLeavingAnimate().finished.then(() => {
@@ -292,16 +286,16 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
     on(typingState, (event) => {
       switch (event.kind) {
         case TypingStateKind.unstart:
-          if (wordWpmTimer) wordWpmTimer({ status: WordStatus.unstart });
+          // if (wordWpmTimer) wordWpmTimer({ status: WordStatus.unstart });
           cursor().positions.reset();
           setPromptKey(cursor().get.character().char);
           break;
         case TypingStateKind.pending:
-          if (!wordWpmTimer) {
-            newWordWpmTimer();
-          } else {
-            wordWpmTimer = wordWpmTimer({ status: WordStatus.pending });
-          }
+          // if (!wordWpmTimer) {
+          //   newWordWpmTimer();
+          // } else {
+          //   wordWpmTimer = wordWpmTimer({ status: WordStatus.pending });
+          // }
           if (!event.next) {
             overMetrics();
             return typingOver();
@@ -316,13 +310,16 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
   /* Typing Actions (Header) */
 
   const reset = () => {
-    wordWpmTimer && wordWpmTimer({ status: WordStatus.over });
-    wordWpmTimer = undefined;
-
     setWordsCount(0);
     setParaStore(clearParagraphs(contentHandler().data.paragraphs));
     setTypingState({ kind: TypingStateKind.unstart });
   };
+
+  // TODO: On doit pouvoir lier metrics et cursor/nav
+  // Genre que les metrics appelles le cursor/nav
+  // Parce que la, cursor/nav s'occupe des statistiques du mots
+  // Et récupère un timestamp, qui pourrait venir de userKeypress
+  // ==> On doit pouvoir tout chainer plutot que de réagir à chaque truc
 
   /* Metrics */
 
@@ -412,9 +409,9 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
   };
 
   onCleanup(() => {
+    // NOTE: On devrait pas avoir le cleanup du timer ? 🤔
     cursor().set.keyFocus(CharacterFocus.unfocus);
     cursor().set.wordStatus(WordStatus.unstart, false);
-    wordWpmTimer && wordWpmTimer({ status: WordStatus.unstart });
     cleanupMetrics();
 
     setTypingState({ kind: TypingStateKind.unstart });
