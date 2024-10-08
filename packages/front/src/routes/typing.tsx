@@ -74,7 +74,7 @@ export default function Typing() {
       <Match when={state().kind === AppStateKind.resume} keyed>
         <ClientResume
           kbLayout={keyboardLayout(settings.kb.value)}
-          metrics={(state() as ResumeState).statistics}
+          typingStatistics={(state() as ResumeState).statistics}
         >
           {(metricsResume) => (
             <ClientActionsResume

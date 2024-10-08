@@ -21,13 +21,13 @@ import {
 } from "~/typingContent/character/stats/metrics";
 import { diffCharacterScore } from "~/typingContent/character/stats/score";
 
-export type CoreProjection = {
+export type StatCore = {
   projection: CharacterMetrics;
   wordStat: WordStat;
   duration: number;
 };
 
-export type MetaProjection = {
+export type StatMeta = {
   logs: LinkedList<TypingCharacter>;
   wordsLogs: LinkedList<TypingWord>;
   sectionProjection: CharacterMetrics;
@@ -36,30 +36,29 @@ export type MetaProjection = {
   stop: number;
 };
 
-export type SpeedProjection = {
-  byKeypress: [valid: number, all: number];
-  byWord: [valid: number, all: number];
+export type StatSpeed = {
+  kpm: number;
+  wpm: number;
 };
 
 export type StatProjection = {
-  speed: SpeedProjection;
+  speed: StatSpeed;
   accuracies: [corrected: number, real: number];
-  consistency: number;
 };
 
 export type KeypressMetricsProjection = {
-  core: CoreProjection;
-  meta: MetaProjection;
+  core: StatCore;
+  meta: StatMeta;
   stats: StatProjection;
 };
 
-const createCoreProjection = (): CoreProjection => ({
+const createCoreProjection = (): StatCore => ({
   projection: createCharacterMetrics(),
   wordStat: createWordStat(),
   duration: 0,
 });
 
-const createMetaCharacterpressProjection = (): MetaProjection => ({
+const createMetaCharacterpressProjection = (): StatMeta => ({
   logs: null,
   wordsLogs: null,
   sectionProjection: createCharacterMetrics(),
@@ -68,15 +67,14 @@ const createMetaCharacterpressProjection = (): MetaProjection => ({
   stop: 0,
 });
 
-const createSpeedProjection = (): SpeedProjection => ({
-  byKeypress: [0, 0],
-  byWord: [0, 0],
+const createSpeedProjection = (): StatSpeed => ({
+  kpm: 0,
+  wpm: 0,
 });
 
 const createStatProjection = (): StatProjection => ({
   speed: createSpeedProjection(),
   accuracies: [0, 0],
-  consistency: 0,
 });
 
 const createKeypressProjection = (): KeypressMetricsProjection => ({
@@ -86,7 +84,7 @@ const createKeypressProjection = (): KeypressMetricsProjection => ({
 });
 
 export type KeypressMetricsProps = {
-  part: CoreProjection;
+  part: StatCore;
 };
 
 const keypressProjectionHandler = (props: KeypressMetricsProps) => {
@@ -104,6 +102,7 @@ const keypressProjectionHandler = (props: KeypressMetricsProps) => {
   const start = performance.now();
 
   // TODO: refacto key/words
+
   const getProjection = (): KeypressMetricsProjection => {
     const stop = performance.now();
     let node = logs;
@@ -119,6 +118,7 @@ const keypressProjectionHandler = (props: KeypressMetricsProps) => {
     mergeWordStats(wordProjection, sectionWordStat);
     /* *** */
 
+    // Ha oui mais attend..
     const projectionResult = diffCharacterScore(projection);
 
     const correct = projectionResult.match;
@@ -128,25 +128,14 @@ const keypressProjectionHandler = (props: KeypressMetricsProps) => {
       projectionResult.missed +
       projectionResult.extra;
 
-    const total = correct + incorrect;
+    const statSpeed = {
+      kpm: ((projectionResult.total / duration) * 60000) / 5,
+      wpm: ((wordProjection.correct / duration) * 60000) / 5,
+    };
 
-    const byKeypress: [number, number] = [
-      ((correct / duration) * 60000) / 5,
-      ((projection.total / duration) * 60000) / 5,
-    ];
-    const byWord: [number, number] = [
-      ((wordProjection.correct / duration) * 60000) / 5,
-      ((wordProjection.correct / duration) * 60000) / 5,
-    ];
-
-    const accuracy = (correct / total) * 100 || 0;
+    const accuracy = (correct / projectionResult.total) * 100 || 0;
     const rawAccuracy =
-      (correct / (total + projection.deleted.total)) * 100 || 0;
-
-    // NOTE: pas sur que consistency doit etre ici
-    // TODO: stats dans section projection, donc pour quoi pas
-    // un section avec projection et stats.. ?
-    const consistency = byWord[1] / byKeypress[0];
+      (correct / (projectionResult.total + projection.deleted.total)) * 100 || 0;
 
     return {
       core: {
@@ -163,12 +152,8 @@ const keypressProjectionHandler = (props: KeypressMetricsProps) => {
         stop,
       },
       stats: {
-        speed: {
-          byKeypress,
-          byWord,
-        },
+        speed: statSpeed,
         accuracies: [accuracy, rawAccuracy],
-        consistency: consistency,
       },
     };
   };

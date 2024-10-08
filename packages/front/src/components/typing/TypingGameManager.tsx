@@ -99,7 +99,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
 
   /* *** */
 
-  // NOTE: wordsCount should be in Metrics ?
+  // NOTE: wordsCount should be in Metrics ? Or CursorNav.. hum..
 
   /* KeyPress: from input to Typing Event + promptKey */
   const [promptKey, setPromptKey] = createSignal<string>("");
@@ -249,8 +249,12 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
 
   /* Metrics */
 
-  // TODO: make a primitive useTypingMetrics
-// we can internatize this behavior
+  // TODO: make  primitive
+  // const { typingStats, updateTypingStats } = useTypingStats();
+  // updateTypingStats({ event: typingState() });
+  // NOTE: Faire le points entre stats & metrics
+  // NOTE: normalement,  liée stat et typingMetrics
+ 
   const [stat, setStat] = createSignal(KeypressMetrics.createStatProjection());
 
   // NOTE: Donc en fait, c'est le "Timer" des stats
@@ -269,6 +273,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
     metricsState = metricsState({ event: typingState });
   };
 
+  /* *** */
   /* Key Metrics */
 
   const keyMetrics = createMemo(
