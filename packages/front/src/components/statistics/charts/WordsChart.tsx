@@ -99,7 +99,9 @@ const WordsChart = (props: WordTypingStatisticsResultProps) => {
     scales: {
       x: {
         grid: {
-          display: false,
+          display: true,
+          color: colors.grid,
+          lineWidth: 1,
         },
         ticks: {
           color: colors.textBottom,
@@ -108,19 +110,14 @@ const WordsChart = (props: WordTypingStatisticsResultProps) => {
       y: {
         grid: {
           display: false,
-          font: {
-            size: 13,
-            weight: "normal",
-            family: "Larsseit, system-ui, sans-serif"
-          }
         },
         ticks: {
           color: colors.text,
           font: {
             size: 15,
             weight: "normal",
-            family: "Larsseit, system-ui, sans-serif"
-          }
+            family: "Larsseit, system-ui, sans-serif",
+          },
         },
       },
     },
