@@ -18,9 +18,7 @@ import { css } from "solid-styled";
 
 import { createComputed, createSignal, onMount } from "solid-js";
 import { CharacterStatsResult } from "~/typingContent/character/stats";
-import {
-  mergeCharacterScore,
-} from "~/typingContent/character/stats/score";
+import { mergeCharacterScore } from "~/typingContent/character/stats/score";
 import { useWindowSize } from "@solid-primitives/resize-observer";
 import { useSettings } from "~/contexts/SettingsProvider";
 
@@ -150,14 +148,16 @@ const CharacterChart = (props: CharacterCharProps) => {
           font: {
             size: 15,
             weight: "normal",
-            family: "Larsseit, system-ui, sans-serif"
-          }
+            family: "Larsseit, system-ui, sans-serif",
+          },
         },
       },
       y: {
         stacked: true,
         grid: {
-          display: false,
+          display: true,
+          color: colors.grid,
+          lineWidth: 1,
         },
         ticks: {
           callback: (value: number) => Math.abs(value),
@@ -165,8 +165,8 @@ const CharacterChart = (props: CharacterCharProps) => {
           font: {
             size: 13,
             weight: "normal",
-            family: "Larsseit, system-ui, sans-serif"
-          }
+            family: "Larsseit, system-ui, sans-serif",
+          },
         },
       },
       // y2: {
