@@ -80,6 +80,7 @@ function RadioGroup<Value>(props: RadioGroupProps<Value>) {
       border-radius: 6px;
       padding: 4px 8px;
       color: var(--text-color);
+      text-transform: capitalize;
       fill: var(--text-color);
       font-size: 14px;
       transition: all 100ms linear;
@@ -98,7 +99,6 @@ function RadioGroup<Value>(props: RadioGroupProps<Value>) {
     }
 
     .radio-group input:checked + label .label-text {
-      text-transform: capitalize;
       color: var(--color-selected);
     }
 

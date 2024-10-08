@@ -1,4 +1,4 @@
-import type { Setter } from "solid-js";
+import { onCleanup, type Setter } from "solid-js";
 
 import List, { type LinkedList } from "~/List";
 
@@ -43,7 +43,6 @@ const createTypingMetricsState = (
   setStat: Setter<StatProjection>,
   setTypingMetrics: Setter<TypingMetrics>,
   setCleanup: (cleanup: () => void) => void,
-  setOver: (over: () => void) => void,
 ): TypingMetricsState => {
   const updateStat = (
     projection: KeypressMetricsProjection,
@@ -98,7 +97,6 @@ const createTypingMetricsState = (
           metrics: props.metrics,
         });
       };
-      setOver(over);
       switch (event.kind) {
         case TypingStateKind.unstart:
           clearInterval(props.interval.timer);
@@ -143,6 +141,8 @@ const createTypingMetricsState = (
           };
           interval.timer = setTimeout(() => {
             update();
+            // TODO: make it directly in "cleanUp"
+            // so, we had to make it mutable :(
             setCleanup(() => clearTimeout(interval.timer));
             clearTimeout(interval.timer);
             interval.timer = setInterval(update, 1000);
