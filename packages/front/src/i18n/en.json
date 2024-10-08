@@ -72,12 +72,17 @@
     "title": "Login",
     "description": "Connect to your account to save your progress and access your statistics."
   },
+  "sendLogin": "Login",
+  "sendRegister": "Register",
   "register": {
     "title": "Register",
     "description": "Create an account to save your progress and access your statistics."
   },
+  "forgotPassword": {
+    "title": "Reinitialize password",
+    "description": "Enter your email address to reset your password."
+  },
   "email": "Email",
   "password": "Password",
-  "confirmPassword": "Confirm password",
-  "forgotPassword": "Forgot password ?"
+  "confirmPassword": "Confirm password"
 }

@@ -38,7 +38,7 @@ const Dropdown = (props: DropdownProps) => {
         params: {
           targets: dropdown(),
           padding: ["0", "8px 26px 26px"],
-          height: [48, 320],
+          height: [48, 380],
           top: ["0", "-8px"],
           width: [200, 820],
           duration: 650,
@@ -53,7 +53,7 @@ const Dropdown = (props: DropdownProps) => {
           padding: ["8px 26px 26px", "0"],
           top: ["-8px", "0"],
           width: ["800px", "200px"],
-          height: [320, 48],
+          height: [380, 48],
           duration: 250,
         },
       }),
@@ -120,7 +120,6 @@ const Dropdown = (props: DropdownProps) => {
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      justify-content: space-between;
       border: 1px solid transparent;
       background-color: var(--color-surface-100);
       transition-duration: 0.5s;
