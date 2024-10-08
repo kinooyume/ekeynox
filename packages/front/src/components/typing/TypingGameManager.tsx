@@ -25,7 +25,6 @@ import KeypressMetrics from "~/typingStatistics/KeypressMetrics";
 import {
   createTypingMetrics,
   createTypingMetricsState,
-  type TypingMetricsState,
 } from "~/typingStatistics/TypingMetrics";
 
 import type { KeyboardHandler } from "../virtualKeyboard/TypingKeyboard";
@@ -50,10 +49,6 @@ import {
   deepCloneParagraphs,
 } from "~/typingContent/paragraphs";
 import { Paragraphs } from "~/typingContent/paragraphs/types";
-import {
-  createWordWpmCounterReactive,
-  WordStatusReactive,
-} from "~/typingContent/word/stats/wpm/WordWpmCounterReactive";
 import { WordStatus } from "~/typingContent/word/types";
 import typingGameRedo from "~/typingGame/typingGameRedo";
 import { TypingStateKind, type TypingState } from "~/typingState";
@@ -218,7 +213,6 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
   const setWordWpm = (cursor: Cursor) => {
     if (cursor.get.hasWpm()) {
       const timestamp = performance.now();
-      //cursor.set.wordLastLeaveTimestamp(timestamp);
       const spentTime = timestamp - cursor.get.wordLastEnterTimestamp();
       const totalSpentTime = cursor.get.wordSpentTime() + spentTime;
       cursor.set.wordSpentTime(totalSpentTime);
@@ -252,15 +246,43 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
   };
 
   let headerLeavingAnimate: () => anime.AnimeTimelineInstance;
+
+  /* Metrics */
+
+  // TODO: make a primitive useTypingMetrics
+// we can internatize this behavior
+  const [stat, setStat] = createSignal(KeypressMetrics.createStatProjection());
+
+  // NOTE: Donc en fait, c'est le "Timer" des stats
+  // enfin genre.. la partie en dessous..
+  const [typingMetrics, setTypingMetrics] = createSignal(createTypingMetrics());
+
+  /* Metrics "State" */
+  let cleanupMetrics = () => {};
+  let metricsState = createTypingMetricsState(
+    setStat,
+    setTypingMetrics,
+    (cleanup) => (cleanupMetrics = cleanup),
+  );
+
+  const updateMetrics = (typingState: TypingState) => {
+    metricsState = metricsState({ event: typingState });
+  };
+
+  /* Key Metrics */
+
+  const keyMetrics = createMemo(
+    (projection: CharacterStats) =>
+      updateCharacterStats({ projection, status: typingState() }),
+    {},
+  );
   const over = (mode: TypingGameOptions) => {
     // NOTE: peut etre le faire en mode "leave"
-    //
     cursor().set.wordStatus(WordStatus.over, false);
-    // TODO: stop le counter/leave
-    // if (wordWpmTimer) wordWpmTimer({ status: WordStatus.over });
     cursor().set.keyFocus(CharacterFocus.unfocus);
     const position = cursor().positions.get();
 
+    // so, metrics before wesh
     props.onOver(
       {
         paragraphs: cleanParagraphs(paraStore, position),
@@ -284,20 +306,18 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
 
   createComputed(
     on(typingState, (event) => {
+      // side effect
+      updateMetrics(event);
       switch (event.kind) {
         case TypingStateKind.unstart:
-          // if (wordWpmTimer) wordWpmTimer({ status: WordStatus.unstart });
           cursor().positions.reset();
           setPromptKey(cursor().get.character().char);
           break;
         case TypingStateKind.pending:
-          // if (!wordWpmTimer) {
-          //   newWordWpmTimer();
-          // } else {
-          //   wordWpmTimer = wordWpmTimer({ status: WordStatus.pending });
-          // }
           if (!event.next) {
-            overMetrics();
+            // NOTE: we call it twice ? 🤔 Make sure it doesn't break anything..
+            // overMetrics();
+
             return typingOver();
           }
           setPromptKey(cursor().get.character().char);
@@ -320,31 +340,6 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
   // Parce que la, cursor/nav s'occupe des statistiques du mots
   // Et récupère un timestamp, qui pourrait venir de userKeypress
   // ==> On doit pouvoir tout chainer plutot que de réagir à chaque truc
-
-  /* Metrics */
-
-  const [stat, setStat] = createSignal(KeypressMetrics.createStatProjection());
-  const [typingMetrics, setTypingMetrics] = createSignal(createTypingMetrics());
-
-  let cleanupMetrics = () => {};
-  let overMetrics = () => {};
-  const updateMetrics = createTypingMetricsState(
-    setStat,
-    setTypingMetrics,
-    (cleanup) => (cleanupMetrics = cleanup),
-    (over) => (overMetrics = over),
-  );
-
-  createComputed((typingMetricsState: TypingMetricsState) => {
-    const metrics = typingMetricsState({ event: typingState() });
-    return metrics;
-  }, updateMetrics);
-
-  const keyMetrics = createMemo(
-    (projection: CharacterStats) =>
-      updateCharacterStats({ projection, status: typingState() }),
-    {},
-  );
 
   /* NOTE: TIMER LOOP CONTENT */
 
