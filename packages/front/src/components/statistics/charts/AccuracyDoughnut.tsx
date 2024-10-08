@@ -40,10 +40,11 @@ const AccuracyDoughnut = (props: MyChartProps) => {
     Math.round(incorrect * 100) / 100,
   ];
   const total = seriesData.reduce((a, v) => a + v);
-  const inPercent = seriesData.map((v) =>
-    v ? Math.max((v / total) * 100, 2) : v,
-  );
 
+  const inPercent = seriesData.reduce((acc, v) => {
+    if (v > 0) acc.push(v);
+    return acc;
+  }, [] as number[]);
   // make dynamicLabels i seriesData index is > 0
   const dynamicLabels = seriesData.reduce((acc, v, i) => {
     if (v > 0) {
@@ -62,11 +63,13 @@ const AccuracyDoughnut = (props: MyChartProps) => {
   let lightColor: FontColor = "rgb(0, 31, 63)";
   let darkColor: FontColor = "#f6f5f7";
 
-  const dynamicBackground = (bgColors: BgColors) =>
-    seriesData.reduce((acc, v, i) => {
+  const dynamicBackground = (bgColors: BgColors) => {
+    const a = seriesData.reduce((acc, v, i) => {
       if (v > 0) acc.push(bgColors[i]);
       return acc;
     }, [] as string[]);
+    return a;
+  };
 
   const getData = (bgColors: BgColors) => {
     return {
