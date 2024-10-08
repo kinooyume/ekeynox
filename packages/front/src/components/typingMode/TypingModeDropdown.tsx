@@ -211,7 +211,9 @@ const TypingModeDropdown = (props: TypingModeDropdownProps) => {
           <div class="options-wrapper">
             <div class="elem options">
               <Switch>
-                <Match when={typingOptions.modeSelected === TypingModeKind.speed}>
+                <Match
+                  when={typingOptions.modeSelected === TypingModeKind.speed}
+                >
                   <SpeedParamsMedium
                     typingOptions={typingOptions}
                     setTypingOptions={setTypingOptions}
@@ -223,7 +225,9 @@ const TypingModeDropdown = (props: TypingModeDropdownProps) => {
                     />
                   </SpeedParamsMedium>
                 </Match>
-                <Match when={typingOptions.modeSelected === TypingModeKind.timer}>
+                <Match
+                  when={typingOptions.modeSelected === TypingModeKind.timer}
+                >
                   <TimerParamsMedium
                     typingOptions={typingOptions}
                     setTypingOptions={setTypingOptions}

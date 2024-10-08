@@ -1,5 +1,4 @@
 import { css } from "solid-styled";
-import type { StatProjection } from "../metrics/KeypressMetrics.ts";
 import {
   Show,
   type JSXElement,
@@ -15,6 +14,7 @@ import anime from "animejs";
 import ProgressBar from "~/svgs/progressBar.tsx";
 import MetricPreview from "../ui/MetricPreview.tsx";
 import { useWindowSize } from "@solid-primitives/resize-observer";
+import { StatProjection } from "~/typingStatistics/KeypressMetrics.ts";
 
 type TypingNavProps = {
   stat: StatProjection;
@@ -49,7 +49,7 @@ const TypingInfo = (props: TypingNavProps) => {
   let accuracyElem: HTMLSpanElement;
 
   createEffect((prevAnim: anime.AnimeInstance | undefined) => {
-    const wpm = Math.trunc(props.stat.speed.byWord[0]);
+    const wpm = Math.trunc(props.stat.speed.wpm);
     const wpmFromElem = parseInt(wpmElem.innerHTML);
 
     if (wpm === 0) anime.remove(wpmElem);
@@ -190,7 +190,7 @@ const TypingInfo = (props: TypingNavProps) => {
             <Show when={props.children}>
               <div class="child">{props.children}</div>
             </Show>
-            <MetricPreview picto={<Gauge speed={props.stat.speed.byWord[0]} />}>
+            <MetricPreview picto={<Gauge speed={props.stat.speed.wpm} />}>
               <span class="stat wpm" ref={wpmElem!}>
                 0
               </span>

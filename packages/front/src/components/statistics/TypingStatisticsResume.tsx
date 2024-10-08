@@ -28,20 +28,19 @@ import Prompt from "../prompt/Prompt";
 import TypingOptionsTitle from "../typingMode/TypingOptionsTitle";
 import { HigherKeyboard } from "~/typingKeyboard/keyboardLayout";
 import StatisticsKeyboard from "../virtualKeyboard/StatisticsKeyboard";
-import { Portal } from "solid-js/web";
 
 type TypingMetricsProps = {
   kbLayout: HigherKeyboard;
-  metrics: TypingStatistics;
+  typingStatistics: TypingStatistics;
   children: (n: TypingStatisticsResult) => JSXElement;
 };
 
 const TypingStatisticsResult = (props: TypingMetricsProps) => {
   const t = useI18n();
-  const keysSet = new Set(Object.keys(props.metrics.characters));
+  const keysSet = new Set(Object.keys(props.typingStatistics.characters));
   const [kbLayout, setKbLayout] = createSignal(props.kbLayout(keysSet));
 
-  const typingStatisticsResult = createTypingStatisticsResult(props.metrics);
+  const typingStatisticsResult = createTypingStatisticsResult(props.typingStatistics);
 
   const getTime = (duration: number) => {
     // from miliseconds to minutes and seconds
@@ -376,15 +375,13 @@ const TypingStatisticsResult = (props: TypingMetricsProps) => {
 
   const Accuracy = () => {
     return (
-      <AccuracyDoughnut stats={props.metrics.typing.logs!.value.stats}>
+      <AccuracyDoughnut stats={props.typingStatistics.typing.logs!.value.stats}>
         <p class="wpm-data main-data">
-          {Math.trunc(props.metrics.typing.logs!.value.stats.speed.byWord[0])}
+          {Math.trunc(props.typingStatistics.typing.logs!.value.stats.speed.wpm)}
           <span>WPM</span>
         </p>
         <p class="raw-data">
-          {props.metrics.typing.logs!.value.stats.speed.byKeypress[1].toFixed(
-            2,
-          )}
+          {typingStatisticsResult.speed.kpm.toFixed(2)}
           <span>Raw</span>
         </p>
       </AccuracyDoughnut>
@@ -414,7 +411,7 @@ const TypingStatisticsResult = (props: TypingMetricsProps) => {
       </div>
       <div class="sticky">
         <div ref={resumeMenu!} class="resume-menu">
-          <TypingOptionsTitle typingOptions={props.metrics.typingOptions} />
+          <TypingOptionsTitle typingOptions={props.typingStatistics.typingOptions} />
           <div class="actions">{props.children(typingStatisticsResult)}</div>
         </div>
       </div>
@@ -437,7 +434,7 @@ const TypingStatisticsResult = (props: TypingMetricsProps) => {
             <div class="cards-wrapper tiny">
               <div class="stat-card">
                 <p class="main-data main-data-tiny">
-                  {getTime(props.metrics.typing.logs!.value.core.duration)}
+                  {getTime(props.typingStatistics.typing.logs!.value.core.duration)}
                 </p>
                 <p class="subtitle">{t("elapsedTime")}</p>
               </div>
@@ -445,9 +442,8 @@ const TypingStatisticsResult = (props: TypingMetricsProps) => {
             <div class="cards-wrapper tiny">
               <div class="stat-card">
                 <p class="main-data main-data-tiny">
-                  {(
-                    props.metrics.typing.logs!.value.stats.consistency * 100
-                  ).toFixed(0)}
+                  {
+                   typingStatisticsResult.consistency.toFixed(0)}
                   <span>%</span>
                 </p>
                 <p class="subtitle">{t("consistency")}</p>
@@ -460,7 +456,7 @@ const TypingStatisticsResult = (props: TypingMetricsProps) => {
         <div class="cards-wrapper">
           <h2 class="stat-title">{t("statistics.contentResumeTitle")}</h2>
           <div class="stat-card">
-            <Prompt paragraphs={props.metrics.paragraphs} />
+            <Prompt paragraphs={props.typingStatistics.paragraphs} />
           </div>
         </div>
         <div class="cards-wrapper">
@@ -477,7 +473,7 @@ const TypingStatisticsResult = (props: TypingMetricsProps) => {
                 </div>
                 <StatisticsKeyboard
                   layout={kbLayout()}
-                  metrics={props.metrics.characters}
+                  metrics={props.typingStatistics.characters}
                 />
               </div>
             </Show>

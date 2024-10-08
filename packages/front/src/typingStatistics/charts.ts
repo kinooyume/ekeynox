@@ -7,8 +7,8 @@ export type ChartMetrics = {
   errors: Array<{ x: number; y: number }>;
 };
 
-// TODO: rename, logsTo.. Sequences / seconde (wpm, raw, errors) ?
-const logsToChartMetrics = (
+//TODO: Logs to Array, puis Array to Chart
+const logsToChartStatistics = (
   logs: LinkedList<KeypressMetricsProjection>,
 ): ChartMetrics => {
   let wpm = [] as { x: number; y: number }[];
@@ -23,8 +23,8 @@ const logsToChartMetrics = (
     const wrong =
       secProj.added.unmatch + secProj.added.missed + secProj.added.extra;
     if (prevElapsed !== elapsed) {
-      wpm.push({ x: elapsed, y: log.value.stats.speed.byWord[0] });
-      raw.push({ x: elapsed, y: log.value.stats.speed.byKeypress[1] });
+      wpm.push({ x: elapsed, y: log.value.stats.speed.wpm });
+      raw.push({ x: elapsed, y: log.value.stats.speed.kpm });
       if (wrong > 0) {
         errors.push({ x: elapsed, y: wrong });
       }
@@ -37,4 +37,4 @@ const logsToChartMetrics = (
   return { wpm, raw, errors };
 };
 
-export { logsToChartMetrics };
+export { logsToChartStatistics };
