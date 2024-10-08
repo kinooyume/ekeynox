@@ -4,16 +4,18 @@ import { useI18n } from "~/contexts/i18nProvider";
 import { createSignal, Match, onMount, Switch } from "solid-js";
 
 import { css } from "solid-styled";
+import Register from "./login/Register";
 
 enum Mode {
   LOGIN = "login",
   REGISTER = "register",
+  FORGOT_PASSWORD = "forgotPassword",
 }
 
 const LoginWrapper: Component<{}> = (props) => {
   const t = useI18n();
 
-  const [mode, setMode] = createSignal(Mode.LOGIN);
+  const [mode, setMode] = createSignal(Mode.REGISTER);
 
   css`
     .form-wrapper {
@@ -48,7 +50,18 @@ const LoginWrapper: Component<{}> = (props) => {
         </div>
         <Switch>
           <Match when={mode() === Mode.LOGIN}>
-            <Login />
+            <Login>
+              <div class="switch-mode">
+                <button onClick={() => setMode(Mode.REGISTER) }>Don't have an account ?</button>
+              </div>
+            </Login>
+          </Match>
+          <Match when={mode() === Mode.REGISTER}>
+            <Register>
+                <button onClick={() => setMode(Mode.LOGIN) }>
+                Already have an account ?
+              </button>
+            </Register>
           </Match>
         </Switch>
       </div>

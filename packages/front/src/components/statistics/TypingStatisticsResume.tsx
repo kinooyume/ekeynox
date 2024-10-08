@@ -28,6 +28,7 @@ import Prompt from "../prompt/Prompt";
 import TypingOptionsTitle from "../typingMode/TypingOptionsTitle";
 import { HigherKeyboard } from "~/typingKeyboard/keyboardLayout";
 import StatisticsKeyboard from "../virtualKeyboard/StatisticsKeyboard";
+import { Portal } from "solid-js/web";
 
 type TypingMetricsProps = {
   kbLayout: HigherKeyboard;
@@ -103,6 +104,13 @@ const TypingStatisticsResult = (props: TypingMetricsProps) => {
       padding-top: 58px;
     }
 
+    .aligned {
+      align-items: center;
+    }
+
+    .flexed {
+      display: flex;
+    }
     .sticky {
       position: sticky;
       background-color: var(--color-surface-100);
@@ -143,8 +151,12 @@ const TypingStatisticsResult = (props: TypingMetricsProps) => {
     }
 
     .cards-wrapper {
+      background-color: var(--color-surface-mixed-200);
+      border: 1px solid var(--background-color);
+
       background-color: var(--color-surface-600);
       border: 1px solid var(--color-surface-mixed-600);
+
       padding: 12px;
       margin: 32px 0;
       border-radius: 18px;
@@ -156,6 +168,8 @@ const TypingStatisticsResult = (props: TypingMetricsProps) => {
     }
 
     .stat-card {
+      background-color: var(--color-surface-mixed-600);
+
       background-color: var(--color-surface-100);
       background-color: var(--stat-background-color);
 
@@ -184,11 +198,11 @@ const TypingStatisticsResult = (props: TypingMetricsProps) => {
       color: var(--text-secondary-color);
     }
 
-    .stat-card p.main-data {
+    p.main-data {
       font-size: 2em;
       margin: 0;
     }
-    .stat-card p.main-data-tiny {
+    p.main-data-tiny {
       font-size: 2em;
       margin: 0;
     }
@@ -197,21 +211,20 @@ const TypingStatisticsResult = (props: TypingMetricsProps) => {
       color: grey;
       margin: 0;
     }
-    .stat-card .main-data span {
+     .main-data span {
       font-size: 1.3rem;
       margin-left: 8px;
       opacity: 0.6;
     }
 
     .report {
-      display: flex;
       justify-content: center;
     }
 
-    .report .raw-data {
+    .raw-data {
       margin: 0;
     }
-    .report .raw-data span {
+    .raw-data span {
       margin-left: 4px;
     }
 
@@ -361,13 +374,42 @@ const TypingStatisticsResult = (props: TypingMetricsProps) => {
 
   const size = useWindowSize();
 
+  const Accuracy = () => {
+    return (
+      <AccuracyDoughnut stats={props.metrics.typing.logs!.value.stats}>
+        <p class="wpm-data main-data">
+          {Math.trunc(props.metrics.typing.logs!.value.stats.speed.byWord[0])}
+          <span>WPM</span>
+        </p>
+        <p class="raw-data">
+          {props.metrics.typing.logs!.value.stats.speed.byKeypress[1].toFixed(
+            2,
+          )}
+          <span>Raw</span>
+        </p>
+      </AccuracyDoughnut>
+    );
+  };
+
+  const Chart = () => {
+    return (
+      <Show when={typingStatisticsResult.chart.wpm.length > 1}>
+        <div class="chart">
+          <SpeedChart metrics={typingStatisticsResult.chart} />
+        </div>
+      </Show>
+    );
+  };
+
   return (
     <div class="metrics full-bleed">
-      <div class="resume-header" ref={resumeHeader!}>
-        <Show when={typingStatisticsResult.chart.wpm.length > 1}>
-          <div class="chart">
-            <SpeedChart metrics={typingStatisticsResult.chart} />
-          </div>
+      <div
+        class="resume-header"
+        classList={{ aligned: size.width < 860 }}
+        ref={resumeHeader!}
+      >
+        <Show fallback={<Accuracy />} when={size.width > 860}>
+          <Chart />
         </Show>
       </div>
       <div class="sticky">
@@ -380,21 +422,15 @@ const TypingStatisticsResult = (props: TypingMetricsProps) => {
         <div class="sidebar">
           <div class="cards-wrapper">
             <h2 class="stat-title">{t("statistics.gameReport")}</h2>
-            <div class="stat-card report">
-              <AccuracyDoughnut stats={props.metrics.typing.logs!.value.stats}>
-                <p class="wpm-data main-data">
-                  {Math.trunc(
-                    props.metrics.typing.logs!.value.stats.speed.byWord[0],
-                  )}
-                  <span>WPM</span>
-                </p>
-                <p class="raw-data">
-                  {props.metrics.typing.logs!.value.stats.speed.byKeypress[1].toFixed(
-                    2,
-                  )}
-                  <span>Raw</span>
-                </p>
-              </AccuracyDoughnut>
+            <div
+              class="stat-card report"
+              classList={{
+                flexed: size.width > 860,
+              }}
+            >
+              <Show fallback={<Chart />} when={size.width > 860}>
+                <Accuracy />
+              </Show>
             </div>
           </div>
           <div class="sub-data">

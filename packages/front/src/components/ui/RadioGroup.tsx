@@ -13,6 +13,7 @@ type RadioGroupProps<Value> = {
   compare: (value: Value) => boolean;
   setChecked: (value: Value) => void;
   children?: JSXElement;
+  tiny?: boolean;
 };
 
 function RadioGroup<Value>(props: RadioGroupProps<Value>) {
@@ -35,15 +36,19 @@ function RadioGroup<Value>(props: RadioGroupProps<Value>) {
     }
 
     .radio-group {
-      padding: 4px;
+      --padding: 8px 20px;
       border-radius: 10px;
       background-color: var(--background-radiogroup);
-      padding: 8px 20px;
+      padding: var(--padding);
 
       position: relative;
       display: flex;
       border: 1px solid var(--background-color);
       transition: all 100ms linear;
+    }
+
+    .radio-group.tiny {
+      --padding: 8px 20px;
     }
 
     .radio-group input:not(:checked) + label:hover {
@@ -93,6 +98,7 @@ function RadioGroup<Value>(props: RadioGroupProps<Value>) {
     }
 
     .radio-group input:checked + label .label-text {
+      text-transform: capitalize;
       color: var(--color-selected);
     }
 
@@ -140,11 +146,12 @@ function RadioGroup<Value>(props: RadioGroupProps<Value>) {
     }
   `;
   return (
-    <div class="radio-group">
-      {/* NOTE: check why, minimal repro and github issue */}
-      {/* <Show when={props.children}> */}
-      {/*   <div class={`icon ${props.name}`}>{props.children}</div> */}
-      {/* </Show> */}
+    <div
+      class="radio-group"
+      classList={{
+        tiny: props.tiny,
+      }}
+    >
       <For each={props.values}>
         {(value) => (
           <div class="input">

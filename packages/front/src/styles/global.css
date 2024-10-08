@@ -2,8 +2,11 @@
   position: relative;
 }
 :root {
+  --background-color-button-primary: #654f3e;
   --text-color-black: rgb(0, 31, 63);
   --text-color-reverse: #f6f5f7;
+  --color-selection: #756151;
+  --color-hover-selection: #867365;
   font-family: Larsseit, system-ui, sans-serif;
   --logo-color: #343450;
   --background-color: #e0e0e0;
@@ -96,7 +99,9 @@
   --icon-filter: grayscale(60%);
 }
 html[data-theme="dark"] {
+  --background-color-button-primary: #f2c992;
   --logo-color: rgb(246, 245, 250, 0.9);
+  --color-selection: #f2c992;
   --color-primary-100: #e7af5c;
   --color-primary-200: #ebb86e;
   --color-primary-300: #efc080;
@@ -232,14 +237,14 @@ a.primary {
   background: none;
   border-radius: 12px;
   font-size: 16px;
-  padding: 0 32px;
+  padding: 0 24px;
   text-transform: capitalize;
 }
 
 button.primary,
 a.primary {
   height: 48px;
-  background-color: var(--text-secondary-color);
+  background-color: var(--background-color-button-primary);
   transition: all 0.3s ease;
   cursor: pointer;
   border: 1px solid transparent;
@@ -276,11 +281,14 @@ button.secondary:active {
 
 button.secondary {
   cursor: pointer;
-  color: var(--text-secondary-color);
+  color: var(--background-color-button-primary);
   border: 1px solid;
-  border-color: var(--text-secondary-color);
+  border-color: var(--background-color-button-primary);
 
   transition: all 0.3s ease;
+}
+button.secondary span {
+  color: var(--background-color-button-primary);
 }
 
 button.secondary:hover {
@@ -358,7 +366,7 @@ span {
   height: 100%;
 }
 
- #app {
+#app {
   display: grid;
   margin: 0;
   min-height: 100%;
@@ -366,7 +374,7 @@ span {
 }
 
 @media screen and (max-width: 860px) {
-#app {
+  #app {
     min-height: unset;
     height: 100%;
   }

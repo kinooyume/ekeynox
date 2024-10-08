@@ -72,12 +72,17 @@
     "title": "Connexion",
     "description": "Connectez-vous pour sauvegarder votre progression et accéder à vos statistiques."
   },
+  "sendLogin": "Se connecter",
+  "sendRegister": "S'inscrire",
   "register": {
     "title": "Register",
     "description": "Create an account to save your progress and access your statistics."
   },
+  "forgotPassword": {
+    "title": "Réinitialiser le mot de passe",
+    "description": "Entrez votre adresse e-mail pour réinitialiser votre mot de passe."
+  },
   "email": "Email",
   "password": "Mot de passe",
-  "confirmPassword": "Confirmer le mot de passe",
-  "forgotPassword": "Mot de passe oublié"
+  "confirmPassword": "Confirmer le mot de passe"
 }

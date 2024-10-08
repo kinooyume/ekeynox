@@ -121,7 +121,7 @@ const TypingModeDropdown = (props: TypingModeDropdownProps) => {
       display: flex;
 
       --background-radiogroup: var(--background-radiogroup-compact);
-      height: 260px;
+      height: 310px;
       margin-top: 16px;
     }
   `;

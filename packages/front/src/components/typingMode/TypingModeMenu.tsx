@@ -210,7 +210,7 @@ const TypingModeKindMenu = (props: TypingModeKindMenuProps) => {
       color: var(--text-secondary-color);
       font-size: 1.3rem;
       text-transform: capitalize;
-      margin-top: 6px;
+      margin-top: 0px;
       font-weight: 500;
     }
 
@@ -230,7 +230,7 @@ const TypingModeKindMenu = (props: TypingModeKindMenuProps) => {
     }
 
     .description {
-      margin-top: 46px;
+      margin-top: 34px;
       max-width: 500px;
     }
 

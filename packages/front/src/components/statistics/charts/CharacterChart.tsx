@@ -10,17 +10,19 @@ import {
   ArcElement,
   BarController,
   BarElement,
+  ChartData,
 } from "chart.js";
 
 import { DefaultChart } from "solid-chartjs";
 import { css } from "solid-styled";
 
-import { onMount } from "solid-js";
+import { createComputed, createSignal, onMount } from "solid-js";
 import { CharacterStatsResult } from "~/typingContent/character/stats";
 import {
   mergeCharacterScore,
-  pushCharacterScore,
 } from "~/typingContent/character/stats/score";
+import { useWindowSize } from "@solid-primitives/resize-observer";
+import { useSettings } from "~/contexts/SettingsProvider";
 
 type CharacterCharProps = {
   keys: CharacterStatsResult;
@@ -30,7 +32,6 @@ const CharacterChart = (props: CharacterCharProps) => {
   let labels: string[] = [];
   let matches: number[] = [];
   let unmatches: number[] = [];
-  let corrected: number[] = [];
   let extras: number[] = [];
   let misses: number[] = [];
 
@@ -44,25 +45,59 @@ const CharacterChart = (props: CharacterCharProps) => {
     misses.push(score.missed);
   });
 
-  const data = {
+  type CharColors = {
+    matches: string;
+    unmatches: string;
+    extras: string;
+  };
+
+  type OptionsColors = {
+    grid: string;
+    text: string;
+    textBottom: string;
+  };
+
+  let lightOptionsColors: OptionsColors = {
+    text: "#654f3e",
+    textBottom: "rgb(0, 31, 63)",
+    grid: "rgba(0, 31, 63, 0.2)",
+  };
+  let darkOptionsColors: OptionsColors = {
+    text: "#f8dbb6",
+    textBottom: "#f6f5f7",
+    grid: "rgba(246, 245, 247, 0.2)",
+  };
+  const darkColors: CharColors = {
+    matches: "#107b65",
+    unmatches: "#a83f3f",
+    extras: "#b16f4c",
+  };
+
+  const lightColors: CharColors = {
+    matches: "#9abc85",
+    unmatches: "#c26b5f",
+    extras: "#cbae5c",
+  };
+
+  const getData = (colors: CharColors) => ({
     labels,
     datasets: [
       {
         label: "Matches",
         data: matches,
-        backgroundColor: "#107b65",
+        backgroundColor: colors.matches,
         borderRadius: 10,
       },
       {
         label: "Unmatches",
         data: unmatches,
-        backgroundColor: "#a83f3f",
+        backgroundColor: colors.unmatches,
         borderRadius: 10,
       },
       {
         label: "extras",
         data: extras,
-        backgroundColor: "#2b5e7a",
+        backgroundColor: colors.extras,
         borderRadius: 10,
       },
       // {
@@ -72,8 +107,8 @@ const CharacterChart = (props: CharacterCharProps) => {
       //   borderRadius: 10,
       // },
     ],
-  };
-  const options = {
+  });
+  const getOptions = (colors: OptionsColors) => ({
     responsive: true,
     maintainAspectRatio: false,
     indexAxis: "x",
@@ -82,6 +117,10 @@ const CharacterChart = (props: CharacterCharProps) => {
       legend: {
         position: "bottom",
         display: true,
+        color: colors.text,
+        labels: {
+          color: colors.text,
+        },
       },
       tooltip: {
         callbacks: {
@@ -105,6 +144,15 @@ const CharacterChart = (props: CharacterCharProps) => {
         grid: {
           display: false,
         },
+
+        ticks: {
+          color: colors.text,
+          font: {
+            size: 15,
+            weight: "normal",
+            family: "Larsseit, system-ui, sans-serif"
+          }
+        },
       },
       y: {
         stacked: true,
@@ -113,6 +161,12 @@ const CharacterChart = (props: CharacterCharProps) => {
         },
         ticks: {
           callback: (value: number) => Math.abs(value),
+          color: colors.textBottom,
+          font: {
+            size: 13,
+            weight: "normal",
+            family: "Larsseit, system-ui, sans-serif"
+          }
         },
       },
       // y2: {
@@ -124,7 +178,7 @@ const CharacterChart = (props: CharacterCharProps) => {
       //   },
       // },
     },
-  };
+  });
   css`
     .chart-wrapper {
       position: relative;
@@ -137,6 +191,22 @@ const CharacterChart = (props: CharacterCharProps) => {
       width: 100%;
     }
   `;
+
+  const { dark } = useSettings();
+  const size = useWindowSize();
+
+  const [data, setData] = createSignal<ChartData>();
+  const [options, setOptions] = createSignal();
+
+  createComputed(() => {
+    if (dark()) {
+      setData(getData(darkColors));
+      setOptions(getOptions(darkOptionsColors));
+    } else {
+      setData(getData(lightColors));
+      setOptions(getOptions(lightOptionsColors));
+    }
+  });
 
   onMount(() => {
     Chart.register(
@@ -157,7 +227,7 @@ const CharacterChart = (props: CharacterCharProps) => {
       <div class="chart">
         <DefaultChart
           type="bar"
-          data={data}
+          data={data()}
           plugins={[
             CategoryScale,
             PointElement,
@@ -169,7 +239,7 @@ const CharacterChart = (props: CharacterCharProps) => {
             BarController,
             BarElement,
           ]}
-          options={options}
+          options={options()}
         />
       </div>
     </div>

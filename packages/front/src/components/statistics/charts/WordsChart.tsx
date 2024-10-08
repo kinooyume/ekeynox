@@ -9,13 +9,16 @@ import {
   ArcElement,
   BarController,
   BarElement,
+  ChartData,
 } from "chart.js";
 
 import { DefaultChart } from "solid-chartjs";
 import { css } from "solid-styled";
 
-import { onMount } from "solid-js";
+import { createComputed, createSignal, onMount } from "solid-js";
 import { WordSpeed } from "~/typingStatistics/averageWordWpm";
+import { useWindowSize } from "@solid-primitives/resize-observer";
+import { useSettings } from "~/contexts/SettingsProvider";
 
 type WordTypingStatisticsResultProps = {
   words: WordSpeed[];
@@ -35,23 +38,56 @@ const WordsChart = (props: WordTypingStatisticsResultProps) => {
     [[] as string[], [] as number[]],
   );
 
-  const data = {
+  type ChartColors = {
+    background: string;
+    border: string;
+  };
+
+  type OptionsColors = {
+    text: string;
+    textBottom: string;
+    grid: string;
+  };
+  let lightOptionsColors: OptionsColors = {
+    grid: "rgba(0, 31, 63, 0.2)",
+    text: "#654f3e",
+    textBottom: "rgb(0, 31, 63)",
+  };
+  let darkOptionsColors: OptionsColors = {
+    text: "#f8dbb6",
+    textBottom: "#f6f5f7",
+    grid: "rgba(246, 245, 247, 0.2)",
+  };
+
+  const lightColors: ChartColors = {
+    background: "#e1c89b",
+    border: "#654f3e",
+  };
+  const darkColors: ChartColors = {
+    background: "#654f3e",
+    border: "#f2c992",
+  };
+  const getData = (colors: ChartColors) => ({
     labels,
     datasets: [
       {
         data: speeds,
-        backgroundColor: "#2b5e7a",
+        backgroundColor: colors.background,
         borderRadius: 10,
       },
     ],
-  };
-  const options = {
+  });
+  const getOptions = (colors: OptionsColors) => ({
     responsive: true,
     maintainAspectRatio: false,
     indexAxis: "y",
     plugins: {
       legend: {
         display: false,
+        color: colors.text,
+      },
+      labels: {
+        color: colors.text,
       },
     },
     elements: {
@@ -65,14 +101,31 @@ const WordsChart = (props: WordTypingStatisticsResultProps) => {
         grid: {
           display: false,
         },
+        ticks: {
+          color: colors.textBottom,
+        },
       },
       y: {
         grid: {
           display: false,
+          font: {
+            size: 13,
+            weight: "normal",
+            family: "Larsseit, system-ui, sans-serif"
+          }
+        },
+        ticks: {
+          color: colors.text,
+          font: {
+            size: 15,
+            weight: "normal",
+            family: "Larsseit, system-ui, sans-serif"
+          }
         },
       },
     },
-  };
+  });
+
   css`
     .chart {
       position: relative;
@@ -92,6 +145,22 @@ const WordsChart = (props: WordTypingStatisticsResultProps) => {
     }
   `;
 
+  const { dark } = useSettings();
+  const size = useWindowSize();
+
+  const [data, setData] = createSignal<ChartData>();
+  const [options, setOptions] = createSignal();
+
+  createComputed(() => {
+    if (dark()) {
+      setData(getData(darkColors));
+      setOptions(getOptions(darkOptionsColors));
+    } else {
+      setData(getData(lightColors));
+      setOptions(getOptions(lightOptionsColors));
+    }
+  });
+
   onMount(() => {
     Chart.register(
       CategoryScale,
@@ -109,7 +178,7 @@ const WordsChart = (props: WordTypingStatisticsResultProps) => {
     <div class="chart">
       <DefaultChart
         type="bar"
-        data={data}
+        data={data()}
         plugins={[
           CategoryScale,
           PointElement,
@@ -121,7 +190,7 @@ const WordsChart = (props: WordTypingStatisticsResultProps) => {
           Legend,
           Colors,
         ]}
-        options={options}
+        options={options()}
       />
     </div>
   );

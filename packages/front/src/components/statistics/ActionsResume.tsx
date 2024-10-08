@@ -110,9 +110,6 @@ const ActionsResume = (props: ActionsResumeProps) => {
       align-items: center;
       gap: 8px;
     }
-    .secondary span {
-      color: var(--text-secondary-color);
-    }
   `;
 
   const size = useWindowSize();

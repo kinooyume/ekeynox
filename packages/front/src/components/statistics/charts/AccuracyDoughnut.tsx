@@ -14,8 +14,15 @@ import {
 
 import { DefaultChart } from "solid-chartjs";
 import { css } from "solid-styled";
-import { onMount, type JSXElement } from "solid-js";
+import {
+  createComputed,
+  createSignal,
+  onMount,
+  type JSXElement,
+} from "solid-js";
 import { StatProjection } from "~/typingStatistics/KeypressMetrics";
+import { useSettings } from "~/contexts/SettingsProvider";
+import { useWindowSize } from "@solid-primitives/resize-observer";
 
 type MyChartProps = {
   stats: StatProjection;
@@ -45,47 +52,85 @@ const AccuracyDoughnut = (props: MyChartProps) => {
     return acc;
   }, [] as string[]);
 
-  const bgColors = ["#107b65", "#b16f4c", "#a83f3f"];
-  const dynamicBackground = seriesData.reduce((acc, v, i) => {
-    if (v > 0) acc.push(bgColors[i]);
-    return acc;
-  }, [] as string[]);
+  type BgColors = string[];
 
-  const data = {
-    datasets: [
-      {
-        data: inPercent,
-        backgroundColor: dynamicBackground,
-      },
-    ],
-    labels: dynamicLabels,
-  } as ChartData;
+  const darkColors = ["#107b65", "#b16f4c", "#a83f3f"];
+  const lightColors = ["#9abc85", "#cbae5c", "#c26b5f"];
 
-  const options = {
-    responsive: true,
-    maintainAspectRatio: false,
-    cutout: "80%",
-    rotation: -95,
-    circumference: 190,
-    plugins: {
-      legend: {
-        position: "bottom",
-        title: {
-          display: true,
-          padding: 1,
+  type FontColor = string;
+
+  let lightColor: FontColor = "rgb(0, 31, 63)";
+  let darkColor: FontColor = "#f6f5f7";
+
+  const dynamicBackground = (bgColors: BgColors) =>
+    seriesData.reduce((acc, v, i) => {
+      if (v > 0) acc.push(bgColors[i]);
+      return acc;
+    }, [] as string[]);
+
+  const getData = (bgColors: BgColors) => {
+    return {
+      datasets: [
+        {
+          data: inPercent,
+          backgroundColor: dynamicBackground(bgColors),
         },
-      },
-      tooltip: {
-        callbacks: {
-          label: (tooltipItem) => {
-            var value = seriesData[tooltipItem.dataIndex];
-            return `${value}`;
+      ],
+      labels: dynamicLabels,
+    } as ChartData;
+  };
+
+  const getOptions = (fontColor: FontColor) =>
+    ({
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: "86%",
+      rotation: -95,
+      borderRadius: 5,
+      borderWidth: 2,
+      circumference: 190,
+      plugins: {
+        legend: {
+          position: "bottom",
+          title: {
+            display: true,
+            padding: 1,
+          },
+          labels: {
+            color: fontColor,
+            font: {
+              size: 15,
+              weight: "normal",
+              family: "Larsseit, system-ui, sans-serif",
+            },
+          },
+        },
+        tooltip: {
+          callbacks: {
+            label: (tooltipItem) => {
+              var value = seriesData[tooltipItem.dataIndex];
+              return `${value}`;
+            },
           },
         },
       },
-    },
-  } as ChartOptions;
+    }) as ChartOptions;
 
+  const { dark } = useSettings();
+  const size = useWindowSize();
+
+  const [data, setData] = createSignal<ChartData>();
+  const [options, setOptions] = createSignal();
+
+  createComputed(() => {
+    if (dark()) {
+      setData(getData(darkColors));
+      setOptions(getOptions(darkColor));
+    } else {
+      setData(getData(lightColors));
+      setOptions(getOptions(lightColor));
+    }
+  });
   css`
     .chart {
       position: relative;
@@ -124,7 +169,7 @@ const AccuracyDoughnut = (props: MyChartProps) => {
       <div class="center">{props.children}</div>
       <DefaultChart
         type="doughnut"
-        data={data}
+        data={data()}
         plugins={[
           CategoryScale,
           DoughnutController,
@@ -136,7 +181,7 @@ const AccuracyDoughnut = (props: MyChartProps) => {
           Colors,
           // overlappingSegments,
         ]}
-        options={options}
+        options={options()}
       />
     </div>
   );
