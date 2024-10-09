@@ -372,11 +372,26 @@ span {
   min-height: 100%;
   background-color: var(--color-surface-100);
 }
+main {
+  margin-top: 96px;
+  display: grid;
+  grid-template-columns:
+    1fr
+    min(1400px, 100%)
+    1fr;
+  grid-template-rows: 1f;
+}
+.modal {
+  position: absolute;
+}
 
 @media screen and (max-width: 860px) {
   #app {
     min-height: unset;
     height: 100%;
+  }
+  main {
+    margin-top: 72px;
   }
 }
 
