@@ -9,7 +9,7 @@ import Header from "./components/header/Header";
 
 import { useAssets } from "solid-js/web";
 
-import { StyleRegistry, css, renderSheets, type StyleData } from "solid-styled";
+import { StyleRegistry, renderSheets, type StyleData } from "solid-styled";
 
 import "./styles/fonts.css";
 import "./styles/global.css";
@@ -22,26 +22,6 @@ import { FocusProvider } from "./contexts/FocusProvider";
 export default function App() {
   const sheets: StyleData[] = [];
   useAssets(() => renderSheets(sheets));
-
-  css`
-    main {
-      margin-top: 96px;
-      display: grid;
-      grid-template-columns:
-        1fr
-        min(1400px, 100%)
-        1fr;
-      grid-template-rows: 1f;
-    }
-    .modal {
-      position: absolute;
-    }
-    @media screen and (max-width: 860px) {
-      main {
-        margin-top: 72px;
-      }
-    }
-  `;
 
   const PageTransition = (props: ParentProps) => (
     <div class="transition-container">
