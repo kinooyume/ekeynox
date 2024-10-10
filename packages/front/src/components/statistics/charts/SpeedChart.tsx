@@ -10,7 +10,6 @@ import {
   Colors,
   ScatterController,
   Chart,
-  DatasetController,
 } from "chart.js";
 
 import { DefaultChart } from "solid-chartjs";
@@ -19,7 +18,6 @@ import { createComputed, createSignal, onMount } from "solid-js";
 import { ChartMetrics } from "~/typingStatistics/charts";
 import { useWindowSize } from "@solid-primitives/resize-observer";
 import { useSettings } from "~/contexts/SettingsProvider";
-import { Theme } from "~/settings/settings";
 
 type MyChartProps = {
   metrics: ChartMetrics;
@@ -220,7 +218,7 @@ const MyChart = (props: MyChartProps) => {
           type: "line",
           label: "Raw",
           order: 3,
-          yAxisID: "raw",
+          yAxisID: "wpm",
           fill: true,
           borderColor: colors.raw,
           borderWidth: 3,
