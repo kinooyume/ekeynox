@@ -25,12 +25,13 @@ const prompt = (props: Props) => {
       --height: 180px;
       margin-bottom: auto;
       max-height: var(--height);
-      max-width: 900px;
       overflow: scroll;
       overflow-x: hidden;
     }
     .prompt.fixedHeight {
       height: var(--height);
+      max-width: 900px;
+      overflow: hidden;
     }
     .paragraph {
       display: flex;
@@ -54,7 +55,6 @@ const prompt = (props: Props) => {
       .prompt.fixedHeight {
         margin: 0 16px auto 16px;
         margin-left: 32px;
-        overflow: hidden;
       }
       .paragraph {
         font-size: 1.2em;
