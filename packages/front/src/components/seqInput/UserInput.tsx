@@ -14,7 +14,7 @@ export type UserInputExtends = {
   onKeyDown: (key: string) => void;
   onKeyUp: (key: string) => void;
   ref?: (ref: UserInputRef) => void;
-}
+};
 
 type Props = {
   typingState: TypingState;
@@ -60,17 +60,24 @@ const UserInput = (props: Props) => {
     //   // backspace !!
     // }
 
-    // Was great, but doesn't work properly on chrome when backspace
-    // const value = input.value.slice(-1);
-    // input.value = " ";
-
     // NOTE: Je peux peut etre ne pas remplacer le value plutot
     // En fait, j'ai peur que ça devienne de plus en plus lent
     // Mais a voir, en vrai y'en aura pas beaucoup
     // Mais, peut etre que c'est la manière universelle de faire
-    const value = input.value;
-    input.value = "";
+
     // *** /
+    //
+
+    // Was great, but doesn't work properly on chrome when backspace
+    // const value = input.value;
+
+    const value = input.value.slice(-1);
+    input.value = " ";
+    // input.value = "";
+
+    if (value.length === 0) {
+      return;
+    }
 
     // const ev = keypressHandler().addKey(value, timestamp);
     // if (!ev) return;
@@ -78,14 +85,30 @@ const UserInput = (props: Props) => {
   };
 
   const handleKeyUp = (event: KeyboardEvent) => {
+    // console.log("[U]Key up", event.key)
+    // console.log(`·${ input.value }·`)
+    // console.log(event.code)
+    // console.log("-----")
     props.onKeyUp(event.key);
   };
 
   const handleKeyDown = (event: KeyboardEvent) => {
+    // console.log("[D]Key down", event.key)
+    // console.log(`·${ input.value }·`)
+    // console.log(event.code)
+    // console.log("-----")
     if (event.key === "Tab") {
       event.preventDefault();
     }
     props.onKeyDown(event.key);
+  };
+
+  const handleCompositionEnd = (event: CompositionEvent) => {
+    input.value = "";
+    if (event.data.length > 0) {
+      const value = event.data;
+      props.onKeyAdd(value);
+    }
   };
 
   /* *** */
@@ -93,7 +116,28 @@ const UserInput = (props: Props) => {
   const { focus: globalFocus, setFocus: setGlobalFocus } = useFocus();
 
   onMount(() => {
+    input.addEventListener("compositionend", handleCompositionEnd);
+
+    // input.addEventListener("keypress", (event) => {
+    // console.log("[KP]Keypress", event.key)
+    // console.log(`·${ input.value }·`)
+    // console.log("Event.Code", event.code)
+    // console.log("-----")
+    //
+    // })
+    // input.addEventListener("beforeinput", (event) => {
+    // console.log("[BI]Before Input")
+    // console.log(`·${ input.value }·`)
+    // console.log("Event:", event)
+    // console.log("-----")
+    //
+    // })
     input.addEventListener("input", handleInputEvent);
+    // can be for focus ?
+    // input.addEventListener("change", (event) => {
+    // console.log("[C]Change", event)
+    // console.log(`·${ input.value }·`)
+    // });
     input.addEventListener("keydown", handleKeyDown);
     input.addEventListener("keyup", handleKeyUp);
 
