@@ -18,7 +18,7 @@ const About: Component<AboutProps> = (props) => {
           color: "var(--text-secondary-color)",
         }}
       >
-        0.17
+        0.17.1
       </span>
       {/* <Modal */}
       {/*   portalId="modal-portal" */}
