@@ -1,20 +1,12 @@
 import { Show, type JSXElement, For } from "solid-js";
 import { css } from "solid-styled";
+import { useI18n } from "~/contexts/i18nProvider";
+import { TypingModeParam } from "~/typingOptions/typingModeParams";
 
-type InputProps<Value> = {
-  label: string;
-  value: Value;
-  icon?: JSXElement;
-};
-
-type RadioGroupProps<Value> = {
-  name: string;
-  values: InputProps<Value>[];
-  compare: (value: Value) => boolean;
-  setChecked: (value: Value) => void;
+interface RadioGroupProps<Value> extends TypingModeParam<Value> {
   children?: JSXElement;
   tiny?: boolean;
-};
+}
 
 function RadioGroup<Value>(props: RadioGroupProps<Value>) {
   css`
@@ -145,6 +137,9 @@ function RadioGroup<Value>(props: RadioGroupProps<Value>) {
       }
     }
   `;
+
+  const t = useI18n();
+
   return (
     <div
       class="radio-group"
@@ -158,16 +153,16 @@ function RadioGroup<Value>(props: RadioGroupProps<Value>) {
             <input
               type="radio"
               id={value.label}
-              name={value.label}
-              value={value.value as string}
-              checked={props.compare(value.value)}
+              name={props.name}
+              value={value.content as any}
+              checked={props.compare(value.content)}
             />
             <label
               for={value.label}
-              onClick={(_) => props.setChecked(value.value)}
+              onClick={(_) => props.setValue(value.content)}
             >
-              <Show when={value.icon}>{value.icon}</Show>
-              <span class="label-text">{value.label}</span>
+              {/* @ts-ignore */}
+              <span class="label-text">{ t(value.label) || value.label}</span>
             </label>
           </div>
         )}

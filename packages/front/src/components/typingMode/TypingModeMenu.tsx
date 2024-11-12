@@ -1,10 +1,10 @@
 import {
-  Match,
-  Switch,
   createComputed,
   createSignal,
+  Match,
   on,
   onMount,
+  Switch,
 } from "solid-js";
 import { makeEventListener } from "@solid-primitives/event-listener";
 import { createStore } from "solid-js/store";
@@ -16,49 +16,18 @@ import { useI18n } from "~/contexts/i18nProvider";
 import { TypingModeKind } from "~/typingOptions/typingModeKind";
 
 import {
-  CategoryKind,
   deepCopy,
   type ContentGeneration,
   type TypingOptions,
 } from "~/typingOptions/typingOptions";
 
 import TypingModeSelection from "./TypingModeSelection";
-import SpeedParams from "./SpeedParams";
-import TimerParams from "./TimerParams";
 
 import CustomInput, { type CustomInputRef } from "../ui/CustomInput";
 
-import Bunny from "~/svgs/bunny";
-import Monkey from "~/svgs/monkey";
-
-// SELECTION de Personnage: ABSOLUMENT PARFAIT
-// MOBILE:  https://www.linkedin.com/posts/hammadx02_flutter-appdevelopment-activity-7241460889885851648-eW69?utm_source=share&utm_medium=member_android
-
-// Le gars a fait pleins de menu de selection stylax
-// https://in.pinterest.com/pin/12525705207244555/
-//
-//Et eux ils font des trucs de malade en mode qui pourrait bien allez à des jeux et tout
-// https://dribbble.com/studiovor
-//
-// Gsap animation
-// https://codepen.io/dev_loop/pen/MWKbJmO
-// Store like this
-// https://codemyui.com/ecommerce-grid-full-screen-product-click/
-// select
-//https://uiverse.io/3bdel3ziz-T/gentle-vampirebat-46
-//
-// Bouncing radio
-// https://uiverse.io/it12uw/sour-mayfly-77
-//
-// Clean avec notif
-// https://uiverse.io/Pradeepsaranbishnoi/heavy-dragonfly-92
-//
-// et celui la
-// https://uiverse.io/Yaya12085/lucky-fox-35
-
-// https://uiverse.io/Yaya12085/silent-liger-85
-//
-// take a list and make cards
+import TypingParams from "./TypingParams";
+import { TypingModeParams, typingModes } from "~/typingOptions/typingMode";
+import { CategoryKind } from "~/typingOptions/typingModeCategory";
 
 type TypingModeKindMenuProps = {
   typingOptions: TypingOptions;
@@ -74,10 +43,6 @@ const TypingModeKindMenu = (props: TypingModeKindMenuProps) => {
   const t = useI18n();
 
   const navigate = useNavigate();
-
-  // useBeforeLeave((e) => {
-  //   start();
-  // });
 
   const [isReady, setIsReady] = createSignal(false);
   const [customValue, setCustomValue] = createSignal("");
@@ -95,12 +60,20 @@ const TypingModeKindMenu = (props: TypingModeKindMenuProps) => {
     deepCopy(props.typingOptions),
   );
 
+  const [modeParams, setModeParams] = createSignal<TypingModeParams>(
+    typingModes[typingOptions.modeSelected],
+  );
+
   createComputed(
     () => {
       setTypingOptions(deepCopy(props.typingOptions));
     },
     { defer: true },
   );
+
+  createComputed(() => {
+    setModeParams(typingModes[typingOptions.modeSelected]);
+  });
 
   createComputed(() => {
     props.fetchSourcesGen({
@@ -445,6 +418,7 @@ const TypingModeKindMenu = (props: TypingModeKindMenuProps) => {
     //   });
     //
   });
+
   return (
     <div class="menu">
       <form class="main-view">
@@ -458,35 +432,21 @@ const TypingModeKindMenu = (props: TypingModeKindMenuProps) => {
           <div class="selection">
             <TypingModeSelection
               selected={typingOptions.modeSelected}
-              setSelected={(mode: TypingModeKind) =>
-                setTypingOptions("modeSelected", mode)
-              }
+              setSelected={(mode: TypingModeKind) => {
+                setTypingOptions("modeSelected", mode);
+              }}
             />
           </div>
         </div>
         <div class="cliped">
           <div class="illustration">
             <div class="illustration-container">
-              <Switch>
-                <Match
-                  when={typingOptions.modeSelected === TypingModeKind.speed}
-                >
-                  <Monkey />
-                </Match>
-                <Match
-                  when={typingOptions.modeSelected === TypingModeKind.timer}
-                >
-                  <Bunny />
-                </Match>
-              </Switch>
+              {typingModes[typingOptions.modeSelected].picto()}
             </div>
           </div>
           <div class="game-description">
             <Switch>
-              <Match
-                when={typingOptions.modeSelected === TypingModeKind.speed}
-                keyed
-              >
+              <Match when={typingOptions.modeSelected === TypingModeKind.speed}>
                 <div class="text">
                   <h2 class="title-mode">{t("typingMode.speed.subtitle")}</h2>
                   <h3>{t("typingMode.speed.title")}</h3>
@@ -494,47 +454,32 @@ const TypingModeKindMenu = (props: TypingModeKindMenuProps) => {
                     {t("typingMode.speed.hugeDescription")}
                   </p>
                 </div>
-
-                <div class="options">
-                  {/* <h2 class="options-title">{t("options")}</h2> */}
-                  <SpeedParams
-                    typingOptions={typingOptions}
-                    setTypingOptions={setTypingOptions}
-                  >
-                    <CustomInput
-                      value={customValue()}
-                      customInput={customRef}
-                      onInput={setCustomValue}
-                    />
-                  </SpeedParams>
-                </div>
               </Match>
-              <Match
-                when={typingOptions.modeSelected === TypingModeKind.timer}
-                keyed
-              >
+              <Match when={typingOptions.modeSelected === TypingModeKind.timer}>
                 <div class="text">
-                  <h2 class="title-mode">{t("typingMode.timer.subtitle")}</h2>
+                  <h2 class="title-mode ">{t("typingMode.timer.subtitle")}</h2>
                   <h3>{t("typingMode.timer.title")}</h3>
                   <p class="description">
                     {t("typingMode.timer.hugeDescription")}
                   </p>
                 </div>
-                <div class="options">
-                  {/* <h2 class="options-title">{t("options")}</h2> */}
-                  <TimerParams
-                    typingOptions={typingOptions}
-                    setTypingOptions={setTypingOptions}
-                  >
-                    <CustomInput
-                      value={customValue()}
-                      customInput={customRef}
-                      onInput={setCustomValue}
-                    />
-                  </TimerParams>
-                </div>
               </Match>
             </Switch>
+
+            <div class="options">
+              <TypingParams
+                typingOptions={typingOptions}
+                setTypingOptions={setTypingOptions}
+                categoryParams={typingModes[typingOptions.modeSelected].category}
+                modeParams={typingModes[typingOptions.modeSelected].params}
+              >
+                <CustomInput
+                  value={customValue()}
+                  customInput={customRef}
+                  onInput={setCustomValue}
+                />
+              </TypingParams>
+            </div>
             <div class="button-wrapper">
               <button
                 class="primary"
@@ -557,3 +502,31 @@ const TypingModeKindMenu = (props: TypingModeKindMenuProps) => {
 };
 
 export default TypingModeKindMenu;
+
+// SELECTION de Personnage: ABSOLUMENT PARFAIT
+// MOBILE:  https://www.linkedin.com/posts/hammadx02_flutter-appdevelopment-activity-7241460889885851648-eW69?utm_source=share&utm_medium=member_android
+
+// Le gars a fait pleins de menu de selection stylax
+// https://in.pinterest.com/pin/12525705207244555/
+//
+//Et eux ils font des trucs de malade en mode qui pourrait bien allez à des jeux et tout
+// https://dribbble.com/studiovor
+//
+// Gsap animation
+// https://codepen.io/dev_loop/pen/MWKbJmO
+// Store like this
+// https://codemyui.com/ecommerce-grid-full-screen-product-click/
+// select
+//https://uiverse.io/3bdel3ziz-T/gentle-vampirebat-46
+//
+// Bouncing radio
+// https://uiverse.io/it12uw/sour-mayfly-77
+//
+// Clean avec notif
+// https://uiverse.io/Pradeepsaranbishnoi/heavy-dragonfly-92
+//
+// et celui la
+// https://uiverse.io/Yaya12085/lucky-fox-35
+
+// https://uiverse.io/Yaya12085/silent-liger-85
+//

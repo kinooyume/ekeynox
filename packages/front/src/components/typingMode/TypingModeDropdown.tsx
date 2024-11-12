@@ -1,7 +1,5 @@
 import {
   type JSX,
-  Match,
-  Switch,
   createComputed,
   createSignal,
   on,
@@ -10,20 +8,18 @@ import { createStore } from "solid-js/store";
 import type { CustomInputRef } from "../ui/CustomInput";
 import CustomInput from "../ui/CustomInput";
 import Dropdown from "../ui/Dropdown";
-import { typingModesArray } from "~/typingOptions/typingMode";
-import SpeedParamsMedium from "./SpeedParamsMedium";
-import TimerParamsMedium from "./TimerParamsMedium";
+import { typingModes, typingModesArray } from "~/typingOptions/typingMode";
 import { css } from "solid-styled";
 import {
-  CategoryKind,
   TypingOptions,
   deepCopy,
 } from "~/typingOptions/typingOptions";
-import { TypingModeKind } from "~/typingOptions/typingModeKind";
 import VerticalRadioBox from "../ui/VerticalRadioBox";
 import HugeRadioLabel from "../ui/HugeRadioLabel";
 import { useI18n } from "~/contexts/i18nProvider";
 import { useTypingOptions } from "~/contexts/TypingOptionsProvider";
+import { CategoryKind } from "~/typingOptions/typingModeCategory";
+import TypingParams from "./TypingParams";
 
 type TypingModeDropdownProps = {
   reverse?: boolean;
@@ -210,36 +206,19 @@ const TypingModeDropdown = (props: TypingModeDropdownProps) => {
           </div>
           <div class="options-wrapper">
             <div class="elem options">
-              <Switch>
-                <Match
-                  when={typingOptions.modeSelected === TypingModeKind.speed}
-                >
-                  <SpeedParamsMedium
-                    typingOptions={typingOptions}
-                    setTypingOptions={setTypingOptions}
-                  >
-                    <CustomInput
-                      value={customValue()}
-                      customInput={customRef}
-                      onInput={setCustomValue}
-                    />
-                  </SpeedParamsMedium>
-                </Match>
-                <Match
-                  when={typingOptions.modeSelected === TypingModeKind.timer}
-                >
-                  <TimerParamsMedium
-                    typingOptions={typingOptions}
-                    setTypingOptions={setTypingOptions}
-                  >
-                    <CustomInput
-                      value={customValue()}
-                      customInput={customRef}
-                      onInput={setCustomValue}
-                    />
-                  </TimerParamsMedium>
-                </Match>
-              </Switch>
+              <TypingParams
+                typingOptions={typingOptions}
+                setTypingOptions={setTypingOptions}
+                categoryParams={typingModes[typingOptions.modeSelected].category}
+                modeParams={typingModes[typingOptions.modeSelected].params}
+                compact={true}
+              >
+                <CustomInput
+                  value={customValue()}
+                  customInput={customRef}
+                  onInput={setCustomValue}
+                />
+              </TypingParams>
             </div>
             <div class="elem actions">
               <button

@@ -2,60 +2,37 @@ import { makeSourceNested } from "~/typingContent/TypingGameSource";
 // NOTE: Je pense qu'on peut remettre typingModeKind ici non ? 
 import { TypingModeKind } from "./typingModeKind";
 import {  TypingGameOptions } from "./typingGameOptions";
+import { Category, CategoryKind, GenerationCategory } from "./typingModeCategory";
+import { Languages } from "./typingModeLanguage";
 
 // NOTE:  TypingOptions -> TypingGameOptionsOptions
 
-export type Languages = "en" | "fr";
-
-export enum WordsGenerationCategory {
-  words1k = "words1k",
-  quotes = "quotes",
-}
-
 export type ContentGeneration = {
-  category: WordsGenerationCategory;
+  category: GenerationCategory;
   language: Languages;
 };
-
-export enum CategoryKind {
-  generation,
-  custom,
-}
-
-export type Category =
-  | { kind: CategoryKind.custom }
-  | { kind: CategoryKind.generation; category: WordsGenerationCategory };
-
-export enum WordsCategoryKind {
-  words1k = "words1k",
-  quotes = "quotes",
-  custom = "custom",
-}
-
-// NOTE: C'est ici !
 
 export type TypingOptions = {
   modeSelected: TypingModeKind;
   categorySelected: Category;
   generation: ContentGeneration;
   custom: string;
-  random: number;
+  wordCount: number;
   timer: number;
 };
 // Default Game Options
 const getDefaultTypingOptions = (): TypingOptions => ({
   modeSelected: TypingModeKind.speed,
-  // NOTE: on doit pouvoir avoir que le kind ?
   categorySelected: {
     kind: CategoryKind.generation,
-    category: WordsGenerationCategory.words1k,
+    category: GenerationCategory.words1k,
   },
   generation: {
-    category: WordsGenerationCategory.words1k,
+    category: GenerationCategory.words1k,
     language: "en",
   },
   custom: "",
-  random: 10,
+  wordCount: 10,
   timer: 10,
 });
 
@@ -79,7 +56,7 @@ const optionsToPending = async (
         getContent: makeSourceNested({
           opts,
           sources: { random: source, custom: opts.custom },
-          wordsCount: opts.random,
+          wordsCount: opts.wordCount,
         }),
       }));
     case TypingModeKind.timer:
@@ -97,28 +74,3 @@ const optionsToPending = async (
 };
 
 export { getDefaultTypingOptions, deepCopy, optionsToPending };
-
-/* *** */
-// NOTE: Do we need this ?
-//
-// export type WordsCategory =
-//   | {
-//       kind: WordsCategoryKind.words1k;
-//       data: string[];
-//     }
-//   | { kind: WordsCategoryKind.quotes; data: string[] }
-//   | { kind: WordsCategoryKind.custom; data: string };
-//
-/* __ */
-
-
-/*
- * NOTE: shoulwe merge contentType/generation ?
- * ==> We want to keep last generation config
- *
- */
-
-// type Selected = {
-//   mode: TypingModeKind;
-//   category: CategoryKind;
-// };

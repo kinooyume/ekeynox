@@ -1,12 +1,11 @@
 import { css } from "solid-styled";
 import { Switch, type JSXElement, Show, Match } from "solid-js";
 import {
-  CategoryKind,
   TypingOptions,
-  WordsGenerationCategory,
 } from "~/typingOptions/typingOptions";
 import { useI18n } from "~/contexts/i18nProvider";
 import { TypingModeKind } from "~/typingOptions/typingModeKind";
+import { CategoryKind, GenerationCategory } from "~/typingOptions/typingModeCategory";
 
 // NOTE: make a data to link title + icons + params full/compact
 //
@@ -61,7 +60,7 @@ const TypingOptionsRecap = (props: TypingOptionsRecapProps) => {
             <Match
               when={
                 (props.typingOptions.categorySelected as any).category ===
-                WordsGenerationCategory.quotes
+                GenerationCategory.quotes
               }
             >
               <div class="tag animate">
@@ -71,12 +70,12 @@ const TypingOptionsRecap = (props: TypingOptionsRecapProps) => {
             <Match
               when={
                 (props.typingOptions.categorySelected as any).category ===
-                  WordsGenerationCategory.words1k &&
+                  GenerationCategory.words1k &&
                 props.typingOptions.modeSelected !== TypingModeKind.timer
               }
             >
               <div class="tag animate">
-                <span>{`${props.typingOptions.random} ${t("words")}`}</span>
+                <span>{`${props.typingOptions.wordCount} ${t("words")}`}</span>
               </div>
             </Match>
           </Switch>

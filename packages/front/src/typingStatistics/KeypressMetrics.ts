@@ -135,7 +135,8 @@ const keypressProjectionHandler = (props: KeypressMetricsProps) => {
 
     const accuracy = (correct / projectionResult.total) * 100 || 0;
     const rawAccuracy =
-      (correct / (projectionResult.total + projection.deleted.total)) * 100 || 0;
+      (correct / (projectionResult.total + projection.deleted.total)) * 100 ||
+      0;
 
     return {
       core: {

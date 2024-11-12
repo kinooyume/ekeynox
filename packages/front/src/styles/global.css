@@ -213,6 +213,9 @@ a {
   cursor: pointer;
 }
 
+/* Button with arrow right to left */
+/* https://uiverse.io/Matilemak/breezy-catfish-99 */
+
 button.reset {
   all: unset;
   cursor: pointer;
