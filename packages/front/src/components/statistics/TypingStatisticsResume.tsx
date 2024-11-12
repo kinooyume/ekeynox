@@ -28,6 +28,7 @@ import Prompt from "../prompt/Prompt";
 import TypingOptionsTitle from "../typingMode/TypingOptionsTitle";
 import { HigherKeyboard } from "~/typingKeyboard/keyboardLayout";
 import StatisticsKeyboard from "../virtualKeyboard/StatisticsKeyboard";
+import { timeStringFromNumber } from "~/utils/timeFromNumber";
 
 type TypingMetricsProps = {
   kbLayout: HigherKeyboard;
@@ -40,16 +41,9 @@ const TypingStatisticsResult = (props: TypingMetricsProps) => {
   const keysSet = new Set(Object.keys(props.typingStatistics.characters));
   const [kbLayout, setKbLayout] = createSignal(props.kbLayout(keysSet));
 
-  const typingStatisticsResult = createTypingStatisticsResult(props.typingStatistics);
-
-  const getTime = (duration: number) => {
-    // from miliseconds to minutes and seconds
-    const minutes = Math.floor(duration / 60000);
-    const seconds = ((duration % 60000) / 1000).toFixed(0);
-    const secString = `${seconds}s`;
-    if (minutes === 0) return secString;
-    return `${minutes}m${secString}`;
-  };
+  const typingStatisticsResult = createTypingStatisticsResult(
+    props.typingStatistics,
+  );
 
   createComputed(() => {
     const layout = props.kbLayout(keysSet);
@@ -130,7 +124,7 @@ const TypingStatisticsResult = (props: TypingMetricsProps) => {
     }
 
     .chart {
-      padding: 46px 32px;
+      padding: 46px 32px 16px 32px;
       border-radius: 16px;
     }
 
@@ -210,7 +204,7 @@ const TypingStatisticsResult = (props: TypingMetricsProps) => {
       color: grey;
       margin: 0;
     }
-     .main-data span {
+    .main-data span {
       font-size: 1.3rem;
       margin-left: 8px;
       opacity: 0.6;
@@ -377,7 +371,9 @@ const TypingStatisticsResult = (props: TypingMetricsProps) => {
     return (
       <AccuracyDoughnut stats={props.typingStatistics.typing.logs!.value.stats}>
         <p class="wpm-data main-data">
-          {Math.trunc(props.typingStatistics.typing.logs!.value.stats.speed.wpm)}
+          {Math.trunc(
+            props.typingStatistics.typing.logs!.value.stats.speed.wpm,
+          )}
           <span>WPM</span>
         </p>
         <p class="raw-data">
@@ -411,7 +407,9 @@ const TypingStatisticsResult = (props: TypingMetricsProps) => {
       </div>
       <div class="sticky">
         <div ref={resumeMenu!} class="resume-menu">
-          <TypingOptionsTitle typingOptions={props.typingStatistics.typingOptions} />
+          <TypingOptionsTitle
+            typingOptions={props.typingStatistics.typingOptions}
+          />
           <div class="actions">{props.children(typingStatisticsResult)}</div>
         </div>
       </div>
@@ -431,10 +429,18 @@ const TypingStatisticsResult = (props: TypingMetricsProps) => {
             </div>
           </div>
           <div class="sub-data">
+            {/* <div class="cards-wrapper tiny"> */}
+            {/*   <div class="stat-card"> */}
+            {/*     <p class="main-data main-data-tiny"> */}
+            {/*       {props.typingStatistics.wordsCount} */}
+            {/*     </p> */}
+            {/*     <p class="subtitle">{"words"}</p> */}
+            {/*   </div> */}
+            {/* </div> */}
             <div class="cards-wrapper tiny">
               <div class="stat-card">
                 <p class="main-data main-data-tiny">
-                  {getTime(props.typingStatistics.typing.logs!.value.core.duration)}
+                  {timeStringFromNumber(typingStatisticsResult.elapsedTime)}
                 </p>
                 <p class="subtitle">{t("elapsedTime")}</p>
               </div>
@@ -442,8 +448,7 @@ const TypingStatisticsResult = (props: TypingMetricsProps) => {
             <div class="cards-wrapper tiny">
               <div class="stat-card">
                 <p class="main-data main-data-tiny">
-                  {
-                   typingStatisticsResult.consistency.toFixed(0)}
+                  {typingStatisticsResult.consistency.toFixed(0)}
                   <span>%</span>
                 </p>
                 <p class="subtitle">{t("consistency")}</p>

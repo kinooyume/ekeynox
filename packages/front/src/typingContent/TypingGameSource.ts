@@ -1,10 +1,11 @@
-import { CategoryKind, TypingOptions, WordsGenerationCategory } from "~/typingOptions/typingOptions";
 import type { ContentData } from ".";
 import Content from ".";
 import { randomQuote, randomWords } from "./randomContent";
 import { Paragraph } from "./paragraphs/types";
 import { deepCloneParagraphs } from "./paragraphs";
 import { createSpace } from "./word";
+import { TypingOptions } from "~/typingOptions/typingOptions";
+import { CategoryKind, GenerationCategory } from "~/typingOptions/typingModeCategory";
 
 // TODO: On a dit, Fixed or Loop
 
@@ -34,12 +35,12 @@ const getSource = ({
     return { src: () => Content.parse(sources.custom), following: false };
   }
   switch (opts.generation.category) {
-    case WordsGenerationCategory.words1k:
+    case GenerationCategory.words1k:
       return {
         src: () => Content.parseWords(randomWords(sources.random)(wordNumber)),
         following: true,
       };
-    case WordsGenerationCategory.quotes:
+    case GenerationCategory.quotes:
       return {
         src: () => Content.parse(randomQuote(sources.random)),
         following: false,

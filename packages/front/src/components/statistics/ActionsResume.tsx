@@ -10,26 +10,30 @@ import {
   type TypingOptions,
   deepCopy,
 } from "~/typingOptions/typingOptions";
-import { TypingTypingOptions } from "~/typingOptions/typingTypingOptions";
 
 import { makeRedoContent } from "~/typingContent/TypingGameSource";
 import Content from "~/typingContent";
 
-import type { TypingStatistics, TypingStatisticsResult } from "~/typingStatistics";
+import type {
+  TypingStatistics,
+  TypingStatisticsResult,
+} from "~/typingStatistics";
 
 import Ghost from "~/svgs/ghost";
-import GameModeDropdown from "../typingMode/TypingModeDropdown";
+// import GameModeDropdown from "../typingMode/TypingModeDropdown";
 import { clearParagraphs } from "~/typingContent/paragraphs";
+import TypingModeDropdown from "../typingMode/TypingModeDropdown";
+import { TypingGameOptions } from "~/typingOptions/typingGameOptions";
 
 type ActionsResumeProps = {
   typingOptions: TypingOptions;
-  content: TypingTypingOptions;
+  content: TypingGameOptions;
   metrics: TypingStatistics;
   metricsResume: TypingStatisticsResult;
   fetchSourcesGen: (opts: ContentGeneration) => Promise<Array<string>>;
   start: (opts: TypingOptions) => void;
   redo: (
-    mode: TypingTypingOptions,
+    mode: TypingGameOptions,
     metrics: TypingStatisticsResult,
     options: TypingOptions,
   ) => void;
@@ -117,7 +121,7 @@ const ActionsResume = (props: ActionsResumeProps) => {
   return (
     <div class="actions">
       <Show when={size.width > 740}>
-        <GameModeDropdown {...props} start={start} reverse={true}>
+        <TypingModeDropdown {...props} start={start} reverse={true}>
           {(isOpen, hover) => (
             <div
               class="menu-title"
@@ -129,7 +133,7 @@ const ActionsResume = (props: ActionsResumeProps) => {
               </Show>
             </div>
           )}
-        </GameModeDropdown>
+        </TypingModeDropdown>
       </Show>
       <button class="secondary" onClick={() => restart(props.typingOptions)}>
         <Ghost /> <span>{t("playAgain")}</span>

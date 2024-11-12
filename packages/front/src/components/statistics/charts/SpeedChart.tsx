@@ -45,9 +45,10 @@ const getOptions = (colors: OptionsColors) => ({
   plugins: {
     legend: {
       position: "bottom",
-      display: false,
+      display: true,
       labels: {
         color: colors.text,
+        padding: 20,
       },
     },
     tooltip: {
@@ -249,7 +250,7 @@ const MyChart = (props: MyChartProps) => {
   css`
     .chart {
       width: 100%;
-      height: 300px;
+      height: 320px;
     }
   `;
 

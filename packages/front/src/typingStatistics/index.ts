@@ -16,6 +16,7 @@ import {
   sortKeysAlpha,
 } from "~/typingContent/character/stats";
 import { consistency } from "./consistency";
+import { TimeArray, timeFromNumber } from "~/utils/timeFromNumber";
 
 export type TypingStatistics = {
   paragraphs: Paragraphs;
@@ -23,7 +24,6 @@ export type TypingStatistics = {
   typing: TypingMetrics;
   characters: CharacterStats;
   wordsCount: number;
-  // elapsedTime ?
 };
 
 export type TypingStatisticsResult = {
@@ -32,6 +32,7 @@ export type TypingStatisticsResult = {
   words: Array<WordSpeed>;
   characters: CharacterStatsResult;
   speed: StatSpeed;
+  elapsedTime: number;
   consistency: number;
 };
 
@@ -49,6 +50,7 @@ const createTypingStatisticsResult = (
     characters: createCharacterStatsResult(
       sortKeysAlpha(typingStatistics.characters),
     ),
+    elapsedTime: typingStatistics.typing.logs!.value.core.duration,
     speed: typingStatistics.typing.logs!.value.stats.speed,
     consistency: consistency(chartStatistics.raw.map((v) => v.y)),
   };

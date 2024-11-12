@@ -301,6 +301,7 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
   };
 
   const typingOver = () => {
+    // pour le timer, updateMetrics !
     setWordWpm(cursor());
     const mode = props.status.mode;
     setTypingState({ kind: TypingStateKind.over });
