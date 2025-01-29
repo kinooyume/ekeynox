@@ -29,7 +29,6 @@ export type SettingsOrigin<T> =
 export enum Theme {
   light,
   dark,
-  auto,
 }
 
 export type Settings = {

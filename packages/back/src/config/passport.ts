@@ -48,7 +48,7 @@ export const configure = (app: Express) => {
       },
       async (jwtPayload, cb) => {
         try {
-          const user = await prisma.user.findUnique({
+          const user = await prisma.userCredential.findUnique({
             where: { id: jwtPayload.id },
           });
           if (!user) throw new Error("Not found the user");

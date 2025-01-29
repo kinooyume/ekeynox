@@ -6,6 +6,7 @@ packages/front/.vercel
 packages/front/.netlify
 packages/front/netlify
 packages/front/.vinxi
+packages/front/.storybook
 packages/front/node_modules
 
 # Back
@@ -35,3 +36,5 @@ gitignore
 # System Files
 .DS_Store
 Thumbs.db
+
+*storybook.log

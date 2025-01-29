@@ -30,7 +30,13 @@ export const registerUser: RequestHandler = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await prisma.userCredential.create({
-      data: { email, password: hashedPassword },
+      data: {
+        email,
+        password: hashedPassword,
+        settings: {
+          create: {},
+        },
+      },
     });
 
     return user;
