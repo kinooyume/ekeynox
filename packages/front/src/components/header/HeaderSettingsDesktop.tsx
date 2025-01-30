@@ -52,9 +52,9 @@ const HeaderSettingsDesktop: Component<SettingsUI> = (props) => {
       <li>
         <DarkModeToggle {...props.darkMode} />
       </li>
-      <li>
-        <a href="/login" >login</a>
-      </li>
+      {/* <li> */}
+      {/*   <a href="/login" >login</a> */}
+      {/* </li> */}
     </ul>
   );
 };
