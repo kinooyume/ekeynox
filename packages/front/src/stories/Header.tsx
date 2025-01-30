@@ -40,26 +40,26 @@ export const Header: Component<HeaderProps> = (props) => (
         </svg>
         <h1>Acme</h1>
       </div>
-      <div>
-        {props.user ? (
-          <>
-            <span class="welcome">
-              Welcome, <b>{props.user.name}</b>!
-            </span>
-            <Button size="small" onClick={props.onLogout} label="Log out" />
-          </>
-        ) : (
-          <>
-            <Button size="small" onClick={props.onLogin} label="Log in" />
-            <Button
-              primary
-              size="small"
-              onClick={props.onCreateAccount}
-              label="Sign up"
-            />
-          </>
-        )}
-      </div>
+      {/* <div> */}
+        {/* {props.user ? ( */}
+        {/*   <> */}
+        {/*     <span class="welcome"> */}
+        {/*       Welcome, <b>{props.user.name}</b>! */}
+        {/*     </span> */}
+        {/*     <Button size="small" onClick={props.onLogout} label="Log out" /> */}
+        {/*   </> */}
+        {/* ) : ( */}
+        {/*   <> */}
+        {/*     <Button size="small" onClick={props.onLogin} label="Log in" /> */}
+        {/*     <Button */}
+        {/*       primary */}
+        {/*       size="small" */}
+        {/*       onClick={props.onCreateAccount} */}
+        {/*       label="Sign up" */}
+        {/*     /> */}
+        {/*   </> */}
+        {/* )} */}
+      {/* </div> */}
     </div>
   </header>
 );
