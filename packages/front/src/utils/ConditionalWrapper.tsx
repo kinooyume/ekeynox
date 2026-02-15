@@ -1,6 +1,5 @@
 import { Component } from "solid-js";
 
-// NOTE: note use after all, was initially for settings
 type ConditionalWrapperProps<T> = {
   cond: boolean;
   DefaultWrapper: Component<T>;

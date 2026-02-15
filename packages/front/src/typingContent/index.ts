@@ -34,7 +34,6 @@ export const parse: Parser = (source) => {
         .filter((word) => word);
     })
     .filter((paragraph) => paragraph.length > 0) as Paragraphs;
-  // TODO: use a flatMap
   if (paragraphs.length > 1) {
     for (let i = 0; i < paragraphs.length - 1; i++) {
       paragraphs[i].push(createEnter());

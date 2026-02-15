@@ -12,9 +12,6 @@ type AboutContactProps = {
   onTransition?: (t: TransitionSize) => void;
 };
 
-// NOTE: example of nested morphin
-// example aussi de Morphing unilateral
-
 const AboutContact: Component<AboutContactProps> = (props) => {
   css`
     .about-contact {
@@ -24,9 +21,7 @@ const AboutContact: Component<AboutContactProps> = (props) => {
   return (
     <div
       class="about-contact"
-      ref={(el) => {
-        console.log(el.clientWidth);
-      }}
+      ref={(el) => {}}
     >
       <Morphing
         sourceAnimation={emptyAnimationChildren}

@@ -29,8 +29,6 @@ const ListSettingsDesktop: Component<ListSettings> = (props) => (
 
 const HeaderSettingsDesktop: Component<SettingsUI> = (props) => {
   const { setFocus } = useFocus();
-  // TODO: should not be here
-  // ==> trigger when switching desktop/mobile
   onCleanup(() => {
     setFocus(FocusType.View);
   });
@@ -60,6 +58,3 @@ const HeaderSettingsDesktop: Component<SettingsUI> = (props) => {
 };
 
 export default HeaderSettingsDesktop;
-function setFocus(View: any) {
-  throw new Error("Function not implemented.");
-}

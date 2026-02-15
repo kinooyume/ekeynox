@@ -10,7 +10,6 @@ export enum WordStatus {
   over = "over",
 }
 
-// Prompt
 export type MetaWord = {
   /* Core */
   characters: NonEmptyArray<MetaCharacter>;
@@ -27,10 +26,6 @@ export type MetaWord = {
   /* --- */
 };
 
-
-/* *** */
-/* TypingState */
-/* *** */
 
 export enum TypingWordKind {
   ignore,

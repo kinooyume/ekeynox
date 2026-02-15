@@ -1,8 +1,5 @@
 import { type Cursor } from "./Cursor";
 
-// NOTE: on appelle l'enfant dans le parent (key->word)
-// Donc on doit pouvoir refacto ca
-// et lié chaque Hooks d'un parent a un enfant
 
 export type NodeHooks = {
   enter: (cursor: Cursor) => void;

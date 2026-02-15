@@ -7,8 +7,6 @@ import { useI18n } from "~/contexts/i18nProvider";
 import { TypingModeKind } from "~/typingOptions/typingModeKind";
 import { CategoryKind, GenerationCategory } from "~/typingOptions/typingModeCategory";
 
-// NOTE: make a data to link title + icons + params full/compact
-//
 type TypingOptionsRecapProps = {
   typingOptions: TypingOptions;
 };

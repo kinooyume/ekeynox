@@ -13,19 +13,13 @@ export enum CharacterFocus {
   back = "back",
 }
 
-// Prompt
 export type MetaCharacter = {
-  // index: number;
   status: CharacterStatus;
   wasInvalid: boolean;
   focus: CharacterFocus;
   ghostFocus: CharacterFocus;
   char: string;
 };
-
-/* *** */
-/* Event */
-/* *** */
 
 export type CharacterAdded =
   | { kind: CharacterStatus.match }
@@ -38,11 +32,7 @@ export enum CharacterEventKind {
   deleted,
   back,
   ignore,
-  // separator - Added/deleted
 }
-
-// CharacterEvent -> CharacterEventInfo
-// CharacterEventTuple -> CharacterEvent
 
 export type CharacterEvent =
   | { kind: CharacterEventKind.added; status: CharacterAdded }
@@ -52,15 +42,8 @@ export type CharacterEvent =
 
 export type CharacterEventTuple = [key: string, CharacterEvent];
 
-/* *** */
-/* TypingState */
-/* *** */
-
-// TODO: remoé focusIsSeparator
-// Hum.. focusIsSeparator c'est not good ça,
-// vue que ça se retrouve dans les metrics
 export type TypingCharacter = {
-  keyMetrics: CharacterEventTuple; // event
+  keyMetrics: CharacterEventTuple;
   timestamp: number;
-  focusIsSeparator: boolean; // NOTE: could be prevKeySeparator
+  focusIsSeparator: boolean;
 };

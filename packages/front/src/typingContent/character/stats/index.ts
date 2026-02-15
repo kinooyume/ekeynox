@@ -26,7 +26,6 @@ const updateCharacterStats = ({
   if (projection[key] === undefined) {
     projection[key] = createCharacterMetrics();
   }
-  /* Side effect */
   updateCharacterMetrics(projection[key])(metrics);
 
   return projection;
@@ -38,7 +37,6 @@ export type CharacterStatsResult = [
   expected: CharacterExpected,
 ];
 
-// Duplicate blanckCharacters
 const blankCharacters = [" ", "Enter"];
 
 const createCharacterStatsResult = (
@@ -47,16 +45,11 @@ const createCharacterStatsResult = (
   const expected = new Map<string, number>();
   const result: CharacterScores = Object.entries(keys).reduce(
     (acc, [key, value]) => {
-      // TODO: Keypress metrics, better handle separator
       if (blankCharacters.includes(key)) return acc;
       value.expected.forEach((e) => {
         expected.set(e, (expected.get(e) || 0) + 1);
       });
       return { ...acc, [key]: value };
-      /*
-       * NOTE: typescript doesn't complain.. why ?
-       * return { ...acc, [key]: diffCharacterScore(value) };
-       */
     },
     {},
   );

@@ -38,7 +38,6 @@ const TypingInfo = (props: TypingNavProps) => {
   };
   const [navBorder, setNavBorder] = createSignal(getNavBorder(getVw()));
 
-  // TODO: refacto wpm/accuracy and others in a proper component
   const resize = () => {
     const vw = getVw();
     setNavWidth(getNavWidth(vw));

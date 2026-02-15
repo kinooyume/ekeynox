@@ -40,10 +40,7 @@ export function FocusProvider(props: {
         focus,
         setFocus,
         locked,
-        setLocked: (a) => {
-          // console.log("setLocked", a);
-          setLocked(a);
-        },
+        setLocked,
       }}
     >
       {props.children}

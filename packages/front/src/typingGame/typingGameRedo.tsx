@@ -25,7 +25,6 @@ type Props = {
 type Redo = (props: Props) => void;
 
 const typingGameRedo: Redo = (props) => {
-  // const [ghostCursor, setGhostCursor] = createSignal<Cursor>();
   const [cleanupGhost, setCleanupGhost] = createSignal(() => {});
 
   createComputed(
@@ -38,7 +37,6 @@ const typingGameRedo: Redo = (props) => {
               paragraphs: props.paragraphs,
               setParagraphs: props.setParagraphs,
             });
-            // setGhostCursor(ghostCursor);
             const ghostInput = TimerInput({
               cursor: ghostCursor,
               sequence: getTimedKeySequence(status.prev.typingLogs),
@@ -48,10 +46,6 @@ const typingGameRedo: Redo = (props) => {
               return timer({ state: props.typingState() });
             }, ghostInput);
             break;
-          // case PendingKind.new:
-          //   cleanupGhost();
-          //   // setGhostCursor(undefined);
-          //   break;
         }
       },
     ),

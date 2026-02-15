@@ -39,15 +39,10 @@ const Login: Component<Props> = (props) => {
       const data = await ky
         .post(`${import.meta.env.VITE_API_URL}/login`, { json: values })
         .json();
-      console.log(data);
       toast.success("Connected", { id: toastId });
-      // redirect
       setFormState(FormState.sended);
     } catch (e) {
-      console.log(e);
-      // TODO: different error messages for server error/credentials
       toast.error("Invalid email/password", { id: toastId });
-      //setError(e);
       setFormState(FormState.error);
     }
   };

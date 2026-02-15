@@ -22,10 +22,6 @@ export type TypingState =
   | TypingStatePending
   | { kind: TypingStateKind.over };
 
-/* *** */
-/* Pending */
-/* *** */
-
 export type TypingPendingEvent = {
   key: TypingCharacter;
   word?: TypingWord;
