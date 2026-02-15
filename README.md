@@ -16,6 +16,12 @@ pnpm install
 pnpm --filter front dev
 ```
 
+To enable the login feature:
+
+```bash
+pnpm --filter front dev:login
+```
+
 ## Stack
 
 SolidJS, SolidStart, TypeScript, solid-styled, anime.js, chart.js
