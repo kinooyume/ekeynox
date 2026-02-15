@@ -37,8 +37,6 @@ const ContactForm: Component<ContactFormProps> = (props) => {
     values,
     event,
   ) => {
-
-    props.onSuccess()
     const form = {
       ...values,
       access_key: import.meta.env.VITE_WEB3FORMS_ACCESS_KEY,
@@ -56,7 +54,6 @@ const ContactForm: Component<ContactFormProps> = (props) => {
       });
 
       if (response.ok) {
-        // const data = await response.json();
         setFormState(FormState.sended);
       } else {
         // Custom message for failed HTTP codes
@@ -72,8 +69,6 @@ const ContactForm: Component<ContactFormProps> = (props) => {
     props.onSuccess()
   };
 
-  // TODO: remoe global style
-  // ==> Utiliser les modules CSS ( et passer la class module a form )
   css`
     .about-contact {
       border-color: var(--color-surface-alt);
@@ -102,9 +97,6 @@ const ContactForm: Component<ContactFormProps> = (props) => {
 
     .textarea-wrapper {
       width: 100%;
-    }
-
-    .input-wrapper {
     }
 
     .input-wrapper p {

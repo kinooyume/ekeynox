@@ -28,7 +28,6 @@ const Keyboard = (props: KeyboardProps) => {
     return keyFound ? keyFound.primary : "";
   };
 
-  // NOTE: use a store/memo maybe ?
   const addKey = (key: string) => {
     const keyFound = findPrimaryKey(key);
     if (keyFound) setPressedKeys([...pressedKeys(), keyFound]);

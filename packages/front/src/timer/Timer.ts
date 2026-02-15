@@ -25,11 +25,6 @@ export type TypingTimerProps = {
 
 export type TypingTimer = TimerEffect<TypingTimerProps>;
 
-// NOTE: C'est pas un timer en fait, c'est un switch play/pause
-
-// NOTE: maybe call it typingTimer ? As it react to TypingState
-// Après, c'est generique.. De base
-
 const createTypingTimer: CreateTimerEffect<TypingTimerProps> = (
   newTimer: NewTimer,
 ) => {

@@ -1,11 +1,8 @@
 import { makeSourceNested } from "~/typingContent/TypingGameSource";
-// NOTE: Je pense qu'on peut remettre typingModeKind ici non ? 
 import { TypingModeKind } from "./typingModeKind";
 import {  TypingGameOptions } from "./typingGameOptions";
 import { Category, CategoryKind, GenerationCategory } from "./typingModeCategory";
 import { Languages } from "./typingModeLanguage";
-
-// NOTE:  TypingOptions -> TypingGameOptionsOptions
 
 export type ContentGeneration = {
   category: GenerationCategory;

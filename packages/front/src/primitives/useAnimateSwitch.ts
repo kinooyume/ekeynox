@@ -66,14 +66,6 @@ function useAnimateSwitch(props: AnimateSwitchProps) {
           case AnimateState.transition:
             props.on?.transition?.(prevState!);
             break;
-          // NOTE: was used for morphing
-          //
-          // case AnimateState.target:
-          //   props.on?.toTarget?.();
-          //   break;
-          // case AnimateState.initial:
-          //   props.on?.toInitial?.();
-          //   break;
         }
         return state;
       }),

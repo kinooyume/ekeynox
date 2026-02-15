@@ -5,9 +5,7 @@ import {
 } from "./HeaderSettingsGlobal";
 import Drawer from "@corvu/drawer";
 
-// createComponent(Comp, props)
-
-import { Component, createComponent, onCleanup } from "solid-js";
+import { Component, onCleanup } from "solid-js";
 import "./Drawer.css";
 import Kebab from "~/svgs/kebab";
 import { css } from "solid-styled";
@@ -31,15 +29,13 @@ const ListSettingsMobile: Component<ListSettings> = (props) => {
       gap: 8px;
     }
     .title p {
-      color: var(--text-color);
       color: var(--text-secondary-color);
       font-size: 19px;
     }
     .params {
       padding-left: 16px;
     }
-    .icon-wrapper {
-    }
+    .icon-wrapper {}
   `;
   return (
     <>
@@ -56,12 +52,6 @@ const ListSettingsMobile: Component<ListSettings> = (props) => {
   );
 };
 
-// TODO: who, to refacto
-// Probably get back the auto stuff
-// style not shared, so probably module for that
-
-// NOTE: en fait ça, ca va convertir le  toggle en radiobox
-//
 const DarkModeToggleToRadioBox: Component<DarkModeSettings> = (props) => {
   const t = useI18n();
   const theme = ["light", "dark"];
@@ -157,23 +147,18 @@ const HeaderSettingsContent: Component<SettingsUI> = (props) => {
   );
 };
 
-// Interessant ce fonctionnement !
 const HeaderSettingsMobile: Component<SettingsUI> = (props) => {
   const { setFocus } = useFocus();
   const { state } = useAppState();
 
-  // TODO: should not be here
-  // ==> trigger when switching desktop/mobile
   onCleanup(() => {
     setFocus(FocusType.View);
   });
 
-  // TODO: focus first input
   return (
     <Drawer
       side="right"
       onFinalFocus={(e) => {
-        // NOTE:  should let the game handle the focus
         if (state().kind === AppStateKind.pending) {
           e.preventDefault();
         }

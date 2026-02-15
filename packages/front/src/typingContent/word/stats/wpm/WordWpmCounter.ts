@@ -1,8 +1,3 @@
-// NOTE: is Timer
-// ==> ici on retrouve le pause/resume
-// [+] un getWpm, getResult.. quelques chose quand il est en pause
-// Mais en fait, ici c'est just callback sans parametre
-// Du coup, pas réactive à un event
 //
 import {
   CharacterStatus,
@@ -20,7 +15,6 @@ export type WpmCounterState =
   | { kind: WpmCounterStateKind.done; wpm: number; duration: number }
   | { kind: WpmCounterStateKind.pending };
 
-// NOTE: check if we can/should use it for regular wpm counter ?
 export type PendingWpmCounter = {
   pause: () => PausedWpmCounter;
   getWpm: (keys: Array<MetaCharacter>) => WpmCounterState;

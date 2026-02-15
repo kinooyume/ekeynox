@@ -1,7 +1,6 @@
 import { TimedKey } from "~/typingStatistics/timedKey";
 import type { CreateNewTimer, TimerPause, TimerPending } from "./Timer";
 
-// NOTE: il me semble qu'on veut jarter ça
 export type SetCleanup = (cleanup: () => void) => void;
 
 type TimerKeypressProps<T> = {
@@ -32,7 +31,6 @@ const create: CreateNewTimer<TimerKeypressProps<TimedKey>> =
         timeout: null,
       };
 
-      // NOTE: check if we really need timeout
       const nodeTimeout = () => {
         lastPress = performance.now();
         pauseProps.timeout = setTimeout(() => {
@@ -44,8 +42,6 @@ const create: CreateNewTimer<TimerKeypressProps<TimedKey>> =
       };
 
       setCleanup(() => pauseProps.timeout && clearTimeout(pauseProps.timeout));
-
-      // side effect
       nodeTimeout();
 
       return {

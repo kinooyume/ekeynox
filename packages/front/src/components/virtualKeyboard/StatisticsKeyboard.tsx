@@ -32,7 +32,6 @@ const StatisticsKeyboard = (props: KeyboardProps) => {
     }
   `;
 
-  // TODO: Keypress metrics, better handle separator
   const blankCharacters = [" ", "Enter"];
   return (
     <div class="kb">

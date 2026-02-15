@@ -7,9 +7,6 @@ import { createSpace } from "./word";
 import { TypingOptions } from "~/typingOptions/typingOptions";
 import { CategoryKind, GenerationCategory } from "~/typingOptions/typingModeCategory";
 
-// TODO: On a dit, Fixed or Loop
-
-// NOTE: Static or Dynamic handler here
 export type SourceProps = {
   random: Array<string>;
   custom: string;
@@ -60,9 +57,6 @@ export type ContentHandler = {
   next: NextContent;
 };
 
-// PERF: du coup, plutot que d'avoir ca
-// on pourrait juste le faire directement dans le store
-
 const mergeSource = (
   prev: ContentData,
   next: ContentData,
@@ -78,7 +72,6 @@ const mergeSource = (
     const newParagraph = prevLast.concat(createSpace(), first);
     paragraphs = prevParagraphs.concat([newParagraph, ...rest]);
   } else {
-    //  prevLast.push(Content.makeEnter());
     paragraphs = prevParagraphs.concat([prevLast, ...nextParagraphs]);
   }
   const wordsCount = prev.wordsCount + next.wordsCount;
@@ -89,8 +82,6 @@ const mergeSource = (
 const next = (nextContent: GetContent, following: boolean) => () => {
   const next = nextContent();
   return (prev: ContentData): ContentHandler => {
-    // add enter at the begin data.paragraphs
-    // if (!following) next.data.paragraphs.unshift([Content.makeEnter()]);
     return {
       data: mergeSource(prev, next.data, following),
       following: following ? next.data.paragraphs[0] : undefined,

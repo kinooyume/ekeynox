@@ -63,7 +63,6 @@ const UserNavHooks: CursorNavHooks = {
         UserNavHooks.character.prev.enter(cursor);
       },
       leave: (cursor) => {
-        // NOTE: we can optimize it by keeping the key performance.now
         if (cursor.get.hasWpm()) {
           const timestamp = performance.now();
           //cursor.set.wordLastLeaveTimestamp(timestamp);

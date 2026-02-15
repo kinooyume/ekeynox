@@ -139,8 +139,6 @@ const TypingModeDropdown = (props: TypingModeDropdownProps) => {
     ref: undefined,
   };
 
-  /* *** */
-
   createComputed(
     on(
       () => props.typingOptions,
