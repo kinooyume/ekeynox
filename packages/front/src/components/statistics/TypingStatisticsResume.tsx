@@ -144,9 +144,6 @@ const TypingStatisticsResult = (props: TypingMetricsProps) => {
     }
 
     .cards-wrapper {
-      background-color: var(--color-surface-mixed-200);
-      border: 1px solid var(--background-color);
-
       background-color: var(--color-surface-600);
       border: 1px solid var(--color-surface-mixed-600);
 
@@ -161,9 +158,6 @@ const TypingStatisticsResult = (props: TypingMetricsProps) => {
     }
 
     .stat-card {
-      background-color: var(--color-surface-mixed-600);
-
-      background-color: var(--color-surface-100);
       background-color: var(--stat-background-color);
 
       padding: 24px;
@@ -291,7 +285,6 @@ const TypingStatisticsResult = (props: TypingMetricsProps) => {
         align-items: center;
         justify-content: center;
         padding: 16px;
-        border-radius: 18px 18px 0 0;
         border-radius: 16px;
       }
     }
@@ -342,23 +335,11 @@ const TypingStatisticsResult = (props: TypingMetricsProps) => {
     window.onscroll = () => {
       const top = resumeMenu.getBoundingClientRect().top;
       const pourcent = 1.0 - top / (headerHeight + resumeHeaderHeight());
-      // NOTE: on peut avoir le pourcent reactive
-      // et du coup gérer les animations dans chaque component
       blockAnimation.seek(pourcent * blockAnimation.duration);
       pictoAnimation.seek(pourcent * pictoAnimation.duration);
       titleAnimation.seek(pourcent * titleAnimation.duration);
     };
   });
-
-  // window.onscroll = () => {
-  //   const bodyST = document.body.scrollTop;
-  //   const docST = document.documentElement.scrollTop;
-  //   const docSH = document.documentElement.scrollHeight;
-  //   const docCH = document.documentElement.clientHeight;
-  //   // console.log everything
-  //   // console.log("bodySt", bodyST);
-  //   console.log("docST", docST);
-  // };
 
   onCleanup(() => {
     window.onscroll = null;
@@ -429,14 +410,6 @@ const TypingStatisticsResult = (props: TypingMetricsProps) => {
             </div>
           </div>
           <div class="sub-data">
-            {/* <div class="cards-wrapper tiny"> */}
-            {/*   <div class="stat-card"> */}
-            {/*     <p class="main-data main-data-tiny"> */}
-            {/*       {props.typingStatistics.wordsCount} */}
-            {/*     </p> */}
-            {/*     <p class="subtitle">{"words"}</p> */}
-            {/*   </div> */}
-            {/* </div> */}
             <div class="cards-wrapper tiny">
               <div class="stat-card">
                 <p class="main-data main-data-tiny">
@@ -507,15 +480,3 @@ const TypingStatisticsResult = (props: TypingMetricsProps) => {
 };
 
 export default TypingStatisticsResult;
-
-// Cool mobile version
-// https://x.com/slavakornilov/status/1787408908069515499
-//
-// Awesome animate mobile
-// https://in.pinterest.com/pin/730568370831216958/?ref=usepanda.com
-//
-// Cool bento.. to check
-// https://codepen.io/EaterUsr/pen/yLZgxBE
-//
-// Really cool tailwind dashboard
-//https://cruip.com/demos/mosaic/

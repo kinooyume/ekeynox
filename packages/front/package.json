@@ -4,6 +4,7 @@
   "Version": "0.0.1",
   "scripts": {
     "dev": "vinxi dev",
+    "dev:login": "VITE_SHOW_LOGIN=true vinxi dev",
     "build": "vinxi build",
     "start": "vinxi start",
     "test": "vitest run",

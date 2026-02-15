@@ -3,10 +3,6 @@ import { TypingOptions } from "~/typingOptions/typingOptions";
 import { TypingGameOptionsOptions } from "~/typingOptions/typingTypingOptions";
 import { TypingStatistics, TypingStatisticsResult } from "./typingStatistics";
 
-/* *** */
-/* Ca, ca va bouger */
-/* *** */
-
 export enum PendingKind {
   new,
   redo,
@@ -24,8 +20,6 @@ export type PendingStatusRedo = {
 };
 
 export type PendingStatus = PendingStatusNew | PendingStatusRedo;
-
-/* ***  */
 
 export enum AppStateKind {
   loading,

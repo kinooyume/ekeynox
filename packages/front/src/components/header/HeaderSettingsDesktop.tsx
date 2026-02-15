@@ -1,4 +1,4 @@
-import { Component, onCleanup } from "solid-js";
+import { Component, onCleanup, Show } from "solid-js";
 import { ListSettings, SettingsUI } from "./HeaderSettingsGlobal";
 import VerticalPopover from "../ui/VerticalDropdown";
 import Tooltip from "../ui/Tooltip";
@@ -29,8 +29,6 @@ const ListSettingsDesktop: Component<ListSettings> = (props) => (
 
 const HeaderSettingsDesktop: Component<SettingsUI> = (props) => {
   const { setFocus } = useFocus();
-  // TODO: should not be here
-  // ==> trigger when switching desktop/mobile
   onCleanup(() => {
     setFocus(FocusType.View);
   });
@@ -52,14 +50,13 @@ const HeaderSettingsDesktop: Component<SettingsUI> = (props) => {
       <li>
         <DarkModeToggle {...props.darkMode} />
       </li>
-      {/* <li> */}
-      {/*   <a href="/login" >login</a> */}
-      {/* </li> */}
+      <Show when={import.meta.env.VITE_SHOW_LOGIN === "true"}>
+        <li>
+          <a href="/login">login</a>
+        </li>
+      </Show>
     </ul>
   );
 };
 
 export default HeaderSettingsDesktop;
-function setFocus(View: any) {
-  throw new Error("Function not implemented.");
-}

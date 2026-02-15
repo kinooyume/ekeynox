@@ -4,12 +4,6 @@ import {
   CharacterStatus,
 } from "~/typingContent/character/types";
 
-// NOTE: Tout ça, c'est appelé dans userKeypress
-// ==> CharacterEventTuple, que ça
-
-// Donc c'est meme pas des metrics
-// C'est lié a l'event typingPending
-
 const blankCharacters = [" ", "Enter"];
 
 type KeyMetricsProps = {
@@ -30,8 +24,6 @@ const makeDeletedKeyMetrics = ({
   { kind: CharacterEventKind.deleted, status },
 ];
 
-
-// TODO: better handling of separators/blankCharacters, as special events.
 const getAddedKeyMetrics = ({
   typed,
   expected,
@@ -74,8 +66,6 @@ const getAddedKeyMetrics = ({
 const getKeyDownMetrics = (typed: string) => {
   switch (typed) {
     case "Backspace":
-      // NOTE: Not sure it's only backspace
-      // case "Process": // Firefox Mobile
       return CharacterEventKind.back;
     case "Enter":
     case "Tab":
@@ -88,12 +78,9 @@ const getKeyMetrics = ({
   typed,
   expected,
 }: KeyMetricsProps): CharacterEventTuple => {
-  // typed.length === 0, userAgent
-  // NOTE: doesn't weems useful
   if (typed === "Backspace") {
     return [typed, { kind: CharacterEventKind.back }];
   } else if (typed.length === 1 || typed === "Enter") {
-    // NOTE: check if really enter needed here ?
     return getAddedKeyMetrics({ typed, expected });
   }
   return [typed, { kind: CharacterEventKind.ignore }];

@@ -10,6 +10,7 @@ import {
   useContext,
 } from "solid-js";
 import { SetStoreFunction, createStore } from "solid-js/store";
+import { isServer } from "solid-js/web";
 import {
   Settings,
   SettingsOriginType,
@@ -40,10 +41,13 @@ export function SettingsProvider(props: {
   const [settings, setSettings] = createStore(defaultSettings());
   const [dark, setDark] = createSignal(false);
 
+  const noopStorage = { getItem: () => null, setItem: () => {}, removeItem: () => {} };
+
   const [persistedSettings, setPersistedSettings] = storage.makePersisted(
     createStore(defaultSettings()),
     {
       name: "settings",
+      storage: isServer ? noopStorage : localStorage,
     },
   );
 

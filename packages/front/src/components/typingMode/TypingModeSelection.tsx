@@ -96,8 +96,6 @@ const TypingModeSelection = (props: TypingModeSelectionProps) => {
     }
     label .icon {
       position: absolute;
-      filter: sepia(100%) hue-rotate(4deg) saturate(157.7%) contrast(75.2%);
-      filter: sepia(100%) hue-rotate(30deg) saturate(76%) brightness(62%);
       filter: var(--icon-filter);
       left: var(--label-icon-left);
       top: var(--label-icon-top);
@@ -128,8 +126,7 @@ const TypingModeSelection = (props: TypingModeSelectionProps) => {
         width: var(--label-icon-size-hover);
       }
     }
-    .radio {
-    }
+    .radio {}
     .select {
       display: none;
     }
@@ -190,7 +187,6 @@ const TypingModeSelection = (props: TypingModeSelectionProps) => {
     }
   `;
 
-  // TODO: better handler mobile stuff (don't show .info)
   onCleanup(() =>
     labelRef.forEach((el) => {
       el.removeEventListener("mouseenter", () => {});

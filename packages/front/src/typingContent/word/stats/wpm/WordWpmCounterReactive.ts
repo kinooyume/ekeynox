@@ -1,10 +1,3 @@
-// TODO: Redo all of it
-// TODO: make a proper pause management
-
-// NOTE: Is Timer
-// but without resume/pause specific logic
-// reactive to WordStatus instead of typingStatus
-
 import { MetaWord, WordStatus } from "~/typingContent/word/types.ts";
 
 import WordWpmCounter, {
@@ -17,8 +10,6 @@ type WordStatusReactiveProps = {
   status: WordStatus;
 };
 
-// NOTE: check pour trouver le nom de ce pattern
-// TODO: ==> So, we should have another type for TypingStateReactive
 export type WordStatusReactive = ({
   status,
 }: WordStatusReactiveProps) => WordStatusReactive;

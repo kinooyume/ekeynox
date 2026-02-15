@@ -39,7 +39,6 @@ export type TypingStatisticsResult = {
 const createTypingStatisticsResult = (
   typingStatistics: TypingStatistics,
 ): TypingStatisticsResult => {
-  // NOTE: On devrait plutot, décompiler en tableau, puis convertir en chart
   const chartStatistics = logsToChartStatistics(typingStatistics.typing.logs);
   return {
     chart: chartStatistics,

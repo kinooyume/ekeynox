@@ -49,7 +49,6 @@ const createTypingMetricsState = (
     metrics: TypingMetrics,
   ) => {
     setStat(projection.stats);
-    /* side effect */
     metrics.logs = List.make(metrics.logs, projection);
   };
 
@@ -59,27 +58,6 @@ const createTypingMetricsState = (
     interval: Interval;
   };
 
-  // TODO: make something so that the LinkedList can't be null
-  // TODO: just ne pas l'ajouter direct
-  //
-  // NOTE: Doesnt't work
-  // don't care for now
-  //
-  // const cleanLogs = (logs: LinkedList<KeypressMetricsProjection>) => {
-  //   if (!logs) return null;
-  //   let log: LinkedList<KeypressMetricsProjection> = logs;
-  //   let prevLog = log;
-  //   while (log) {
-  //     if (!log.value.meta.logs) {
-  //       prevLog.next = log.next;
-  //     } else {
-  //       prevLog = log;
-  //     }
-  //     log = log.next;
-  //   }
-  //   return log;
-  // };
-  //
   const pending =
     (props: PendingMetricsProps) =>
     ({ event }: TypingMetricsProps): TypingMetricsState => {
@@ -87,11 +65,9 @@ const createTypingMetricsState = (
         clearInterval(props.interval.timer);
         const [overKeypressMetrics, finalProjection] =
           props.keypressMetrics.pause(true);
-        // side effect
         updateStat(finalProjection, props.metrics);
         setTypingMetrics(props.metrics);
         props.metrics.projection = finalProjection;
-        // props.metrics.logs = cleanLogs(props.metrics.logs);
         return paused({
           keypressMetrics: overKeypressMetrics,
           metrics: props.metrics,
@@ -141,8 +117,6 @@ const createTypingMetricsState = (
           };
           interval.timer = setTimeout(() => {
             update();
-            // TODO: make it directly in "cleanUp"
-            // so, we had to make it mutable :(
             setCleanup(() => clearTimeout(interval.timer));
             clearTimeout(interval.timer);
             interval.timer = setInterval(update, 1000);

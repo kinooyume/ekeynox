@@ -41,9 +41,11 @@ export function TypingOptionsProvider(props: TypingOptionsProviderProps) {
     getDefaultTypingOptions(),
   );
 
+  const noopStorage = { getItem: () => null, setItem: () => {}, removeItem: () => {} };
+
   const [persistedOptions, setPersistedOptions] = makePersisted(
     createStore<TypingOptions>(getDefaultTypingOptions()),
-    { name: "typingOptions" },
+    { name: "typingOptions", storage: isServer ? noopStorage : localStorage },
   );
 
   onMount(() => {

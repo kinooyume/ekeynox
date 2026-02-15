@@ -101,8 +101,6 @@ const keypressProjectionHandler = (props: KeypressMetricsProps) => {
 
   const start = performance.now();
 
-  // TODO: refacto key/words
-
   const getProjection = (): KeypressMetricsProjection => {
     const stop = performance.now();
     let node = logs;
@@ -113,12 +111,9 @@ const keypressProjectionHandler = (props: KeypressMetricsProps) => {
     const [sectionProjection, sortedLogs] =
       createCharacterMetricsFromPendingList(node);
     const [sectionWordStat, sortedWordLogs] = createWordStatFromList(wordNode);
-    /*  Side effect */
     pushCharacterMetrics(projection, sectionProjection);
     mergeWordStats(wordProjection, sectionWordStat);
-    /* *** */
 
-    // Ha oui mais attend..
     const projectionResult = diffCharacterScore(projection);
 
     const correct = projectionResult.match;

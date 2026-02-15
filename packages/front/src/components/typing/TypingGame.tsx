@@ -23,7 +23,6 @@ type TypingGameProps = {
   paragraphs: Paragraphs;
   keyMetrics: CharacterStats;
 
-  // TODO: can be remove
   onPause: () => void;
 
   Input: (props: UserInputExtends) => JSXElement;
@@ -31,8 +30,6 @@ type TypingGameProps = {
 
   children: JSXElement;
 };
-
-// TODO: better handle no keyboard on keyDown/UP
 
 const TypingGame = (props: TypingGameProps) => {
   const [inputRef, setInputRef] = createSignal<HTMLInputElement>();
@@ -66,17 +63,14 @@ const TypingGame = (props: TypingGameProps) => {
 
   const { focus: globalFocus } = useFocus();
 
-  // TODO: Go back to Manager
   createComputed(
     on(
       globalFocus,
       (gFocus) => {
         if (gFocus === FocusType.Hud) {
-          // console.log("unfocus")
           inputRef()!.blur();
           props.onPause();
         } else {
-          // console.log("focus")
           inputRef()?.focus();
         }
       },

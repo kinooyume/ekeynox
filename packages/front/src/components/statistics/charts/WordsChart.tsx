@@ -27,8 +27,6 @@ type WordTypingStatisticsResultProps = {
 const WordsChart = (props: WordTypingStatisticsResultProps) => {
   // get the first 10 words
   const words = props.words.slice(0, 10);
-  // const words = props.words;
-  // NOTE: ??
   const [labels, speeds] = words.reduce(
     ([labels, speeds], word) => {
       labels.push(word.word);

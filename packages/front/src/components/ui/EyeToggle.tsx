@@ -8,10 +8,6 @@ type Props = {
   children: JSXElement;
 };
 
-// TODO: quick and dirty, to refacto
-// ==> separate svg et toggle
-// ---> check dark/light stuff
-
 const EyeToggle: Component<Props> = (props) => {
   css`
     /* From Uiverse.io by catraco */

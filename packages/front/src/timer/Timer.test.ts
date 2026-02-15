@@ -24,8 +24,6 @@ describe("Typing Timer", () => {
   });
 
   it("should start the timer", () => {
-
-    // TODO: Mockup TypingState
     const props: TypingTimerProps = {
       state: {
         kind: TypingStateKind.pending,

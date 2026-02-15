@@ -19,20 +19,14 @@ type CursorProps = {
   setParagraphs: SetStoreFunction<Paragraphs>;
 };
 
-// Pourquoi c'est pas des variables direct ? est-ce souhaitable ?
-
-// NOTE: State
-
 export type Position = {
   paragraph: number;
   word: number;
   character: number;
 };
 
-// NOTE:
 export type Cursor = {
   focus: () => void;
-  // NOTE: Signal or store
   get: {
     paragraph: () => Paragraph;
     nbrParagraphs: () => number;
@@ -40,7 +34,6 @@ export type Cursor = {
     typingWord: () => TypingWord | null;
     nbrWords: () => number;
     isSeparator: () => boolean;
-    // TODO: just make an undefined
     hasWpm: () => boolean;
     wordIsCorrect: () => boolean;
     wordIsValid: () => boolean;
@@ -66,9 +59,7 @@ export type Cursor = {
     keyFocus: (focus: CharacterFocus) => void;
     ghostFocus: (focus: CharacterFocus) => void;
   };
-  // NOTE: can be a store
   positions: {
-    // Index  []
     paragraph: () => number;
     word: () => number;
     character: () => number;
@@ -83,8 +74,6 @@ export type Cursor = {
 };
 
 const makeCursor = (props: CursorProps) => {
-  /* NOTE: could be replace by nested linked list */
-  /* Keep paragraph/word/key-letter index */
   const [paragraph, setCurrentParagraph] = createSignal(0);
   const [word, setCurrentWord] = createSignal(0);
   const [key, setCurrentKey] = createSignal(0);
@@ -107,7 +96,6 @@ const makeCursor = (props: CursorProps) => {
     },
   };
 
-  /* *** */
   const cursor: Cursor = {
     positions,
     focus: () => {
@@ -120,14 +108,11 @@ const makeCursor = (props: CursorProps) => {
       cursor.set.keyFocus(CharacterFocus.focus);
     },
 
-    /* NOTE: Paragraphs Data Getter */
-
     get: {
       paragraph: () => props.paragraphs[positions.paragraph()],
       nbrParagraphs: () => props.paragraphs.length - 1,
       nbrWords: () => props.paragraphs[positions.paragraph()].length - 1,
       typingWord: () => {
-        // NOTE: vraiment pas sur de ça 
         if (cursor.get.wordIsValid()) {
           cursor.set.wordIsCorrect(true);
           return {
@@ -169,8 +154,6 @@ const makeCursor = (props: CursorProps) => {
       isSeparator: () =>
         props.paragraphs[positions.paragraph()][positions.word()].isSeparator,
     },
-
-    /* NOTE: Paragraphs Data Setter */
 
     set: {
       /* key */

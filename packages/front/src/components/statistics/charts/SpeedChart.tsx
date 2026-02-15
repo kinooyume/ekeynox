@@ -270,18 +270,6 @@ const MyChart = (props: MyChartProps) => {
     }
   });
 
-  createComputed(() => {
-    let newData;
-    if (size.width < 1160) {
-      // console.log("dataOrigin2");
-      // newData = dataOrigin2;
-    } else {
-      // console.log("dataOrigin");
-      // newData = dataOrigin;
-    }
-    // setData(newData);
-  });
-
   onMount(() => {
     Chart.register(
       LineController,

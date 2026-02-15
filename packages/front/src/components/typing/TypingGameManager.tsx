@@ -74,7 +74,6 @@ type TypingGameManagerProps = {
 const TypingGameManager = (props: TypingGameManagerProps) => {
   const t = useI18n();
 
-  // NOTE: keep the signal as it can cause error if we give it to the next state
   const [typingOptions, setTypingOptions] = createSignal<TypingOptions>(
     props.typingOptions,
   );
@@ -97,20 +96,13 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
     }),
   );
 
-  /* *** */
-
-  // NOTE: wordsCount should be in Metrics ? Or CursorNav.. hum..
-
-  /* KeyPress: from input to Typing Event + promptKey */
   const [promptKey, setPromptKey] = createSignal<string>("");
   const [wordsCount, setWordsCount] = createSignal<number>(0);
 
-  // Also trigger appendContent, at the half content
   const [totalWordsCount, setTotalWordsCount] = createSignal(
     contentHandler().data.wordsCount,
   );
 
-  // TODO: better handler isSeparator
   const nextWordHooks: ExtraWordHooks = {
     enter: (word) => {},
     leave: (word) => {
@@ -134,9 +126,6 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
     }),
   );
 
-  // pour le counter, on veut just enter/leave
-  // NOTE: Peut etre des soucis ici, avec le truc de backspace et tout ça
-  // TODO: ici, on a le liens userKeypress <-> cursor/nav
   const [keypressHandler, setKeypressHandler] = createSignal(
     makeKeypressHandler(cursor(), cursorNav()),
   );
@@ -179,16 +168,11 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
       typingState,
     });
 
-  // Can be Signal
   let onKeyboard: KeyboardHandler = {
     keyDown: () => {},
     keyUp: () => {},
   };
 
-  /* Keyboard Listener */
-  // NOTE: Set TypingState from userKeypress
-
-  /* *** */
   const onKeyDown = (key: string) => {
     onKeyboard.keyDown(key);
 
@@ -207,9 +191,6 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
     setTypingState(event);
   };
 
-  /* Typing Event management */
-
-  // TODO: remoé, wordWPM
   const setWordWpm = (cursor: Cursor) => {
     if (cursor.get.hasWpm()) {
       const timestamp = performance.now();
@@ -230,12 +211,9 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
     setWordWpm(cursor());
     cursor().set.wordStatus(WordStatus.pause, false);
 
-    // TODO: stop le counter
-    // if (wordWpmTimer) wordWpmTimer = wordWpmTimer({ status: WordStatus.pause });
     setTypingState({ kind: TypingStateKind.pause });
   };
 
-  // NOTE: ==> Timer Only
   const cleanParagraphs = (
     paragraphs: Paragraphs,
     { paragraph: pIndex, word: wIndex }: Position,
@@ -249,16 +227,8 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
 
   /* Metrics */
 
-  // TODO: make  primitive
-  // const { typingStats, updateTypingStats } = useTypingStats();
-  // updateTypingStats({ event: typingState() });
-  // NOTE: Faire le points entre stats & metrics
-  // NOTE: normalement,  liée stat et typingMetrics
- 
   const [stat, setStat] = createSignal(KeypressMetrics.createStatProjection());
 
-  // NOTE: Donc en fait, c'est le "Timer" des stats
-  // enfin genre.. la partie en dessous..
   const [typingMetrics, setTypingMetrics] = createSignal(createTypingMetrics());
 
   /* Metrics "State" */
@@ -273,21 +243,16 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
     metricsState = metricsState({ event: typingState });
   };
 
-  /* *** */
-  /* Key Metrics */
-
   const keyMetrics = createMemo(
     (projection: CharacterStats) =>
       updateCharacterStats({ projection, status: typingState() }),
     {},
   );
   const over = (mode: TypingGameOptions) => {
-    // NOTE: peut etre le faire en mode "leave"
     cursor().set.wordStatus(WordStatus.over, false);
     cursor().set.keyFocus(CharacterFocus.unfocus);
     const position = cursor().positions.get();
 
-    // so, metrics before wesh
     props.onOver(
       {
         paragraphs: cleanParagraphs(paraStore, position),
@@ -301,7 +266,6 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
   };
 
   const typingOver = () => {
-    // pour le timer, updateMetrics !
     setWordWpm(cursor());
     const mode = props.status.mode;
     setTypingState({ kind: TypingStateKind.over });
@@ -312,7 +276,6 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
 
   createComputed(
     on(typingState, (event) => {
-      // side effect
       updateMetrics(event);
       switch (event.kind) {
         case TypingStateKind.unstart:
@@ -321,9 +284,6 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
           break;
         case TypingStateKind.pending:
           if (!event.next) {
-            // NOTE: we call it twice ? 🤔 Make sure it doesn't break anything..
-            // overMetrics();
-
             return typingOver();
           }
           setPromptKey(cursor().get.character().char);
@@ -341,17 +301,8 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
     setTypingState({ kind: TypingStateKind.unstart });
   };
 
-  // TODO: On doit pouvoir lier metrics et cursor/nav
-  // Genre que les metrics appelles le cursor/nav
-  // Parce que la, cursor/nav s'occupe des statistiques du mots
-  // Et récupère un timestamp, qui pourrait venir de userKeypress
-  // ==> On doit pouvoir tout chainer plutot que de réagir à chaque truc
-
-  /* NOTE: TIMER LOOP CONTENT */
-
   const appendContent = () => {
     const { data, next } = contentHandler();
-    // TODO: add following option back
     const newContent = next();
     setTotalWordsCount(contentHandler().data.wordsCount);
 
@@ -374,8 +325,6 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
     ),
   );
 
-  // should only be there at timer
-  // WordsCount a la fin d'un mot, sauf si c'est un operator
   createComputed(
     on(wordsCount, () => {
       if (
@@ -387,17 +336,11 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
     }),
   );
 
-  /* NOTE: TIMER LOOP CONTENT */
-
-  /* Shuffle different from timer and speed */
-
   const shuffle = (loop: boolean) => {
     if (loop) {
       return () => {
-        /* On devrait pouvoir lier ça au final */
         setContentHandler(contentHandler().new());
         appendContent();
-        /* *** */
         setParaStore(deepCloneParagraphs(contentHandler().data.paragraphs));
         reset();
       };
@@ -410,7 +353,6 @@ const TypingGameManager = (props: TypingGameManagerProps) => {
   };
 
   onCleanup(() => {
-    // NOTE: On devrait pas avoir le cleanup du timer ? 🤔
     cursor().set.keyFocus(CharacterFocus.unfocus);
     cursor().set.wordStatus(WordStatus.unstart, false);
     cleanupMetrics();

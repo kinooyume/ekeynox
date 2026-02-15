@@ -14,7 +14,6 @@ import { Locale } from "~/settings/settings";
 
 type Dictionaries = Record<Locale, RawDictionary>;
 
-// TODO: simple read file in folder
 const dictionaries: Dictionaries = {
   en: en_dict,
   fr: fr_dict,
@@ -28,7 +27,6 @@ type I18nProviderProps = {
   children: JSX.Element | JSX.Element[];
 };
 
-// TODO: check when undefined 
 const i18nContext = createContext<Translator>({} as Translator);
 
 export function useI18n() {
