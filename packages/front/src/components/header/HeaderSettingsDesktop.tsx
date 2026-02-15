@@ -1,4 +1,4 @@
-import { Component, onCleanup } from "solid-js";
+import { Component, onCleanup, Show } from "solid-js";
 import { ListSettings, SettingsUI } from "./HeaderSettingsGlobal";
 import VerticalPopover from "../ui/VerticalDropdown";
 import Tooltip from "../ui/Tooltip";
@@ -50,9 +50,11 @@ const HeaderSettingsDesktop: Component<SettingsUI> = (props) => {
       <li>
         <DarkModeToggle {...props.darkMode} />
       </li>
-      {/* <li> */}
-      {/*   <a href="/login" >login</a> */}
-      {/* </li> */}
+      <Show when={import.meta.env.VITE_SHOW_LOGIN === "true"}>
+        <li>
+          <a href="/login">login</a>
+        </li>
+      </Show>
     </ul>
   );
 };
