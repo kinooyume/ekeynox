@@ -405,18 +405,9 @@ const TypingModeKindMenu = (props: TypingModeKindMenuProps) => {
     appHeight();
     const clearWindowEvent = makeEventListener(window, "resize", appHeight);
     // document?.addEventListener("resize", appHeight);
-    preload(new URL(`${import.meta.env.VITE_BASE_URL}/typing`), {
+    preload(new URL("/typing", window.location.origin), {
       preloadData: true,
     });
-    //   anime.timeline().add({
-    //     targets: ".menu .title-content *",
-    //     translateY: [-80, 0],
-    //     opacity: [0, 1],
-    //     easing: "easeOutElastic(1, 0.9)",
-    //     duration: 800,
-    //     delay: (el, i) => 100 * i,
-    //   });
-    //
   });
 
   return (

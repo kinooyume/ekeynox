@@ -7,6 +7,7 @@ import {
   onCleanup,
   createEffect,
 } from "solid-js";
+import { isServer } from "solid-js/web";
 import Nav from "~/svgs/nav-abs.tsx";
 import Gauge from "~/svgs/gauge.tsx";
 import Accuracy from "~/svgs/accuracy.tsx";
@@ -25,7 +26,7 @@ type TypingNavProps = {
 
 const TypingInfo = (props: TypingNavProps) => {
   const getVw = () =>
-    Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+    isServer ? 0 : Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
 
   const getNavWidth = (vw: number) => {
     const dynamic = vw - 232;
@@ -170,9 +171,6 @@ const TypingInfo = (props: TypingNavProps) => {
     }
   `;
 
-  // pitetre interessant: https://codepen.io/juliangarnier/pen/XvjWvx
-  // https://codepen.io/AlikinVV/pen/OrmJxj
-
   const size = useWindowSize();
 
   return (
@@ -215,19 +213,3 @@ const TypingInfo = (props: TypingNavProps) => {
 };
 
 export default TypingInfo;
-
-// <span class="wpm">WPM: {Math.trunc(wpm())}</span>
-//
-// UI Stuff
-// preview on hover
-// https://uiverse.io/PriyanshuGupta28/massive-ape-73
-//
-// splash
-// https://uiverse.io/Shoh2008/big-deer-80
-//
-// cool todo bar, with spash
-// https://uiverse.io/JkHuger/warm-panther-74
-//
-//
-// StopWatch animejs
-// https://codepen.io/MrSung/pen/xaRdjN
