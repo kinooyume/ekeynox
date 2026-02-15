@@ -16,7 +16,7 @@ pnpm install
 pnpm --filter front dev
 ```
 
-To enable the login feature:
+To enable the login feature (really WIP):
 
 ```bash
 pnpm --filter front dev:login
