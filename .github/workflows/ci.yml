@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches: [develop]
+  pull_request:
+    branches: [develop]
+
+jobs:
+  ci:
+    name: CI (lint, test, build)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Validate PR commits
+        if: github.event_name == 'pull_request'
+        uses: cocogitto/cocogitto-action@v4
+        with:
+          command: check
+          args: --from-latest-tag
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run ESLint
+        run: pnpm --filter front eslint
+
+      - name: Run tests
+        run: pnpm --filter front test
+
+      - name: Build
+        run: pnpm --filter front build

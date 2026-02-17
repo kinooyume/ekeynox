@@ -1,0 +1,15 @@
+from_latest_tag = true
+ignore_merge_commits = true
+tag_prefix = "v"
+branch_whitelist = ["main"]
+
+pre_bump_hooks = []
+post_bump_hooks = [
+    """jq '.version = "{{version}}"' package.json > tmp.json && mv tmp.json package.json""",
+    """jq '.version = "{{version}}"' packages/front/package.json > tmp.json && mv tmp.json packages/front/package.json""",
+    "git add package.json packages/front/package.json",
+]
+
+[changelog]
+path = "CHANGELOG.md"
+authors = []

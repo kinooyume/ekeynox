@@ -1,0 +1,50 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Release (bump, changelog)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Bump version and generate changelog
+        id: bump
+        uses: cocogitto/cocogitto-action@v4
+        with:
+          command: bump
+          args: --auto
+          git-user: "github-actions[bot]"
+          git-user-email: "github-actions[bot]@users.noreply.github.com"
+
+      - name: Push bump commit and tag
+        if: steps.bump.outputs.version != ''
+        run: |
+          git push origin main --follow-tags
+          git fetch origin develop
+          git checkout -B develop origin/develop
+          git merge main --no-edit
+          git push origin develop
+
+      - name: Extract changelog for release
+        if: steps.bump.outputs.version != ''
+        id: changelog
+        run: cog changelog --at ${{ steps.bump.outputs.version }} > /tmp/release_notes.md
+
+      - name: Create GitHub Release
+        if: steps.bump.outputs.version != ''
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.bump.outputs.version }}
+          name: Release ${{ steps.bump.outputs.version }}
+          body_path: /tmp/release_notes.md
+          make_latest: true

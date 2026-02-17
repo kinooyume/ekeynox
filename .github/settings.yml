@@ -1,0 +1,33 @@
+repository:
+  has_wiki: false
+  has_projects: false
+
+branches:
+  - name: main
+    protection:
+      required_status_checks:
+        strict: true
+        contexts:
+          - "CI (lint, test, build)"
+      enforce_admins: false
+      required_pull_request_reviews:
+        dismiss_stale_reviews: true
+        require_code_owner_reviews: false
+        required_approving_review_count: 0
+      restrictions: null
+      allow_squash_merge: true
+      allow_merge_commit: false
+      allow_rebase_merge: false
+
+  - name: develop
+    protection:
+      required_status_checks:
+        strict: true
+        contexts:
+          - "CI (lint, test, build)"
+      enforce_admins: false
+      required_pull_request_reviews:
+        dismiss_stale_reviews: true
+        require_code_owner_reviews: false
+        required_approving_review_count: 0
+      restrictions: null
